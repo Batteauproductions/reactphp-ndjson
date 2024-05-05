@@ -1,0 +1,28 @@
+{
+    "remotePath": "/web/chronicles_of_dalaria/chargen/dev",
+    "host": "77.169.18.225",
+    "username": "Geert",
+    "password": "Darnassus_2011",
+    "port": 22,
+    "secure": false,
+    "protocol": "sftp",
+    "uploadOnSave": true,
+    "passive": false,
+    "debug": false,
+    "privateKeyPath": null,
+    "passphrase": null,
+    "agent": null,
+    "allow": [],
+    "ignore": [
+        "node_modules",
+        "\\.vscode",
+        "\\.git",
+        "\\.DS_Store"
+    ],
+    "generatedFiles": {
+        "extensionsToInclude": [
+            ""
+        ],
+        "path": ""
+    }
+}

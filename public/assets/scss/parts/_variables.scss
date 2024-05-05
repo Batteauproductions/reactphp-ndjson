@@ -1,0 +1,67 @@
+/* breakpoints */
+$breakpoint-small: 39.9375em;
+$breakpoint-medium: 40em;
+$breakpoint-medium-only: 63.9375em;
+$breakpoint-large: 64em;
+$breakpoint-large-only: 74.9375em;
+
+$container-width-small: 90vw;
+$container-width-medium: 80vw;
+$container-width-large: 70vw;
+
+/* color sets for the application */
+$color-primary: #1E1E1E;
+$color-secundary: #7D1717;
+$color-tertiary: #E34646;
+$color-error: rgb(196, 118, 118);
+
+$color-bg-body: #{$color-primary};
+$color-font-body-dark: #000000;
+$color-font-body-light: #fff;
+$color-font-body: $color-font-body-light;
+
+$color-bg-header: $color-font-body-light;
+$color-font-header: $color-font-body-light;
+
+$color-bg-main: #{$color-bg-body};
+$color-font-main: #{$color-font-body-light};
+
+$color-bg-footer: #{$color-primary};
+$color-font-footer: #ffffff;
+
+/*font-sizings for different screens*/
+$font-size-small: 12px;
+$font-size-medium: 14px;
+$font-size-large: 16px;
+
+/* font settings for the headers */
+$head-font-transform: none;
+$head-font-weight: bold;
+$head-font-size: 1.25rem;
+$head-line-height: 1.45rem;
+$head-font-family: "Manuale", serif;
+$head-font: #{$head-font-weight} #{$head-font-size}/#{$head-line-height} #{$head-font-family};
+$head-color: $color-font-body;
+
+/* font settings for the body */
+$paragraph-font-transform: none;
+$paragraph-font-weight: normal;
+$paragraph-font-size: 1rem;
+$paragraph-line-height: 1.2rem;
+$paragraph-font-family: "Manuale", serif;
+$paragraph-font: #{$paragraph-font-weight} #{$paragraph-font-size}/#{$paragraph-line-height} #{$paragraph-font-family};
+$paragraph-color: $color-font-body;
+
+/* font settings for the links */
+$link-font-transform: none;
+$link-font-weight: normal;
+$link-font-size: inherit;
+$link-line-height: inherit;
+$link-font-family: "Manuale", serif;
+$link-font: #{$link-font-weight} #{$link-font-size}/#{$link-line-height} #{$link-font-family};
+$link-color: $color-tertiary;
+
+/* misc settings */
+$border-radius: 0.313rem;
+$padding: 1.25rem;
+$margin: 1.25rem;

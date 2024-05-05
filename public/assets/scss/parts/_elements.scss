@@ -1,0 +1,202 @@
+@import 'variables.scss';
+
+.alert {
+    display: block;
+    border: solid 1px #cc0000;
+    background: #FFCCCC;    
+    margin: $margin 0;
+    padding: $padding;
+
+    ul {
+        margin: 0;
+        padding: 0;
+        li {
+            color: #cc0000;
+            list-style-type: "\203A";
+        }
+    }
+    
+    /*&.alert-danger {
+
+    }*/
+}
+
+.button {
+    
+    cursor: pointer;
+    display: inline-block;
+    font: $paragraph-font;
+    padding: calc(0.5*$padding) $padding;
+    margin-bottom: $margin;
+    
+    &.solid {
+        border-radius: $border-radius;
+        border: solid 0.063rem $color-secundary;
+        color: $paragraph-color !important;
+        background-color: $color-secundary;
+        &:hover {
+            background-color: lighten($color-secundary,20%);
+        }
+    }
+    &.clear {
+        color: $paragraph-color;
+    }
+}
+
+.container {
+    width: 100%;
+    max-width: $container-width-small;
+    margin: 0 auto;
+    /* Medium and up */
+    @media screen and (min-width: #{$breakpoint-medium}) {
+        max-width: $container-width-medium;
+    }
+    /* Large and up */
+    @media screen and (min-width: #{$breakpoint-large}) {
+        max-width: $container-width-large;
+    }
+}
+
+.form-data {
+    font-weight: bold;
+}
+
+.navigation {
+    &-site {
+        border-bottom: solid 0.125rem #fff;
+        box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.35);
+    }
+    &-footer {
+        border-top: solid 0.125rem #fff;
+        font-size: calc(0.8*$paragraph-font-size);
+    }
+    &-site, &-footer {
+
+        background: $color-primary;
+
+        nav {
+
+            a {
+                display: inline-block;
+                padding: $padding;
+            }
+
+            .dropdown {
+                position: relative;
+                display: inline-block;               
+                
+                .dropdown-content {
+                    display: none;
+                    position: absolute;
+                    background-color: lighten($color-primary,20%);
+                    min-width: 260px;
+                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                    z-index: 1;      
+                    a {
+                        display: block;
+                    }             
+                }
+
+                &:hover {
+                    .dropdown-content {
+                        display: block;
+                    }    
+                }
+                
+            }
+
+        }
+    }
+}
+
+.profile {
+    text-align: center;
+    .profile-avatar {
+        display: block;
+        width: 100%;
+        max-width: 15.625rem;
+        border-radius: $border-radius;
+    }
+    .profile-name {
+        display: block;
+        font-size: calc(1.2*$paragraph-font-size);
+    }
+    .profile-role {
+        display: block;
+        font-size: calc(0.8*$paragraph-font-size);
+    }
+}
+
+
+.text-center {
+    text-align: center;
+}
+
+.wrapper {
+
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-height: calc(100vh - 2.5rem);
+
+    h1 {
+        margin-top: 0;
+    }
+
+    .content-wrapper {
+        border-radius: $border-radius;
+        padding: calc($padding*2);
+        margin: $margin 0;
+        width: 100%;
+
+        &--login, &--signup_start, &--signup_error, &--signup_done {
+            max-width: 25rem;
+        }
+
+        &--profile {
+            max-width: 43.75rem;
+        }
+
+        &.solid {
+            background-color: $color-primary;
+            box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.35);
+        }
+    
+        &.transparent {
+            background-color: rgba($color-primary, 0.5);
+        }
+    }    
+}
+
+.wrapper-character {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    height: 100%;
+    min-height: calc(100vh - 2.5rem);
+    flex-wrap: wrap;
+    align-content: flex-start;
+    flex-direction: row;
+    gap: $margin;
+
+    .tile {
+        flex: 1 0 calc(50% - #{$padding * 2}); 
+        background: black;
+        padding: $padding;
+        box-sizing: border-box;
+
+        /* Medium and up */
+        @media screen and (min-width: #{$breakpoint-medium}) {
+            flex: 1 0 calc(33.333% - #{$padding * 2}); 
+        }
+
+        /* Large and up */
+        @media screen and (min-width: #{$breakpoint-large}) {
+            flex: 1 0 calc(16.666% - #{$padding * 2}); 
+        }
+    }
+}
+
+

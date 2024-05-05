@@ -1,0 +1,157 @@
+@import 'variables.scss';
+
+html {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    width: 100%;
+    background: url('/assets/images/backgrounds/bg_moutaincity.png');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body, ul, li, h1, h2, h3, p {    
+    color: $color-font-body;
+    font-weight: normal;
+    font-size: $font-size-small;
+    line-height: calc($font-size-small * 1.1);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+
+    /* Medium and up */
+    @media screen and (min-width: #{$breakpoint-medium}) {
+        font-size: $font-size-medium;
+        line-height: calc($font-size-medium * 1.1);
+    }
+    /* Large and up */
+    @media screen and (min-width: #{$breakpoint-large}) {
+        font-size: $font-size-large;
+        line-height: calc($font-size-large * 1.1);
+    }
+}
+
+header {
+    color: $color-font-footer;
+    position: fixed;
+    width: 100%;
+    top: 0px;
+}
+
+main {
+    color: $color-font-main;
+    margin: $margin;
+    min-height: calc(100vh - #{$margin * 2});
+}
+
+footer {
+    color: $color-font-footer;
+    position: fixed;
+    width: 100%;
+    bottom: 0px;
+}
+
+h1 {
+    color: $head-color;
+    font: $head-font;
+    text-transform: $head-font-transform;
+}
+
+h2 {
+    color: $head-color;
+    font-size: calc($head-font-size * 0.85);
+    line-height: calc($head-line-height * 0.85);
+    text-transform: $head-font-transform;
+}
+
+h3 {
+    color: $head-color;
+    font-size: calc($head-font-size * 0.75);
+    line-height: calc($head-line-height * 0.75);
+    text-transform: $head-font-transform;
+}
+
+p {
+    color: $paragraph-color;
+    font: $paragraph-font;
+    text-transform: $paragraph-font-transform;    
+}
+
+i {
+    &.fa-solid, &.fa-regular, &.fa-brands {
+        margin-right: calc(0.5 * $margin);
+    }
+}
+a, a:hover, a:active, a:focus {
+    color: $link-color;
+    //font: $link-font;
+    text-transform: $link-font-transform;
+
+    &:hover {
+        color: lighten($link-color,20%);
+    }
+}
+
+form {
+
+    label {
+        display: inline-block;
+        font: $paragraph-font;
+        color: $paragraph-color;
+        margin-bottom: calc(0.5 * $margin);
+
+        &.input-error {
+            color: $color-error;
+            font-weight: bold;
+            margin-top: calc($margin * 0.50);
+            margin-bottom: calc(1.2 * $margin);
+        }
+    }
+
+    input {
+        
+        font: $paragraph-font;
+        display: block;        
+        font-size: inherit;
+        margin-bottom: calc(1.2 * $margin);
+        padding: calc($padding*0.5) $padding;
+        width: calc(100% - calc(2*$padding));
+
+        &.input-error {
+            background: $color-error;
+            border-color: darken($color-error,20%);
+            color: darken($color-error,20%);
+            margin-bottom: 0;
+        }
+    }
+
+    select {
+        display: block;
+        width: 100%;
+        &.input-error {
+            background: $color-error;
+            border-color: darken($color-error,30%);
+            color: darken($color-error,30%);
+        }
+    }
+
+    textarea {
+        resize: none;
+    }
+    
+}
+
+/* Small only */
+@media screen and (max-width: #{$breakpoint-small}) {
+}
+/* Medium only */
+@media screen and (min-width: #{$breakpoint-medium}) and (max-width: #{$breakpoint-medium-only}) {
+}
+/* Large only */
+@media screen and (min-width: #{$breakpoint-large}) and (max-width: #{$breakpoint-large-only}) {
+}
