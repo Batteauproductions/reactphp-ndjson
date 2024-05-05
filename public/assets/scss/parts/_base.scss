@@ -45,8 +45,8 @@ header {
 
 main {
     color: $color-font-main;
-    margin: $margin;
-    min-height: calc(100vh - #{$margin * 2});
+    margin: calc($margin * 4) $margin;
+    min-height: calc(100vh - #{$margin * 8});
 }
 
 footer {

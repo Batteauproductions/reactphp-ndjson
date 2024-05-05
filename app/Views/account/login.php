@@ -31,7 +31,7 @@
                 </a>
             </div>
             <div>
-                <a class="" href="<?php echo base_url('account/password_forget') ?>">
+                <a href="<?php echo base_url('account/password_forget') ?>">
                     <i class="fa-solid fa-key"></i>Wachtwoord vergeten
                 </a>
             </div>

@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\CharacterModel;
+use App\Models\SystemModel;
 use App\Helpers\auth_helper;
 
 class Page extends BaseController
@@ -9,10 +11,21 @@ class Page extends BaseController
 
     protected $session;
     protected $arrRights;
+    protected $characterModel;
+    protected $systemModel;
+    protected $arrSettings;
 
     public function __construct() 
     {
         $this->session = session();
+        $this->characterModel = new CharacterModel();
+        $this->systemModel = new SystemModel();
+        //apply settings to the variable
+        $this->arrSettings['options_user_roles']        = $this->systemModel->getUserRoleOptions();
+        $this->arrSettings['options_user_status']       = $this->systemModel->getUserStatusOptions();
+        //-----
+        $this->arrSettings['options_character_status']  = $this->systemModel->getCharacterStatusOptions();
+        $this->arrSettings['options_character_types']   = $this->systemModel->getCharacterTypeOptions();
     }
 
     public function view($page) 
@@ -43,9 +56,9 @@ class Page extends BaseController
         {
             case 'character_database':
                 if($arrRights['isGameMaster']) {
-                    $arrData['arrType'] = [1,2,3,4,5,6];
-                    $arrData['arrStatus'] = [1,2,3,4,5,6];
-                    $arrData['arrCharacters'] = [1,2,3,4,5,6,1,2,3,4,5,6];
+                    $arrData['arrStatus'] = $this->arrSettings['options_character_status'];
+                    $arrData['arrType'] = $this->arrSettings['options_character_types'];                    
+                    $arrData['arrCharacters'] = $this->characterModel->getCharacters();
                     $arrContent['content'] = view('gamemaster/character_database',$arrData);
                 } else {
                     $arrContent['content'] = view('_templates/no_access');

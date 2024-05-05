@@ -13,8 +13,8 @@
                 </label>
                 <select id="type" name="type" type="text">
                     <option value="">Geen voorkeur</option>
-                    <?php foreach($arrType as $iKey => $sValue):?>
-                        <option value="<?php echo $iKey ?>"><?php echo $sValue ?></option>
+                    <?php foreach($arrType as $type):?>
+                        <option value="<?php echo $type->id ?>"><?php echo $type->name ?></option>
                     <?php endforeach;?> 
                 </select>
             </div>
@@ -24,8 +24,8 @@
                 </label>
                 <select id="status" name="status" type="text">
                     <option value="">Geen voorkeur</option>
-                    <?php foreach($arrStatus as $iKey => $sValue):?>
-                        <option value="<?php echo $iKey ?>"><?php echo $sValue ?></option>
+                    <?php foreach($arrStatus as $status):?>
+                        <option value="<?php echo $status->id ?>"><?php echo $status->name ?></option>
                     <?php endforeach;?> 
                 </select>
             </div>
@@ -38,9 +38,11 @@
     </section>
 
     <section class="wrapper-character"> 
-        <?php foreach($arrCharacters as $iKey => $sValue):?>
-            <div class="tile">
-                <?php echo $sValue ?>
+        <?php foreach($arrCharacters as $characters):?>
+            <div class="tile tile-status--<?php echo $characters->status_name ?>">              
+                <?php echo $characters->name ?>
+                <?php echo $characters->status_name ?>
+                <img class="tile-avatar" src="<?php echo empty($characters->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('elements/header-img.png') ?>"/>
             </div>
         <?php endforeach;?> 
     </section>
