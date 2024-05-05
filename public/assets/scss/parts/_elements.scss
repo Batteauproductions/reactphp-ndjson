@@ -43,25 +43,12 @@
     }
 }
 
-.container {
-    width: 100%;
-    max-width: $container-width-small;
-    margin: 0 auto;
-    /* Medium and up */
-    @media screen and (min-width: #{$breakpoint-medium}) {
-        max-width: $container-width-medium;
-    }
-    /* Large and up */
-    @media screen and (min-width: #{$breakpoint-large}) {
-        max-width: $container-width-large;
-    }
-}
-
 .form-data {
     font-weight: bold;
 }
 
 .navigation {
+    
     &-site {
         border-bottom: solid 0.125rem #fff;
         box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.35);
@@ -172,28 +159,52 @@
 
 .wrapper-character {
     width: 100%;
-    display: flex;
-    align-items: flex-start;
     height: 100%;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    flex-direction: row;
-    gap: $margin;
 
     .tile {
-        flex: 1 0 calc(50% - #{$padding * 2}); 
+        position: relative;
+        color: #fff;
+        cursor: pointer;
         background: black;
-        box-sizing: border-box;
+        background-size: contain;
+        background-position: center center;
+        border-radius: $border-radius;
+        padding: $padding;
+        overflow: hidden;
+        text-align: center;
+        text-shadow: 
+            1px 0 0 #000, /*right */
+            0 1px 0 #000, /*top */
+            -1px 0 0 #000, /*left */
+            0 -1px 0 #000; /*bottom */
 
-        /* Medium and up */
-        @media screen and (min-width: #{$breakpoint-medium}) {
-            flex: 1 0 calc(25% - #{$padding * 2}); 
+        h1 {
+            font-size: 1.1rem;
+            line-height: 1.2rem;
+            margin: 0;
         }
 
-        /* Large and up */
-        @media screen and (min-width: #{$breakpoint-large}) {
-            flex: 1 0 calc(16.666% - #{$padding * 2}); 
+        p {
+            font-size: 0.9rem;
+            line-height: 1.0rem;
+            margin: 0;
         }
+
+        .tile-overlay {
+            left: 0;
+            position: absolute;
+            top: 200px;
+            transition: top 500ms;
+            background: rgba($color-primary, 0.5);
+            height: 100%;
+            width: 100%;
+        }
+        &:hover {
+            .tile-overlay {                
+                top: 0;                
+            }
+        } 
+
     }
 }
 

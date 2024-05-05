@@ -17,6 +17,7 @@ html {
 }
 
 body {
+  background: transparent;
   margin: 0;
   padding: 0;
   min-height: 100%;
@@ -53,6 +54,7 @@ header {
 }
 
 main {
+  background: transparent !important;
   color: #fff;
   margin: 5rem 1.25rem;
   min-height: calc(100vh - 10rem);
@@ -115,7 +117,7 @@ form label.input-error {
   margin-top: 0.625rem;
   margin-bottom: 1.5rem;
 }
-form input {
+form input, form select {
   font: normal 1rem/1.2rem Manuale, serif;
   display: block;
   font-size: inherit;
@@ -123,23 +125,20 @@ form input {
   padding: 0.625rem 1.25rem;
   width: calc(100% - 2.5rem);
 }
-form input.input-error {
+form input.input-error, form select.input-error {
   background: rgb(196, 118, 118);
   border-color: #944040;
   color: #944040;
   margin-bottom: 0;
 }
-form select {
-  display: block;
-  width: 100%;
-}
-form select.input-error {
-  background: rgb(196, 118, 118);
-  border-color: #713030;
-  color: #713030;
-}
 form textarea {
   resize: none;
+}
+form textarea.input-error {
+  background: rgb(196, 118, 118);
+  border-color: #944040;
+  color: #944040;
+  margin-bottom: 0;
 }
 
 /* Small only */
@@ -189,24 +188,6 @@ form textarea {
 }
 .button.clear {
   color: #fff;
-}
-
-.container {
-  width: 100%;
-  max-width: 90vw;
-  margin: 0 auto;
-  /* Medium and up */
-  /* Large and up */
-}
-@media screen and (min-width: 40em) {
-  .container {
-    max-width: 80vw;
-  }
-}
-@media screen and (min-width: 64em) {
-  .container {
-    max-width: 70vw;
-  }
 }
 
 .form-data {
@@ -302,99 +283,40 @@ form textarea {
 
 .wrapper-character {
   width: 100%;
-  display: flex;
-  align-items: flex-start;
   height: 100%;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  flex-direction: row;
-  gap: 1.25rem;
 }
 .wrapper-character .tile {
-  flex: 1 0 calc(50% - 2.5rem);
+  position: relative;
+  color: #fff;
+  cursor: pointer;
   background: black;
-  box-sizing: border-box;
-  /* Medium and up */
-  /* Large and up */
+  background-size: contain;
+  background-position: center center;
+  border-radius: 0.313rem;
+  padding: 1.25rem;
+  overflow: hidden;
+  text-align: center;
+  text-shadow: 1px 0 0 #000, 0 1px 0 #000, -1px 0 0 #000, 0 -1px 0 #000; /*bottom */
 }
-@media screen and (min-width: 40em) {
-  .wrapper-character .tile {
-    flex: 1 0 calc(25% - 2.5rem);
-  }
+.wrapper-character .tile h1 {
+  font-size: 1.1rem;
+  line-height: 1.2rem;
+  margin: 0;
 }
-@media screen and (min-width: 64em) {
-  .wrapper-character .tile {
-    flex: 1 0 calc(16.666% - 2.5rem);
-  }
+.wrapper-character .tile p {
+  font-size: 0.9rem;
+  line-height: 1rem;
+  margin: 0;
 }
-
-/* breakpoints */
-/* color sets for the application */
-/*font-sizings for different screens*/
-/* font settings for the headers */
-/* font settings for the body */
-/* font settings for the links */
-/* misc settings */
-.column-wrapper {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-}
-
-.column {
-  box-sizing: border-box;
-}
-
-.col-1 {
-  width: 8.33333%;
-}
-
-.col-2 {
-  width: 16.66667%;
-}
-
-.col-3 {
-  width: 25%;
-}
-
-.col-4 {
-  width: 33.33333%;
-}
-
-.col-5 {
-  width: 41.66667%;
-}
-
-.col-6 {
-  width: 50%;
-}
-
-.col-7 {
-  width: 58.33333%;
-}
-
-.col-8 {
-  width: 66.66667%;
-}
-
-.col-9 {
-  width: 75%;
-}
-
-.col-10 {
-  width: 83.33333%;
-}
-
-.col-11 {
-  width: 91.66667%;
-}
-
-.col-12 {
+.wrapper-character .tile .tile-overlay {
+  left: 0;
+  position: absolute;
+  top: 200px;
+  transition: top 500ms;
+  background: rgba(30, 30, 30, 0.5);
+  height: 100%;
   width: 100%;
+}
+.wrapper-character .tile:hover .tile-overlay {
+  top: 0;
 }

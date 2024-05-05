@@ -22,6 +22,12 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Manuale:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 
+        <!-- Foundation v6 -->
+        <link rel="stylesheet" type="text/css" href="<?php echo vendor_path('foundation/css/foundation.min.css'); ?>">
+	    <link rel="stylesheet" type="text/css" href="<?php echo vendor_path('foundation/css/app.css'); ?>">
+    	<script type="text/javascript" src="<?php echo vendor_path('foundation/js/vendor/foundation.min.js'); ?>"></script>
+	    <script type="text/javascript" src="<?php echo vendor_path('foundation/js/vendor/what-input.js'); ?>"></script>
+
         <!-- Font Awesome -->
         <script src="https://kit.fontawesome.com/d3ced6c017.js" crossorigin="anonymous"></script>
 

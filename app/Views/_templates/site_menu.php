@@ -1,7 +1,7 @@
 <div class="navigation-site animate__animated animate__slideInDown">
-    <div class="container">        
-        <nav>
-            <div class="dropdown">
+    <div class="grid-container">        
+        <nav class="grid-x">
+            <div class="cell shrink dropdown">
                 <a href="#"><i class="fa-solid fa-users"></i>Karakters</a>
                 <div class="dropdown-content">
                     <a href="<?php echo base_url('user/create_character')?>"><i class="fa-solid fa-user-plus"></i>Aanmaken</a>
@@ -9,7 +9,7 @@
                 </div>
             </div>
             <?php if(isset($isGameMaster) && $isGameMaster): ?>
-                <div class="dropdown">
+                <div class="cell shrink dropdown">
                     <a href="#"><i class="fa-solid fa-book-atlas"></i>Spelleiding</a>
                     <div class="dropdown-content">
                         <a href="<?php echo base_url('gamemaster/character_database')?>"><i class="fa-solid fa-database"></i>Karakter Database</a>
@@ -19,7 +19,7 @@
                     </div>
                 </div>
             <?php endif; ?>
-            <div class="dropdown">
+            <div class="cell shrink dropdown">
                 <a href="#"><i class="fa-solid fa-book"></i>Handleiding</a>
                 <div class="dropdown-content">
                     <a href="<?php echo base_url('manual/help')?>"><i class="fa-solid fa-circle-question"></i>Help</a>
@@ -29,9 +29,11 @@
                     
                 </div>
             </div>
-            <a href="<?php echo base_url('user/profile')?>"><i class="fa-solid fa-user"></i>Profiel</a>
+            <div class="cell shrink">
+                <a href="<?php echo base_url('user/profile')?>"><i class="fa-solid fa-user"></i>Profiel</a>
+            </div>            
             <?php if(isset($isAdmin) && $isAdmin): ?>
-                <div class="dropdown">
+                <div class="cell shrink dropdown">
                     <a href="#"><i class="fa-solid fa-gears"></i>Admin</a>
                     <div class="dropdown-content">
                         <a href="<?php echo base_url('admin/user_database')?>"><i class="fa-solid fa-database"></i>Gebruiker Database</a>
@@ -39,7 +41,9 @@
                     </div>
                 </div>
             <?php endif; ?>
-            <a href="<?php echo base_url('account/logout')?>"><i class="fa-solid fa-right-from-bracket"></i>Uitloggen</a>
+            <div class="cell shrink">
+                <a href="<?php echo base_url('account/logout')?>"><i class="fa-solid fa-right-from-bracket"></i>Uitloggen</a>
+            </div>
         </nav>
     </div>
 </div>

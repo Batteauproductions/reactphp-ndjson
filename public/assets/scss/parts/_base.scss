@@ -11,6 +11,7 @@ html {
 }
 
 body {
+    background: transparent;
     margin: 0;
     padding: 0;
     min-height: 100%;
@@ -44,6 +45,7 @@ header {
 }
 
 main {
+    background: transparent !important;
     color: $color-font-main;
     margin: calc($margin * 4) $margin;
     min-height: calc(100vh - #{$margin * 8});
@@ -97,7 +99,7 @@ a, a:hover, a:active, a:focus {
     }
 }
 
-form {
+form {   
 
     label {
         display: inline-block;
@@ -113,8 +115,7 @@ form {
         }
     }
 
-    input {
-        
+    input, select {        
         font: $paragraph-font;
         display: block;        
         font-size: inherit;
@@ -123,27 +124,17 @@ form {
         width: calc(100% - calc(2*$padding));
 
         &.input-error {
-            background: $color-error;
-            border-color: darken($color-error,20%);
-            color: darken($color-error,20%);
-            margin-bottom: 0;
-        }
-    }
-
-    select {
-        display: block;
-        width: 100%;
-        &.input-error {
-            background: $color-error;
-            border-color: darken($color-error,30%);
-            color: darken($color-error,30%);
+            @include input-error;
         }
     }
 
     textarea {
         resize: none;
-    }
-    
+
+        &.input-error {
+            @include input-error;
+        }
+    }    
 }
 
 /* Small only */
