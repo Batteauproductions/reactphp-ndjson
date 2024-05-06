@@ -2,8 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Models\AccountModel;
 use App\Models\CharacterModel;
 use App\Models\SystemModel;
+use App\Models\EventModel;
+
 use App\Helpers\auth_helper;
 
 class Page extends BaseController
@@ -12,6 +15,8 @@ class Page extends BaseController
     protected $session;
     protected $arrRights;
     protected $characterModel;
+    protected $eventModel;
+    protected $accountModel;
     protected $systemModel;
     protected $arrSettings;
 
@@ -19,6 +24,8 @@ class Page extends BaseController
     {
         $this->session = session();
         $this->characterModel = new CharacterModel();
+        $this->eventModel = new EventModel();
+        $this->accountModel = new AccountModel();
         $this->systemModel = new SystemModel();
         //apply settings to the variable
         $this->arrSettings['options_user_roles']        = $this->systemModel->getUserRoleOptions();
@@ -28,7 +35,7 @@ class Page extends BaseController
         $this->arrSettings['options_character_types']   = $this->systemModel->getCharacterTypeOptions();
     }
 
-    public function view($page) 
+    public function view($page,$subpage=null,$id=null) 
     {        
         //collect the rights for the menu
         //1 -- admin | has all the rights needed to perform changes in the system
@@ -54,16 +61,54 @@ class Page extends BaseController
         //check user status        
         switch($page) 
         {
-            case 'character_database':
-                if($arrRights['isGameMaster']) {
-                    $arrData['arrStatus'] = $this->arrSettings['options_character_status'];
-                    $arrData['arrType'] = $this->arrSettings['options_character_types'];                    
-                    $arrData['arrCharacters'] = $this->characterModel->getCharacters();
-                    $arrContent['content'] = view('gamemaster/character_database',$arrData);
+            //----admin pages
+            case 'user':
+                if($arrRights['isAdmin']) {
+                    switch($subpage) {
+                        case 'database':
+                            $arrData['arrRoles'] = $this->arrSettings['options_user_roles']; 
+                            $arrData['arrStatus'] = $this->arrSettings['options_user_status'];                            
+                            $arrData['arrUsers'] = $this->accountModel->getUsers();
+                            $arrContent['content'] = view('admin/user_database',$arrData);
+                            break;
+                    }
                 } else {
                     $arrContent['content'] = view('_templates/no_access');
                 }
                 break;
+            //----gamemaster pages
+            case 'event':
+                if($arrRights['isGameMaster']) {
+                    switch($subpage) {
+                        case 'database':
+                            $arrData['arrEvents'] = $this->eventModel->getEvents();
+                            $arrContent['content'] = view('gamemaster/events_database',$arrData);
+                            break;
+                        case 'edit':
+                            $arrData['arrEvents'] = $this->eventModel->getEvent($id);
+                            $arrContent['content'] = view('gamemaster/events_database',$arrData);
+                            break;
+                    }                    
+                } else {
+                    $arrContent['content'] = view('_templates/no_access');
+                }
+                break;
+            case 'character':
+                if($arrRights['isGameMaster']) {
+                    switch($subpage) {
+                        case 'database':
+                            $arrContent['arrJS'] = ['app/grid_sorting.js'];
+                            $arrData['arrStatus'] = $this->arrSettings['options_character_status'];
+                            $arrData['arrType'] = $this->arrSettings['options_character_types'];                    
+                            $arrData['arrCharacters'] = $this->characterModel->getCharacters();
+                            $arrContent['content'] = view('gamemaster/character_database',$arrData);
+                            break;
+                    }                    
+                } else {
+                    $arrContent['content'] = view('_templates/no_access');
+                }
+                break;
+            //----user pages
             case 'profile':
                 if($arrRights['isUser']) {
                     $arrContent['arrJS'] = ['validation/signup_validation.js'];
@@ -74,6 +119,7 @@ class Page extends BaseController
                     $arrContent['content'] = view('account/login');
                 }
                 break;
+            //----generic pages
             case 'password_forget':
                 $arrContent['arrJS'] = ['validation/password_forget_validation.js'];
                 $arrContent['content'] = view('account/password_forget');

@@ -32,6 +32,22 @@ class AccountModel extends Model
 		$this->db->table(TBL_USER_DETAILS)->insert($arrDetails);
     }
 
+    public function getUsers() {
+		$query = $this
+                    ->db
+                    ->table(TBL_USER.' u')
+                    ->select('u.id, u.username, u.email, u.firstname, u.lastname, u.birthday, u.discord,
+                            d.role, d.status, d.avatar, d.loggedin_dt as last_login,
+                            ro.id as role_id, ro.name as role_name,
+                            us.id as status_id, us.name as status_name')					
+                    ->join(TBL_USER_DETAILS.' d','d.user_id = u.id')
+                    ->join(TBL_USER_ROLES.' ro','ro.id = d.role')
+                    ->join(TBL_USER_STATUS.' us','us.id = d.status')
+                    ->orderBy('u.firstname','asc');
+                
+        return $query->get()->getResultObject();
+    }
+
     public function getUser($arrData)
     {        
         // Fetch user data including password hash

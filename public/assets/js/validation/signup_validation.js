@@ -70,3 +70,5 @@ $.validator.addMethod("lettersonly", function(value, element) {
 
     return age >= min;
   }, "Je moet ouder zijn dan 16 om deel te nemen aan onze evenementen");
+
+  

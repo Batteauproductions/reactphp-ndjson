@@ -1,15 +1,15 @@
 <section class="wrapper">
     <div class="content-wrapper content-wrapper--profile solid">               
         <form id="form-signup" method="post" action="<?php echo base_url('account/signup-process') ?>">
-            <div class="column-wrapper">
-                <div class="column col-4">
+            <div class="grid-x grid-padding-x">
+                <div class="cell small-4">
                     <div class="profile"> 
                         <img class="profile-avatar" src="<?php echo image_path('elements/anonymous_avatar.png')?>" alt=""/>
                         <span class="profile-name">##NAME##</span>
                         <span class="profile-role">##ROLE##</span>
                     </div>
                 </div>
-                <div class="column col-8">                  
+                <div class="cell small-8">                 
                     <?php if (session()->has('errors')) : ?>
                         <div class="alert alert-danger">
                             <ul>
@@ -41,11 +41,11 @@
                     </div>            
                     <div>
                         <label for="password">Wachtwoord</label>
-                        <input id="password" type="password" name="password">
+                        <input id="password" type="password" name="password" value="">
                     </div>
                     <div>
                         <label for="password_repeat">Wachtwoord herhalen</label>
-                        <input id="password_repeat" type="password" name="password_repeat">
+                        <input id="password_repeat" type="password" name="password_repeat" value="">
                     </div>
                     <div>
                         <button class="button solid" type="submit">

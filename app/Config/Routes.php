@@ -17,6 +17,10 @@ $routes->get('account/logout', 'Account::signOutProcess');
 //-----Page View Related Routes------//
 $routes->get('user/(:any)', 'Page::view/$1');
 $routes->get('account/(:any)', 'Page::view/$1');
-$routes->get('gamemaster/(:any)', 'Page::view/$1');
-$routes->get('admin/(:any)', 'Page::view/$1');
+//------
+$routes->get('gamemaster/(:any)/(:any)', 'Page::view/$1/$2');
+$routes->get('gamemaster/(:any)/(:any)/(:any)', 'Page::view/$1/$2/$3');
+$routes->get('admin/(:any)/(:any)/', 'Page::view/$1/$2');
+$routes->get('admin/(:any)/(:any)/(:any)', 'Page::view/$1/$2/$3');
+//------
 $routes->get('/', 'Page::view/login');

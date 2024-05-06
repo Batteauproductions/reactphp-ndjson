@@ -42,13 +42,14 @@ header {
     position: fixed;
     width: 100%;
     top: 0px;
+    z-index: 99;
 }
 
 main {
     background: transparent !important;
     color: $color-font-main;
-    margin: calc($margin * 4) $margin;
-    min-height: calc(100vh - #{$margin * 8});
+    margin: calc($margin * 3) $margin;
+    min-height: calc(100vh - #{$margin * 6});
 }
 
 footer {
@@ -56,6 +57,7 @@ footer {
     position: fixed;
     width: 100%;
     bottom: 0px;
+    z-index: 99;
 }
 
 h1 {

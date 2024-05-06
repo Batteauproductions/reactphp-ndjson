@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+
+class EventModel extends Model
+{
+    
+    protected $db;
+
+    public function __construct()
+    {
+        $this->db = \Config\Database::connect();
+    }
+
+    public function getEvents() 
+    {		
+        $query = $this
+                    ->db
+                    ->table(TBL_EVENT)
+                    ->select('id, name, description, story_date, oc_start_time, oc_end_time')
+                    ->orderBy('oc_start_time','desc');
+
+		return $query->get()->getResultObject();
+	}
+	
+	public function getEvent($id) 
+    {		
+		$query = $this
+                    ->db
+                    ->table(TBL_EVENT)
+                    ->select('id, name, description, story_date, oc_start_time, oc_end_time')	
+                    ->orderBy('oc_start_time','desc')
+                    ->where('id',$id);                    
+		
+        return $query->get()->getResultObject();
+	}
+	
+	public function deleteEvent($id) 
+    {
+	    $this->db->table(TBL_EVENT)->where('id', $id)->delete();
+	}
+	
+	public function submitEvent($arrData) 
+    {
+        $this->db->table(TBL_EVENT)->insert($arrData);
+	}
+	
+	public function updateEvent($arrData,$id) 
+    {	
+		$this->db->table(TBL_EVENT)->where('id', $id)->update($arrData);		
+	}
+
+}

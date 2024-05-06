@@ -7,7 +7,7 @@
                 Het ziet er naar uit dat je op een pagina terecht bent gekomen waar je geen rechten voor hebt.
             </p>
         </div> 
-        <div>
+        <div class="text-center">
             <a class="button solid" href="<?php echo base_url() ?>">
                 <i class="fa-solid fa-house"></i>Homepagina
             </a>
