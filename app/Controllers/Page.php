@@ -92,12 +92,13 @@ class Page extends BaseController
                 } else {
                     $arrContent['content'] = view('_templates/no_access');
                 }
-                break;
-            case 'character':
+                break;                
+            case 'character':                
                 if($arrRights['isGameMaster']) {
                     switch($subpage) {
                         case 'database':
                             $arrContent['arrJS'] = ['app/grid_sorting.js'];
+                            //---
                             $arrData['arrStatus'] = $this->arrSettings['options_character_status'];
                             $arrData['arrType'] = $this->arrSettings['options_character_types'];                    
                             $arrData['arrCharacters'] = $this->characterModel->getCharacters();
@@ -108,16 +109,50 @@ class Page extends BaseController
                     $arrContent['content'] = view('_templates/no_access');
                 }
                 break;
+            case 'database':
+                if($arrRights['isGameMaster']) {
+                    switch($subpage) {
+                        case 'search':
+                            $arrContent['content'] = view('gamemaster/search_database',$arrData);
+                            break;
+                    }                    
+                } else {
+                    $arrContent['content'] = view('_templates/no_access');
+                }
+                break;
             //----user pages
             case 'profile':
                 if($arrRights['isUser']) {
-                    $arrContent['arrJS'] = ['validation/signup_validation.js'];
-                    $arrContent['content'] = view('account/profile');
+                    $arrContent['arrJS'] = ['validation/profile_validation.js']; 
+                    //---
+                    $arrData['oUser'] = $this->accountModel->getUserDetails($this->session->get('uid'));                                       
+                    $arrContent['content'] = view('account/profile',$arrData);
 
                 } else {
                     $arrContent['arrJS'] = ['validation/login_validation.js'];
                     $arrContent['content'] = view('account/login');
                 }
+                break;
+            case 'manual':
+                if($arrRights['isUser']) {
+                    switch($subpage) {
+                        case 'help':
+                            $arrContent['content'] = view('manual/help');
+                            break;
+                        case 'rulebooks':
+                            $arrContent['content'] = view('manual/rulebooks');
+                            break;
+                        case 'skills':
+                            $arrContent['content'] = view('manual/skills');
+                            break;
+                        case 'faq':
+                            $arrContent['content'] = view('manual/faq');
+                            break;                        
+                    }
+                } else {
+                    $arrContent['arrJS'] = ['validation/login_validation.js'];
+                    $arrContent['content'] = view('account/login');
+                }                
                 break;
             //----generic pages
             case 'password_forget':

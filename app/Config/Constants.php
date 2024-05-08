@@ -102,7 +102,7 @@ define('URL_RULES_BASE', 'https://larp.dalaria.nl/wp-content/uploads/documents/K
 define('URL_RULES_SPELLS', 'https://larp.dalaria.nl/wp-content/uploads/documents/KvD-Rituelen-Spreukenboek.pdf');
 define('URL_RULES_GOODS', 'https://larp.dalaria.nl/wp-content/uploads/documents/KvD-Goederen-en-Ambachten.pdf');
 
-define('WEBMASTER','stichting@dalaria.nl');
+define('EMAIL_WEBMASTER','stichting@dalaria.nl');
 define('EMAIL_NAME', 'Stichting Dalaria');
 define('EMAIL_REPLY', 'stichting@dalaria.nl');
 define('EMAIL_BUG', 'spelleiding@dalaria.nl');

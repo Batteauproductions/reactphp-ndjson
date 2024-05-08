@@ -14,24 +14,11 @@
                     <div class="dropdown-content">
                         <a href="<?php echo base_url('gamemaster/character/database')?>"><i class="fa-solid fa-database"></i>Karakter Database</a>
                         <a href="<?php echo base_url('gamemaster/event/database')?>"><i class="fa-solid fa-calendar-days"></i>Evenementen</a>
-                        <a href="<?php echo base_url('gamemaster/tools')?>"><i class="fa-solid fa-screwdriver-wrench"></i>Tools</a>
-                        <a href="<?php echo base_url('gamemaster/search')?>"><i class="fa-solid fa-magnifying-glass"></i>Zoeken</a>
+                        <a href="<?php echo base_url('gamemaster/database/search')?>"><i class="fa-solid fa-magnifying-glass"></i>Zoeken</a>
+                        <a href="<?php echo base_url('gamemaster/tools')?>"><i class="fa-solid fa-screwdriver-wrench"></i>Tools</a>                        
                     </div>
                 </div>
             <?php endif; ?>
-            <div class="cell shrink dropdown">
-                <a href="#"><i class="fa-solid fa-book"></i>Handleiding</a>
-                <div class="dropdown-content">
-                    <a href="<?php echo base_url('manual/help')?>"><i class="fa-solid fa-circle-question"></i>Help</a>
-                    <a href="<?php echo URL_RULES ?>" target="_blank"><i class="fa-solid fa-book"></i>Regelboeken</a>
-                    <a href="<?php echo base_url('manual/skills')?>"><i class="fa-solid fa-kitchen-set"></i>Vaardigheden</a>
-                    <a href="<?php echo base_url('manual/faq')?>"><i class="fa-solid fa-book" aria-hidden="true"></i>F.A.Q.</a>
-                    
-                </div>
-            </div>
-            <div class="cell shrink">
-                <a href="<?php echo base_url('user/profile')?>"><i class="fa-solid fa-user"></i>Profiel</a>
-            </div>            
             <?php if(isset($isAdmin) && $isAdmin): ?>
                 <div class="cell shrink dropdown">
                     <a href="#"><i class="fa-solid fa-gears"></i>Admin</a>
@@ -41,6 +28,19 @@
                     </div>
                 </div>
             <?php endif; ?>
+            <div class="cell shrink dropdown">
+                <a href="#"><i class="fa-solid fa-book"></i>Handleiding</a>
+                <div class="dropdown-content">
+                    <a href="<?php echo base_url('manual/help')?>"><i class="fa-solid fa-circle-question"></i>Help</a>
+                    <a href="<?php echo base_url('manual/rulebooks')?>"><i class="fa-solid fa-book"></i>Regelboeken</a>
+                    <a href="<?php echo base_url('manual/skills')?>"><i class="fa-solid fa-kitchen-set"></i>Vaardigheden</a>
+                    <a href="<?php echo base_url('manual/faq')?>"><i class="fa-solid fa-book" aria-hidden="true"></i>F.A.Q.</a>
+                    
+                </div>
+            </div>
+            <div class="cell shrink">
+                <a href="<?php echo base_url('user/profile')?>"><i class="fa-solid fa-user"></i>Profiel</a>
+            </div>                
             <div class="cell shrink">
                 <a href="<?php echo base_url('account/logout')?>"><i class="fa-solid fa-right-from-bracket"></i>Uitloggen</a>
             </div>

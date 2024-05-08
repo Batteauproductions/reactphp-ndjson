@@ -12,7 +12,7 @@ class Account extends Controller
     private $validation;
     protected $session;
     protected $accountModel;
-    protected $mailController;   
+    protected $mailController;  
 
     public function __construct() 
     {
@@ -20,7 +20,7 @@ class Account extends Controller
         $this->validation = \Config\Services::validation();
         $this->session = session();
         $this->accountModel = new AccountModel();
-        $this->mailController = new EmailController();        
+        $this->mailController = new EmailController(); 
     }
 
     public function signOutProcess() 
@@ -30,8 +30,7 @@ class Account extends Controller
     }
 
     public function signInProcess() 
-    {        
-        
+    {               
         // Set validation rules
         $this->validation->setRules([
             'username'          => 'required|max_length[50]',
@@ -103,7 +102,7 @@ class Account extends Controller
             'firstname'         => 'required|max_length[50]',
             'lastname'          => 'required|max_length[50]',
             'birthday'          => 'required|valid_date',
-            'discord'           => 'max_length[50]|is_unique[user.discord]',
+            'discord'           => 'max_length[50]',
             'password'          => 'required|min_length[10]',
             'password_repeat'   => 'required|matches[password]',
         ]);
@@ -114,14 +113,16 @@ class Account extends Controller
         } else {
             // Access form data
             $request = service('request');
-            $arrUser['username'] 	= $request->getPost('username');
-            $arrUser['email'] 		= $request->getPost('email');
-            $arrUser['firstname'] 	= $request->getPost('firstname');
-            $arrUser['lastname'] 	= $request->getPost('lastname');
-            $arrUser['birthday'] 	= $request->getPost('birthday');
-            $arrUser['discord'] 	= $request->getPost('discord');
-            $arrUser['hash'] 		= md5($arrUser['username']);
-            $arrUser['password'] 	= password_hash($request->getPost('password'), PASSWORD_DEFAULT);
+            $arrUser = array(
+                'username' 	=> $request->getPost('username'),
+                'email'		=> $request->getPost('email'),
+                'firstname' => $request->getPost('firstname'),
+                'lastname' 	=> $request->getPost('lastname'),
+                'birthday' 	=> $request->getPost('birthday'),
+                'discord' 	=> $request->getPost('discord'),
+                'hash'		=> md5($arrUser['username']),
+                'password'  => password_hash($request->getPost('password'), PASSWORD_DEFAULT),
+            );
 
             // Insert user data into the database using the model
             $this->accountModel->insertUser($arrUser);
@@ -129,6 +130,74 @@ class Account extends Controller
             $arrContent['content'] = view('account/signup_done',$arrUser);
             return view('_templates/framework', $arrContent);
         }        
+    }
+
+    public function updateProfile() {
+        // Set validation rules
+        $this->validation->setRules([
+            //'email'             => 'required|valid_email|max_length[250]|is_unique[user.email]',
+            'firstname'         => 'required|max_length[50]',
+            'lastname'          => 'required|max_length[50]',
+            'birthday'          => 'required|valid_date',
+            'discord'           => 'max_length[50]',
+            //'password'          => 'min_length[10]',
+            //'password_repeat'   => 'matches[password]',
+        ]);
+        // Validation failed, redirect back to the form with validation errors
+        if (!$this->validation->withRequest($this->request)->run()) {            
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());        
+        } else {
+            // Access form data
+            $request = service('request');
+            $arrUserBase = array(
+                //'email' 		=> $request->getPost('email'),
+                'firstname' 	=> $request->getPost('firstname'),
+                'lastname' 		=> $request->getPost('lastname'),
+                'birthday' 		=> $request->getPost('birthday'),
+                'discord' 		=> $request->getPost('discord'),
+                'modified_dt' 	=> date('Y-m-d H:i:s')
+            );   
+            
+            $arrUserDetails = [];
+
+            if(!empty($request->getPost('avatar'))) {
+                // Access file upload settings from App configuration
+                $uploadConfig = [
+                    'upload_path'   => './public/assets/images/avatars/user/',
+                    'allowed_types' => 'gif|jpg|jpeg|png',
+                    'max_size'      => 1024 * 5, // 5 MB
+                    'file_name'     => 'image_' . date('YmdHis'),
+                    'overwrite'     => true,
+                ];
+
+                // Get the uploaded file
+                $file = $this->request->getFile('avatar');
+
+                // Check if the file was uploaded successfully
+                if ($file->isValid() && !$file->hasMoved()) {
+                    // Perform the upload using the specified upload settings
+                    if ($file->move($uploadConfig['upload_path'], $uploadConfig['file_name'])) {
+                        $arrUserDetails = array(
+                            'avatar' 		=> $file->getName(),
+                            'modified_dt' 	=> date('Y-m-d H:i:s')
+                        );
+                    } else {
+                        return redirect()->back()->withInput()->with('errors', ['Een fout zorgde dat je je plaatje niet kon uploaden, probeer het later nog eens.']);
+                    }
+                } else {
+                    return redirect()->back()->withInput()->with('errors', ['Een fout zorgde dat je je plaatje niet kon uploaden, probeer het later nog eens.']);
+                }
+            }
+            
+            $arrUser = array(
+                'id' 			=> $this->session->userdata('uid'),
+                'arrUserBase' 	=> $arrUserBase,
+                'arrUserDetails'=> $arrUserDetails
+            );
+    
+            $this->accountModel->updateUser($arrUser);
+            redirect()->back();
+        }
     }
 
     public function passwordResetProcess() 
@@ -156,5 +225,23 @@ class Account extends Controller
                 return view('_templates/framework', $arrContent);         
             }
         }
+    }
+
+    public function activateUser($sUser, $sHash) 
+    {
+        $arrData['username'] = $sUser;
+        $arrData['hash'] = $sHash;
+        $arrContent['content'] = '';
+        //check if user and hash match
+		if($this->accountModel->activateUser($arrData)) {
+			$arrContent['content'] = view('account/activate_done');
+		} else {
+			$arrContent['content'] = view('account/activate_error');
+		}				
+        return view('_templates/framework', $arrContent);
+	}
+
+    public function passwordReset($sUser, $sHash) 
+    {
     }
 }

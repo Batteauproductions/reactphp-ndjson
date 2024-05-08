@@ -1,0 +1,20 @@
+<section class="wrapper">
+    <div class="content-wrapper content-wrapper--signup_done solid text-center animate__animated animate__fadeIn">       
+        <div class="text-center">
+            <h1>Activatie incompleet</h1>
+            <img src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
+            <p>
+                Er ging iets mis tijdens de activatie, neem contact op met de systeem beheerder.
+            </p>
+        </div> 
+        <div>
+            <a class="button solid" href="mailto:<?php echo EMAIL_WEBMASTER ?>">
+                <i class="fa-regular fa-envelope"></i>Support
+            </a>
+            <a class="button clear" href="<?php echo base_url('account/login') ?>">
+                <i class="fa-solid fa-right-to-bracket"></i>Naar inloggen
+            </a>
+            
+        </div>
+    </div>
+</section>

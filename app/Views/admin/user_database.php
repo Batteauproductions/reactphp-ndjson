@@ -44,7 +44,7 @@
                 <div class="grid-x grid-margin-x grid-margin-y wrapper-character" data-equalizer>
                     <?php foreach($arrUsers as $user):?>
                         <div class="cell small-6 medium-4 large-2 tile tile-status--<?php echo $user->status_name ?>">              
-                            <img src="<?php echo empty($user->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('elements/header-img.png') ?>"/>
+                            <img src="<?php echo empty($user->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/user/'.$user->avatar) ?>"/>
                             <div class="tile-content" data-equalizer-watch>                            
                                 <h1><?php echo $user->firstname.' '.$user->lastname ?></h1>
                                 <p><?php echo $user->role_name ?></p>

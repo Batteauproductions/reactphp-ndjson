@@ -7,7 +7,12 @@
                         <label for="name" class="input-group-label">
                             Karakternaam
                         </label>
-                        <input id="name" class="input-group-field" name="name" type="text">
+                        <select id="name" class="input-group-field" name="name" type="text">
+                            <option value="">Geen voorkeur</option>
+                            <?php foreach($arrCharacters as $character):?>
+                                <option value="<?php echo $character->id ?>"><?php echo $character->name ?></option>
+                            <?php endforeach;?> 
+                        </select>
                     </div>
                     <div class="cell shrink input-group">
                         <label for="type" class="input-group-label">
@@ -44,13 +49,13 @@
                 <div class="grid-x grid-margin-x grid-margin-y wrapper-character" data-equalizer>
                     <?php foreach($arrCharacters as $character):?>
                         <div 
-                            data-name="<?php echo $character->name ?>" 
+                            data-name="<?php echo $character->id ?>" 
                             data-type="<?php echo $character->type_id ?>"
                             data-status="<?php echo $character->status_id ?>"
                             class="cell small-6 medium-4 large-2 tile tile-status--<?php echo $character->status_name ?>">              
                             <img src="<?php echo empty($characters->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('elements/header-img.png') ?>"/>
                             <div class="tile-content" data-equalizer-watch>                            
-                                <h1><?php echo $character->name ?></h1>
+                                <h1><?php echo substr($character->name, 0, 20) ?></h1>
                                 <p><?php echo $character->status_name ?></p>
                             </div>
                             <div class="tile-overlay">

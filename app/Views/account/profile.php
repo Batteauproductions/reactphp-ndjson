@@ -1,13 +1,13 @@
 <section class="wrapper">
     <div class="content-wrapper content-wrapper--profile solid">               
-        <form id="form-signup" method="post" action="<?php echo base_url('account/signup-process') ?>">
+        <form id="form-signup" method="post" action="<?php echo base_url('account/update-profile') ?>">
             <div class="grid-x grid-padding-x">
-                <div class="cell small-4">
+                <div class="cell small-4 text-center">
                     <div class="profile"> 
-                        <img class="profile-avatar" src="<?php echo image_path('elements/anonymous_avatar.png')?>" alt=""/>
-                        <span class="profile-name">##NAME##</span>
-                        <span class="profile-role">##ROLE##</span>
+                        <img src="<?php echo empty($oUser->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/user/'.$oUser->avatar) ?>"/>                        
                     </div>
+                    <h1 class="profile-name"><?php echo $oUser->username; ?></h1>
+                    <p class="profile-role"><?php echo $oUser->role_name; ?></p>
                 </div>
                 <div class="cell small-8">                 
                     <?php if (session()->has('errors')) : ?>
@@ -20,24 +20,28 @@
                         </div>
                     <?php endif ?>
                     <div>
+                        <label for="avatar">Avatar</label>
+                        <input id="avatar" type="file" name="avatar" value="<?php echo $oUser->avatar; ?>" placeholder="<?php echo $oUser->avatar; ?>">
+                    </div>
+                    <div>
                         <label for="email">Email</label>
-                        <input id="email" type="email" name="email">
+                        <input id="email" type="email" name="email" value="<?php echo $oUser->email; ?>" placeholder="<?php echo $oUser->email; ?>" disabled>
                     </div>
                     <div>
                         <label for="firstname">Voornaam</label>
-                        <input id="firstname" type="text" name="firstname">
+                        <input id="firstname" type="text" name="firstname" value="<?php echo $oUser->firstname; ?>" placeholder="<?php echo $oUser->firstname; ?>">
                     </div>
                     <div>
                         <label for="lastname">Achternaam</label>
-                        <input id="lastname" type="text" name="lastname">
+                        <input id="lastname" type="text" name="lastname" value="<?php echo $oUser->lastname; ?>" placeholder="<?php echo $oUser->lastname; ?>">
                     </div>
                     <div>
                         <label for="birthday">Geboortedatum</label>
-                        <input id="birthday" type="date" name="birthday">
+                        <input id="birthday" type="date" name="birthday" value="<?php echo $oUser->birthday; ?>" placeholder="<?php echo $oUser->birthday; ?>">
                     </div>
                     <div>
                         <label for="discord">Discord Alias</label>
-                        <input id="discord" type="text" name="discord">
+                        <input id="discord" type="text" name="discord" value="<?php echo $oUser->discord; ?>" placeholder="<?php echo $oUser->discord; ?>">
                     </div>            
                     <div>
                         <label for="password">Wachtwoord</label>

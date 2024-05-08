@@ -32,7 +32,8 @@ class AccountModel extends Model
 		$this->db->table(TBL_USER_DETAILS)->insert($arrDetails);
     }
 
-    public function getUsers() {
+    public function getUsers() 
+    {
 		$query = $this
                     ->db
                     ->table(TBL_USER.' u')
@@ -104,5 +105,44 @@ class AccountModel extends Model
             ->update();
     }
 
-    
+    public function activateUser($arrData) {
+        $bPass = false;
+		
+		//get queue
+		$query = $this
+				->db
+                ->table(TBL_USER)
+				->select('id')	
+				->where('username', $arrData['username'])
+				->where('hash', $arrData['hash'])
+				->get()
+                ->getRow();
+	
+		if(!is_null($query)) {			
+			//update status
+			$this
+				->db
+                ->table(TBL_USER_DETAILS)
+				->set('status',2)
+				->set('modified_dt',date('Y:m:d H:i:s'))
+				->where('user_id', $query->id);			
+			$bPass = true;
+		}
+		
+		return $bPass;
+    }
+
+    public function updateUser($arrUser) {
+        $query = $this
+			->db
+            ->table(TBL_USER)
+			->set($arrUser['arrUserBase'])
+			->where('id',$arrUser['id']);
+			
+		$query = $this
+			->db
+            ->table(TBL_USER_DETAILS)
+			->set($arrUser['arrUserDetails'])
+			->where('user_id',$arrUser['id']);
+    }    
 }
