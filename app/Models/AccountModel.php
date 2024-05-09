@@ -106,31 +106,28 @@ class AccountModel extends Model
     }
 
     public function activateUser($arrData) {
-        $bPass = false;
-		
-		//get queue
 		$query = $this
 				->db
                 ->table(TBL_USER)
-				->select('id')	
+                ->set('modified_dt', date('Y-m-d H:i:s'))	
 				->where('username', $arrData['username'])
 				->where('hash', $arrData['hash'])
-				->get()
-                ->getRow();
-	
-		if(!is_null($query)) {			
-			//update status
-			$this
+				->update();
+                
+        $affectedRows = $this->db->affectedRows();
+        $uid = $this->db->insertID();
+
+        if ($affectedRows > 0) {
+            $this
 				->db
                 ->table(TBL_USER_DETAILS)
 				->set('status',2)
 				->set('modified_dt',date('Y:m:d H:i:s'))
-				->where('user_id', $query->id)
-                ->update();		
-			$bPass = true;
-		}
-		
-		return $bPass;
+				->where('user_id', $uid)
+                ->update();
+            return true;
+        } 
+        return false;
     }
 
     public function updateUser($arrUser) {
@@ -140,12 +137,30 @@ class AccountModel extends Model
 			->set($arrUser['arrUserBase'])
 			->where('id',$arrUser['id'])
             ->update();
-		
-		$this
+
+        if(!empty($arrUser['arrUserDetails'])) {
+            $this
 			->db
             ->table(TBL_USER_DETAILS)
 			->set($arrUser['arrUserDetails'])
 			->where('user_id',$arrUser['id'])
             ->update();
-    }    
+        }	
+    }   
+    
+    public function resetPassword($arrUser) {
+        $query = $this
+                ->db
+                ->table(TBL_USER)
+                ->set('password',$arrUser['password'])
+                ->where('username',$arrUser['username'])
+                ->where('hash',$arrUser['hash'])
+                ->update();
+
+        if ($this->db->affectedRows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

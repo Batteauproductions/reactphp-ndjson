@@ -14,7 +14,6 @@
                     <div class="dropdown-content">
                         <a href="<?php echo base_url('gamemaster/character/database')?>"><i class="fa-solid fa-database"></i>Karakter Database</a>
                         <a href="<?php echo base_url('gamemaster/event/database')?>"><i class="fa-solid fa-calendar-days"></i>Evenementen</a>
-                        <a href="<?php echo base_url('gamemaster/database/search')?>"><i class="fa-solid fa-magnifying-glass"></i>Zoeken</a>
                         <a href="<?php echo base_url('gamemaster/tools')?>"><i class="fa-solid fa-screwdriver-wrench"></i>Tools</a>                        
                     </div>
                 </div>

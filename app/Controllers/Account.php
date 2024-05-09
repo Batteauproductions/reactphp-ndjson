@@ -156,14 +156,13 @@ class Account extends Controller
                 'birthday' 		=> $request->getPost('birthday'),
                 'discord' 		=> $request->getPost('discord'),
                 'modified_dt' 	=> date('Y-m-d H:i:s')
-            );   
+            );  
             
             $arrUserDetails = [];
             // Get the uploaded file
             $file = $request->getFile('avatar');
-
             if(!empty($file->getName())) {
-
+                //setup rules for upload
                 $uploadConfig = array(
                     'upload_path'   => './assets/images/avatars/user/',
                     'allowed_types' => 'gif|jpg|jpeg|png',
@@ -171,7 +170,6 @@ class Account extends Controller
                     'file_name'     => md5($this->session->get('username')).'.'.$file->getExtension(),
                     'overwrite'     => true,
                 );            
-
                 // Check if the file was uploaded successfully
                 if ($file->isValid() && !$file->hasMoved()) {
                     // Perform the upload using the specified upload settings
@@ -186,20 +184,21 @@ class Account extends Controller
                 } else {
                     return redirect()->back()->withInput()->with('errors', ['Een fout zorgde dat je je plaatje niet kon uploaden, probeer het later nog eens.']);
                 }
-            } 
-            
+            }  
+            //setup data for the model           
             $arrUser = array(
                 'id' 			=> $this->session->get('uid'),
                 'arrUserBase' 	=> $arrUserBase,
                 'arrUserDetails'=> $arrUserDetails
             );
-  
-            $this->accountModel->updateUser($arrUser);            
+            //update the profile
+            $this->accountModel->updateUser($arrUser);    
+            //return to profile page
             return redirect()->to('user/profile'); 
         }
     }
 
-    public function passwordResetProcess() 
+    public function passwordForgotProcess() 
     {
         // Set validation rules
         $this->validation->setRules([
@@ -228,8 +227,10 @@ class Account extends Controller
 
     public function activateUser($sUser, $sHash) 
     {
-        $arrData['username'] = $sUser;
-        $arrData['hash'] = $sHash;
+        $arrData = array (
+            'username' => $sUser,
+            'hash' => $sHash,
+        );
         $arrContent['content'] = '';
         //check if user and hash match
 		if($this->accountModel->activateUser($arrData)) {
@@ -242,5 +243,45 @@ class Account extends Controller
 
     public function passwordReset($sUser, $sHash) 
     {
+        $arrData = array (
+            'username' => $sUser,
+            'hash' => $sHash,
+        );
+        $arrContent['arrJS'] = ['validation/password_reset_validation.js'];
+        $arrContent['content'] = view('account/password_reset',$arrData);
+        return view('_templates/framework', $arrContent);
     }
+
+    public function passwordResetProcess() 
+    {
+        // Set validation rules
+        $this->validation->setRules([
+            'username'          => 'required',
+            'hash'              => 'required',
+            'password'          => 'required|min_length[10]',
+            'password_repeat'   => 'required|matches[password]',
+        ]);
+
+        // Validation failed, redirect back to the form with validation errors
+        if (!$this->validation->withRequest($this->request)->run()) {            
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());        
+        } else {
+            $request = service('request');
+            $arrUser = array(
+                'username' 	=> $request->getPost('username'),
+                'hash' 		=> $request->getPost('hash'),
+                'password'  => password_hash($request->getPost('password'), PASSWORD_DEFAULT),
+            );  
+            $arrContent['content'] = '';
+
+            //check if update is done
+            if($this->accountModel->resetPassword($arrUser)) {
+                $arrContent['content'] = view('account/password_reset_done');
+            } else {
+                $arrContent['content'] = view('account/password_reset_error');
+            }            
+            return view('_templates/framework', $arrContent);
+        }        
+    }
+
 }

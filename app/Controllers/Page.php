@@ -170,7 +170,7 @@ class Page extends BaseController
                     case 'password_forget':
                         $arrContent['arrJS'] = ['validation/password_forget_validation.js'];
                         $arrContent['content'] = view('account/password_forget');
-                        break;    
+                        break;
                     case 'signup':
                         $arrContent['arrJS'] = ['validation/signup_validation.js'];
                         $arrContent['content'] = view('account/signup');

@@ -1,22 +1,19 @@
-
 <!-- banner -->
 <table width="100%" style="width: 100%;">
     <tr>
         <td style="padding: 0 0 20px;">
             <a href="<?php echo $sEmailLink; ?>" target="_blank"> 
-                <img class="flex-image" src="<?php echo image_path('email/password_forgot/header.jpg') ?>" height="auto" width="100%" style="display:block; height:auto; width:100%;"> 							
+                <img class="flex-image" src="<?php echo image_path('email/character_approved/header.jpg') ?>" height="auto" width="100%" style="display:block; height:auto; width:100%;"> 							
             </a>
         </td>
     </tr>
 </table>
-<!-- /banner -->                                
+<!-- /banner -->
 <table width="100%" style="width: 100%;">
     <tr>
         <td style="padding: 0 20px 20px; color: #FFFFFF; font: normal 16px/18px 'Manuale', serif;">
-            Beste <?php echo $sFirstname.' '.$sLastname; ?>,<br><br>
-            Je hebt aangegeven dat je je wachtwoord bent vergeten, geen probleem. Volg de onderstaande button om je wachtwoord opnieuw in te stellen.<br>
-            <br>
-            Heb je nog vragen? Neem contact op via ons <a href="<?php echo URL_DISCORD; ?>" target="_blank" style="text-decoration: underline; color:#E34646;">discord-kanaal</a>.<br>
+            Beste Spelleiding,<br><br>
+            Je ontvangt deze mail, omdat <strong><?php echo $player_name; ?></strong> zijn/haar personage <strong><?php echo $char_name; ?></strong> heeft ingediend ter controle. <br>
             <br>
             Met vriendelijke groet,<br>
             Stichting Dalaria
@@ -27,7 +24,7 @@
             <table align="left" bgcolor="#7D1717" style="background-color:#7D1717">						
                 <tr>
                     <td style="font: normal 16px/18px 'Manuale', serif; text-align:center; padding:12px 28px;">
-                        <a href="<?php echo $sEmailLink ?>" target="_blank" style="color:#ffffff; text-decoration: none;">Wachtwoord instellen &rsaquo; </a>
+                        <a href="<?php echo $sEmailLink ?>" target="_blank" style="color:#ffffff; text-decoration: none;">Karakter bekijken &rsaquo; </a>
                     </td>
                 </tr>							
             </table>

@@ -25,6 +25,7 @@ $routes->get('account/password_reset/(:any)/(:any)', 'Account::passwordReset/$1/
 $routes->get('account/logout', 'Account::signOutProcess');
 $routes->get('account/(:any)', 'Page::view/page/$1');
 
+$routes->post('account/password-forgot', 'Account::passwordForgotProcess');
 $routes->post('account/password-reset', 'Account::passwordResetProcess');
 $routes->post('account/signin-process', 'Account::signInProcess');
 $routes->post('account/signup-process', 'Account::signUpProcess');

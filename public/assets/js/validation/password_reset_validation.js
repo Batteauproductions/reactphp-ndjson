@@ -1,13 +1,13 @@
-$("#form-login").validate({
+$("#form-password_forget").validate({
     rules: {
-        username: {
-            required: true,
-            minlength: 3,
-            maxlength: 50,
-        }
-        ,password: {
-            required: true,
-        }
+        password: {
+			minlength: 10,
+			required: true,
+		}
+		,password_repeat: {
+			required: true,
+			equalTo: "#password"
+		}
     }
     ,errorClass: 'input-error'
     ,errorPlacement: function (error, element) {

@@ -20,7 +20,7 @@ class EmailController extends Controller
         $this->email->setTo($arrData['email']);
         $this->email->setSubject($subject);
         // Load PHP view file and capture its output
-        $arrData['sEmailLink']	= base_url('user/activate/'.$arrData['username'].'/'.$arrData['hash']);
+        $arrData['sEmailLink']	= base_url('account/activate/'.$arrData['username'].'/'.$arrData['hash']);
 		$arrData['sFirstname']	= $arrData['firstname'];
 		$arrData['sLastname']	= $arrData['lastname'];
         //-------
@@ -47,7 +47,7 @@ class EmailController extends Controller
         $this->email->setTo($oData->email);
         $this->email->setSubject($subject);
         // Load PHP view file and capture its output
-        $arrData['sEmailLink']	= base_url('user/password_reset/'.$oData->username.'/'.$oData->hash);
+        $arrData['sEmailLink']	= base_url('account/password_reset/'.$oData->username.'/'.$oData->hash);
 		$arrData['sFirstname']	= $oData->firstname;
 		$arrData['sLastname']	= $oData->lastname;
         //-------

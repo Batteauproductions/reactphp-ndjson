@@ -1,6 +1,6 @@
 <section class="wrapper">
     <div class="content-wrapper content-wrapper--login solid animate__animated animate__fadeIn">               
-        <form id="form-password_forget" method="post" action="<?php echo base_url('account/password-reset') ?>">
+        <form id="form-password_forget" method="post" action="<?php echo base_url('account/password-forgot') ?>">
             <div class="text-center">
                 <h1>Wachtwoord vergeten</h1>
                 <p>Vul hieronder het email adres in dat bij je account hoort. Je ontvangt daarna een email met daarin een link om je wachtwoord opnieuw in te stellen.</p>

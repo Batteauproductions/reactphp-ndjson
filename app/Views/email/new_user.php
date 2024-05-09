@@ -3,7 +3,7 @@
     <tr>
         <td style="padding: 0 0 20px;">
             <a href="<?php echo $sEmailLink; ?>" target="_blank"> 
-                <img class="flex-image" src="<?php echo image_path('email/password_forgot/header.jpg') ?>" height="auto" width="720" style="display:block; height:auto; width:720px;"> 							
+                <img class="flex-image" src="<?php echo image_path('email/activate_user/header.jpg') ?>" height="auto" width="100%" style="display:block; height:auto; width:100%;"> 							
             </a>
         </td>
     </tr>

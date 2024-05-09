@@ -3,8 +3,8 @@ $("#form-signup").validate({
 	rules: {
         username: {
 			required: true,
-			minlength: 5,
-			maxlength: 25,
+			minlength: 3,
+			maxlength: 50,
 			alphanumeric: true,
 		}
 		,email: {
