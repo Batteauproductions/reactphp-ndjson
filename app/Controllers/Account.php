@@ -120,7 +120,7 @@ class Account extends Controller
                 'lastname' 	=> $request->getPost('lastname'),
                 'birthday' 	=> $request->getPost('birthday'),
                 'discord' 	=> $request->getPost('discord'),
-                'hash'		=> md5($arrUser['username']),
+                'hash'		=> md5($request->getPost('username')),
                 'password'  => password_hash($request->getPost('password'), PASSWORD_DEFAULT),
             );
 
@@ -159,19 +159,18 @@ class Account extends Controller
             );   
             
             $arrUserDetails = [];
+            // Get the uploaded file
+            $file = $request->getFile('avatar');
 
-            if(!empty($request->getPost('avatar'))) {
-                // Access file upload settings from App configuration
-                $uploadConfig = [
-                    'upload_path'   => './public/assets/images/avatars/user/',
+            if(!empty($file->getName())) {
+
+                $uploadConfig = array(
+                    'upload_path'   => './assets/images/avatars/user/',
                     'allowed_types' => 'gif|jpg|jpeg|png',
                     'max_size'      => 1024 * 5, // 5 MB
-                    'file_name'     => 'image_' . date('YmdHis'),
+                    'file_name'     => md5($this->session->get('username')).'.'.$file->getExtension(),
                     'overwrite'     => true,
-                ];
-
-                // Get the uploaded file
-                $file = $this->request->getFile('avatar');
+                );            
 
                 // Check if the file was uploaded successfully
                 if ($file->isValid() && !$file->hasMoved()) {
@@ -180,23 +179,23 @@ class Account extends Controller
                         $arrUserDetails = array(
                             'avatar' 		=> $file->getName(),
                             'modified_dt' 	=> date('Y-m-d H:i:s')
-                        );
+                        );                
                     } else {
                         return redirect()->back()->withInput()->with('errors', ['Een fout zorgde dat je je plaatje niet kon uploaden, probeer het later nog eens.']);
                     }
                 } else {
                     return redirect()->back()->withInput()->with('errors', ['Een fout zorgde dat je je plaatje niet kon uploaden, probeer het later nog eens.']);
                 }
-            }
+            } 
             
             $arrUser = array(
-                'id' 			=> $this->session->userdata('uid'),
+                'id' 			=> $this->session->get('uid'),
                 'arrUserBase' 	=> $arrUserBase,
                 'arrUserDetails'=> $arrUserDetails
             );
-    
-            $this->accountModel->updateUser($arrUser);
-            redirect()->back();
+  
+            $this->accountModel->updateUser($arrUser);            
+            return redirect()->to('user/profile'); 
         }
     }
 

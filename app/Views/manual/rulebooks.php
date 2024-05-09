@@ -3,7 +3,7 @@
         <section class="grid-x grid-padding-x grid-padding-y">
             <div class="cell">
                 <div class="grid-x grid-x grid-margin-x grid-margin-y" data-equalizer>
-                    <div class="cell small-6 medium-4 content-wrapper solid">
+                    <div class="cell small-6 medium-6 large-4 content-wrapper solid">
                         <div class="grid-x grid-margin-x align-middle">
                             <div class="cell small-12 medium-6">
                                 <img src="https://larp.dalaria.nl/wp-content/uploads/2022/04/devon-edited.jpg"/>
@@ -25,7 +25,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="cell small-6 medium-4 content-wrapper solid">
+                    <div class="cell small-6 medium-6 large-4 content-wrapper solid">
                         <div class="grid-x grid-margin-x align-middle">
                             <div class="cell small-12 medium-6">
                                 <img src="https://larp.dalaria.nl/wp-content/uploads/2022/04/3f326785-49c2-495d-b9a9-aac3244df0ae_rw_600-edited.jpg"/>
@@ -46,7 +46,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="cell small-6 medium-4 content-wrapper solid">
+                    <div class="cell small-6 medium-6 large-4 content-wrapper solid">
                         <div class="grid-x grid-margin-x align-middle">
                             <div class="cell small-12 medium-6">
                                 <img src="https://larp.dalaria.nl/wp-content/uploads/2022/04/elf-1.jpg"/>

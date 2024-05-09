@@ -2,7 +2,7 @@
     <div class="content-wrapper content-wrapper--signup_done solid text-center animate__animated animate__fadeIn">       
         <div class="text-center">
             <h1>Wachtwoord vergeten</h1>
-            <img src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
+            <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
             <p>
                 Je ontvangt binnen enkele minuten een e-mail op <span class="form-data"><?php echo $email ?></span> met daarin een link om een nieuw wachtwoord in te stellen.
             </p>

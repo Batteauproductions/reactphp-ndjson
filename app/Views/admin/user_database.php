@@ -3,13 +3,18 @@
         <section class="grid-x grid-padding-x grid-padding-y">        
             <form class="cell sortable">
                 <div class="grid-x grid-margin-x grid-margin-y align-bottom">
-                    <div class="cell shrink input-group">
+                    <div class="cell small-6 medium-4 input-group">
                         <label for="name" class="input-group-label">
-                            Karakternaam
+                            Naam
                         </label>
-                        <input id="name" class="input-group-field" name="name" type="text">
+                        <select id="name" class="input-group-field" name="name" type="text">
+                            <option value="">Geen voorkeur</option>
+                            <?php foreach($arrUsers as $user):?>
+                                <option value="<?php echo $user->id ?>"><?php echo $user->firstname.' '.$user->lastname ?></option>
+                            <?php endforeach;?> 
+                        </select>
                     </div>
-                    <div class="cell shrink input-group">
+                    <div class="cell small-6 medium-4 input-group">
                         <label for="type" class="input-group-label">
                             Type
                         </label>
@@ -20,7 +25,7 @@
                             <?php endforeach;?> 
                         </select>
                     </div>
-                    <div class="cell shrink input-group">
+                    <div class="cell small-6 medium-4 input-group">
                         <label for="status" class="input-group-label">
                             Status
                         </label>
@@ -31,7 +36,7 @@
                             <?php endforeach;?> 
                         </select>
                     </div>
-                    <div class="cell shrink">
+                    <div class="cell">
                         <button class="button solid" type="submit">
                             <i class="fa-solid fa-filter"></i>Filter toepassen
                         </button>
@@ -44,10 +49,13 @@
                 <div class="grid-x grid-margin-x grid-margin-y wrapper-character" data-equalizer>
                     <?php foreach($arrUsers as $user):?>
                         <div class="cell small-6 medium-4 large-2 tile tile-status--<?php echo $user->status_name ?>">              
-                            <img src="<?php echo empty($user->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/user/'.$user->avatar) ?>"/>
-                            <div class="tile-content" data-equalizer-watch>                            
-                                <h1><?php echo $user->firstname.' '.$user->lastname ?></h1>
-                                <p><?php echo $user->role_name ?></p>
+                            <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>" style="opacity:0;"/>                            
+                            <div class="tile-content" data-equalizer-watch>
+                                <img src="<?php echo empty($user->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/hero/'.$user->avatar) ?>"/>                        
+                                <div class="tile-description">
+                                    <h1><?php echo $user->firstname.' '.$user->lastname ?></h1>
+                                    <p><?php echo $user->status_name ?></p>
+                                </div>                                
                             </div>
                             <div class="tile-overlay">
                                 <ul>

@@ -41,6 +41,9 @@
     }
     &.clear {
         color: $paragraph-color;
+        &:hover, &:active, &:focus {
+            color: $link-color;
+        }
     }
 }
 
@@ -116,6 +119,9 @@
     }
 }
 
+.spacer-image {
+    margin-bottom: $margin;
+}
 
 .text-center {
     text-align: center;
@@ -128,7 +134,7 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    min-height: calc(100vh - #{$margin * 8});
+    min-height: 100vh;
 
     h1 {
         margin-top: 0;
@@ -136,38 +142,29 @@
 
     .content-wrapper {
         padding: calc($padding*2);
-        margin: $margin 0;
-
+        
         &--login, &--signup_start, &--signup_error, &--signup_done {
-            max-width: 25rem;
+            max-width: 30rem;
         }
     
         &--profile {
             max-width: 43.75rem;
         }
+
+        @include tile(large)
     }
     
 }
 
 .content-wrapper {
-    border-radius: $border-radius;
-    overflow: hidden;   
-    width: 100%;    
-
-    &.solid {
-        background-color: $color-primary;
-        box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.35);
-    }
-
-    &.transparent {
-        background-color: rgba($color-primary, 0.5);
-    }
-}    
+    @include tile(large)
+}
 
 .page-wrapper {
     width: 100%;
     height: 100%;
-    min-height: calc(100vh - #{$margin * 8});
+    min-height: 100vh;
+    padding: calc($padding*4) 0;
 
     &.solid {
         background-color: $color-primary;
@@ -182,7 +179,7 @@
         position: relative;
         color: #fff;
         cursor: pointer;
-        background: black;
+        background: $color-primary;
         background-size: cover;
         background-position: center center;
         border-radius: $border-radius;
@@ -215,62 +212,56 @@
 
         &-status {            
             &--nieuw {
-                img {
-                    border: solid 2px white;
-                }
+                border: solid 2px white;
             }
             &--pending {
-                img {
-                    border: solid 2px gold;
+                border: solid 2px gold;
+                img {                    
                     filter: contrast(200%);
                 }
             }
             &--actief {
-                img {
-                    border: solid 2px white;
-                }
+                border: solid 2px white;
             }
             &--dood {
-                img {
-                    border: solid 2px black;
+                border: solid 2px black;
+                img {                    
                     filter: grayscale(100%);
                 }
             }
             &--locked {
-                img {
-                    border: solid 2px white;
-                }
+                border: solid 2px white;
             }
             &--denied {
-                img {
-                    border: solid 2px red;
-                }
+                border: solid 2px red;
             }
             &--deleted {
-                img {
-                    border: solid 2px darkred;
-                }
+                border: solid 2px darkred;
             }
             &--inactief {
-                img {
-                    border: solid 2px grey;
+                border: solid 2px grey;
+                img {                    
                     filter: grayscale(70%);
-                }
-            }
-            
-            &--nieuw, &--actief, &--nieuw, &--locked, &--denied, &--deleted {
-                img {
-                    border: solid 2px white;
                 }
             }
         }  
         
         .tile-content {
-            position: absolute;
-            text-align: center;
+            position: relative;
             width: 100%;
-            padding: $padding;
-            bottom: 0;
+            height: 100%;           
+
+            img {
+                position: absolute;
+                bottom: 0;
+            }
+            .tile-description {
+                position: absolute;
+                padding: $padding;
+                text-align: center;
+                width: 100%;
+                bottom: 0;    
+            }           
         }
 
         .tile-overlay {

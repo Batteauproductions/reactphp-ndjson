@@ -73,3 +73,26 @@ $margin: 1.25rem;
     color: darken($color-error,20%);
     margin-bottom: 0;
 }
+
+@mixin tile ($size) {
+    border-radius: $border-radius;
+    overflow: hidden;   
+    width: 100%;    
+
+    &.solid {
+        background-color: $color-primary;
+        box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.35);
+    }
+
+    &.transparent {
+        background-color: rgba($color-primary, 0.5);
+    }
+
+    @if $size == small {
+
+    } @else if $size == medium {
+
+    } @else {
+
+    }
+}

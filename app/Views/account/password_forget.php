@@ -4,7 +4,7 @@
             <div class="text-center">
                 <h1>Wachtwoord vergeten</h1>
                 <p>Vul hieronder het email adres in dat bij je account hoort. Je ontvangt daarna een email met daarin een link om je wachtwoord opnieuw in te stellen.</p>
-                <img src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
+                <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
             </div> 
             <div>
                 <label for="email">Email</label>

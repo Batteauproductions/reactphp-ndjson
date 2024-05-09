@@ -1,6 +1,6 @@
 <section class="wrapper">
     <div class="content-wrapper content-wrapper--profile solid">               
-        <form id="form-signup" method="post" action="<?php echo base_url('account/update-profile') ?>">
+        <form id="form-signup" method="post" action="<?php echo base_url('account/update-profile') ?>" enctype="multipart/form-data">
             <div class="grid-x grid-padding-x">
                 <div class="cell small-4 text-center">
                     <div class="profile"> 

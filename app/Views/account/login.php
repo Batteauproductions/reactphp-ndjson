@@ -3,7 +3,7 @@
         <form id="form-login" class="grid-x grid-margin-y" method="post" action="<?php echo base_url('account/signin-process') ?>">
             <div class="cell text-center">
                 <h1>Account Inloggen</h1>
-                <img src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
+                <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
             </div> 
             <?php if (session()->has('errors')) : ?>
                 <div class="cell alert alert-danger">

@@ -46,7 +46,7 @@
         <?php echo isset($content) && !empty($content) ? '<main>'.$content.'</main>' : ''; ?>
         <?php echo isset($footer) && !empty($footer) ? '<footer>'.$footer.'</footer>' : ''; ?>
 
-        <script type="text/javascript" src="<?php echo vendor_path('foundation/js/app.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo js_path('app/site.js'); ?>"></script>
 
         <?php if(isset($arrJS)): ?>
             <?php foreach($arrJS as $iKey => $sValue) :?>

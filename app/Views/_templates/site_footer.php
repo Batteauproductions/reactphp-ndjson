@@ -1,4 +1,4 @@
-<div class="navigation-footer animate__animated animate__fadeInUp">
+<div class="navigation-footer">
     <div class="grid-container">        
         <nav class="grid-x"> 
             <div class="cell shrink">           

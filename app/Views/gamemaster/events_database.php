@@ -6,7 +6,7 @@
             <div class="cell">
                 <div class="grid-x grid-x grid-margin-x grid-margin-y" data-equalizer>
                     <?php foreach($arrEvents as $event):?>
-                        <a class="cell small-6 medium-4 content-wrapper solid" href="<?php echo base_url('gamemaster/event/edit/'.$event->id)?>">
+                        <a class="cell small-6 medium-6 large-4 content-wrapper solid" href="<?php echo base_url('gamemaster/event/edit/'.$event->id)?>">
                             <div class="grid-x grid-margin-x align-middle">
                                 <div class="cell small-12 medium-6">
                                     <img src="<?php echo image_path('events/event_'.strtolower(str_replace([' ', '.'], '_',$event->name)).'.png')?>"/>
