@@ -104,10 +104,37 @@
 .profile {
     text-align: center;
     .profile-avatar {
+        cursor: pointer;
+        position: relative;
         display: block;
+        height: auto;
         width: 100%;
-        max-width: 15.625rem;
         border-radius: $border-radius;
+        overflow: hidden;
+
+        .profile-avatar-action {
+            cursor: pointer;
+            position: absolute;
+            display: block;
+            background-color: rgba($color-primary, 0.5);
+            top: 100%;
+            height: 100%;
+            transition: top 500ms;
+            padding: $padding;
+
+            ul {
+                margin: 0;
+                padding: 0;
+                li {
+                    font-size: calc(0.7*$paragraph-font-size) !important;
+                }
+            }
+            
+        }
+
+        &:hover .profile-avatar-action {
+            top: 0;
+        }
     }
     .profile-name {
         display: block;

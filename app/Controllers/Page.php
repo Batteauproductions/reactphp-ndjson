@@ -120,6 +120,10 @@ class Page extends BaseController
                                     break;
                             }
                             break;
+                        case 'tools':
+                            $arrContent['arrJS'] = ['app/encoder_script.js'];
+                            $arrContent['content'] = view('gamemaster/tools');
+                            break;
                     }
                 } else {
                     return $this->noPageAcces();

@@ -238,10 +238,33 @@ form textarea.input-error {
   text-align: center;
 }
 .profile .profile-avatar {
+  cursor: pointer;
+  position: relative;
   display: block;
+  height: auto;
   width: 100%;
-  max-width: 15.625rem;
   border-radius: 0.313rem;
+  overflow: hidden;
+}
+.profile .profile-avatar .profile-avatar-action {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  background-color: rgba(30, 30, 30, 0.5);
+  top: 100%;
+  height: 100%;
+  transition: top 500ms;
+  padding: 1.25rem;
+}
+.profile .profile-avatar .profile-avatar-action ul {
+  margin: 0;
+  padding: 0;
+}
+.profile .profile-avatar .profile-avatar-action ul li {
+  font-size: 0.7rem !important;
+}
+.profile .profile-avatar:hover .profile-avatar-action {
+  top: 0;
 }
 .profile .profile-name {
   display: block;

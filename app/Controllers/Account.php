@@ -140,8 +140,6 @@ class Account extends Controller
             'lastname'          => 'required|max_length[50]',
             'birthday'          => 'required|valid_date',
             'discord'           => 'max_length[50]',
-            //'password'          => 'min_length[10]',
-            //'password_repeat'   => 'matches[password]',
         ]);
         // Validation failed, redirect back to the form with validation errors
         if (!$this->validation->withRequest($this->request)->run()) {            
@@ -155,6 +153,7 @@ class Account extends Controller
                 'lastname' 		=> $request->getPost('lastname'),
                 'birthday' 		=> $request->getPost('birthday'),
                 'discord' 		=> $request->getPost('discord'),
+                'password'      => password_hash($request->getPost('password'), PASSWORD_DEFAULT),
                 'modified_dt' 	=> date('Y-m-d H:i:s')
             );  
             
@@ -165,7 +164,7 @@ class Account extends Controller
                 //setup rules for upload
                 $uploadConfig = array(
                     'upload_path'   => './assets/images/avatars/user/',
-                    'allowed_types' => 'gif|jpg|jpeg|png',
+                    'allowed_types' => 'jpg|jpeg|png',
                     'max_size'      => 1024 * 5, // 5 MB
                     'file_name'     => md5($this->session->get('username')).'.'.$file->getExtension(),
                     'overwrite'     => true,

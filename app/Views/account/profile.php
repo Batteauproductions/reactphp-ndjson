@@ -4,11 +4,21 @@
             <div class="grid-x grid-padding-x">
                 <div class="cell small-4 text-center">
                     <div class="profile"> 
-                        <img src="<?php echo empty($oUser->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/user/'.$oUser->avatar) ?>"/>                        
+                        <div class="profile-avatar text-left">
+                            <label class="profile-avatar-action">
+                                <input id="avatar" type="file" name="avatar" value="<?php echo $oUser->avatar; ?>" placeholder="<?php echo $oUser->avatar; ?>" hidden>
+                                <ul>
+                                    <li>Enkel bestanden van maximaal 2mb</li>                                    
+                                    <li>De extensies .jpg en .png zijn toegestaan</li>
+                                    <li>Aspect ratio van 1:1 wordt aangeraden</li>
+                                </ul>
+                            </label>
+                            <img src="<?php echo empty($oUser->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/user/'.$oUser->avatar) ?>"/>
+                        </div>                        
+                        <h1 class="profile-name"><?php echo $oUser->username; ?></h1>
+                        <p class="profile-role"><?php echo $oUser->role_name; ?></p>
                     </div>
-                    <h1 class="profile-name"><?php echo $oUser->username; ?></h1>
-                    <p class="profile-role"><?php echo $oUser->role_name; ?></p>
-                </div>
+                </div>                
                 <div class="cell small-8">                 
                     <?php if (session()->has('errors')) : ?>
                         <div class="alert alert-danger">
@@ -19,10 +29,6 @@
                             </ul>
                         </div>
                     <?php endif ?>
-                    <div>
-                        <label for="avatar">Avatar</label>
-                        <input id="avatar" type="file" name="avatar" value="<?php echo $oUser->avatar; ?>" placeholder="<?php echo $oUser->avatar; ?>">
-                    </div>
                     <div>
                         <label for="email">Email</label>
                         <input id="email" type="email" name="email" value="<?php echo $oUser->email; ?>" placeholder="<?php echo $oUser->email; ?>" disabled>
@@ -43,14 +49,6 @@
                         <label for="discord">Discord Alias</label>
                         <input id="discord" type="text" name="discord" value="<?php echo $oUser->discord; ?>" placeholder="<?php echo $oUser->discord; ?>">
                     </div>            
-                    <div>
-                        <label for="password">Wachtwoord</label>
-                        <input id="password" type="password" name="password" value="">
-                    </div>
-                    <div>
-                        <label for="password_repeat">Wachtwoord herhalen</label>
-                        <input id="password_repeat" type="password" name="password_repeat" value="">
-                    </div>
                     <div>
                         <button class="button solid" type="submit">
                             <i class="fa-regular fa-address-card"></i>Opslaan
