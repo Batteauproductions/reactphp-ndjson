@@ -54,7 +54,7 @@ class SystemModel extends Model
     return $this
         ->db
         ->table(TBL_RACE)
-        ->select('id, name, description')
+        ->select('id, name, description, available')
         ->get()
         ->getResultObject();
   }
@@ -63,7 +63,7 @@ class SystemModel extends Model
     return $this
         ->db
         ->table(TBL_PROF)
-        ->select('id, name, description')
+        ->select('id, name, description, available')
         ->get()
         ->getResultObject();
   }
@@ -72,10 +72,53 @@ class SystemModel extends Model
     return $this
         ->db
         ->table(TBL_SKILL)
-        ->select('id, name, basic_description')
+        ->select('id, name, basic_description, available')
         ->get()
         ->getResultObject();
   }
 
+  public function getBaseCharSetting () {
+    $result = $this
+              ->db
+              ->table(TBL_TOOL_SETTINGS)
+              ->select('value')
+              ->where('name','base_char')
+              ->get()
+              ->getRow();
+    return json_decode($result->value, true);
+  }
+
+  public function getXPModSetting () {
+    $result =  $this
+              ->db
+              ->table(TBL_TOOL_SETTINGS)
+              ->select('value')
+              ->where('name','xp_progression')
+              ->get()
+              ->getRow();
+    return $result->value;
+  }
+
+  public function getStatModSetting () {
+    $result =  $this
+              ->db
+              ->table(TBL_TOOL_SETTINGS)
+              ->select('value')
+              ->where('name','stat_mod')
+              ->get()
+              ->getRow();
+    return json_decode($result->value, true);
+  }
+
+  public function getProfModSetting () {
+    $result =  $this
+              ->db
+              ->table(TBL_TOOL_SETTINGS)
+              ->select('value')
+              ->where('name','prof_cost')
+              ->get()
+              ->getRow();
+    return $result->value;
+  }
 
 }

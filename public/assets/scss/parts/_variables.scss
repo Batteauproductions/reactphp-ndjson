@@ -9,7 +9,6 @@ $container-width-small: 90vw;
 $container-width-medium: 80vw;
 $container-width-large: 70vw;
 
-
 /* color sets for the application */
 $color-primary: #1E1E1E;
 $color-secundary: #7D1717;
@@ -66,6 +65,7 @@ $link-color: $color-tertiary;
 $border-radius: 0.313rem;
 $padding: 1.25rem;
 $margin: 1.25rem;
+$list-style: "\203A";
 
 @mixin input-error {
     background: $color-error;

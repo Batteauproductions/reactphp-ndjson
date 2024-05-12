@@ -139,6 +139,15 @@ form {
     }    
 }
 
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: $list-style;
+    li {
+        padding: 0 0 calc(0.5*$padding) calc(0.5*$padding);        
+    }
+}
+
 /* Small only */
 @media screen and (max-width: #{$breakpoint-small}) {
 }

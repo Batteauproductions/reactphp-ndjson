@@ -15,6 +15,7 @@
                         <a href="<?php echo base_url('gamemaster/character/database')?>"><i class="fa-solid fa-database"></i>Karakter Database</a>
                         <a href="<?php echo base_url('gamemaster/event/database')?>"><i class="fa-solid fa-calendar-days"></i>Evenementen</a>
                         <a href="<?php echo base_url('gamemaster/tools')?>"><i class="fa-solid fa-screwdriver-wrench"></i>Tools</a>                        
+                        <a href="<?php echo base_url('gamemaster/settings')?>"><i class="fa-solid fa-sliders"></i>Instellingen</a>
                     </div>
                 </div>
             <?php endif; ?>
@@ -23,7 +24,7 @@
                     <a href="#"><i class="fa-solid fa-gears"></i>Admin</a>
                     <div class="dropdown-content">
                         <a href="<?php echo base_url('admin/user/database')?>"><i class="fa-solid fa-database"></i>Gebruiker Database</a>
-                        <a href="<?php echo base_url('admin/settigs')?>"><i class="fa-solid fa-sliders"></i>Instellingen</a>
+                        <a href="<?php echo base_url('admin/settings')?>"><i class="fa-solid fa-sliders"></i>Instellingen</a>
                     </div>
                 </div>
             <?php endif; ?>

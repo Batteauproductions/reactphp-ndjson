@@ -148,12 +148,10 @@ class Account extends Controller
             // Access form data
             $request = service('request');
             $arrUserBase = array(
-                //'email' 		=> $request->getPost('email'),
                 'firstname' 	=> $request->getPost('firstname'),
                 'lastname' 		=> $request->getPost('lastname'),
                 'birthday' 		=> $request->getPost('birthday'),
                 'discord' 		=> $request->getPost('discord'),
-                'password'      => password_hash($request->getPost('password'), PASSWORD_DEFAULT),
                 'modified_dt' 	=> date('Y-m-d H:i:s')
             );  
             

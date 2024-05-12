@@ -21,7 +21,7 @@ class CharacterModel extends Model
     public function getCharacters($uid = null)
     {
         $query = $this->db->table(TBL_CHAR . ' c')
-                        ->select('c.id, c.user_id, c.name, c.avatar, c.created_dt, c.modified_dt,
+                        ->select('c.id, c.user_id, c.name, c.avatar, c.race_id, c.created_dt, c.modified_dt,
                                 cs.id as status_id, cs.name as status_name, cs.description as status_description,
                                 ct.id as type_id, ct.name as type_name, ct.description as type_description,
                                 CONCAT(u.firstname, " ", u.lastname) as user_name', false)

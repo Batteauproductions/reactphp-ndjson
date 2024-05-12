@@ -143,6 +143,15 @@ form textarea.input-error {
   margin-bottom: 0;
 }
 
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: "›";
+}
+ul li {
+  padding: 0 0 0.625rem 0.625rem;
+}
+
 /* Small only */
 /* Medium only */
 /* Large only */
@@ -159,17 +168,7 @@ form textarea.input-error {
   background: #FFCCCC;
   margin: 1.25rem 0;
   padding: 1.25rem;
-  /*&.alert-danger {
-
-  }*/
-}
-.alert ul {
-  margin: 0;
-  padding: 0;
-}
-.alert ul li {
   color: #cc0000;
-  list-style-type: "›";
 }
 
 .button {
@@ -232,99 +231,6 @@ form textarea.input-error {
 }
 .navigation-site nav .dropdown:hover .dropdown-content, .navigation-footer nav .dropdown:hover .dropdown-content {
   display: block;
-}
-
-.profile {
-  text-align: center;
-}
-.profile .profile-avatar {
-  cursor: pointer;
-  position: relative;
-  display: block;
-  height: auto;
-  width: 100%;
-  border-radius: 0.313rem;
-  overflow: hidden;
-}
-.profile .profile-avatar .profile-avatar-action {
-  cursor: pointer;
-  position: absolute;
-  display: block;
-  background-color: rgba(30, 30, 30, 0.5);
-  top: 100%;
-  height: 100%;
-  transition: top 500ms;
-  padding: 1.25rem;
-}
-.profile .profile-avatar .profile-avatar-action ul {
-  margin: 0;
-  padding: 0;
-}
-.profile .profile-avatar .profile-avatar-action ul li {
-  font-size: 0.7rem !important;
-}
-.profile .profile-avatar:hover .profile-avatar-action {
-  top: 0;
-}
-.profile .profile-name {
-  display: block;
-  font-size: 1.2rem;
-}
-.profile .profile-role {
-  display: block;
-  font-size: 0.8rem;
-}
-
-.spacer-image {
-  margin-bottom: 1.25rem;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.wrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  min-height: 100vh;
-}
-.wrapper h1 {
-  margin-top: 0;
-}
-.wrapper .content-wrapper {
-  padding: 2.5rem;
-  border-radius: 0.313rem;
-  overflow: hidden;
-  width: 100%;
-}
-.wrapper .content-wrapper--login, .wrapper .content-wrapper--signup_start, .wrapper .content-wrapper--signup_error, .wrapper .content-wrapper--signup_done {
-  max-width: 30rem;
-}
-.wrapper .content-wrapper--profile {
-  max-width: 43.75rem;
-}
-.wrapper .content-wrapper.solid {
-  background-color: #1E1E1E;
-  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.35);
-}
-.wrapper .content-wrapper.transparent {
-  background-color: rgba(30, 30, 30, 0.5);
-}
-
-.content-wrapper {
-  border-radius: 0.313rem;
-  overflow: hidden;
-  width: 100%;
-}
-.content-wrapper.solid {
-  background-color: #1E1E1E;
-  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.35);
-}
-.content-wrapper.transparent {
-  background-color: rgba(30, 30, 30, 0.5);
 }
 
 .page-wrapper {
@@ -438,4 +344,93 @@ form textarea.input-error {
 }
 .page-wrapper .tile:hover .tile-overlay {
   top: 0;
+}
+
+.profile {
+  text-align: center;
+}
+.profile .profile-avatar {
+  cursor: pointer;
+  position: relative;
+  display: block;
+  height: auto;
+  width: 100%;
+  border-radius: 0.313rem;
+  overflow: hidden;
+}
+.profile .profile-avatar .profile-avatar-action {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  background-color: rgba(30, 30, 30, 0.5);
+  top: 100%;
+  height: 100%;
+  transition: top 500ms;
+  padding: 1.25rem;
+}
+.profile .profile-avatar .profile-avatar-action ul li {
+  font-size: 0.8rem !important;
+}
+.profile .profile-avatar:hover .profile-avatar-action {
+  top: 0;
+}
+.profile .profile-name {
+  display: block;
+  font-size: 1.2rem;
+}
+.profile .profile-role {
+  display: block;
+  font-size: 0.8rem;
+}
+
+.spacer-image {
+  margin-bottom: 1.25rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 100vh;
+}
+.wrapper h1 {
+  margin-top: 0;
+}
+.wrapper .content-wrapper {
+  padding: 2.5rem;
+  border-radius: 0.313rem;
+  overflow: hidden;
+  width: 100%;
+}
+.wrapper .content-wrapper--login, .wrapper .content-wrapper--signup_start, .wrapper .content-wrapper--signup_error, .wrapper .content-wrapper--signup_done {
+  max-width: 30rem;
+}
+.wrapper .content-wrapper--profile {
+  max-width: 43.75rem;
+}
+.wrapper .content-wrapper.solid {
+  background-color: #1E1E1E;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.35);
+}
+.wrapper .content-wrapper.transparent {
+  background-color: rgba(30, 30, 30, 0.5);
+}
+
+.content-wrapper {
+  border-radius: 0.313rem;
+  overflow: hidden;
+  width: 100%;
+}
+.content-wrapper.solid {
+  background-color: #1E1E1E;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.35);
+}
+.content-wrapper.transparent {
+  background-color: rgba(30, 30, 30, 0.5);
 }

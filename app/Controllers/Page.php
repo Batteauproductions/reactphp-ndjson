@@ -39,6 +39,11 @@ class Page extends BaseController
             'options_race_types'        => $this->systemModel->getRaceTypeOptions(),
             'options_profession_types'  => $this->systemModel->getProfessionTypeOptions(),
             'options_skill_types'       => $this->systemModel->getSkillTypeOptions(),
+            //-----
+            'jsonBaseChar'              => $this->systemModel->getBaseCharSetting(),
+            'arrXP'                     => $this->systemModel->getXPModSetting(),
+            'jsonStat'                  => $this->systemModel->getStatModSetting(),
+            'arrProfLevel'              => $this->systemModel->getProfModSetting(),
         );
 
         //collect the rights for the menu
@@ -83,6 +88,19 @@ class Page extends BaseController
                                     break;
                             }
                             break;
+                        case 'settings':
+                            $arrData = array (
+                                'arrRace' => $this->arrSettings['options_race_types'],
+                                'arrProf' => $this->arrSettings['options_profession_types'],
+                                'arrSkill' => $this->arrSettings['options_skill_types'],
+                                'jsonBaseChar' => $this->arrSettings['jsonBaseChar'],
+                                'arrXP' => $this->arrSettings['arrXP'],
+                                'jsonStat' => $this->arrSettings['jsonStat'],
+                                'arrProfLevel' => $this->arrSettings['arrProfLevel'],
+                                'viewAsAdmin' => true,
+                            );
+                            $arrContent['content'] = view('_templates/settings',$arrData);
+                            break;
                     }                    
                 } else {
                     return $this->noPageAcces();
@@ -124,6 +142,19 @@ class Page extends BaseController
                             $arrContent['arrJS'] = ['app/encoder_script.js'];
                             $arrContent['content'] = view('gamemaster/tools');
                             break;
+                        case 'settings':
+                            $arrData = array (
+                                'arrRace' => $this->arrSettings['options_race_types'],
+                                'arrProf' => $this->arrSettings['options_profession_types'],
+                                'arrSkill' => $this->arrSettings['options_skill_types'],
+                                'jsonBaseChar' => $this->arrSettings['jsonBaseChar'],
+                                'arrXP' => $this->arrSettings['arrXP'],
+                                'jsonStat' => $this->arrSettings['jsonStat'],
+                                'arrProfLevel' => $this->arrSettings['arrProfLevel'],
+                                'viewAsAdmin' => false,
+                            );
+                            $arrContent['content'] = view('_templates/settings',$arrData);
+                            break;
                     }
                 } else {
                     return $this->noPageAcces();
@@ -135,6 +166,7 @@ class Page extends BaseController
                         case 'character':
                             switch($subpage) {
                                 case 'create':
+                                    $arrContent['content'] = view('_templates/work_in_progress');
                                     break;
                                 case 'database':
                                     $arrData['arrCharacters'] = $this->characterModel->getCharacters($this->session->get('uid'));
@@ -145,16 +177,19 @@ class Page extends BaseController
                         case 'manual':
                             switch($subpage) {
                                 case 'help':
-                                    $arrContent['content'] = view('manual/help');
+                                    //$arrContent['content'] = view('manual/help');
+                                    $arrContent['content'] = view('_templates/work_in_progress');
                                     break;
                                 case 'rulebooks':
                                     $arrContent['content'] = view('manual/rulebooks');
                                     break;
                                 case 'skills':
-                                    $arrContent['content'] = view('manual/skills');
+                                    //$arrContent['content'] = view('manual/skills');
+                                    $arrContent['content'] = view('_templates/work_in_progress');
                                     break;
                                 case 'faq':
-                                    $arrContent['content'] = view('manual/faq');
+                                    //$arrContent['content'] = view('manual/faq');
+                                    $arrContent['content'] = view('_templates/work_in_progress');
                                     break;
                             }
                             break;
