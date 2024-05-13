@@ -166,7 +166,13 @@ class Page extends BaseController
                         case 'character':
                             switch($subpage) {
                                 case 'create':
-                                    $arrContent['content'] = view('_templates/work_in_progress');
+                                    $arrData = array (
+                                        'arrRace' => $this->arrSettings['options_race_types'],
+                                        'arrProf' => $this->arrSettings['options_profession_types'],
+                                        'arrSkill' => $this->arrSettings['options_skill_types'],
+                                        'viewAsAdmin' => false,
+                                    );
+                                    $arrContent['content'] = view('character/character_create',$arrData);
                                     break;
                                 case 'database':
                                     $arrData['arrCharacters'] = $this->characterModel->getCharacters($this->session->get('uid'));
