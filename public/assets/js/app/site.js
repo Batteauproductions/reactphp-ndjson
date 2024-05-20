@@ -15,7 +15,7 @@ $(document).ready(function() {
         sessionStorage.removeItem('navigationAnimated');
     });
     
-    const background = $('body').css('background');
+    /*const background = $('body').css('background');
     const arrBackgrounds = ['bg_fishingvillage','bg_forestpatrol','bg_hauntedruines','bg_moutaincity','bg_mysticlibrary'];
     let currentIndex = 0;
     function changeBackground() {
@@ -23,7 +23,7 @@ $(document).ready(function() {
         $('body').css('background-image', `url('/assets/images/backgrounds/${arrBackgrounds[currentIndex]}.png')`);
         currentIndex = (currentIndex + 1) % arrBackgrounds.length;
     }
-    setInterval(changeBackground, 10000);
+    setInterval(changeBackground, 10000);*/
     
 
 });

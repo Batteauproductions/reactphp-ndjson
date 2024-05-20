@@ -6,6 +6,9 @@ use App\Models\AccountModel;
 use App\Models\CharacterModel;
 use App\Models\SystemModel;
 use App\Models\EventModel;
+use App\Models\RaceModel;
+use App\Models\ProfessionModel;
+use App\Models\SkillModel;
 
 use App\Helpers\auth_helper;
 
@@ -19,6 +22,10 @@ class Page extends BaseController
     protected $accountModel;
     protected $systemModel;
     protected $arrSettings;
+    protected $raceModel;
+    protected $professionModel;
+    protected $skillModel;
+    
 
     public function __construct() 
     {
@@ -28,24 +35,9 @@ class Page extends BaseController
         $this->eventModel = new EventModel();
         $this->accountModel = new AccountModel();
         $this->systemModel = new SystemModel();
-        //apply settings to the variable
-        $this->arrSettings = array (
-            'options_user_roles'        => $this->systemModel->getUserRoleOptions(),
-            'options_user_status'       => $this->systemModel->getUserStatusOptions(),
-            //-----
-            'options_character_status'  => $this->systemModel->getCharacterStatusOptions(),
-            'options_character_types'   => $this->systemModel->getCharacterTypeOptions(),
-            //-----
-            'options_race_types'        => $this->systemModel->getRaceTypeOptions(),
-            'options_profession_types'  => $this->systemModel->getProfessionTypeOptions(),
-            'options_skill_types'       => $this->systemModel->getSkillTypeOptions(),
-            //-----
-            'jsonBaseChar'              => $this->systemModel->getBaseCharSetting(),
-            'arrXP'                     => $this->systemModel->getXPModSetting(),
-            'jsonStat'                  => $this->systemModel->getStatModSetting(),
-            'arrProfLevel'              => $this->systemModel->getProfModSetting(),
-        );
-
+        $this->raceModel = new RaceModel();
+        $this->professionModel = new ProfessionModel();
+        $this->skillModel = new SkillModel();
         //collect the rights for the menu
         //1 -- admin | has all the rights needed to perform changes in the system
         //2 -- spelleiding | has rights to perform all but system changes
@@ -57,11 +49,28 @@ class Page extends BaseController
             'isEditor'      => auth_helper::isLoggedIn($this->session->get('role'),RIGHTS_EDITOR),
             'isUser'        => auth_helper::isLoggedIn($this->session->get('role'),RIGHTS_ALL),
         );
-        
+        //apply settings to the variable
+        $this->arrSettings = array (
+            'options_user_roles'        => $this->systemModel->getUserRoleOptions(),
+            'options_user_status'       => $this->systemModel->getUserStatusOptions(),
+            //-----
+            'options_character_status'  => $this->systemModel->getCharacterStatusOptions(),
+            'options_character_types'   => $this->systemModel->getCharacterTypeOptions(),
+            //-----
+            'options_race_types'        => $this->raceModel->getRaces(),
+            'options_profession_types'  => $this->professionModel->getProfessions($this->arrRights['isGameMaster']),
+            'options_skill_types'       => $this->skillModel->getSkills(),
+            //-----
+            'jsonBaseChar'              => $this->systemModel->getBaseCharSetting(),
+            'arrXP'                     => $this->systemModel->getXPModSetting(),
+            'jsonStat'                  => $this->systemModel->getStatModSetting(),
+            'arrProfLevel'              => $this->systemModel->getProfModSetting(),
+        );
     }
 
     public function view($access=null,$page=null,$subpage=null,$id=null) 
     {         
+
         //collect the base view containers
         if ($this->arrRights['isAdmin'] || $this->arrRights['isGameMaster'] || $this->arrRights['isEditor'] || $this->arrRights['isUser']) {
             $arrContent['header'] = view('_templates/site_menu',$this->arrRights);
@@ -81,9 +90,11 @@ class Page extends BaseController
                         case 'user':
                             switch($subpage) {
                                 case 'database':
-                                    $arrData['arrRoles'] = $this->arrSettings['options_user_roles']; 
-                                    $arrData['arrStatus'] = $this->arrSettings['options_user_status'];                            
-                                    $arrData['arrUsers'] = $this->accountModel->getUsers();
+                                    $arrData = array (
+                                        'arrRoles' => $this->arrSettings['options_user_roles'],
+                                        'arrStatus' => $this->arrSettings['options_user_status'],
+                                        'arrUsers' => $this->accountModel->getUsers(),
+                                    );
                                     $arrContent['content'] = view('admin/user_database',$arrData);
                                     break;
                             }
@@ -165,14 +176,19 @@ class Page extends BaseController
                     switch($page) {
                         case 'character':
                             switch($subpage) {
-                                case 'create':
+                                case 'view':
+                                case 'create':                                    
+                                    $arrContent['arrJS'] = ['app/tool/app.js'];
                                     $arrData = array (
-                                        'arrRace' => $this->arrSettings['options_race_types'],
-                                        'arrProf' => $this->arrSettings['options_profession_types'],
-                                        'arrSkill' => $this->arrSettings['options_skill_types'],
+                                        'oSession' => $this->session,
+                                        'jsonBaseChar' => $this->arrSettings['jsonBaseChar'],
+                                        'jsonStat' => $this->arrSettings['jsonStat'],
+                                        'arrXP' => $this->arrSettings['arrXP'],
+                                        'arrProfLevel' => $this->arrSettings['arrProfLevel'],
+                                        'arrEvents' => $this->eventModel->getEvents(),
                                         'viewAsAdmin' => false,
                                     );
-                                    $arrContent['content'] = view('character/character_create',$arrData);
+                                    $arrContent['content'] = view('character/character_sheet',$arrData);
                                     break;
                                 case 'database':
                                     $arrData['arrCharacters'] = $this->characterModel->getCharacters($this->session->get('uid'));
@@ -243,4 +259,3 @@ class Page extends BaseController
     }
 
 }
-

@@ -34,6 +34,18 @@
     }
 }
 
+.form-character {    
+    .info-container {
+        position: relative;
+        height: auto;
+        width: 100%;
+        font-size: calc(0.8*$paragraph-font-size) !important;
+        border-radius: $border-radius;
+        background: $color-primary;
+        padding: $padding;
+    }
+}
+
 .form-data {
     font-weight: bold;
 }
@@ -225,6 +237,7 @@
 
 .profile {
     text-align: center;
+
     .profile-avatar {
         cursor: pointer;
         position: relative;
@@ -233,6 +246,10 @@
         width: 100%;
         border-radius: $border-radius;
         overflow: hidden;
+
+        img {
+            width: 100% !important;
+        }
 
         .profile-avatar-action {
             cursor: pointer;
@@ -264,6 +281,11 @@
         display: block;
         font-size: calc(0.8*$paragraph-font-size);
     }
+}
+
+.reveal {
+    background: $color-primary;
+    border-radius: $border-radius;
 }
 
 .spacer-image {

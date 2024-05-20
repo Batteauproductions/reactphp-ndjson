@@ -50,33 +50,6 @@ class SystemModel extends Model
           ->getResultObject();
   }
 
-  public function getRaceTypeOptions () {
-    return $this
-        ->db
-        ->table(TBL_RACE)
-        ->select('id, name, description, available')
-        ->get()
-        ->getResultObject();
-  }
-
-  public function getProfessionTypeOptions () {
-    return $this
-        ->db
-        ->table(TBL_PROF)
-        ->select('id, name, description, available')
-        ->get()
-        ->getResultObject();
-  }
-
-  public function getSkillTypeOptions () {
-    return $this
-        ->db
-        ->table(TBL_SKILL)
-        ->select('id, name, basic_description, available')
-        ->get()
-        ->getResultObject();
-  }
-
   public function getBaseCharSetting () {
     $result = $this
               ->db

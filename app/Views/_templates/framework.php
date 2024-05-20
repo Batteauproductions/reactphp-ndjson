@@ -34,7 +34,7 @@
         <!-- JS Validation -->
         <script type="text/javascript" src="<?php echo vendor_path('validation/jquery.validate.min.js')?>"></script>
         <script type="text/javascript" src="<?php echo vendor_path('validation/additional-methods.min.js')?>"></script>
-        <script type="text/javascript" src="<?php echo vendor_path('validation/localization/messages_NL.min.js')?>"></script>
+        <script type="text/javascript" src="<?php echo vendor_path('validation/localization/messages_nl.js')?>"></script>
         
         <!-- Global Styling -->
         <link rel="stylesheet" href="<?php echo base_url('assets/css/index.css')?>">
@@ -50,7 +50,7 @@
 
         <?php if(isset($arrJS)): ?>
             <?php foreach($arrJS as $iKey => $sValue) :?>
-                <script type="text/javascript" src="<?php echo js_path($sValue)?>"></script>
+                <script type="module" src="<?php echo js_path($sValue)?>"></script>
             <?php endforeach;?>
         <?php endif; ?>
 

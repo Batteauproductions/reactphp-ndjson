@@ -193,6 +193,16 @@ ul li {
   color: #E34646;
 }
 
+.form-character .info-container {
+  position: relative;
+  height: auto;
+  width: 100%;
+  font-size: 0.8rem !important;
+  border-radius: 0.313rem;
+  background: #1E1E1E;
+  padding: 1.25rem;
+}
+
 .form-data {
   font-weight: bold;
 }
@@ -357,6 +367,9 @@ ul li {
   border-radius: 0.313rem;
   overflow: hidden;
 }
+.profile .profile-avatar img {
+  width: 100% !important;
+}
 .profile .profile-avatar .profile-avatar-action {
   cursor: pointer;
   position: absolute;
@@ -380,6 +393,11 @@ ul li {
 .profile .profile-role {
   display: block;
   font-size: 0.8rem;
+}
+
+.reveal {
+  background: #1E1E1E;
+  border-radius: 0.313rem;
 }
 
 .spacer-image {
