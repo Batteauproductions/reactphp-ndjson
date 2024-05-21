@@ -51,7 +51,7 @@
                         <div class="cell small-6 medium-4 large-2 tile tile-status--<?php echo $user->status_name ?>">              
                             <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>" style="opacity:0;"/>                            
                             <div class="tile-content" data-equalizer-watch>
-                                <img src="<?php echo empty($user->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/hero/'.$user->avatar) ?>"/>                        
+                                <img src="<?php echo empty($user->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/user/'.$user->avatar) ?>"/>                        
                                 <div class="tile-description">
                                     <h1><?php echo $user->firstname.' '.$user->lastname ?></h1>
                                     <p><?php echo $user->status_name ?></p>
