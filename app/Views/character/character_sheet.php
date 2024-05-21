@@ -9,7 +9,7 @@
             <input type="hidden" name="jsonStat" value='<?php echo json_encode($jsonStat) ?>'/>
             <input type="hidden" name="arrXP" value='<?php echo $arrXP ?>'/>
             <input type="hidden" name="arrProfLevel" value='<?php echo $arrProfLevel ?>'/>
-            <input type="hidden" name="character" value=''/>
+            <input type="hidden" name="character" value='<?php echo isset($oCharacter) ? $oCharacter: '' ?>'/>
             <!-- /Tool information -->
 
             <div class="cell small-12 medium-4 large-3 text-center">
@@ -49,7 +49,9 @@
                                 Raskeuze
                             </div>
                             <div class="cell small-6">
-                                <a data-open="selection-modal" data-type="race"><i class="fa-solid fa-plus"></i>toevoegen</a>
+                                <a data-open="selection-modal" data-type="race">
+                                    <span id="race"><i class="fa-solid fa-plus"></i>toevoegen</span>
+                                </a>
                             </div>
                             <div class="cell small-6 text-left">
                                 Vaardigheid

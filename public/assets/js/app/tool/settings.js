@@ -9,7 +9,7 @@ let oCharacter = {
     build: oSettings.jsonBaseChar,
     race: {},
     profession: [],
-    skilss: [], 
+    skills: [], 
 }
 
 export {

@@ -1,6 +1,16 @@
 // Importing the variables
 import { oSettings, oCharacter } from './settings.js';
 
+function _construct(oCharacter=null)
+{
+    if (oCharacter !== null && oCharacter !== undefined && oCharacter !== '') {        
+        let obj = JSON.parse(oCharacter);
+        console.log('character received', obj);
+    } else {
+        console.log('No character information received, treating as new');
+    }
+}
+
 //This function serves as a "helper", to calculate the proper profession costs
 //rank: the rank of the profession
 function calculateProfessionCost(rank) {
@@ -30,18 +40,19 @@ function checkXPCost(cost) {
 //container: the element in the DOM to add elements to
 //element: the element that needs to be added
 function elementAdd(container, element) {
+    console.log($.type(element.sub_name));
     if (typeof element === 'object') {
         var name = $('<div>', {
             class: 'cell small-6 text-left',
-            text: `${element.main_name} (niveau ${element.rank})`
+            text: `${element.main_name}${element.rank !== null ? ` (niveau ${element.rank})` : ''}`
         });
         var subtype = $('<div>', {
             class: 'cell small-4 text-center',
-            text: element.sub_name,
+            text: `${element.sub_name !== null ? ` ${element.sub_name}` : '-'}`,
         });
         var cost = $('<div>', {
             class: 'cell small-2 text-right',
-            text: `${calculateProfessionCost(element.rank)}pt.`
+            text: `${element.xp_cost}pt.`
         });
         $(`#${container}`).prepend(name,subtype,cost);
     } else {
@@ -51,15 +62,55 @@ function elementAdd(container, element) {
 
 //This function will 
 function experienceSpend(cost) {
-    oCharacter.build.spend_xp += cost;
+    if((oCharacter.build.spend_xp+cost) > oCharacter.build.max_xp) {
+        console.warn(`Attempt to set XP over maximum`);
+        oCharacter.build.spend_xp = oCharacter.build.max_xp;
+    } else {
+        oCharacter.build.spend_xp += cost;
+    }
     $('#spend_xp').text(oCharacter.build.spend_xp);
 }
 function experienceRefund(cost) {
-    oCharacter.build.spend_xp -= cost;
+    if((oCharacter.build.spend_xp-cost) < 0) {
+        console.warn(`Attempt to set XP under minimum`);
+        oCharacter.build.spend_xp = 0;
+    } else {
+        oCharacter.build.spend_xp -= cost;
+    }
     $('#spend_xp').text(oCharacter.build.spend_xp);
 }
 
-//This function will add a profession to the character
+//
+function showMessage (type, message) {
+    switch(type) {
+        case 'done':
+            console.log(message);
+            break;
+        case 'error':
+            console.log(message);
+            break;
+    }
+}
+
+//These functions deal with adding, altering or removing skills from the character
+//obj: The skill that is being parsed
+function skillAdd(obj) {
+    if (typeof obj === 'object') {
+        oCharacter.skills.push(obj);
+    } else {
+        console.error("skillAdd is not an object: " +$.type(obj));
+    }
+}
+
+function skillRemove(obj) {
+    if (typeof obj === 'object') {
+        oCharacter.skills.splice(obj);
+    } else {
+        console.error("skillRemove is not an object: " +$.type(obj));
+    }
+}
+
+//These functions deal with adding, altering or removing professions from the character
 //obj: The profession that is being parsed
 function professionAdd(obj) {
     if (typeof obj === 'object') {
@@ -133,11 +184,14 @@ function updateCharacterStats() {
 	$('#charObject').val(JSON.stringify(window.oCharacter));*/
 }
 
-export {    
+export {  
+    _construct, 
     calculateProfessionCost,
     checkXPCost,
     elementAdd,
     professionAdd,
+    showMessage,
+    skillAdd,
     professionRemove,
     updateCharacter,    
     updateCharacterStats,
