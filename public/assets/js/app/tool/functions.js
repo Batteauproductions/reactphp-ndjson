@@ -1,11 +1,13 @@
 // Importing the variables
 import { oSettings, oCharacter } from './settings.js';
 
-function _construct(oCharacter=null)
+function _construct(obj=null)
 {
-    if (oCharacter !== null && oCharacter !== undefined && oCharacter !== '') {        
-        let obj = JSON.parse(oCharacter);
-        console.log('character received', obj);
+    console.log(oSettings);
+    console.log(oCharacter);
+    if (obj !== null && obj !== undefined && obj !== '') {        
+        let json_obj = JSON.parse(obj);
+        console.log('character received', json_obj);
     } else {
         console.log('No character information received, treating as new');
     }
@@ -40,7 +42,6 @@ function checkXPCost(cost) {
 //container: the element in the DOM to add elements to
 //element: the element that needs to be added
 function elementAdd(container, element) {
-    console.log($.type(element.sub_name));
     if (typeof element === 'object') {
         var name = $('<div>', {
             class: 'cell small-6 text-left',
@@ -97,6 +98,7 @@ function showMessage (type, message) {
 function skillAdd(obj) {
     if (typeof obj === 'object') {
         oCharacter.skills.push(obj);
+        experienceSpend(obj.xp_cost);
     } else {
         console.error("skillAdd is not an object: " +$.type(obj));
     }
@@ -105,6 +107,7 @@ function skillAdd(obj) {
 function skillRemove(obj) {
     if (typeof obj === 'object') {
         oCharacter.skills.splice(obj);
+        experienceRefund(obj.xp_cost);
     } else {
         console.error("skillRemove is not an object: " +$.type(obj));
     }
@@ -136,6 +139,50 @@ function updateCharacter() {
 
 }
 
+function calculateIncrease(id) {	
+	let increase = 0;
+    	
+    //--- race
+	$.each(oCharacter.race, function(key,value) {
+        if($.isArray(value.modifier)) {
+            for(var i=0; i<value.modifier.length; i++) {
+                if(value.modifier[i].id === id) {
+                    increase ++;
+                }
+            }
+        } else if (value.modifier.id === id) {
+            increase ++;
+        }        
+    });
+    //--- profession
+    $.each(oCharacter.profession, function(key,value) {
+        if($.isArray(value.modifier)) {
+            for(var i=0; i<value.modifier.length; i++) {
+                if(value.modifier[i].id === id) {
+                    increase ++;
+                }
+            }            
+        } else if (value.modifier.id === id) {
+            increase ++;
+        }        
+    });
+    //--- skills
+    $.each(oCharacter.skills, function(key,value) {
+        if($.isArray(value.modifier)) {
+            console.log('skills array')
+            for(var i=0; i<value.modifier.length; i++) {
+                if(value.modifier[i].id == id) {
+                    increase ++;
+                }
+            }
+        } else if (value.modifier.id === id) {
+            increase ++;
+        }
+    });
+
+	return increase;
+}
+
 //This function updates the stats of the character	
 //---1: INCREASE_BASE_SANITY
 //---2: INCREASE_BASE_HEALTH
@@ -148,40 +195,25 @@ function updateCharacter() {
 //---9: INCREASE_BASE_MANA_MINOR
 //---10: INCREASE_BASE_CURRENCY
 function updateCharacterStats() {
-	/*//Sanity 
-	window.oCharacter.sanity = window.chargen_settings.character.sanity+(calculateIncrease(1)*window.chargen_settings.stat_mod.sanity);
-	$('#BASE_SANITY').html(window.oCharacter.sanity);
-	//Health
-	window.oCharacter.hp = window.chargen_settings.character.hp+(calculateIncrease(2)*window.chargen_settings.stat_mod.hp);
-	$('#BASE_HEALTH').html(window.oCharacter.hp);
-	//Dexterity
-	window.oCharacter.dex = window.chargen_settings.character.dex+(calculateIncrease(3)*window.chargen_settings.stat_mod.dex);
-	$('#BASE_DEX').html(window.oCharacter.dex);
-	//Strength
-	window.oCharacter.str = window.chargen_settings.character.str+(calculateIncrease(4)*window.chargen_settings.stat_mod.str);
-	$('#BASE_STR').html(window.oCharacter.str);
-	//Intelligence
-	window.oCharacter.intel = window.chargen_settings.character.intel+(calculateIncrease(5)*window.chargen_settings.stat_mod.intel);
-	$('#BASE_INT').html(window.oCharacter.intel);
-	//Godpoints
-	window.oCharacter.gp = window.chargen_settings.character.gp+(calculateIncrease(6)*window.chargen_settings.stat_mod.gp);
-	$('#BASE_GODPOINTS').html(window.oCharacter.gp);		
-	//Mana
-	window.oCharacter.mana = window.chargen_settings.character.mana+(calculateIncrease(7)*window.chargen_settings.stat_mod.mana)+(calculateIncrease(9)*window.chargen_settings.stat_mod.mana_minor);
-	$('#BASE_MANA').html(window.oCharacter.mana);
-	//Available experience points
-	
-	//Check if NPC / DPC
-	let dropdownValue = $('select[name="type_id"]').val();
-	if (dropdownValue === '2' || dropdownValue === '3') {
-		window.oCharacter.max_xp = 100;
-	} else {
-		window.oCharacter.max_xp = window.chargen_settings.character.max_xp+(calculateIncrease(8)*window.chargen_settings.stat_mod.xp)+adjustExperienceTotal();		
-	}
-	$('.BASE_POINTS').html(window.oCharacter.max_xp);
-	adjustExperience();		
-	
-	$('#charObject').val(JSON.stringify(window.oCharacter));*/
+
+    //oCharacter.build.currency = oSettings.jsonBaseChar.currency+(calculateIncrease(10)*oSettings.jsonStat.currency);
+	oCharacter.build.hp = oSettings.jsonBaseChar.hp+(calculateIncrease(2)*oSettings.jsonStat.hp);
+    oCharacter.build.sanity = oSettings.jsonBaseChar.sanity+(calculateIncrease(1)*oSettings.jsonStat.sanity);
+    oCharacter.build.mana = oSettings.jsonBaseChar.mana+(calculateIncrease(7)*oSettings.jsonStat.mana);
+    oCharacter.build.gp = oSettings.jsonBaseChar.gp+(calculateIncrease(6)*oSettings.jsonStat.gp);
+    //oCharacter.build.favour = oSettings.jsonBaseChar.favour+(calculateIncrease(6)*oSettings.jsonStat.favour);
+    oCharacter.build.str = oSettings.jsonBaseChar.str+(calculateIncrease(4)*oSettings.jsonStat.str);
+    oCharacter.build.dex = oSettings.jsonBaseChar.dex+(calculateIncrease(3)*oSettings.jsonStat.dex);
+    oCharacter.build.intel = oSettings.jsonBaseChar.intel+(calculateIncrease(5)*oSettings.jsonStat.intel);
+    //oCharacter.build.clues = oSettings.jsonBaseChar.clues+(calculateIncrease(6)*oSettings.jsonStat.clues);
+
+    //update the text
+    $.each(oCharacter.build, function(key,value) {
+        $(`#stat-${key}`).text(value);
+    });
+    //update the object
+    $('input[name="character"]').val(JSON.stringify(oCharacter));
+
 }
 
 export {  

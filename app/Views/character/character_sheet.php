@@ -63,7 +63,7 @@
                                 Geld
                             </div>
                             <div class="cell small-6">
-                                <?php echo $jsonBaseChar['currency'] ?> goud
+                                <span id="stat-currency"><?php echo $jsonBaseChar['currency'] ?></span> goud
                             </div>
                         </div>
                     </div>
@@ -73,31 +73,31 @@
                                 Levenspunten
                             </div>
                             <div class="cell small-6">
-                                <?php echo $jsonBaseChar['hp'] ?>
+                                <span id="stat-hp"><?php echo $jsonBaseChar['hp'] ?></span>
                             </div>
                             <div class="cell small-6 text-left">
                                 Sanity
                             </div>
                             <div class="cell small-6">
-                                <?php echo $jsonBaseChar['sanity'] ?>
+                                <span id="stat-sanity"><?php echo $jsonBaseChar['sanity'] ?></span>
                             </div>
                             <div class="cell small-6 text-left">
                                 Mana
                             </div>
                             <div class="cell small-6">
-                                <?php echo $jsonBaseChar['mana'] ?>
+                                <span id="stat-mana"><?php echo $jsonBaseChar['mana'] ?></span>
                             </div>
                             <div class="cell small-6 text-left">
                                 Godpunten
                             </div>
                             <div class="cell small-6">
-                                <?php echo $jsonBaseChar['gp'] ?>
+                                <span id="stat-gp"><?php echo $jsonBaseChar['gp'] ?></span>
                             </div>
                             <div class="cell small-6 text-left">
                                 Favour
                             </div>
                             <div class="cell small-6">
-                                0
+                                <span id="stat-favour">0</span>
                             </div>
                         </div>
                     </div>
@@ -107,25 +107,25 @@
                                 Kracht
                             </div>
                             <div class="cell small-6">
-                                <?php echo $jsonBaseChar['str'] ?>
+                                <span id="stat-str"><?php echo $jsonBaseChar['str'] ?></span>
                             </div>
                             <div class="cell small-6 text-left">
                                 Behendingheid
                             </div>
                             <div class="cell small-6">
-                                <?php echo $jsonBaseChar['dex'] ?>
+                                <span id="stat-dex"><?php echo $jsonBaseChar['dex'] ?></span>
                             </div>
                             <div class="cell small-6 text-left">
                                 Intelligentie
                             </div>
                             <div class="cell small-6">
-                                <?php echo $jsonBaseChar['intel'] ?>
+                                <span id="stat-intel"><?php echo $jsonBaseChar['intel'] ?></span>
                             </div>
                             <div class="cell small-6 text-left">
                                 Clues
                             </div>
                             <div class="cell small-6">
-                                0
+                                <span id="stat-clues">0</span>
                             </div>
                         </div>
                     </div>
@@ -217,7 +217,10 @@
 
 <div class="reveal large" id="selection-modal" data-reveal>
     
-    <form id="update-character" class="grid-x grid-padding-x grid-padding-y">
+    <div id="modal-loading" class="text-center">
+        <i class="fa-solid fa-spinner fa-spin"></i> Gegevens laden
+    </div>
+    <form id="modal-form" class="grid-x grid-padding-x grid-padding-y" style="display:none;">
         <div id="selection-modal-dropdowns" class="cell small-3">
             <select name="type" data-name="" data-action="collect" style="display:none;">
                 <option value="" disabled selected>Geen voorkeur</option>

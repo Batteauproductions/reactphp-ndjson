@@ -1,5 +1,5 @@
 import { oSettings, oCharacter } from './settings.js';
-import { _construct, calculateProfessionCost, checkXPCost, elementAdd, showMessage, skillAdd, professionAdd } from './functions.js';
+import { _construct, calculateProfessionCost, checkXPCost, elementAdd, showMessage, skillAdd, professionAdd, updateCharacterStats } from './functions.js';
 
 $(document).ready(function() {
 
@@ -10,6 +10,9 @@ $(document).ready(function() {
 
     //add extra functionality to the model
     $('a[data-open]').on('click',function(){ 
+        
+        $('#modal-loading').show();
+        $('#modal-form').hide();
         var sAction = $(this).data("type");
         //hide the elements in the reveal model
         $('select[name="type"]').hide();
@@ -41,6 +44,8 @@ $(document).ready(function() {
                 //select the first option per default
                 $('select[name="type"] option:first, select[name="subtype"] option:first').prop('selected', true);
                 $('select[name="type"]').data('name',sAction).show();
+                $('#modal-loading').hide();
+                $('#modal-form').show();
             },
             error: function(error) {
                 console.log('Error:', error);
@@ -110,18 +115,20 @@ $(document).ready(function() {
                 break;
             case 'profession-choose':
                 //define a custom profession object
-                var oProfession = {
+                let oProfession = {
                     main_id: parseInt(oTempData.details.id),
                     main_name: oTempData.details.name,
                     sub_id: parseInt($('select[name="subtype"] option:selected').val()),
                     sub_name: ($('select[name="subtype"] option:selected').text() !== 'Geen voorkeur') ? $('select[name="subtype"] option:selected').text() : null,
+                    modifier: oTempData.modifier,
                     rank: 1,                    
                 }
                 oProfession.xp_cost = calculateProfessionCost(oProfession.rank);
                 //check if xp is available
                 if(checkXPCost(parseInt(oSettings.arrProfLevel[oProfession.rank-1]))) {
                     professionAdd(oProfession);
-                    elementAdd("profession-list",oProfession);                    
+                    elementAdd("profession-list",oProfession);
+                    updateCharacterStats();
                     bCheck = true;
                 } else {
                     showMessage('error','Je hebt niet genoeg vaardigheidspunten.'); 
@@ -130,18 +137,22 @@ $(document).ready(function() {
             case 'skill_base-choose':
             case 'skill_combat-choose':
             case 'skill_magic-choose':
+                var $Container = sAction.replace('-choose','-list')
                 //define a custom skill object
-                var oSkill = {
+                let oSkill = {
                     main_id: parseInt(oTempData.details.id),
                     main_name: (oTempData.details.name !== 'Geen voorkeur') ? oTempData.details.name : null,
                     sub_id: parseInt($('select[name="subtype"] option:selected').val()),
                     sub_name: ($('select[name="subtype"] option:selected').text() !== 'Geen voorkeur') ? $('select[name="subtype"] option:selected').text() : null,
                     rank: null,
+                    modifier: oTempData.modifier,
+                    xp_cost: parseInt(oTempData.details.xp_cost),
                 }
                 //check if xp is available
-                if(checkXPCost(parseInt(oTempData.details.xp_cost))) {
+                if(checkXPCost(parseInt(oSkill.xp_cost))) {
                     skillAdd(oSkill);
-                    elementAdd("skill_base-list",oSkill);                    
+                    elementAdd($Container,oSkill);
+                    updateCharacterStats();                    
                     bCheck = true;
                 } else {
                     showMessage('error','Je hebt niet genoeg vaardigheidspunten.');
