@@ -1,18 +1,20 @@
-const oSettings = {
-    jsonBaseChar: JSON.parse($('input[name="jsonBaseChar"]').val()),
-    jsonStat: JSON.parse($('input[name="jsonStat"]').val()),
-    arrXP: $('input[name="arrXP"]').val().split(","),
-    arrProfLevel: $('input[name="arrProfLevel"]').val().split(","),
-};
+//oSettings
+const jsonBaseChar = Object.freeze(JSON.parse($('input[name="jsonBaseChar"]').val()));
+const jsonStat = Object.freeze(JSON.parse($('input[name="jsonStat"]').val()));
+const arrXP = Object.freeze($('input[name="arrXP"]').val().split(","));
+const arrProfLevel = Object.freeze($('input[name="arrProfLevel"]').val().split(","));
 
 let oCharacter = {
-    build: oSettings.jsonBaseChar,
+    build: Object.assign({}, jsonBaseChar),
     race: {},
     profession: [],
     skills: [], 
 }
 
 export {
-    oSettings,
+    jsonBaseChar,
+    jsonStat,
+    arrXP,
+    arrProfLevel,
     oCharacter,
 }

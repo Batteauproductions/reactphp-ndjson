@@ -1,10 +1,10 @@
 // Importing the variables
-import { oSettings, oCharacter } from './settings.js';
+import { jsonBaseChar,jsonStat,arrXP,arrProfLevel,oCharacter } from './settings.js';
 
 function _construct(obj=null)
 {
-    console.log(oSettings);
     console.log(oCharacter);
+    
     if (obj !== null && obj !== undefined && obj !== '') {        
         let json_obj = JSON.parse(obj);
         console.log('character received', json_obj);
@@ -19,7 +19,7 @@ function calculateProfessionCost(rank) {
     if (typeof rank === 'number') {
         let iTotalcost = 0;
         for(let i=0; i<rank; i++) {
-            iTotalcost += parseInt(oSettings.arrProfLevel[i]);
+            iTotalcost += parseInt(arrProfLevel[i]);
         }
         return parseInt(iTotalcost);
     } else {
@@ -169,7 +169,6 @@ function calculateIncrease(id) {
     //--- skills
     $.each(oCharacter.skills, function(key,value) {
         if($.isArray(value.modifier)) {
-            console.log('skills array')
             for(var i=0; i<value.modifier.length; i++) {
                 if(value.modifier[i].id == id) {
                     increase ++;
@@ -196,16 +195,16 @@ function calculateIncrease(id) {
 //---10: INCREASE_BASE_CURRENCY
 function updateCharacterStats() {
 
-    //oCharacter.build.currency = oSettings.jsonBaseChar.currency+(calculateIncrease(10)*oSettings.jsonStat.currency);
-	oCharacter.build.hp = oSettings.jsonBaseChar.hp+(calculateIncrease(2)*oSettings.jsonStat.hp);
-    oCharacter.build.sanity = oSettings.jsonBaseChar.sanity+(calculateIncrease(1)*oSettings.jsonStat.sanity);
-    oCharacter.build.mana = oSettings.jsonBaseChar.mana+(calculateIncrease(7)*oSettings.jsonStat.mana);
-    oCharacter.build.gp = oSettings.jsonBaseChar.gp+(calculateIncrease(6)*oSettings.jsonStat.gp);
-    //oCharacter.build.favour = oSettings.jsonBaseChar.favour+(calculateIncrease(6)*oSettings.jsonStat.favour);
-    oCharacter.build.str = oSettings.jsonBaseChar.str+(calculateIncrease(4)*oSettings.jsonStat.str);
-    oCharacter.build.dex = oSettings.jsonBaseChar.dex+(calculateIncrease(3)*oSettings.jsonStat.dex);
-    oCharacter.build.intel = oSettings.jsonBaseChar.intel+(calculateIncrease(5)*oSettings.jsonStat.intel);
-    //oCharacter.build.clues = oSettings.jsonBaseChar.clues+(calculateIncrease(6)*oSettings.jsonStat.clues);
+    //oCharacter.build.currency = jsonBaseChar.currency+(calculateIncrease(10)*jsonStat.currency);
+	oCharacter.build.hp = jsonBaseChar.hp+(calculateIncrease(2)*jsonStat.hp);
+    oCharacter.build.sanity = jsonBaseChar.sanity+(calculateIncrease(1)*jsonStat.sanity);
+    oCharacter.build.mana = jsonBaseChar.mana+(calculateIncrease(7)*jsonStat.mana);
+    oCharacter.build.gp = jsonBaseChar.gp+(calculateIncrease(6)*jsonStat.gp);
+    //oCharacter.build.favour = jsonBaseChar.favour+(calculateIncrease(6)*jsonStat.favour);
+    oCharacter.build.str = jsonBaseChar.str+(calculateIncrease(4)*jsonStat.str);
+    oCharacter.build.dex = jsonBaseChar.dex+(calculateIncrease(3)*jsonStat.dex);
+    oCharacter.build.intel = jsonBaseChar.intel+(calculateIncrease(5)*jsonStat.intel);
+    //oCharacter.build.clues = jsonBaseChar.clues+(calculateIncrease(6)*jsonStat.clues);
 
     //update the text
     $.each(oCharacter.build, function(key,value) {

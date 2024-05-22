@@ -1,4 +1,4 @@
-import { oSettings, oCharacter } from './settings.js';
+import { oCharacter } from './settings.js';
 import { _construct, calculateProfessionCost, checkXPCost, elementAdd, showMessage, skillAdd, professionAdd, updateCharacterStats } from './functions.js';
 
 $(document).ready(function() {
@@ -100,9 +100,24 @@ $(document).ready(function() {
     });
 
     $('a[data-action]').on('click', function(){
+
+        //set several variables
+        //--sAction; will be used to collect what action is being called by clicking on choice
+        //--bCheck; will be used to check if the modal can be closed or should remain open
         var sAction = $(this).data("action");
         var bCheck = false;
 
+        //create a temporary object stripping it of all information we don't need
+        let oChoice = {
+            main_id: parseInt(oTempData.details.id),
+            main_name: oTempData.details.name,
+            sub_id: parseInt($('select[name="subtype"] option:selected').val()),
+            sub_name: ($('select[name="subtype"] option:selected').text() !== 'Geen voorkeur') ? $('select[name="subtype"] option:selected').text() : null,
+            modifier: oTempData.modifier,
+            rank: 1,
+        }
+
+        //perform an action based on what is being done
         switch(sAction) {
             case 'race-choose':
                 var oRace = {
@@ -114,21 +129,16 @@ $(document).ready(function() {
                 bCheck = true;
                 break;
             case 'profession-choose':
-                //define a custom profession object
-                let oProfession = {
-                    main_id: parseInt(oTempData.details.id),
-                    main_name: oTempData.details.name,
-                    sub_id: parseInt($('select[name="subtype"] option:selected').val()),
-                    sub_name: ($('select[name="subtype"] option:selected').text() !== 'Geen voorkeur') ? $('select[name="subtype"] option:selected').text() : null,
-                    modifier: oTempData.modifier,
-                    rank: 1,                    
-                }
-                oProfession.xp_cost = calculateProfessionCost(oProfession.rank);
+                //set the xp cost of the object
+                oChoice.xp_cost = calculateProfessionCost(oChoice.rank);
                 //check if xp is available
-                if(checkXPCost(parseInt(oSettings.arrProfLevel[oProfession.rank-1]))) {
-                    professionAdd(oProfession);
-                    elementAdd("profession-list",oProfession);
-                    updateCharacterStats();
+                if(checkXPCost(oChoice.xp_cost)) {
+                    professionAdd(oChoice);
+                    elementAdd("profession-list",oChoice);
+                    //check if the choice has a stat modifier
+                    if(oChoice.modifier.length > 0) {
+                        updateCharacterStats();
+                    }                    
                     bCheck = true;
                 } else {
                     showMessage('error','Je hebt niet genoeg vaardigheidspunten.'); 
@@ -137,22 +147,17 @@ $(document).ready(function() {
             case 'skill_base-choose':
             case 'skill_combat-choose':
             case 'skill_magic-choose':
-                var $Container = sAction.replace('-choose','-list')
-                //define a custom skill object
-                let oSkill = {
-                    main_id: parseInt(oTempData.details.id),
-                    main_name: (oTempData.details.name !== 'Geen voorkeur') ? oTempData.details.name : null,
-                    sub_id: parseInt($('select[name="subtype"] option:selected').val()),
-                    sub_name: ($('select[name="subtype"] option:selected').text() !== 'Geen voorkeur') ? $('select[name="subtype"] option:selected').text() : null,
-                    rank: null,
-                    modifier: oTempData.modifier,
-                    xp_cost: parseInt(oTempData.details.xp_cost),
-                }
+                var $Container = sAction.replace('-choose','-list');
+                //set the xp cost of the object
+                oChoice.xp_cost = parseInt(oTempData.details.xp_cost);
                 //check if xp is available
-                if(checkXPCost(parseInt(oSkill.xp_cost))) {
-                    skillAdd(oSkill);
-                    elementAdd($Container,oSkill);
-                    updateCharacterStats();                    
+                if(checkXPCost(parseInt(oChoice.xp_cost))) {
+                    skillAdd(oChoice);
+                    elementAdd($Container,oChoice);
+                    //check if the choice has a stat modifier
+                    if(oChoice.modifier.length > 0) {
+                        updateCharacterStats();
+                    }  
                     bCheck = true;
                 } else {
                     showMessage('error','Je hebt niet genoeg vaardigheidspunten.');
@@ -163,7 +168,6 @@ $(document).ready(function() {
                 console.error(`a[data-action], unknown sAction called with value: ${sAction}`);
                 break;
         }
-        console.log(oCharacter)
         if(bCheck) {
             $('#selection-modal').foundation('close');
         }
