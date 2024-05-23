@@ -72,8 +72,7 @@ class Character extends Controller
                 default:
                     echo 'unknown action called';
                     break;
-            } 
-            
+            }             
         } else {
             echo 'no action parsed';
         }

@@ -42,7 +42,7 @@ class SkillModel extends Model
 	}
 
     public function getSkillsByLink($skill_type=null, 
-                                    $arrProfessions,
+                                    $arrProfessions=null,
                                     $admin=false) {		
         
         $query = $this
@@ -62,21 +62,15 @@ class SkillModel extends Model
                 ->orderBy('s.profession_link','asc')
                 ->orderBy('s.profession_sublink','asc')
                 ->orderBy('s.profession_rank','asc');
-        
-        /*if($arrProfessions !== null) {
+               
+        if($arrProfessions !== null) {
             foreach($arrProfessions as $key => $value) {
-                $query->or(['s.profession_link' <= $value, 's.profession_rank' <= $value]);
+                $query->where('s.profession_link <=', $arrProfessions[$key]['main_id']);
+                //$query->where('s.profession_rank <=',  $value);
             }            
-        } */
-        
-        echo $this->db->getLastQuery();
-        exit;
-        if ($admin) {
-            $query->where('s.sl_only', 1);
-        } else {
-            $query->where('s.sl_only', null);
         }
 
+       
 		return $query->get()->getResultObject();
 	}
 
