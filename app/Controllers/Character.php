@@ -44,7 +44,13 @@ class Character extends Controller
         $arrData = array(
             'id' => $request->getPost('id'),
             'action' => $request->getPost('action'),
+            'character' => $request->getPost('character'),
         );
+        
+        $arrProfessions = null;
+        if(isset($arrData['character']['profession']) > 0) {
+            $arrProfessions = $arrData['character']['profession'];
+        }
 
         if (isset($arrData['action'])) {
             switch($arrData['action']) {
@@ -55,13 +61,13 @@ class Character extends Controller
                     echo json_encode($this->professionModel->getProfessions($this->arrRights['isGameMaster']));
                     break;
                 case 'fill-dropdown-skill_base':
-                    echo json_encode($this->skillModel->getSkillsByLink([1,2]));
+                    echo json_encode($this->skillModel->getSkillsByLink([1,2],$arrProfessions,$this->arrRights['isGameMaster']));
                     break;
                 case 'fill-dropdown-skill_combat':
-                    echo json_encode($this->skillModel->getSkillsByLink([6,8]));
+                    echo json_encode($this->skillModel->getSkillsByLink([6,8],$arrProfessions,$this->arrRights['isGameMaster']));
                     break;
                 case 'fill-dropdown-skill_magic':
-                    echo json_encode($this->skillModel->getSkillsByLink([3,4,5,10,11]));
+                    echo json_encode($this->skillModel->getSkillsByLink([3,4,5,10,11],$arrProfessions,$this->arrRights['isGameMaster']));
                     break;
                 default:
                     echo 'unknown action called';

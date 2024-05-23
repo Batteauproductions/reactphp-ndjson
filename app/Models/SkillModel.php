@@ -13,8 +13,6 @@ class SkillModel extends Model
     {
         $this->db = \Config\Database::connect();
     }
-
-	
 	
 	/*START: LINKED TO THE SKILLS*/
 	public function getSkills($admin=false) {		
@@ -44,22 +42,19 @@ class SkillModel extends Model
 	}
 
     public function getSkillsByLink($skill_type=null, 
-                                    $profession_link=null, 
-                                    $profession_sublink=null, 
-                                    $profession_rank=null, 
+                                    $arrProfessions,
                                     $admin=false) {		
-		$query = $this
+        
+        $query = $this
                 ->db
                 ->table(TBL_SKILL.' s')
                 ->select('s.id, s.name, s.description, s.available, s.profession_link,s.modifier, s.skill_type, s.profession_link, s.profession_sublink, s.profession_rank, s.sl_only,
                             p.id as prof_id, p.name as prof_name,
                             sm.id as stat_id, sm.name as stat_name,
                             st.id as type_id, st.name as type_name')
-                ->whereIn('s.skill_type', $skill_type)
-                //->where('s.profession_link', $profession_link)
-                //->where('s.profession_sublink', $profession_sublink)
-                //->where('s.profession_rank', $profession_rank)
                 ->where('s.available', 1)
+                ->whereIn('s.skill_type', $skill_type)
+                ->whereIn('s.profession_link', [null,1])
                 ->join(TBL_PROF.' p','p.id = s.profession_link','left')
                 ->join(TBL_STATMOD.' sm','sm.id = s.modifier','left')
                 ->join(TBL_SKILL_TYPE.' st','st.id = s.skill_type','left')
@@ -67,7 +62,15 @@ class SkillModel extends Model
                 ->orderBy('s.profession_link','asc')
                 ->orderBy('s.profession_sublink','asc')
                 ->orderBy('s.profession_rank','asc');
-            
+        
+        /*if($arrProfessions !== null) {
+            foreach($arrProfessions as $key => $value) {
+                $query->or(['s.profession_link' <= $value, 's.profession_rank' <= $value]);
+            }            
+        } */
+        
+        echo $this->db->getLastQuery();
+        exit;
         if ($admin) {
             $query->where('s.sl_only', 1);
         } else {

@@ -1,5 +1,5 @@
 // Importing the variables
-import { jsonBaseChar,jsonStat,arrXP,arrProfLevel,oCharacter } from './settings.js';
+import { jsonBaseChar,jsonStat,arrXP,arrProfLevel,oCharacter,oTranslations, language} from './settings.js';
 
 function _construct(obj=null)
 {
@@ -13,20 +13,34 @@ function _construct(obj=null)
     }
 }
 
-//This function serves as a "helper", to calculate the proper profession costs
-//rank: the rank of the profession
-function calculateProfessionCost(rank) {
-    if (typeof rank === 'number') {
+//This function serves as a "helper", to calculate the proper costs
+//obj: the rank of the profession or skill
+//--professions are based on the xp cost growth, this is not the same across ranks
+function calculateProfessionCost(obj) {
+    if (typeof obj === 'object') {
         let iTotalcost = 0;
-        for(let i=0; i<rank; i++) {
+        //increases cost per rank
+        for(let i=0; i<obj.rank; i++) {
             iTotalcost += parseInt(arrProfLevel[i]);
         }
         return parseInt(iTotalcost);
     } else {
-        console.error("calculateProfessionCost is not an number: " +$.type(rank));
+        console.error(`calculateProfessionCost is not an object: ${$.type(obj)}`);
+    }
+}
+//--skills are allways calculated by rank increase and initial cost
+function calculateSkillCost(obj) {
+    if (typeof obj === 'object') {
+        if(obj.rank !== null) {
+            return parseInt(obj.rank) * parseInt(obj.xp_cost);
+        }
+        return parseInt(obj.xp_cost);
+    } else {
+        console.error(`calculateSkillCost is not an object: ${$.type(obj)}`);
     }
 }
 
+//This function will check if the character has enough xp available to buy the profession or skill
 function checkXPCost(cost) {
     if (typeof cost === 'number') {
         if(oCharacter.build.spend_xp + cost <= oCharacter.build.max_xp) {
@@ -81,14 +95,71 @@ function experienceRefund(cost) {
     $('#spend_xp').text(oCharacter.build.spend_xp);
 }
 
+
+
+function modalClear () {
+    //--set default status to loading
+    $('#modal-loading').show();
+    $('#modal-form').hide();
+    
+    //--hide the elements in the reveal model
+    $('select[name="type"]').hide();
+    $('select[name="subtype"]').hide();        
+    //--remove the old types /remove the old sub types
+    $('select[name="type"] option, select[name="subtype"] option').filter(function() {
+        return $(this).attr('value') !== undefined && $(this).attr('value') !== "";
+    }).remove();
+    //--remove the old rank options
+    $('#rank-options').html('');
+    $('#description').hide();
+    $(`p[choice-message]`).hide();
+}
+
+function modalSet (data,action) {
+    //check if the data has a subtype                
+    if (data.hasOwnProperty('subtype') && data.subtype.length > 0) {                    
+        //add new options
+        for(var i=0; i< data.subtype.length; i++) {
+            var option = $('<option>', {
+                value: data.subtype[i].id,
+                text: data.subtype[i].name
+            });
+            $('select[name="subtype"]').append(option);
+        }
+        $('select[name="subtype"]').show();
+    };
+    if(data.details.max_rank !== null) {
+        for(var i=1; i<=data.details.max_rank; i++ ) {
+            var label = $('<label>', {
+                for: `rank-${i}`,
+                text: `${oTranslations[language].rank} - ${i}`,
+            });
+            var option = $('<input>', {
+                id: `rank-${i}`,
+                value: i,
+                type: "radio",
+                name: "rank",
+            });
+            $('#rank-options').append(label, option);
+        }
+        $('#rank-options').show();
+    }
+    //fill the content                
+    $(`#description h1[data-title]`).html(data.details.name);
+    $(`#description p[data-description]`).html(data.details.description);
+    $(`a[data-action]`).data('action',`${action}-choose`);
+    $(`#description a[data-link]`).attr('href',`https://larp.dalaria.nl/wp-content/uploads/documents/KvD-Basisregels.pdf#page=${data.details.rule_page}`);
+    $(`#description`).show();
+}
+
 //
-function showMessage (type, message) {
+function showMessage (element,type, message) {    
     switch(type) {
         case 'done':
             console.log(message);
             break;
         case 'error':
-            console.log(message);
+            $(element).addClass('input-error').text(message).show();
             break;
     }
 }
@@ -118,7 +189,7 @@ function skillRemove(obj) {
 function professionAdd(obj) {
     if (typeof obj === 'object') {
         oCharacter.profession.push(obj);
-        experienceSpend(calculateProfessionCost(obj.rank));
+        experienceSpend(calculateProfessionCost(obj));
     } else {
         console.error("professionAdd is not an object: " +$.type(obj));
     }
@@ -136,7 +207,7 @@ function professionRemove(obj) {
 
 
 function updateCharacter() {
-
+    $('input[name="character"]').val(JSON.stringify(oCharacter));
 }
 
 function calculateIncrease(id) {	
@@ -146,11 +217,11 @@ function calculateIncrease(id) {
 	$.each(oCharacter.race, function(key,value) {
         if($.isArray(value.modifier)) {
             for(var i=0; i<value.modifier.length; i++) {
-                if(value.modifier[i].id === id) {
+                if(value.modifier[i].id == id) {
                     increase ++;
                 }
             }
-        } else if (value.modifier.id === id) {
+        } else if (value.modifier.id == id) {
             increase ++;
         }        
     });
@@ -158,11 +229,11 @@ function calculateIncrease(id) {
     $.each(oCharacter.profession, function(key,value) {
         if($.isArray(value.modifier)) {
             for(var i=0; i<value.modifier.length; i++) {
-                if(value.modifier[i].id === id) {
+                if(value.modifier[i].id == id) {
                     increase ++;
                 }
             }            
-        } else if (value.modifier.id === id) {
+        } else if (value.modifier.id == id) {
             increase ++;
         }        
     });
@@ -174,7 +245,7 @@ function calculateIncrease(id) {
                     increase ++;
                 }
             }
-        } else if (value.modifier.id === id) {
+        } else if (value.modifier.id == id) {
             increase ++;
         }
     });
@@ -193,8 +264,9 @@ function calculateIncrease(id) {
 //---8: INCREASE_BASE_POINTS
 //---9: INCREASE_BASE_MANA_MINOR
 //---10: INCREASE_BASE_CURRENCY
+//---11: INCREASE_BASE_FAVOR
 function updateCharacterStats() {
-
+    //--adjust the stats of the character
     //oCharacter.build.currency = jsonBaseChar.currency+(calculateIncrease(10)*jsonStat.currency);
 	oCharacter.build.hp = jsonBaseChar.hp+(calculateIncrease(2)*jsonStat.hp);
     oCharacter.build.sanity = jsonBaseChar.sanity+(calculateIncrease(1)*jsonStat.sanity);
@@ -205,21 +277,22 @@ function updateCharacterStats() {
     oCharacter.build.dex = jsonBaseChar.dex+(calculateIncrease(3)*jsonStat.dex);
     oCharacter.build.intel = jsonBaseChar.intel+(calculateIncrease(5)*jsonStat.intel);
     //oCharacter.build.clues = jsonBaseChar.clues+(calculateIncrease(6)*jsonStat.clues);
-
-    //update the text
+    //--update the text on the sheet per modifier
     $.each(oCharacter.build, function(key,value) {
         $(`#stat-${key}`).text(value);
     });
     //update the object
-    $('input[name="character"]').val(JSON.stringify(oCharacter));
-
+    updateCharacter();
 }
 
 export {  
     _construct, 
     calculateProfessionCost,
+    calculateSkillCost,
     checkXPCost,
     elementAdd,
+    modalClear,
+    modalSet,
     professionAdd,
     showMessage,
     skillAdd,

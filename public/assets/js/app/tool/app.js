@@ -1,5 +1,5 @@
-import { oCharacter } from './settings.js';
-import { _construct, calculateProfessionCost, checkXPCost, elementAdd, showMessage, skillAdd, professionAdd, updateCharacterStats } from './functions.js';
+import { language, oCharacter, oTranslations } from './settings.js';
+import { _construct, calculateSkillCost, calculateProfessionCost, checkXPCost, elementAdd, modalClear, modalSet, showMessage, skillAdd, professionAdd, updateCharacterStats } from './functions.js';
 
 $(document).ready(function() {
 
@@ -9,16 +9,10 @@ $(document).ready(function() {
     _construct($('input[name="character"]').val());
 
     //add extra functionality to the model
-    $('a[data-open]').on('click',function(){ 
-        
-        $('#modal-loading').show();
-        $('#modal-form').hide();
-        var sAction = $(this).data("type");
-        //hide the elements in the reveal model
-        $('select[name="type"]').hide();
-        $('select[name="subtype"]').hide();
-        $(`#description`).hide();
-        //make call to fill the dropdown
+    $('a[data-open]').on('click',function(){     
+        var sAction = $(this).data("type");    
+        modalClear();
+        //--make call to fill the dropdown
         $.ajax({
             url: window.location.origin + '/action/get-dropdown',
             data: {
@@ -28,11 +22,6 @@ $(document).ready(function() {
             type: 'POST',
             dataType: 'json',
             success: function(data) {
-                //console.log(data);
-                //remove the old types /remove the old sub types
-                $('select[name="type"] option, select[name="subtype"] option').filter(function() {
-                    return $(this).attr('value') !== undefined && $(this).attr('value') !== "";
-                }).remove();
                 //add options to the dropdown                
                 for(var i=0; i< data.length; i++) {
                     var option = $('<option>', {
@@ -72,25 +61,7 @@ $(document).ready(function() {
             success: function(data) {
                 //console.log(data);
                 oTempData = data;
-                //check if the data has a subtype                
-                if (data.hasOwnProperty('subtype') && data.subtype.length > 0) {
-                    
-                    //add new options
-                    for(var i=0; i< data.subtype.length; i++) {
-                        var option = $('<option>', {
-                            value: data.subtype[i].id,
-                            text: data.subtype[i].name
-                        });
-                        $('select[name="subtype"]').append(option);
-                    }
-                    $('select[name="subtype"]').show();
-                };
-                //fill the content                
-                $(`#description h1[data-title]`).html(data.details.name);
-                $(`#description p[data-description]`).html(data.details.description);
-                $(`a[data-action]`).data('action',`${sAction}-choose`);
-                $(`#description a[data-link]`).attr('href',`https://larp.dalaria.nl/wp-content/uploads/documents/KvD-Basisregels.pdf#page=${data.details.rule_page}`);
-                $(`#description`).show();
+                modalSet(data,sAction);
             },
             error: function(error) {
                 alert('Error:', error);
@@ -100,21 +71,41 @@ $(document).ready(function() {
     });
 
     $('a[data-action]').on('click', function(){
-
         //set several variables
         //--sAction; will be used to collect what action is being called by clicking on choice
         //--bCheck; will be used to check if the modal can be closed or should remain open
         var sAction = $(this).data("action");
-        var bCheck = false;
-
+        var $Container = sAction.replace('-choose','-list');
+        var bCheck = false;        
+        var showErrorMessage = (msg) => showMessage('p[choice-message]', 'error', `${oTranslations[language][msg]}`);
         //create a temporary object stripping it of all information we don't need
-        let oChoice = {
+        var oChoice = {
             main_id: parseInt(oTempData.details.id),
             main_name: oTempData.details.name,
-            sub_id: parseInt($('select[name="subtype"] option:selected').val()),
-            sub_name: ($('select[name="subtype"] option:selected').text() !== 'Geen voorkeur') ? $('select[name="subtype"] option:selected').text() : null,
-            modifier: oTempData.modifier,
-            rank: 1,
+            sub_id: $('select[name="subtype"] option:selected').val() ? parseInt($('select[name="subtype"] option:selected').val()) : null,
+            sub_name: ($('select[name="subtype"] option:selected').val() !== '') ? $('select[name="subtype"] option:selected').text() : null,
+            modifier: oTempData.modifier,    
+            xp_cost: parseInt(oTempData.details.xp_cost),            
+        }
+
+        var handleChoice = (addFunction,xpCalc) => {
+            oChoice.xp_cost = xpCalc(oChoice);
+            //check if xp is available
+            if(!checkXPCost(oChoice.xp_cost)) {
+                showErrorMessage('not_enough_vp');
+            } else {
+                if(oTempData.subtype.length > 0 && oChoice.sub_id === null) { 
+                    showErrorMessage('choose_sub');                        
+                } else {
+                    addFunction(oChoice);
+                    elementAdd($Container,oChoice);
+                    //check if the choice has a stat modifier
+                    if(oChoice.modifier.length > 0) {
+                        updateCharacterStats();
+                    }  
+                    bCheck = true;
+                }
+            }
         }
 
         //perform an action based on what is being done
@@ -130,39 +121,15 @@ $(document).ready(function() {
                 break;
             case 'profession-choose':
                 //set the xp cost of the object
-                oChoice.xp_cost = calculateProfessionCost(oChoice.rank);
-                //check if xp is available
-                if(checkXPCost(oChoice.xp_cost)) {
-                    professionAdd(oChoice);
-                    elementAdd("profession-list",oChoice);
-                    //check if the choice has a stat modifier
-                    if(oChoice.modifier.length > 0) {
-                        updateCharacterStats();
-                    }                    
-                    bCheck = true;
-                } else {
-                    showMessage('error','Je hebt niet genoeg vaardigheidspunten.'); 
-                }                
+                oChoice.rank = 1;
+                handleChoice(professionAdd,calculateProfessionCost);
                 break;
             case 'skill_base-choose':
             case 'skill_combat-choose':
             case 'skill_magic-choose':
-                var $Container = sAction.replace('-choose','-list');
                 //set the xp cost of the object
-                oChoice.xp_cost = parseInt(oTempData.details.xp_cost);
-                //check if xp is available
-                if(checkXPCost(parseInt(oChoice.xp_cost))) {
-                    skillAdd(oChoice);
-                    elementAdd($Container,oChoice);
-                    //check if the choice has a stat modifier
-                    if(oChoice.modifier.length > 0) {
-                        updateCharacterStats();
-                    }  
-                    bCheck = true;
-                } else {
-                    showMessage('error','Je hebt niet genoeg vaardigheidspunten.');
-                }  
-
+                oChoice.rank = $('input[name="rank"]:checked').val() !== undefined ? $('input[name="rank"]:checked').val() : null;
+                handleChoice(skillAdd,calculateSkillCost);
                 break;
             default:
                 console.error(`a[data-action], unknown sAction called with value: ${sAction}`);

@@ -228,10 +228,14 @@
             <select name="subtype" style="display:none;">
                 <option value="" disabled selected>Geen voorkeur</option>
             </select>
+            <section id="rank-options" style="display:none;">
+                <!-- dynamic filled -->
+            </section>
         </div>
         <div id="description" class="cell small-9" style="display:none;">
             <h1 data-title></h1>
             <p data-description></p>
+            <p class="" style="display:none" choice-message></p>
             <a data-action="race-choose" class="button solid"><i class="fa-regular fa-square-check"></i>kiezen</a>
             <a data-link href="" class="button clear" target="_blank" ><i class="fa-solid fa-circle-info"></i>meer informatie</a>
         </div>
