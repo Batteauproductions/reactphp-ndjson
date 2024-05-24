@@ -22,13 +22,30 @@ $(document).ready(function() {
             type: 'POST',
             dataType: 'json',
             success: function(data) {
-                //add options to the dropdown                
+                var optGroup = '';
                 for(var i=0; i< data.length; i++) {
-                    var option = $('<option>', {
-                        value: data[i].id,
-                        text: data[i].name
-                    });
-                    $('select[name="type"]').append(option);
+                    if(data[i].hasOwnProperty('prof_name')) {
+                        if(optGroup == '' || optGroup !== data[i].prof_name) {
+                            var optionGroup = $('<optgroup>', {
+                                label: data[i].prof_name
+                            });
+                            optGroup = data[i].prof_name;  
+                        } 
+                        if(optGroup == data[i].prof_name) {
+                            var option = $('<option>', {
+                                value: data[i].id,
+                                text: data[i].name
+                            });
+                            optionGroup.append(option);       
+                        } 
+                        $('select[name="type"]').append(optionGroup);
+                    } else {
+                        var option = $('<option>', {
+                            value: data[i].id,
+                            text: data[i].name
+                        });
+                        $('select[name="type"]').append(option); 
+                    }                    
                 }
                 //select the first option per default
                 $('select[name="type"] option:first, select[name="subtype"] option:first').prop('selected', true);
@@ -46,6 +63,7 @@ $(document).ready(function() {
     $('select[name="type"]').on('change',function(){
         //hide the dropdown with subtypes
         $('select[name="subtype"]').hide();
+        $('#rank-options').html('');
         //collect data
         var iID = $(this).val();
         var sAction = $(this).data("name");
@@ -136,6 +154,7 @@ $(document).ready(function() {
                 break;
         }
         if(bCheck) {
+            console.log(oCharacter);
             $('#selection-modal').foundation('close');
         }
     });

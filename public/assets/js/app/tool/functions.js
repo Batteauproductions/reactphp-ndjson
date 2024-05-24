@@ -95,13 +95,10 @@ function experienceRefund(cost) {
     $('#spend_xp').text(oCharacter.build.spend_xp);
 }
 
-
-
 function modalClear () {
     //--set default status to loading
     $('#modal-loading').show();
-    $('#modal-form').hide();
-    
+    $('#modal-form').hide();    
     //--hide the elements in the reveal model
     $('select[name="type"]').hide();
     $('select[name="subtype"]').hide();        
@@ -109,6 +106,7 @@ function modalClear () {
     $('select[name="type"] option, select[name="subtype"] option').filter(function() {
         return $(this).attr('value') !== undefined && $(this).attr('value') !== "";
     }).remove();
+    $('select[name="type"]').find('optgroup').remove();
     //--remove the old rank options
     $('#rank-options').html('');
     $('#description').hide();
@@ -119,6 +117,7 @@ function modalSet (data,action) {
     //check if the data has a subtype                
     if (data.hasOwnProperty('subtype') && data.subtype.length > 0) {                    
         //add new options
+
         for(var i=0; i< data.subtype.length; i++) {
             var option = $('<option>', {
                 value: data.subtype[i].id,

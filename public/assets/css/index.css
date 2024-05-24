@@ -132,6 +132,9 @@ form input.input-error, form select.input-error {
   color: #944040;
   margin-bottom: 0;
 }
+form select {
+  width: 100%;
+}
 form textarea {
   resize: none;
 }

@@ -175,11 +175,11 @@
                         <h1>Avonturen</h1>
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
                         <div class="grid-x grid-margin-x grid-margin-y">
-                            <a class="cell small-4 medium-3 large-2">
+                            <a class="cell small-4 medium-3 large-2" data-open="background-modal">
                                 <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>"/>
                             </a>
                             <?php foreach($arrEvents as $event):?>
-                                <a class="cell small-4 medium-3 large-2">
+                                <a class="cell small-4 medium-3 large-2" data-open="adventure-modal">
                                     <img src="<?php echo image_path('events/event_'.strtolower(str_replace([' ', '.'], '_',$event->name)).'.png')?>"/>
                                 </a>    
                             <?php endforeach; ?>
@@ -193,7 +193,7 @@
                         <div class="grid-x grid-padding-x grid-padding-y">
                             <div class="cell small-4">
                                 <div class="info-container">
-                                    <a data-open="selection-modal" data-type="skill_magic"><i class="fa-solid fa-plus"></i>toevoegen</a>
+                                    <a data-open="selection-modal" data-type="item_basic"><i class="fa-solid fa-plus"></i>toevoegen</a>
                                 </div>
                             </div>
                             <div class="cell small-8">
@@ -220,6 +220,7 @@
     <div id="modal-loading" class="text-center">
         <i class="fa-solid fa-spinner fa-spin"></i> Gegevens laden
     </div>
+
     <form id="modal-form" class="grid-x grid-padding-x grid-padding-y" style="display:none;">
         <div id="selection-modal-dropdowns" class="cell small-3">
             <select name="type" data-name="" data-action="collect" style="display:none;">
@@ -244,4 +245,37 @@
     <button class="close-button" data-close aria-label="Close modal" type="button">
         <span aria-hidden="true">&times;</span>
     </button>
+
+</div>
+
+<div class="reveal large" id="background-modal" data-reveal>
+    
+    <div id="modal-loading" class="text-center">
+        <i class="fa-solid fa-spinner fa-spin"></i> Gegevens laden
+    </div>
+
+    <form id="modal-form" class="grid-x grid-padding-x grid-padding-y" style="display:none;">
+        
+    </form>
+    
+    <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    
+</div>
+
+<div class="reveal large" id="adventure-modal" data-reveal>
+    
+    <div id="modal-loading" class="text-center">
+        <i class="fa-solid fa-spinner fa-spin"></i> Gegevens laden
+    </div>
+
+    <form id="modal-form" class="grid-x grid-padding-x grid-padding-y" style="display:none;">
+        
+    </form>
+    
+    <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    
 </div>

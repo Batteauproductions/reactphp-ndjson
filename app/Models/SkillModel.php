@@ -41,38 +41,52 @@ class SkillModel extends Model
 		return $query->get()->getResultObject();
 	}
 
-    public function getSkillsByLink($skill_type=null, 
-                                    $arrProfessions=null,
-                                    $admin=false) {		
-        
+    public function getSkillsByLink($skill_type = null, $arrProfessions = null, $admin = false)
+    {
+        // Start building the base query
         $query = $this
                 ->db
-                ->table(TBL_SKILL.' s')
-                ->select('s.id, s.name, s.description, s.available, s.profession_link,s.modifier, s.skill_type, s.profession_link, s.profession_sublink, s.profession_rank, s.sl_only,
+                ->table(TBL_SKILL . ' s')
+                ->select('s.id, s.name, s.description, s.available, s.modifier, s.skill_type, s.profession_link, s.profession_sublink, s.profession_rank, s.sl_only,
                             p.id as prof_id, p.name as prof_name,
                             sm.id as stat_id, sm.name as stat_name,
                             st.id as type_id, st.name as type_name')
                 ->where('s.available', 1)
                 ->whereIn('s.skill_type', $skill_type)
-                ->whereIn('s.profession_link', [null,1])
-                ->join(TBL_PROF.' p','p.id = s.profession_link','left')
-                ->join(TBL_STATMOD.' sm','sm.id = s.modifier','left')
-                ->join(TBL_SKILL_TYPE.' st','st.id = s.skill_type','left')
-                ->orderBy('s.name','asc')
-                ->orderBy('s.profession_link','asc')
-                ->orderBy('s.profession_sublink','asc')
-                ->orderBy('s.profession_rank','asc');
-               
-        if($arrProfessions !== null) {
-            foreach($arrProfessions as $key => $value) {
-                $query->where('s.profession_link <=', $arrProfessions[$key]['main_id']);
-                //$query->where('s.profession_rank <=',  $value);
-            }            
+                ->join(TBL_PROF . ' p', 'p.id = s.profession_link', 'left')
+                ->join(TBL_STATMOD . ' sm', 'sm.id = s.modifier', 'left')
+                ->join(TBL_SKILL_TYPE . ' st', 'st.id = s.skill_type', 'left')
+                ->orderBy('s.profession_link', 'asc')
+                ->orderBy('s.name', 'asc')                
+                ->orderBy('s.profession_sublink', 'asc')
+                ->orderBy('s.profession_rank', 'asc');
+    
+        // Apply the initial where condition for profession link
+        $query->groupStart()
+              ->whereIn('s.profession_link', [null, 1]);
+    
+        // If arrProfessions is provided, add those conditions
+        if ($arrProfessions !== null) {
+            foreach ($arrProfessions as $key => $value) {
+                $query->orGroupStart()
+                      ->where('s.profession_link', $arrProfessions[$key]['main_id'])
+                      ->where('s.profession_rank <=', $arrProfessions[$key]['rank'])
+                      ->groupEnd();
+            }
         }
-
-       
-		return $query->get()->getResultObject();
-	}
+    
+        $query->groupEnd(); // End the initial profession link conditions group
+    
+        // Execute the query and get the results
+        $result = $query->get()->getResultObject();
+    
+        // Optional: Retrieve and log the last executed query for debugging
+        // $lastQuery = $this->db->getLastQuery();
+        // log_message('info', 'Last executed query: ' . $lastQuery);
+        // echo $lastQuery;
+    
+        return $result;
+    }
 
 	public function getSkillDetails($id) 
     {

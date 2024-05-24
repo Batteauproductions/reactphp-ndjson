@@ -6,6 +6,7 @@ use CodeIgniter\Controller;
 use App\Models\RaceModel;
 use App\Models\ProfessionModel;
 use App\Models\SkillModel;
+use App\Models\ItemModel;
 
 use App\Helpers\auth_helper;
 
@@ -16,6 +17,7 @@ class Character extends Controller
     protected $raceModel;
     protected $professionModel;
     protected $skillModel;
+    protected $itemModel;
 
     public function __construct() 
     {
@@ -24,6 +26,7 @@ class Character extends Controller
         $this->raceModel = new RaceModel();
         $this->professionModel = new ProfessionModel();
         $this->skillModel = new SkillModel();
+        $this->itemModel = new ItemModel();
         //collect the rights for the menu
         //1 -- admin | has all the rights needed to perform changes in the system
         //2 -- spelleiding | has rights to perform all but system changes
@@ -68,6 +71,9 @@ class Character extends Controller
                     break;
                 case 'fill-dropdown-skill_magic':
                     echo json_encode($this->skillModel->getSkillsByLink([3,4,5,10,11],$arrProfessions,$this->arrRights['isGameMaster']));
+                    break;
+                case 'fill-dropdown-item_basic':
+                    echo json_encode($this->itemModel->getBasicKit());
                     break;
                 default:
                     echo 'unknown action called';
