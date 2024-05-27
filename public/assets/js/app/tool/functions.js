@@ -8,8 +8,10 @@ function _construct(obj=null)
     if (obj !== null && obj !== undefined && obj !== '') {        
         let json_obj = JSON.parse(obj);
         console.log('character received', json_obj);
+        oCharacter.status = 'existing';
     } else {
         console.log('No character information received, treating as new');
+        oCharacter.status = 'new';
     }
 }
 
@@ -30,6 +32,7 @@ function calculateProfessionCost(obj) {
 }
 //--skills are allways calculated by rank increase and initial cost
 function calculateSkillCost(obj) {
+    console.log(obj);
     if (typeof obj === 'object') {
         if(obj.rank !== null) {
             return parseInt(obj.rank) * parseInt(obj.xp_cost);
@@ -57,25 +60,34 @@ function checkXPCost(cost) {
 //element: the element that needs to be added
 function elementAdd(container, element) {
     if (typeof element === 'object') {
+        var row = $('<div>', {
+            class: 'grid-x',
+        });
         var name = $('<div>', {
-            class: 'cell small-6 text-left',
+            class: 'cell small-5 text-left',
             text: `${element.main_name}${element.rank !== null ? ` (niveau ${element.rank})` : ''}`
         });
         var subtype = $('<div>', {
-            class: 'cell small-4 text-center',
+            class: 'cell small-3 text-center',
             text: `${element.sub_name !== null ? ` ${element.sub_name}` : '-'}`,
         });
         var cost = $('<div>', {
             class: 'cell small-2 text-right',
             text: `${element.xp_cost}pt.`
         });
-        $(`#${container}`).prepend(name,subtype,cost);
+        if(oCharacter.status === 'new') {
+            var action = $('<div>', {
+                class: 'cell small-2 text-right',
+                html: `${element.xp_cost}pt.`
+            });
+        } 
+        $(row).prepend(name,subtype,cost,action);      
+        $(`#${container}`).prepend(row);
     } else {
         console.error("elementAdd is not an object: " +$.type(element));
     }
 }
 
-//This function will 
 function experienceSpend(cost) {
     if((oCharacter.build.spend_xp+cost) > oCharacter.build.max_xp) {
         console.warn(`Attempt to set XP over maximum`);
@@ -85,6 +97,7 @@ function experienceSpend(cost) {
     }
     $('#spend_xp').text(oCharacter.build.spend_xp);
 }
+
 function experienceRefund(cost) {
     if((oCharacter.build.spend_xp-cost) < 0) {
         console.warn(`Attempt to set XP under minimum`);
@@ -151,6 +164,27 @@ function modalSet (data,action) {
     $(`#description`).show();
 }
 
+//These functions deal with adding, altering or removing professions from the character
+//obj: The profession that is being parsed
+function professionAdd(obj) {
+    if (typeof obj === 'object') {
+        oCharacter.profession.push(obj);
+        experienceSpend(calculateProfessionCost(obj));
+    } else {
+        console.error("professionAdd is not an object: " +$.type(obj));
+    }
+}
+
+//This function will remove a profession to the character
+//obj: The profession that is being parsed
+function professionRemove(obj) {
+    if (typeof obj === 'object') {
+        
+    } else {
+        console.error("professionRemove is not an object: " +$.type(obj));
+    }
+}
+
 //
 function showMessage (element,type, message) {    
     switch(type) {
@@ -174,6 +208,8 @@ function skillAdd(obj) {
     }
 }
 
+//This function will remove a skill from the character
+//obj: The skill that is being parsed
 function skillRemove(obj) {
     if (typeof obj === 'object') {
         oCharacter.skills.splice(obj);
@@ -183,73 +219,31 @@ function skillRemove(obj) {
     }
 }
 
-//These functions deal with adding, altering or removing professions from the character
-//obj: The profession that is being parsed
-function professionAdd(obj) {
-    if (typeof obj === 'object') {
-        oCharacter.profession.push(obj);
-        experienceSpend(calculateProfessionCost(obj));
-    } else {
-        console.error("professionAdd is not an object: " +$.type(obj));
-    }
-}
-
-//This function will remove a profession to the character
-//obj: The profession that is being parsed
-function professionRemove(obj) {
-    if (typeof obj === 'object') {
-        
-    } else {
-        console.error("professionRemove is not an object: " +$.type(obj));
-    }
-}
-
-
 function updateCharacter() {
     $('input[name="character"]').val(JSON.stringify(oCharacter));
 }
 
-function calculateIncrease(id) {	
-	let increase = 0;
-    	
-    //--- race
-	$.each(oCharacter.race, function(key,value) {
-        if($.isArray(value.modifier)) {
-            for(var i=0; i<value.modifier.length; i++) {
-                if(value.modifier[i].id == id) {
-                    increase ++;
+function calculateIncrease(id) {
+    let increase = 0;
+    // Helper function to calculate the increase for each category
+    var calculateForCategory = (category) => {
+        $.each(category, function(key, value) {
+            if ($.isArray(value.modifier)) {
+                for (let i = 0; i < value.modifier.length; i++) {
+                    if (value.modifier[i].id == id) {
+                        increase += value.rank > 1 ? value.rank : 1;
+                    }
                 }
-            }
-        } else if (value.modifier.id == id) {
-            increase ++;
-        }        
-    });
-    //--- profession
-    $.each(oCharacter.profession, function(key,value) {
-        if($.isArray(value.modifier)) {
-            for(var i=0; i<value.modifier.length; i++) {
-                if(value.modifier[i].id == id) {
-                    increase ++;
-                }
-            }            
-        } else if (value.modifier.id == id) {
-            increase ++;
-        }        
-    });
-    //--- skills
-    $.each(oCharacter.skills, function(key,value) {
-        if($.isArray(value.modifier)) {
-            for(var i=0; i<value.modifier.length; i++) {
-                if(value.modifier[i].id == id) {
-                    increase ++;
-                }
-            }
-        } else if (value.modifier.id == id) {
-            increase ++;
-        }
-    });
+            } 
+        });
+    }
 
-	return increase;
+    // Calculate increase for race, profession, and skills
+    calculateForCategory(oCharacter.race);
+    calculateForCategory(oCharacter.profession);
+    calculateForCategory(oCharacter.skills);
+
+    return increase;
 }
 
 //This function updates the stats of the character	
@@ -293,9 +287,10 @@ export {
     modalClear,
     modalSet,
     professionAdd,
+    professionRemove,
     showMessage,
     skillAdd,
-    professionRemove,
+    skillRemove,    
     updateCharacter,    
     updateCharacterStats,
 }

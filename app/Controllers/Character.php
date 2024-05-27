@@ -72,8 +72,11 @@ class Character extends Controller
                 case 'fill-dropdown-skill_magic':
                     echo json_encode($this->skillModel->getSkillsByLink([3,4,5,10,11],$arrProfessions,$this->arrRights['isGameMaster']));
                     break;
-                case 'fill-dropdown-item_basic':
+                case 'fill-dropdown-base_kit':
                     echo json_encode($this->itemModel->getBasicKit());
+                    break;
+                case 'fill-dropdown-item_add':
+                    echo json_encode($this->itemModel->getItems());
                     break;
                 default:
                     echo 'unknown action called';
@@ -105,6 +108,9 @@ class Character extends Controller
                 case 'get-details-skill_combat':
                 case 'get-details-skill_magic':
                     echo json_encode($this->skillModel->getSkillDetails($arrData['id']));
+                    break;
+                case 'get-details-base_kit':
+                    echo json_encode($this->itemModel->getBasicKitDetails($arrData['id']));
                     break;
                 default:
                     echo 'unknown action called';

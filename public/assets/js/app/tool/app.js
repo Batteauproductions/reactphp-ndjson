@@ -146,8 +146,10 @@ $(document).ready(function() {
             case 'skill_combat-choose':
             case 'skill_magic-choose':
                 //set the xp cost of the object
-                oChoice.rank = $('input[name="rank"]:checked').val() !== undefined ? $('input[name="rank"]:checked').val() : null;
+                oChoice.rank = $('input[name="rank"]:checked').val() !== undefined ? parseInt($('input[name="rank"]:checked').val()) : null;
                 handleChoice(skillAdd,calculateSkillCost);
+                break;
+            case 'base_kit-choose': 
                 break;
             default:
                 console.error(`a[data-action], unknown sAction called with value: ${sAction}`);
@@ -172,5 +174,4 @@ $(document).ready(function() {
         }
     });
     
-
 });

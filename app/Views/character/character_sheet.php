@@ -136,11 +136,13 @@
                     <div class="cell small-12 large-6 text-center">
                         <h1>Beroep(en)</h1>
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
-                        <div id="profession-list" class="grid-x align-middle info-container">
-                            <div class="cell small-12 text-center">
-                                <a data-open="selection-modal" data-type="profession"><i class="fa-solid fa-plus"></i>toevoegen</a>
+                        <div class="info-container">
+                            <div id="profession-list">
+
                             </div>
+                            <a data-open="selection-modal" data-type="profession"><i class="fa-solid fa-plus"></i>toevoegen</a>
                         </div>
+                        
                     </div>
                     <div class="cell small-12 large-6 text-center">
                         <h1>Beroeps vaardigheden</h1>
@@ -193,19 +195,17 @@
                         <div class="grid-x grid-padding-x grid-padding-y">
                             <div class="cell small-4">
                                 <div class="info-container">
-                                    <a data-open="selection-modal" data-type="item_basic"><i class="fa-solid fa-plus"></i>toevoegen</a>
+                                    <a data-open="selection-modal" data-type="base_kit"><i class="fa-solid fa-plus"></i>toevoegen</a>
                                 </div>
                             </div>
                             <div class="cell small-8">
                                 <div class="info-container">
-                                    <a data-open="selection-modal" data-type="skill_magic"><i class="fa-solid fa-plus"></i>toevoegen</a>
+                                    <a data-open="selection-modal" data-type="item_add"><i class="fa-solid fa-plus"></i>toevoegen</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="cell small-12">
             </div>
             <div class="cell small-12">
                 <button class="button solid"><i class="fa-regular fa-floppy-disk"></i> Opslaan</button>

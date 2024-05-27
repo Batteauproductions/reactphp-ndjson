@@ -7,16 +7,38 @@ const oTranslations = Object.freeze({
     "nl-NL": {
         not_enough_vp: 'Je hebt niet genoeg vaardigheidspunten.',
         choose_sub: 'Kies een subclasse',
-        rank: "Niveau"
+        rank: "Niveau",
+        remove: "verwijderen",
+        edit: "aanpassen",
+        upgrade: "verhogen",
+        downgrade: "verlagen"
     },
-    "en-GB": {
-        not_enough_vp: 'Je hebt niet genoeg vaardigheidspunten.',
-        choose_sub: 'Kies een subclasse',
-        rank: "Level"
-    }
 });
 
 let language = 'nl-NL';
+
+const icons = Object.freeze({
+    "remove": {
+        icon: '<i class="fa-solid fa-xmark"></i>',
+        text: oTranslations[language].remove,
+    },
+    "edit": {
+        icon: '<i class="fa-solid fa-pen-to-square"></i>',
+        text: oTranslations[language].edit,
+    },
+    "upgrade":{
+        icon: '<i class="fa-solid fa-circle-up"></i>',
+        text: oTranslations[language].upgrade,
+    },
+    "downgrade":{
+        icon: '<i class="fa-solid fa-circle-down"></i>',
+        text: oTranslations[language].downgrade,
+    },
+});
+const iconset = Object.freeze({
+    "new_skill_no_rank": Array("remove"),
+    "new_skill_with_rank": Array("remove","upgrade"),
+})
 
 let oCharacter = {
     build: Object.assign({}, jsonBaseChar),
@@ -29,6 +51,7 @@ export {
     jsonBaseChar,
     jsonStat,
     arrXP,
+    icons,
     arrProfLevel,
     oTranslations,
     language,
