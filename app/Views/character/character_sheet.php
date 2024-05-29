@@ -138,40 +138,84 @@
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
                         <div class="info-container">
                             <div id="profession-list">
-
+                                <!-- Dynamic filled -->
                             </div>
                             <a data-open="selection-modal" data-type="profession"><i class="fa-solid fa-plus"></i>toevoegen</a>
-                        </div>
-                        
+                        </div>                        
                     </div>
                     <div class="cell small-12 large-6 text-center">
                         <h1>Beroeps vaardigheden</h1>
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
-                        <div id="skill_base-list" class="grid-x align-middle info-container">                          
-                            <div class="cell small-12 text-center">
-                                <a data-open="selection-modal" data-type="skill_base"><i class="fa-solid fa-plus"></i>toevoegen</a>
+                        <div class="info-container">
+                            <div id="skill_base-list">
+                                <!-- Dynamic filled -->
                             </div>
+                            <a data-open="selection-modal" data-type="skill_base"><i class="fa-solid fa-plus"></i>toevoegen</a>
                         </div>
                     </div>
                     <div class="cell small-12 large-6 text-center">
                         <h1>Gevechts vaardigheden</h1>
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
-                        <div id="skill_combat-list" class="grid-x align-middle info-container">
-                            <div class="cell small-12 text-center">
-                                <a data-open="selection-modal" data-type="skill_combat"><i class="fa-solid fa-plus"></i>toevoegen</a>
+                        <div class="info-container">
+                            <div id="skill_combat-list">
+                                <!-- Dynamic filled -->
                             </div>
+                            <a data-open="selection-modal" data-type="skill_combat"><i class="fa-solid fa-plus"></i>toevoegen</a>
                         </div>
                     </div>
                     <div class="cell small-12 large-6 text-center">
                         <h1>Magische vaardigheden</h1>
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
-                        <div id="skill_magic-list" class="grid-x align-middle info-container">
-                            <div class="cell small-12 text-center">
-                                <a data-open="selection-modal" data-type="skill_magic"><i class="fa-solid fa-plus"></i>toevoegen</a>
+                        <div class="info-container">
+                            <div id="skill_magic-list">
+                                <!-- Dynamic filled -->
+                            </div>
+                            <a data-open="selection-modal" data-type="skill_magic"><i class="fa-solid fa-plus"></i>toevoegen</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-x grid-padding-x grid-padding-y show-for-large">
+                    <div class="cell small-12 text-center">
+                        <h1>Avonturen</h1>
+                        <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
+                        <div class="grid-x grid-margin-x grid-margin-y">
+                            <a class="cell small-4 medium-3 large-2" data-open="background-modal">
+                                <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>"/>
+                            </a>
+                            <?php foreach($arrEvents as $event):?>
+                                <a class="cell small-4 medium-3 large-2" data-open="adventure-modal">
+                                    <img src="<?php echo image_path('events/event_'.strtolower(str_replace([' ', '.'], '_',$event->name)).'.png')?>"/>
+                                </a>    
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-x grid-padding-x grid-padding-y show-for-large">
+                    <div class="cell small-12 text-center">
+                        <h1>Uitrusting</h1>
+                        <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
+                        <div class="grid-x grid-padding-x grid-padding-y">
+                            <div class="cell small-4">
+                                <div class="info-container">
+                                    <div data-id="base_kit-list">
+                                        <!-- Dynamic filled -->
+                                    </div>
+                                    <a data-open="selection-modal" data-type="base_kit"><i class="fa-solid fa-plus"></i>toevoegen</a>
+                                </div>
+                            </div>
+                            <div class="cell small-8">
+                                <div class="info-container">
+                                    <div id="item-list">
+                                        <!-- Dynamic filled -->
+                                    </div>
+                                    <a data-open="selection-modal" data-type="item_add"><i class="fa-solid fa-plus"></i>toevoegen</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="cell small-12 hide-for-large">
                 <div class="grid-x grid-padding-x grid-padding-y">
                     <div class="cell small-12 text-center">
                         <h1>Avonturen</h1>
@@ -193,13 +237,19 @@
                         <h1>Uitrusting</h1>
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
                         <div class="grid-x grid-padding-x grid-padding-y">
-                            <div class="cell small-4">
+                            <div class="cell small-12 medium-6">
                                 <div class="info-container">
+                                    <div data-id="base_kit-list">
+                                        <!-- Dynamic filled -->
+                                    </div>
                                     <a data-open="selection-modal" data-type="base_kit"><i class="fa-solid fa-plus"></i>toevoegen</a>
                                 </div>
                             </div>
-                            <div class="cell small-8">
+                            <div class="cell small-12 medium-6">
                                 <div class="info-container">
+                                    <div id="item-list">
+                                        <!-- Dynamic filled -->
+                                    </div>
                                     <a data-open="selection-modal" data-type="item_add"><i class="fa-solid fa-plus"></i>toevoegen</a>
                                 </div>
                             </div>

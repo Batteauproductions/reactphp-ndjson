@@ -5,13 +5,14 @@ const arrXP = Object.freeze($('input[name="arrXP"]').val().split(","));
 const arrProfLevel = Object.freeze($('input[name="arrProfLevel"]').val().split(","));
 const oTranslations = Object.freeze({
     "nl-NL": {
-        not_enough_vp: 'Je hebt niet genoeg vaardigheidspunten.',
-        choose_sub: 'Kies een subclasse',
-        rank: "Niveau",
-        remove: "verwijderen",
-        edit: "aanpassen",
-        upgrade: "verhogen",
-        downgrade: "verlagen"
+        not_enough_vp: 'Je hebt niet genoeg vaardigheidspunten.'
+        ,choose_sub: 'Kies een subclasse'
+        ,rank: "Niveau"
+        ,remove: "verwijderen"
+        ,edit: "aanpassen"
+        ,upgrade: "verhogen"
+        ,downgrade: "verlagen"
+        ,change: "veranderen"
     },
 });
 
@@ -33,6 +34,10 @@ const icons = Object.freeze({
     "downgrade":{
         icon: '<i class="fa-solid fa-circle-down"></i>',
         text: oTranslations[language].downgrade,
+    },
+    "change":{
+        icon: '<i class="fa-solid fa-rotate-right"></i>',
+        text: oTranslations[language].change,
     },
 });
 const iconset = Object.freeze({

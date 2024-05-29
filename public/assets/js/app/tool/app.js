@@ -1,4 +1,4 @@
-import { language, oCharacter, oTranslations } from './settings.js';
+import { language, icons, oCharacter, oTranslations } from './settings.js';
 import { _construct, calculateSkillCost, calculateProfessionCost, checkXPCost, elementAdd, modalClear, modalSet, showMessage, skillAdd, professionAdd, updateCharacterStats } from './functions.js';
 
 $(document).ready(function() {
@@ -32,6 +32,21 @@ $(document).ready(function() {
                             optGroup = data[i].prof_name;  
                         } 
                         if(optGroup == data[i].prof_name) {
+                            var option = $('<option>', {
+                                value: data[i].id,
+                                text: data[i].name
+                            });
+                            optionGroup.append(option);       
+                        } 
+                        $('select[name="type"]').append(optionGroup);
+                    } else if(data[i].hasOwnProperty('type_name')) {
+                        if(optGroup == '' || optGroup !== data[i].type_name) {
+                            var optionGroup = $('<optgroup>', {
+                                label: data[i].type_name
+                            });
+                            optGroup = data[i].type_name;  
+                        } 
+                        if(optGroup == data[i].type_name) {
                             var option = $('<option>', {
                                 value: data[i].id,
                                 text: data[i].name
@@ -149,12 +164,22 @@ $(document).ready(function() {
                 oChoice.rank = $('input[name="rank"]:checked').val() !== undefined ? parseInt($('input[name="rank"]:checked').val()) : null;
                 handleChoice(skillAdd,calculateSkillCost);
                 break;
-            case 'base_kit-choose': 
+            case 'base_kit-choose':
+                var $element = $('div[data-id="base_kit-list"]');
+                oCharacter.build.base_kit = parseInt(oTempData.details.id);
+                var container = $('<div>', {
+                    html: `<h3 data-title>${oTempData.details.name}</h3><p data-description>${oTempData.details.description}</p>`
+                });
+                var icon = icons["change"];
+                $('a[data-type="base_kit"]').html(`${icon.icon} ${icon.text}`);
+                $element.html('').append(container)
+                bCheck = true;
                 break;
             default:
                 console.error(`a[data-action], unknown sAction called with value: ${sAction}`);
                 break;
         }
+        
         if(bCheck) {
             console.log(oCharacter);
             $('#selection-modal').foundation('close');

@@ -1,5 +1,5 @@
 // Importing the variables
-import { jsonBaseChar,jsonStat,arrXP,arrProfLevel,oCharacter,oTranslations, language} from './settings.js';
+import { jsonBaseChar,jsonStat,arrXP,arrProfLevel,oCharacter,icons,oTranslations, language} from './settings.js';
 
 function _construct(obj=null)
 {
@@ -60,28 +60,49 @@ function checkXPCost(cost) {
 //element: the element that needs to be added
 function elementAdd(container, element) {
     if (typeof element === 'object') {
+        console.log(element);
+
+        //--create master container
         var row = $('<div>', {
             class: 'grid-x',
         });
-        var name = $('<div>', {
+
+        //--create main name column
+        var column_name = $('<div>', {
             class: 'cell small-5 text-left',
             text: `${element.main_name}${element.rank !== null ? ` (niveau ${element.rank})` : ''}`
         });
-        var subtype = $('<div>', {
+
+        //--create sub name (if exists)
+        var column_subname = $('<div>', {
             class: 'cell small-3 text-center',
             text: `${element.sub_name !== null ? ` ${element.sub_name}` : '-'}`,
         });
-        var cost = $('<div>', {
+
+        //--create xp cost column
+        var column_cost = $('<div>', {
             class: 'cell small-2 text-right',
             text: `${element.xp_cost}pt.`
         });
-        if(oCharacter.status === 'new') {
-            var action = $('<div>', {
-                class: 'cell small-2 text-right',
-                html: `${element.xp_cost}pt.`
+        
+        //--create icon set column
+        var iconSet = ["upgrade","remove"];
+        var arrIcons = [];
+        for (var i=0; i<iconSet.length; i++) {
+            var action = $('<a>', {
+                "data-action": iconSet[i],
+                "data-id": element.main_id,
+                "data-sub_id": element.sub_id,
+                html: icons[iconSet[i]].icon
             });
-        } 
-        $(row).prepend(name,subtype,cost,action);      
+            arrIcons.push(action)
+        }        
+        var column_action = $('<div>', {
+            class: 'cell small-2 text-right',
+            html: arrIcons
+        });
+         
+        $(row).append(column_name,column_subname,column_cost,column_action);      
         $(`#${container}`).prepend(row);
     } else {
         console.error("elementAdd is not an object: " +$.type(element));
