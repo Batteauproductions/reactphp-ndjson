@@ -185,7 +185,7 @@ class Page extends BaseController
                                         'jsonStat' => $this->arrSettings['jsonStat'],
                                         'arrXP' => $this->arrSettings['arrXP'],
                                         'arrProfLevel' => $this->arrSettings['arrProfLevel'],
-                                        'arrEvents' => $this->eventModel->getEvents(),
+                                        'arrEvents' => array_reverse($this->eventModel->getEvents()),
                                         'viewAsAdmin' => false,
                                     );
                                     $arrContent['content'] = view('character/character_sheet',$arrData);

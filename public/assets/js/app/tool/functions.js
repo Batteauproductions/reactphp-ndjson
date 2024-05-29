@@ -13,6 +13,8 @@ function _construct(obj=null)
         console.log('No character information received, treating as new');
         oCharacter.status = 'new';
     }
+
+    $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
 }
 
 //This function serves as a "helper", to calculate the proper costs
@@ -55,6 +57,24 @@ function checkXPCost(cost) {
     }    
 };
 
+//A helper function to turn the complete integer of the currency of the user into setting correct text
+function convertCurrency(iAmount) {
+    const iCurrency = parseInt(iAmount);
+
+    const iGold = Math.floor(iCurrency / 100);
+    const iSilver = Math.floor((iCurrency % 100) / 10);
+    const iCopper = iCurrency % 10;
+
+    const iSize = 20;
+
+    const sGold = iGold > 0 ? `${iGold} <img src="${window.location.origin}/assets/images/elements/coin_gold.png" style="height:${iSize}x; width:${iSize}px"/>` : '';
+    const sSilver = iSilver > 0 ? `${iSilver} <img src="${window.location.origin}/assets/images/elements/coin_silver.png" style="height:${iSize}px; width:${iSize}px"/>` : '';
+    const sCopper = iCopper > 0 ? `${iCopper} <img src="${window.location.origin}/assets/images/elements/coin_copper.png" style="height:${iSize}px; width:${iSize}px"/>` : '';
+
+    const sCurrency = `${sGold} ${sSilver} ${sCopper}`.trim();
+    return sCurrency;
+}
+
 //This function will add a container to the sheet
 //container: the element in the DOM to add elements to
 //element: the element that needs to be added
@@ -64,7 +84,7 @@ function elementAdd(container, element) {
 
         //--create master container
         var row = $('<div>', {
-            class: 'grid-x',
+            class: 'grid-x animate__animated animate__slideInDown',
         });
 
         //--create main name column
@@ -75,13 +95,13 @@ function elementAdd(container, element) {
 
         //--create sub name (if exists)
         var column_subname = $('<div>', {
-            class: 'cell small-3 text-center',
+            class: 'cell small-4 text-center',
             text: `${element.sub_name !== null ? ` ${element.sub_name}` : '-'}`,
         });
 
         //--create xp cost column
         var column_cost = $('<div>', {
-            class: 'cell small-2 text-right',
+            class: 'cell small-1 text-right',
             text: `${element.xp_cost}pt.`
         });
         
@@ -304,6 +324,7 @@ export {
     calculateProfessionCost,
     calculateSkillCost,
     checkXPCost,
+    convertCurrency,
     elementAdd,
     modalClear,
     modalSet,

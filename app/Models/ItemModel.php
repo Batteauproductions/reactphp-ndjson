@@ -64,4 +64,25 @@ class ItemModel extends Model
         return $query->getResultObject();
 	}
 
+    public function getItemDetails($id) 
+    {
+        $arrData['details'] = $this->getItemById($id);
+        $arrData['subtype'] = array();
+        $arrData['modifier'] = array();
+        return $arrData;
+    }
+
+    public function getItemById($id) 
+    {		
+        $query = $this
+                    ->db
+                    ->table(TBL_ITEMS)
+                    ->select('id, type_id, level, name, description, gatherable, price_low, price, price_high')
+                    ->where('id',$id)
+                    ->where('available', 1)
+                    ->get();
+
+        return $query->getRow();
+	}
+
 }

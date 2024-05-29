@@ -30,7 +30,7 @@ class RaceModel extends Model
     public function getRaceDetails($id) 
     {
         $arrData['details'] = $this->getRaceById($id);
-            //$arrData['skills'] = $this->getRaceSkills(explode('|',$arrData['details']->skills));
+        $arrData['skills'] = array();
         $arrData['modifier'] = $this->getRaceModifer(explode('|',$arrData['details']->modifier));
         return $arrData;
     }

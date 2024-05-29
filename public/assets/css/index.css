@@ -196,9 +196,32 @@ ul li {
   color: #E34646;
 }
 
+.event-container {
+  background: #1E1E1E;
+  border-radius: 0.313rem;
+  position: relative;
+  overflow: hidden;
+}
+.event-container span {
+  bottom: 0;
+  color: #fff;
+  font-weight: bold;
+  left: 0;
+  padding: 1.25rem;
+  position: absolute;
+  width: 100%;
+}
+.event-container.disabled {
+  cursor: default;
+  pointer-events: none !important;
+  opacity: 0.6;
+  filter: grayscale(1);
+}
+
 .form-character .info-container {
   position: relative;
   height: auto;
+  overflow: hidden;
   width: 100%;
   font-size: 0.8rem !important;
   border-radius: 0.313rem;

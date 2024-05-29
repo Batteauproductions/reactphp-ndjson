@@ -34,10 +34,36 @@
     }
 }
 
+.event-container {
+    
+    background: $color-primary;
+    border-radius: $border-radius;
+    position: relative;
+    overflow: hidden;
+
+    span {
+        bottom: 0;
+        color: $paragraph-color;
+        font-weight: bold;
+        left: 0;
+        padding: $padding;
+        position: absolute;
+        width: 100%;
+    }
+
+    &.disabled {
+        cursor: default;
+        pointer-events: none !important;
+        opacity: 0.6;
+        filter: grayscale(1);
+    }
+}
+
 .form-character {    
     .info-container {
         position: relative;
         height: auto;
+        overflow: hidden;
         width: 100%;
         font-size: calc(0.8*$paragraph-font-size) !important;
         border-radius: $border-radius;

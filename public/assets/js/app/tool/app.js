@@ -175,6 +175,8 @@ $(document).ready(function() {
                 $element.html('').append(container)
                 bCheck = true;
                 break;
+            case 'item_add-choose':
+                break;
             default:
                 console.error(`a[data-action], unknown sAction called with value: ${sAction}`);
                 break;

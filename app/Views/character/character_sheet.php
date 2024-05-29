@@ -63,7 +63,7 @@
                                 Geld
                             </div>
                             <div class="cell small-6">
-                                <span id="stat-currency"><?php echo $jsonBaseChar['currency'] ?></span> goud
+                                <span id="stat-currency"><?php echo $jsonBaseChar['currency'] ?></span>
                             </div>
                         </div>
                     </div>
@@ -180,11 +180,17 @@
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
                         <div class="grid-x grid-margin-x grid-margin-y">
                             <a class="cell small-4 medium-3 large-2" data-open="background-modal">
-                                <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>"/>
+                                <div class="event-container">
+                                    <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>"/>
+                                    <span>Achtergrond</span>
+                                </div>                              
                             </a>
                             <?php foreach($arrEvents as $event):?>
                                 <a class="cell small-4 medium-3 large-2" data-open="adventure-modal">
-                                    <img src="<?php echo image_path('events/event_'.strtolower(str_replace([' ', '.'], '_',$event->name)).'.png')?>"/>
+                                    <div class="event-container">
+                                        <img src="<?php echo image_path('events/event_'.strtolower(str_replace([' ', '.'], '_',$event->name)).'.png')?>"/>
+                                        <span><?php echo $event->name ?></span>
+                                    </div>
                                 </a>    
                             <?php endforeach; ?>
                         </div>
@@ -222,11 +228,17 @@
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
                         <div class="grid-x grid-margin-x grid-margin-y">
                             <a class="cell small-4 medium-3 large-2" data-open="background-modal">
-                                <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>"/>
+                                <div class="event-container">
+                                    <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>"/>
+                                    <span>Achtergrond</span>
+                                </div>                              
                             </a>
                             <?php foreach($arrEvents as $event):?>
                                 <a class="cell small-4 medium-3 large-2" data-open="adventure-modal">
-                                    <img src="<?php echo image_path('events/event_'.strtolower(str_replace([' ', '.'], '_',$event->name)).'.png')?>"/>
+                                    <div class="event-container">
+                                        <img src="<?php echo image_path('events/event_'.strtolower(str_replace([' ', '.'], '_',$event->name)).'.png')?>"/>
+                                        <span><?php echo $event->name.' - '.$event->description ?></span>
+                                    </div>
                                 </a>    
                             <?php endforeach; ?>
                         </div>
@@ -286,6 +298,7 @@
         <div id="description" class="cell small-9" style="display:none;">
             <h1 data-title></h1>
             <p data-description></p>
+            <p data-cost></p>
             <p class="" style="display:none" choice-message></p>
             <a data-action="race-choose" class="button solid"><i class="fa-regular fa-square-check"></i>kiezen</a>
             <a data-link href="" class="button clear" target="_blank" ><i class="fa-solid fa-circle-info"></i>meer informatie</a>

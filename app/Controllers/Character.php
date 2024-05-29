@@ -112,6 +112,9 @@ class Character extends Controller
                 case 'get-details-base_kit':
                     echo json_encode($this->itemModel->getBasicKitDetails($arrData['id']));
                     break;
+                case 'get-details-item_add':
+                    echo json_encode($this->itemModel->getItemDetails($arrData['id']));
+                    break;
                 default:
                     echo 'unknown action called';
                     break;
