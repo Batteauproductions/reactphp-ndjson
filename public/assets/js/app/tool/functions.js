@@ -67,9 +67,9 @@ function convertCurrency(iAmount) {
 
     const iSize = 20;
 
-    const sGold = iGold > 0 ? `${iGold} <img src="${window.location.origin}/assets/images/elements/coin_gold.png" style="height:${iSize}x; width:${iSize}px"/>` : '';
-    const sSilver = iSilver > 0 ? `${iSilver} <img src="${window.location.origin}/assets/images/elements/coin_silver.png" style="height:${iSize}px; width:${iSize}px"/>` : '';
-    const sCopper = iCopper > 0 ? `${iCopper} <img src="${window.location.origin}/assets/images/elements/coin_copper.png" style="height:${iSize}px; width:${iSize}px"/>` : '';
+    const sGold = iGold > 0 ? `${iGold} <img title="goud" src="${window.location.origin}/assets/images/elements/coin_gold.png" style="height:${iSize}x; width:${iSize}px"/>` : '';
+    const sSilver = iSilver > 0 ? `${iSilver} <img title="zilver" src="${window.location.origin}/assets/images/elements/coin_silver.png" style="height:${iSize}px; width:${iSize}px"/>` : '';
+    const sCopper = iCopper > 0 ? `${iCopper} <img title="koper" src="${window.location.origin}/assets/images/elements/coin_copper.png" style="height:${iSize}px; width:${iSize}px"/>` : '';
 
     const sCurrency = `${sGold} ${sSilver} ${sCopper}`.trim();
     return sCurrency;
@@ -149,24 +149,6 @@ function experienceRefund(cost) {
     $('#spend_xp').text(oCharacter.build.spend_xp);
 }
 
-function modalClear () {
-    //--set default status to loading
-    $('#modal-loading').show();
-    $('#modal-form').hide();    
-    //--hide the elements in the reveal model
-    $('select[name="type"]').hide();
-    $('select[name="subtype"]').hide();        
-    //--remove the old types /remove the old sub types
-    $('select[name="type"] option, select[name="subtype"] option').filter(function() {
-        return $(this).attr('value') !== undefined && $(this).attr('value') !== "";
-    }).remove();
-    $('select[name="type"]').find('optgroup').remove();
-    //--remove the old rank options
-    $('#rank-options').html('');
-    $('#description').hide();
-    $(`p[choice-message]`).hide();
-}
-
 function modalSet (data,action) {
     //check if the data has a subtype                
     if (data.hasOwnProperty('subtype') && data.subtype.length > 0) {                    
@@ -205,27 +187,6 @@ function modalSet (data,action) {
     $(`#description`).show();
 }
 
-//These functions deal with adding, altering or removing professions from the character
-//obj: The profession that is being parsed
-function professionAdd(obj) {
-    if (typeof obj === 'object') {
-        oCharacter.profession.push(obj);
-        experienceSpend(calculateProfessionCost(obj));
-    } else {
-        console.error("professionAdd is not an object: " +$.type(obj));
-    }
-}
-
-//This function will remove a profession to the character
-//obj: The profession that is being parsed
-function professionRemove(obj) {
-    if (typeof obj === 'object') {
-        
-    } else {
-        console.error("professionRemove is not an object: " +$.type(obj));
-    }
-}
-
 //
 function showMessage (element,type, message) {    
     switch(type) {
@@ -235,28 +196,6 @@ function showMessage (element,type, message) {
         case 'error':
             $(element).addClass('input-error').text(message).show();
             break;
-    }
-}
-
-//These functions deal with adding, altering or removing skills from the character
-//obj: The skill that is being parsed
-function skillAdd(obj) {
-    if (typeof obj === 'object') {
-        oCharacter.skills.push(obj);
-        experienceSpend(obj.xp_cost);
-    } else {
-        console.error("skillAdd is not an object: " +$.type(obj));
-    }
-}
-
-//This function will remove a skill from the character
-//obj: The skill that is being parsed
-function skillRemove(obj) {
-    if (typeof obj === 'object') {
-        oCharacter.skills.splice(obj);
-        experienceRefund(obj.xp_cost);
-    } else {
-        console.error("skillRemove is not an object: " +$.type(obj));
     }
 }
 
@@ -326,13 +265,8 @@ export {
     checkXPCost,
     convertCurrency,
     elementAdd,
-    modalClear,
     modalSet,
-    professionAdd,
-    professionRemove,
     showMessage,
-    skillAdd,
-    skillRemove,    
     updateCharacter,    
     updateCharacterStats,
 }

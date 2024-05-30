@@ -1,5 +1,33 @@
-import { language, icons, oCharacter, oTranslations } from './settings.js';
-import { _construct, calculateSkillCost, calculateProfessionCost, checkXPCost, elementAdd, modalClear, modalSet, showMessage, skillAdd, professionAdd, updateCharacterStats } from './functions.js';
+import { 
+    domain,
+    language,
+    icons, oCharacter, oTranslations } from './settings.js';
+
+import { 
+    skillAdd, 
+    skillRemove,
+} from './skills.js';
+
+import {
+    professionAdd,
+    professionRemove,
+} from './professions.js'
+
+import {
+    itemAdd,
+    itemRemove,
+} from './items.js'
+
+import { 
+    _construct, 
+    calculateSkillCost, 
+    calculateProfessionCost, 
+    checkXPCost, 
+    elementAdd, 
+    modalSet, 
+    showMessage, 
+    updateCharacterStats 
+} from './functions.js';
 
 $(document).ready(function() {
 
@@ -11,10 +39,23 @@ $(document).ready(function() {
     //add extra functionality to the model
     $('a[data-open]').on('click',function(){     
         var sAction = $(this).data("type");    
-        modalClear();
+        //--set default status to loading
+        $('#modal-loading').show();
+        $('#modal-form').hide();    
+        //--hide the elements in the reveal model
+        $('select[name="type"]').hide();
+        $('select[name="subtype"]').hide();
+        $('#description').hide();
+        $('p[choice-message]').hide();        
+        //--remove the old types / remove the old sub types
+        $('select[name="type"] option, select[name="subtype"] option').filter(function() {
+            return $(this).attr('value') !== undefined && $(this).attr('value') !== "";
+        }).remove();
+        $('select[name="type"]').find('optgroup').remove();
+        $('#rank-options').html('');        
         //--make call to fill the dropdown
         $.ajax({
-            url: window.location.origin + '/action/get-dropdown',
+            url: `${domain}/action/get-dropdown`,
             data: {
                 action: `fill-dropdown-${sAction}`,
                 character: oCharacter,
@@ -24,6 +65,7 @@ $(document).ready(function() {
             success: function(data) {
                 var optGroup = '';
                 for(var i=0; i< data.length; i++) {
+                    //check if we are dealing with skills, since they have a prof_name
                     if(data[i].hasOwnProperty('prof_name')) {
                         if(optGroup == '' || optGroup !== data[i].prof_name) {
                             var optionGroup = $('<optgroup>', {
@@ -39,7 +81,9 @@ $(document).ready(function() {
                             optionGroup.append(option);       
                         } 
                         $('select[name="type"]').append(optionGroup);
-                    } else if(data[i].hasOwnProperty('type_name')) {
+                    } 
+                    //or if we are dealing with items, since they have a type_name but not a prof_name
+                    else if(data[i].hasOwnProperty('type_name')) {
                         if(optGroup == '' || optGroup !== data[i].type_name) {
                             var optionGroup = $('<optgroup>', {
                                 label: data[i].type_name
@@ -54,7 +98,9 @@ $(document).ready(function() {
                             optionGroup.append(option);       
                         } 
                         $('select[name="type"]').append(optionGroup);
-                    } else {
+                    } 
+                    //or something else (race/profession/basekit), since they have nothing like above
+                    else {
                         var option = $('<option>', {
                             value: data[i].id,
                             text: data[i].name

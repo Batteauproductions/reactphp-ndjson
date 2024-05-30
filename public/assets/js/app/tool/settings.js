@@ -1,4 +1,5 @@
 //oSettings
+const domain = window.location.origin;
 const jsonBaseChar = Object.freeze(JSON.parse($('input[name="jsonBaseChar"]').val()));
 const jsonStat = Object.freeze(JSON.parse($('input[name="jsonStat"]').val()));
 const arrXP = Object.freeze($('input[name="arrXP"]').val().split(","));
@@ -61,4 +62,5 @@ export {
     oTranslations,
     language,
     oCharacter,
+    domain,
 }

@@ -207,9 +207,10 @@ ul li {
   color: #fff;
   font-weight: bold;
   left: 0;
-  padding: 1.25rem;
+  padding: 0.625rem;
   position: absolute;
   width: 100%;
+  text-shadow: 1px 0 0 #000, 0 1px 0 #000, -1px 0 0 #000, 0 -1px 0 #000; /*bottom */
 }
 .event-container.disabled {
   cursor: default;

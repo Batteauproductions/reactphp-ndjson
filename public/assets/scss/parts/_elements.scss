@@ -46,9 +46,15 @@
         color: $paragraph-color;
         font-weight: bold;
         left: 0;
-        padding: $padding;
+        padding: calc($padding/2);
         position: absolute;
         width: 100%;
+
+        text-shadow: 
+            1px 0 0 #000, /*right */
+            0 1px 0 #000, /*top */
+            -1px 0 0 #000, /*left */
+            0 -1px 0 #000; /*bottom */
     }
 
     &.disabled {
