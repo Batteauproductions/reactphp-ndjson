@@ -90,7 +90,7 @@ h3 {
 
 p {
   color: #fff;
-  font: normal 1rem/1.2rem Manuale, serif;
+  font: normal 1rem/1.35rem Manuale, serif;
   text-transform: none;
 }
 
@@ -108,7 +108,7 @@ a:hover, a:hover:hover, a:active:hover, a:focus:hover {
 
 form label {
   display: inline-block;
-  font: normal 1rem/1.2rem Manuale, serif;
+  font: normal 1rem/1.35rem Manuale, serif;
   color: #fff;
   margin-bottom: 0.625rem;
 }
@@ -119,7 +119,7 @@ form label.input-error {
   margin-bottom: 1.5rem;
 }
 form input, form select {
-  font: normal 1rem/1.2rem Manuale, serif;
+  font: normal 1rem/1.35rem Manuale, serif;
   display: block;
   font-size: inherit;
   margin-bottom: 1.5rem;
@@ -176,7 +176,7 @@ ul li {
 .button {
   cursor: pointer;
   display: inline-block;
-  font: normal 1rem/1.2rem Manuale, serif;
+  font: normal 1rem/1.35rem Manuale, serif;
   padding: 0.625rem 1.25rem;
   margin-bottom: 0;
 }
@@ -194,6 +194,10 @@ ul li {
 }
 .button.clear:hover, .button.clear:active, .button.clear:focus {
   color: #E34646;
+}
+
+.choice-row {
+  padding-bottom: 1.25rem;
 }
 
 .event-container {
@@ -224,10 +228,14 @@ ul li {
   height: auto;
   overflow: hidden;
   width: 100%;
-  font-size: 0.8rem !important;
+  font-family: "Manuale", serif !important;
+  font-size: 0.9rem !important;
   border-radius: 0.313rem;
   background: #1E1E1E;
   padding: 1.25rem;
+}
+.form-character .info-container ul li {
+  text-align: left;
 }
 
 .form-data {
@@ -248,7 +256,7 @@ ul li {
 .navigation-site nav a, .navigation-footer nav a {
   display: inline-block;
   padding: 1.25rem;
-  font: normal 1rem/1.2rem Manuale, serif;
+  font: normal 1rem/1.35rem Manuale, serif;
 }
 .navigation-site nav .dropdown, .navigation-footer nav .dropdown {
   position: relative;

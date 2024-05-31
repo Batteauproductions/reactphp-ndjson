@@ -211,7 +211,7 @@
                             </div>
                             <div class="cell small-8">
                                 <div class="info-container">
-                                    <div id="item-list">
+                                    <div data-id="item-list">
                                         <!-- Dynamic filled -->
                                     </div>
                                     <a data-open="selection-modal" data-type="item_add"><i class="fa-solid fa-plus"></i>toevoegen</a>
@@ -259,7 +259,7 @@
                             </div>
                             <div class="cell small-12 medium-6">
                                 <div class="info-container">
-                                    <div id="item-list">
+                                    <div data-id="item-list">
                                         <!-- Dynamic filled -->
                                     </div>
                                     <a data-open="selection-modal" data-type="item_add"><i class="fa-solid fa-plus"></i>toevoegen</a>
@@ -291,9 +291,11 @@
             <select name="subtype" style="display:none;">
                 <option value="" disabled selected>Geen voorkeur</option>
             </select>
+            <input type="number" name="item_amount" style="display:none;" value="">
             <section id="rank-options" style="display:none;">
                 <!-- dynamic filled -->
             </section>
+
         </div>
         <div id="description" class="cell small-9" style="display:none;">
             <h1 data-title></h1>

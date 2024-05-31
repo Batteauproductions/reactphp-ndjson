@@ -7,6 +7,7 @@ const arrProfLevel = Object.freeze($('input[name="arrProfLevel"]').val().split("
 const oTranslations = Object.freeze({
     "nl-NL": {
         not_enough_vp: 'Je hebt niet genoeg vaardigheidspunten.'
+        ,not_enough_coin: 'Je hebt niet genoeg geld om dit aan te schaffen.'
         ,choose_sub: 'Kies een subclasse'
         ,rank: "Niveau"
         ,remove: "verwijderen"
@@ -14,6 +15,9 @@ const oTranslations = Object.freeze({
         ,upgrade: "verhogen"
         ,downgrade: "verlagen"
         ,change: "veranderen"
+        ,gold: "Goud"
+        ,silver: "Zilver"
+        ,copper: "Koper"
     },
 });
 

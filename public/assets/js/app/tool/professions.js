@@ -3,6 +3,13 @@ import {
     oCharacter    
 } from './settings.js';
 
+// Importing the functions needed for the file
+import { 
+    _construct, 
+    calculateProfessionCost, 
+    experienceSpend,
+} from './functions.js';
+
 //These functions deal with adding, altering or removing professions from the character
 //obj: The profession that is being parsed
 function professionAdd(obj) {

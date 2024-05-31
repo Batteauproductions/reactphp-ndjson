@@ -34,6 +34,10 @@
     }
 }
 
+.choice-row {
+    padding-bottom: $padding;
+}
+
 .event-container {
     
     background: $color-primary;
@@ -71,10 +75,18 @@
         height: auto;
         overflow: hidden;
         width: 100%;
-        font-size: calc(0.8*$paragraph-font-size) !important;
+        font-family: $paragraph-font-family !important;
+        font-size: calc(0.9*$paragraph-font-size) !important;
         border-radius: $border-radius;
         background: $color-primary;
         padding: $padding;
+
+        
+        ul {
+            li {
+                text-align: left;
+            }
+        }
     }
 }
 

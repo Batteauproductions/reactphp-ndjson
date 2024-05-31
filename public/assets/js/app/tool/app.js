@@ -23,6 +23,7 @@ import {
     calculateSkillCost, 
     calculateProfessionCost, 
     checkXPCost, 
+    checkCurrencyCost,
     elementAdd, 
     modalSet, 
     showMessage, 
@@ -138,7 +139,7 @@ $(document).ready(function() {
             type: 'POST',
             dataType: 'json',
             success: function(data) {
-                //console.log(data);
+                console.log(data);
                 oTempData = data;
                 modalSet(data,sAction);
             },
@@ -164,7 +165,8 @@ $(document).ready(function() {
             sub_id: $('select[name="subtype"] option:selected').val() ? parseInt($('select[name="subtype"] option:selected').val()) : null,
             sub_name: ($('select[name="subtype"] option:selected').val() !== '') ? $('select[name="subtype"] option:selected').text() : null,
             modifier: oTempData.modifier,    
-            xp_cost: parseInt(oTempData.details.xp_cost),            
+            amount: ($('input[name="item_amount"]').val() !== '') ? parseInt($('input[item_amount"]').val()) : null,
+            cost: parseInt(oTempData.details.xp_cost),            
         }
 
         var handleChoice = (addFunction,xpCalc) => {
@@ -222,6 +224,11 @@ $(document).ready(function() {
                 bCheck = true;
                 break;
             case 'item_add-choose':
+                if(!checkCurrencyCost(parseInt(oTempData.details.price))) {
+                    showErrorMessage('not_enough_coin');
+                } else {
+                    itemAdd($('[data-id="item-list"]'),oChoice);
+                }
                 break;
             default:
                 console.error(`a[data-action], unknown sAction called with value: ${sAction}`);

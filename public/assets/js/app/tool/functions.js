@@ -57,6 +57,18 @@ function checkXPCost(cost) {
     }    
 };
 
+//This function will check if the character has enough xp available to buy the profession or skill
+function checkCurrencyCost(cost) {
+    if (typeof cost === 'number') {
+        if(oCharacter.build.currency - cost >= 0) {
+            return true;
+        } 
+        return false;
+    } else {
+        console.error("checkXPCost is not an number: " +$.type(cost));
+    }    
+};
+
 //A helper function to turn the complete integer of the currency of the user into setting correct text
 function convertCurrency(iAmount) {
     const iCurrency = parseInt(iAmount);
@@ -67,9 +79,9 @@ function convertCurrency(iAmount) {
 
     const iSize = 20;
 
-    const sGold = iGold > 0 ? `${iGold} <img title="goud" src="${window.location.origin}/assets/images/elements/coin_gold.png" style="height:${iSize}x; width:${iSize}px"/>` : '';
-    const sSilver = iSilver > 0 ? `${iSilver} <img title="zilver" src="${window.location.origin}/assets/images/elements/coin_silver.png" style="height:${iSize}px; width:${iSize}px"/>` : '';
-    const sCopper = iCopper > 0 ? `${iCopper} <img title="koper" src="${window.location.origin}/assets/images/elements/coin_copper.png" style="height:${iSize}px; width:${iSize}px"/>` : '';
+    const sGold = iGold > 0 ? `${iGold} <img title="${oTranslations[language].gold}" src="${window.location.origin}/assets/images/elements/coin_gold.png" style="height:${iSize}x; width:${iSize}px"/>` : '';
+    const sSilver = iSilver > 0 ? `${iSilver} <img title="${oTranslations[language].silver}" src="${window.location.origin}/assets/images/elements/coin_silver.png" style="height:${iSize}px; width:${iSize}px"/>` : '';
+    const sCopper = iCopper > 0 ? `${iCopper} <img title="${oTranslations[language].copper}" src="${window.location.origin}/assets/images/elements/coin_copper.png" style="height:${iSize}px; width:${iSize}px"/>` : '';
 
     const sCurrency = `${sGold} ${sSilver} ${sCopper}`.trim();
     return sCurrency;
@@ -78,13 +90,13 @@ function convertCurrency(iAmount) {
 //This function will add a container to the sheet
 //container: the element in the DOM to add elements to
 //element: the element that needs to be added
-function elementAdd(container, element) {
+function elementAdd(container, element, type) {
     if (typeof element === 'object') {
         console.log(element);
 
         //--create master container
         var row = $('<div>', {
-            class: 'grid-x animate__animated animate__slideInDown',
+            class: 'grid-x choice-row animate__animated animate__slideInDown',
         });
 
         //--create main name column
@@ -93,17 +105,21 @@ function elementAdd(container, element) {
             text: `${element.main_name}${element.rank !== null ? ` (niveau ${element.rank})` : ''}`
         });
 
-        //--create sub name (if exists)
-        var column_subname = $('<div>', {
-            class: 'cell small-4 text-center',
-            text: `${element.sub_name !== null ? ` ${element.sub_name}` : '-'}`,
-        });
+        if(type === 'skill' || type === 'profession') {
+            //--create sub name (if exists)
+            var column_subname = $('<div>', {
+                class: 'cell small-4 text-center',
+                text: `${element.sub_name !== null ? ` ${element.sub_name}` : '-'}`,
+            });
 
-        //--create xp cost column
-        var column_cost = $('<div>', {
-            class: 'cell small-1 text-right',
-            text: `${element.xp_cost}pt.`
-        });
+            //--create xp cost column
+            var column_cost = $('<div>', {
+                class: 'cell small-1 text-right',
+                text: `${element.xp_cost}pt.`
+            });
+        } else if (type === 'item') {
+            
+        }
         
         //--create icon set column
         var iconSet = ["upgrade","remove"];
@@ -182,6 +198,13 @@ function modalSet (data,action) {
     //fill the content                
     $(`#description h1[data-title]`).html(data.details.name);
     $(`#description p[data-description]`).html(data.details.description);
+    if(data.details.hasOwnProperty('xp_cost')) {
+        $('#description p[data-cost]').show().html(`${data.details.xp_cost} vp`);
+    } else if (data.details.hasOwnProperty('price')) {
+        $('#description p[data-cost]').show().html(convertCurrency(data.details.price));
+    } else {
+        $('#description p[data-cost]').hide();
+    }
     $(`a[data-action]`).data('action',`${action}-choose`);
     $(`#description a[data-link]`).attr('href',`https://larp.dalaria.nl/wp-content/uploads/documents/KvD-Basisregels.pdf#page=${data.details.rule_page}`);
     $(`#description`).show();
@@ -263,7 +286,9 @@ export {
     calculateProfessionCost,
     calculateSkillCost,
     checkXPCost,
+    checkCurrencyCost,
     convertCurrency,
+    experienceSpend,
     elementAdd,
     modalSet,
     showMessage,

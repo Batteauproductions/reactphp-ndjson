@@ -3,6 +3,13 @@ import {
     oCharacter    
 } from './settings.js';
 
+// Importing the functions needed for the file
+import { 
+    _construct, 
+    experienceSpend,
+} from './functions.js';
+
+
 //These functions deal with adding, altering or removing skills from the character
 //obj: The skill that is being parsed
 function skillAdd(obj) {
