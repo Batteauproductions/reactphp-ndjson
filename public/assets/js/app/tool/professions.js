@@ -6,16 +6,15 @@ import {
 // Importing the functions needed for the file
 import { 
     _construct, 
-    calculateProfessionCost, 
-    experienceSpend,
+    characterAddTo,
+    characterRemoveFrom,
 } from './functions.js';
 
 //These functions deal with adding, altering or removing professions from the character
 //obj: The profession that is being parsed
 function professionAdd(obj) {
     if (typeof obj === 'object') {
-        oCharacter.profession.push(obj);
-        experienceSpend(calculateProfessionCost(obj));
+        characterAddTo(oCharacter.profession,obj)
     } else {
         console.error("professionAdd is not an object: " +$.type(obj));
     }
@@ -23,12 +22,8 @@ function professionAdd(obj) {
 
 //This function will remove a profession to the character
 //obj: The profession that is being parsed
-function professionRemove(obj) {
-    if (typeof obj === 'object') {
-        
-    } else {
-        console.error("professionRemove is not an object: " +$.type(obj));
-    }
+function professionRemove(element,main_id,sub_id) {
+    characterRemoveFrom(oCharacter.profession,element,main_id,sub_id)
 }
 
 export {

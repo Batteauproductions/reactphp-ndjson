@@ -1,5 +1,14 @@
 // Importing the variables
-import { jsonBaseChar,jsonStat,arrXP,arrProfLevel,oCharacter,icons,oTranslations, language} from './settings.js';
+import { 
+        arrXP
+        ,icons
+        ,iconset
+        ,jsonBaseChar
+        ,jsonStat
+        ,language
+        ,oTranslations      
+        ,oCharacter
+} from './settings.js';
 
 function _construct(obj=null)
 {
@@ -17,32 +26,57 @@ function _construct(obj=null)
     $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
 }
 
+function characterAddTo(attribute,subject) {
+    //add the subject to the attribute called
+    attribute.push(subject);
+    experienceSpend(subject.cost);
+    // Check if the choice has a stat modifier
+    if (subject.modifier.length > 0) {
+        updateCharacterStats();
+    }
+    console.log('characterAddTo: ',oCharacter);
+}
+
+function characterRemoveFrom(attribute,element,main_id,sub_id=null) {
+    let itemFound = false;
+    let subject = {};
+    for (let i = 0; i < attribute.length; i ++) {
+        if(attribute[i].main_id == main_id && attribute[i].sub_id == sub_id) {            
+            subject = attribute[i];
+            attribute.splice(i,1);
+            itemFound = true;
+            break;
+        } 
+    }
+    if (!itemFound) {
+        console.error('Item not found');
+    } else {        
+        if (subject.modifier.length > 0) {
+            updateCharacterStats();
+        }
+        experienceRefund(subject.cost);
+        element.parent().parent().remove();
+    }
+    console.log('characterRemoveFrom: ',oCharacter);
+}
+
 //This function serves as a "helper", to calculate the proper costs
 //obj: the rank of the profession or skill
 //--professions are based on the xp cost growth, this is not the same across ranks
-function calculateProfessionCost(obj) {
-    if (typeof obj === 'object') {
-        let iTotalcost = 0;
-        //increases cost per rank
-        for(let i=0; i<obj.rank; i++) {
-            iTotalcost += parseInt(arrProfLevel[i]);
-        }
-        return parseInt(iTotalcost);
-    } else {
-        console.error(`calculateProfessionCost is not an object: ${$.type(obj)}`);
-    }
+function calculateProfessionCost(obj,rank) {
+    let iTotalCost = 0;
+    for (let i = 1; i <= rank; i++) {
+        const cost = parseInt(obj.details[`rank_${i}_cost`]);
+        iTotalCost += cost;
+    }    
+    return iTotalCost;
 }
 //--skills are allways calculated by rank increase and initial cost
-function calculateSkillCost(obj) {
-    console.log(obj);
-    if (typeof obj === 'object') {
-        if(obj.rank !== null) {
-            return parseInt(obj.rank) * parseInt(obj.xp_cost);
-        }
-        return parseInt(obj.xp_cost);
-    } else {
-        console.error(`calculateSkillCost is not an object: ${$.type(obj)}`);
+function calculateSkillCost(obj,rank) {
+    if(rank !== null) {
+        return parseInt(obj.details.xp_cost) * parseInt(rank);
     }
+    return parseInt(obj.details.xp_cost);
 }
 
 //This function will check if the character has enough xp available to buy the profession or skill
@@ -92,62 +126,88 @@ function convertCurrency(iAmount) {
 //element: the element that needs to be added
 function elementAdd(container, element, type) {
     if (typeof element === 'object') {
-        console.log(element);
 
-        //--create master container
-        var row = $('<div>', {
-            class: 'grid-x choice-row animate__animated animate__slideInDown',
+        // Create master container
+        const row = $('<div>', {
+            class: 'grid-x choice-row animate__animated animate__fadeInLeft',
         });
 
-        //--create main name column
-        var column_name = $('<div>', {
+        // Create main name column
+        const column_name = $('<div>', {
             class: 'cell small-5 text-left',
             text: `${element.main_name}${element.rank !== null ? ` (niveau ${element.rank})` : ''}`
         });
 
-        if(type === 'skill' || type === 'profession') {
-            //--create sub name (if exists)
-            var column_subname = $('<div>', {
+        let column_subname, column_cost, local_icons;
+
+        if (type === 'skill' || type === 'profession') {
+            // Create sub name column (if exists)
+            column_subname = $('<div>', {
                 class: 'cell small-4 text-center',
-                text: `${element.sub_name !== null ? ` ${element.sub_name}` : '-'}`,
+                text: element.sub_name !== null ? element.sub_name : '-',
             });
 
-            //--create xp cost column
-            var column_cost = $('<div>', {
+            // Create cost column
+            column_cost = $('<div>', {
                 class: 'cell small-1 text-right',
-                text: `${element.xp_cost}pt.`
+                html: `${element.cost}pt.`
             });
+            local_icons = iconset["new_skill_no_rank"];
         } else if (type === 'item') {
-            
-        }
-        
-        //--create icon set column
-        var iconSet = ["upgrade","remove"];
-        var arrIcons = [];
-        for (var i=0; i<iconSet.length; i++) {
-            var action = $('<a>', {
-                "data-action": iconSet[i],
-                "data-id": element.main_id,
-                "data-sub_id": element.sub_id,
-                html: icons[iconSet[i]].icon
+            local_icons = iconset["new_item"];
+            column_cost = $('<div>', {
+                class: 'cell small-1 text-right',
+                html: `${convertCurrency(element.cost)}.`
             });
-            arrIcons.push(action)
-        }        
-        var column_action = $('<div>', {
+        }
+
+        // Create icon set column
+        const arrIcons = local_icons.map(icon => $('<a>', {
+            "data-action": `${type}-${icon}`,
+            "data-id": element.main_id,
+            "data-sub_id": element.sub_id,
+            html: icons[icon].icon
+        }));
+
+        const column_action = $('<div>', {
             class: 'cell small-2 text-right',
             html: arrIcons
         });
-         
-        $(row).append(column_name,column_subname,column_cost,column_action);      
-        $(`#${container}`).prepend(row);
+
+        // Append columns to row
+        row.append(column_name);
+        if (column_subname) row.append(column_subname);
+        if (column_cost) row.append(column_cost);
+        row.append(column_action);
+
+        // Insert row into container alphabetically
+        const $container = $(`#${container}`);
+        let inserted = false;
+
+        $container.children('.choice-row').each(function () {
+            const currentRow = $(this);
+            const currentName = currentRow.find('.cell.small-5.text-left').text().trim();
+
+            if (currentName.localeCompare(element.main_name, undefined, { sensitivity: 'base' }) > 0) {
+                currentRow.before(row);
+                inserted = true;
+                return false; // break the loop
+            }
+        });
+
+        if (!inserted) {
+            $container.append(row);
+        }
     } else {
-        console.error("elementAdd is not an object: " +$.type(element));
+        console.error("elementAdd: argument 'element' is not an object: " + $.type(element));
     }
 }
 
+//This function will handle the spending of experience
+//It should check if there is an attempt to spend more than available
 function experienceSpend(cost) {
     if((oCharacter.build.spend_xp+cost) > oCharacter.build.max_xp) {
-        console.warn(`Attempt to set XP over maximum`);
+        console.error(`Attempt to set XP over maximum`);
         oCharacter.build.spend_xp = oCharacter.build.max_xp;
     } else {
         oCharacter.build.spend_xp += cost;
@@ -155,6 +215,8 @@ function experienceSpend(cost) {
     $('#spend_xp').text(oCharacter.build.spend_xp);
 }
 
+//This function will handle the refund of experience
+//It should check if there is an attempt to refund more than zero
 function experienceRefund(cost) {
     if((oCharacter.build.spend_xp-cost) < 0) {
         console.warn(`Attempt to set XP under minimum`);
@@ -165,49 +227,132 @@ function experienceRefund(cost) {
     $('#spend_xp').text(oCharacter.build.spend_xp);
 }
 
-function modalSet (data,action) {
-    //check if the data has a subtype                
-    if (data.hasOwnProperty('subtype') && data.subtype.length > 0) {                    
-        //add new options
+//This function will handle the choice of of Profession, Skill and Items
+//The parameters it will use are as followed
+//--oTempData, The choice made by the user
+//--addFunction, The function it should perform once an item can be added
+//--action: The action being called, it corresponds with a[data-action] from the app.js
+//--type: A simple rundown of the type of action being called. It should be profession, skill or item
+function handleChoice(oTempData,addFunction,action,type) {
 
-        for(var i=0; i< data.subtype.length; i++) {
-            var option = $('<option>', {
-                value: data.subtype[i].id,
-                text: data.subtype[i].name
-            });
-            $('select[name="subtype"]').append(option);
-        }
-        $('select[name="subtype"]').show();
-    };
-    if(data.details.max_rank !== null) {
-        for(var i=1; i<=data.details.max_rank; i++ ) {
-            var label = $('<label>', {
-                for: `rank-${i}`,
-                text: `${oTranslations[language].rank} - ${i}`,
-            });
-            var option = $('<input>', {
-                id: `rank-${i}`,
-                value: i,
-                type: "radio",
-                name: "rank",
-            });
-            $('#rank-options').append(label, option);
-        }
-        $('#rank-options').show();
+    const showErrorMessage = (msg) => showMessage($(this).parent(), 'error', `${oTranslations[language][msg]}`);
+    const $Container = action.replace('-choose','-list');
+
+    //create a temporary object stripping it of all information we don't need
+    const oChoice = {
+        main_id: parseInt(oTempData.details.id),
+        main_name: oTempData.details.name,
+        sub_id: $('select[name="subtype"] option:selected').val() ? parseInt($('select[name="subtype"] option:selected').val()) : null,
+        sub_name: ($('select[name="subtype"] option:selected').val() !== '') ? $('select[name="subtype"] option:selected').text() : null,        
+        rank: oTempData.rank,  
+        modifier: oTempData.modifier,  
+        cost: oTempData.cost,                                
     }
-    //fill the content                
-    $(`#description h1[data-title]`).html(data.details.name);
-    $(`#description p[data-description]`).html(data.details.description);
-    if(data.details.hasOwnProperty('xp_cost')) {
-        $('#description p[data-cost]').show().html(`${data.details.xp_cost} vp`);
-    } else if (data.details.hasOwnProperty('price')) {
-        $('#description p[data-cost]').show().html(convertCurrency(data.details.price));
-    } else {
-        $('#description p[data-cost]').hide();
+
+    //--Check if the costs can be deducted from the character
+    //--bDeducted; will be used to check if the modal can be closed or should remain open
+    let bDeducted = false;
+
+    if (type === "profession" || type === "skill") {
+        bDeducted = checkXPCost(oChoice.cost);
+        if (!bDeducted) {
+            showErrorMessage('not_enough_vp');
+            return;
+        }
+    } else if (type === "item") {
+        bDeducted = checkCurrencyCost(oChoice.cost);
+        if (!bDeducted) {
+            showErrorMessage('not_enough_coin');
+            return;
+        }
     }
-    $(`a[data-action]`).data('action',`${action}-choose`);
-    $(`#description a[data-link]`).attr('href',`https://larp.dalaria.nl/wp-content/uploads/documents/KvD-Basisregels.pdf#page=${data.details.rule_page}`);
-    $(`#description`).show();
+
+    if (oTempData.subtype.length > 0 && oChoice.sub_id === null) { 
+        showErrorMessage('choose_sub');                        
+        return;
+    }
+
+    addFunction(oChoice);
+    elementAdd($Container, oChoice, type);
+
+    // Close the pop-up
+    $('#selection-modal').foundation('close');
+}
+
+function modalSet(data, action) {
+    const $subtypeSelect = $('select[name="subtype"]');
+    const $rankOptions = $('#rank-options');
+    const $container = $('#choice-description');
+
+    // Clear previous content
+    $subtypeSelect.empty().hide();
+    $rankOptions.empty().hide();
+    $container.empty();
+
+    // Check if the data has a subtype and add new options
+    if (data.subtype && data.subtype.length > 0) {
+        const options = data.subtype.map(subtype => $('<option>', {
+            value: subtype.id,
+            text: subtype.name
+        }));
+        $subtypeSelect.append(options).show();
+    }
+
+    // Check if the skill has more than one level to buy
+    if (data.details.max_rank) {
+        const rankElements = [];
+        for (let i = 1; i <= data.details.max_rank; i++) {
+            rankElements.push(
+                $('<label>', { for: `rank-${i}`, text: `${oTranslations[language].rank} - ${i}` }),
+                $('<input>', { id: `rank-${i}`, value: i, type: 'radio', name: 'rank' })
+            );
+        }
+        $rankOptions.append(rankElements).show();
+    }
+
+    // Create and append content elements if they exist
+    const contentElements = [];
+
+    if (data.details.name) {
+        contentElements.push($('<h1>', { html: data.details.name }));
+    }
+    if (data.details.description) {
+        contentElements.push($('<p>', { html: data.details.description }));
+    }
+    if (data.details.advanced_description) {
+        contentElements.push($('<p>', { html: data.details.advanced_description }));
+    }
+    if (data.details.disclaimer) {        
+        contentElements.push($('<p>', { html: data.details.disclaimer }));
+    }
+    
+    if(data.modifier) {        
+        for(let i = 0; i < data.modifier.length; i++) {
+            contentElements.push($('<p>', { html: `<i class="fa-solid fa-arrow-up-right-dots"></i> ${data.modifier[i].description}` }));
+        }        
+    }
+    if (action ==="skill_base" || action === "skill_combat" || action === "skill_magic") {
+        contentElements.push($('<p>', { html: `${icons.experience.icon} ${data.details.xp_cost} ${icons.experience.text}`}));
+    } else if (action === "profession") {
+        contentElements.push($('<p>', { html: `${icons.experience.icon} ${data.details.rank_1_cost} ${icons.experience.text}`}));
+    } else if (action === "item_add") {
+        contentElements.push($('<p>', { html: convertCurrency(data.details.price) }));
+    }
+    contentElements.push($('<a>', { 
+        class: 'button solid','data-action': `${action}-choose`
+        ,html: `${icons.choose.icon} ${icons.choose.text}`})
+    );
+
+    if (data.details.rule_page) {
+        contentElements.push($('<a>', { 
+            class: 'button clear'
+            ,target: '_blank'
+            ,href: `https://larp.dalaria.nl/wp-content/uploads/documents/KvD-Basisregels.pdf#page=${data.details.rule_page}`
+            ,html: `${icons.more_info.icon} ${icons.more_info.text}`})
+        );
+    }
+
+    $container.append(contentElements);
 }
 
 //
@@ -217,7 +362,7 @@ function showMessage (element,type, message) {
             console.log(message);
             break;
         case 'error':
-            $(element).addClass('input-error').text(message).show();
+            $(element).append($('<p>',{ class: "input-message input-error", text: message}));
             break;
     }
 }
@@ -283,6 +428,8 @@ function updateCharacterStats() {
 
 export {  
     _construct, 
+    characterAddTo,
+    characterRemoveFrom,
     calculateProfessionCost,
     calculateSkillCost,
     checkXPCost,
@@ -290,6 +437,7 @@ export {
     convertCurrency,
     experienceSpend,
     elementAdd,
+    handleChoice,
     modalSet,
     showMessage,
     updateCharacter,    

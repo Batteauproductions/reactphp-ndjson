@@ -8,7 +8,6 @@
             <input type="hidden" name="jsonBaseChar" value='<?php echo json_encode($jsonBaseChar) ?>'/>
             <input type="hidden" name="jsonStat" value='<?php echo json_encode($jsonStat) ?>'/>
             <input type="hidden" name="arrXP" value='<?php echo $arrXP ?>'/>
-            <input type="hidden" name="arrProfLevel" value='<?php echo $arrProfLevel ?>'/>
             <input type="hidden" name="character" value='<?php echo isset($oCharacter) ? $oCharacter: '' ?>'/>
             <!-- /Tool information -->
 
@@ -295,15 +294,11 @@
             <section id="rank-options" style="display:none;">
                 <!-- dynamic filled -->
             </section>
-
         </div>
-        <div id="description" class="cell small-9" style="display:none;">
-            <h1 data-title></h1>
-            <p data-description></p>
-            <p data-cost></p>
-            <p class="" style="display:none" choice-message></p>
-            <a data-action="race-choose" class="button solid"><i class="fa-regular fa-square-check"></i>kiezen</a>
-            <a data-link href="" class="button clear" target="_blank" ><i class="fa-solid fa-circle-info"></i>meer informatie</a>
+        <div class="cell small-9">
+            <div id="choice-description">
+                <!-- dynamic filled -->
+            </div>
         </div>
     </form>
     

@@ -6,16 +6,15 @@ import {
 // Importing the functions needed for the file
 import { 
     _construct, 
-    experienceSpend,
+    characterAddTo,
+    characterRemoveFrom,
 } from './functions.js';
-
 
 //These functions deal with adding, altering or removing skills from the character
 //obj: The skill that is being parsed
 function skillAdd(obj) {
     if (typeof obj === 'object') {
-        oCharacter.skills.push(obj);
-        experienceSpend(obj.xp_cost);
+        characterAddTo(oCharacter.skills,obj)
     } else {
         console.error("skillAdd is not an object: " +$.type(obj));
     }
@@ -23,13 +22,8 @@ function skillAdd(obj) {
 
 //This function will remove a skill from the character
 //obj: The skill that is being parsed
-function skillRemove(obj) {
-    if (typeof obj === 'object') {
-        oCharacter.skills.splice(obj);
-        experienceRefund(obj.xp_cost);
-    } else {
-        console.error("skillRemove is not an object: " +$.type(obj));
-    }
+function skillRemove(element,main_id,sub_id) {
+    characterRemoveFrom(oCharacter.skills,element,main_id,sub_id)
 }
 
 export {  

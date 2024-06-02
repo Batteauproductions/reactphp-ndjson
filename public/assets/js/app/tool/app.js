@@ -1,7 +1,8 @@
 import { 
-    domain,
-    language,
-    icons, oCharacter, oTranslations } from './settings.js';
+    domain
+    ,icons
+    ,oCharacter
+} from './settings.js';
 
 import { 
     skillAdd, 
@@ -22,12 +23,8 @@ import {
     _construct, 
     calculateSkillCost, 
     calculateProfessionCost, 
-    checkXPCost, 
-    checkCurrencyCost,
-    elementAdd, 
+    handleChoice,
     modalSet, 
-    showMessage, 
-    updateCharacterStats 
 } from './functions.js';
 
 $(document).ready(function() {
@@ -46,8 +43,7 @@ $(document).ready(function() {
         //--hide the elements in the reveal model
         $('select[name="type"]').hide();
         $('select[name="subtype"]').hide();
-        $('#description').hide();
-        $('p[choice-message]').hide();        
+        $('#choice-description').html('');
         //--remove the old types / remove the old sub types
         $('select[name="type"] option, select[name="subtype"] option').filter(function() {
             return $(this).attr('value') !== undefined && $(this).attr('value') !== "";
@@ -131,7 +127,7 @@ $(document).ready(function() {
         var sAction = $(this).data("name");
         //make call to collect details
         $.ajax({
-            url: window.location.origin + '/action/get-details',
+            url: `${domain}/action/get-details`,
             data: {
                 id: iID,
                 action: `get-details-${sAction}`
@@ -150,68 +146,13 @@ $(document).ready(function() {
 
     });
 
-    $('a[data-action]').on('click', function(){
-        //set several variables
+    $('body').on('click', 'a[data-action]', function(){
+        $('p.input-message').remove();
         //--sAction; will be used to collect what action is being called by clicking on choice
-        //--bCheck; will be used to check if the modal can be closed or should remain open
-        var sAction = $(this).data("action");
-        var $Container = sAction.replace('-choose','-list');
-        var bCheck = false;        
-        var showErrorMessage = (msg) => showMessage('p[choice-message]', 'error', `${oTranslations[language][msg]}`);
-        //create a temporary object stripping it of all information we don't need
-        var oChoice = {
-            main_id: parseInt(oTempData.details.id),
-            main_name: oTempData.details.name,
-            sub_id: $('select[name="subtype"] option:selected').val() ? parseInt($('select[name="subtype"] option:selected').val()) : null,
-            sub_name: ($('select[name="subtype"] option:selected').val() !== '') ? $('select[name="subtype"] option:selected').text() : null,
-            modifier: oTempData.modifier,    
-            amount: ($('input[name="item_amount"]').val() !== '') ? parseInt($('input[item_amount"]').val()) : null,
-            cost: parseInt(oTempData.details.xp_cost),            
-        }
-
-        var handleChoice = (addFunction,xpCalc) => {
-            oChoice.xp_cost = xpCalc(oChoice);
-            //check if xp is available
-            if(!checkXPCost(oChoice.xp_cost)) {
-                showErrorMessage('not_enough_vp');
-            } else {
-                if(oTempData.subtype.length > 0 && oChoice.sub_id === null) { 
-                    showErrorMessage('choose_sub');                        
-                } else {
-                    addFunction(oChoice);
-                    elementAdd($Container,oChoice);
-                    //check if the choice has a stat modifier
-                    if(oChoice.modifier.length > 0) {
-                        updateCharacterStats();
-                    }  
-                    bCheck = true;
-                }
-            }
-        }
-
+        const sAction = $(this).data("action");
+        
         //perform an action based on what is being done
         switch(sAction) {
-            case 'race-choose':
-                var oRace = {
-                    id: parseInt(oTempData.details.id),
-                    //modifier: parseInt(),
-                }
-                $('#race').html(`<i class="fa-solid fa-rotate-right"></i>${oTempData.details.name}</span>`)
-                oCharacter.race = oRace
-                bCheck = true;
-                break;
-            case 'profession-choose':
-                //set the xp cost of the object
-                oChoice.rank = 1;
-                handleChoice(professionAdd,calculateProfessionCost);
-                break;
-            case 'skill_base-choose':
-            case 'skill_combat-choose':
-            case 'skill_magic-choose':
-                //set the xp cost of the object
-                oChoice.rank = $('input[name="rank"]:checked').val() !== undefined ? parseInt($('input[name="rank"]:checked').val()) : null;
-                handleChoice(skillAdd,calculateSkillCost);
-                break;
             case 'base_kit-choose':
                 var $element = $('div[data-id="base_kit-list"]');
                 oCharacter.build.base_kit = parseInt(oTempData.details.id);
@@ -223,21 +164,44 @@ $(document).ready(function() {
                 $element.html('').append(container)
                 bCheck = true;
                 break;
+            case 'item-remove':
+                itemRemove($(this),$(this).data('id'),$(this).data('sub_id'));
+                break;
             case 'item_add-choose':
-                if(!checkCurrencyCost(parseInt(oTempData.details.price))) {
-                    showErrorMessage('not_enough_coin');
-                } else {
-                    itemAdd($('[data-id="item-list"]'),oChoice);
+                oTempData.amount = ($('input[name="item_amount"]').val() !== '') ? parseInt($('input[item_amount"]').val()) : null;
+                oTempData.cost = parseInt(oTempData.details.price);
+                handleChoice(oTempData,itemAdd,sAction,'item');
+                break;
+            case 'profession-choose':
+                oTempData.rank = 1;
+                oTempData.cost = calculateProfessionCost(oTempData, oTempData.rank);
+                handleChoice(oTempData,professionAdd,sAction,'profession');
+                break;
+            case 'profession-remove':
+                professionRemove($(this),$(this).data('id'),$(this).data('sub_id'));
+                break;
+            case 'race-choose':
+                var oRace = {
+                    id: parseInt(oTempData.details.id),
+                    //modifier: parseInt(),
                 }
+                $('#race').html(`<i class="fa-solid fa-rotate-right"></i>${oTempData.details.name}</span>`)
+                oCharacter.race = oRace
+                bCheck = true;
+                break;
+            case 'skill_base-choose':
+            case 'skill_combat-choose':
+            case 'skill_magic-choose':
+                oTempData.rank = $('input[name="rank"]:checked').val() !== undefined ? parseInt($('input[name="rank"]:checked').val()) : null;
+                oTempData.cost = calculateSkillCost(oTempData, oTempData.rank);
+                handleChoice(oTempData,skillAdd,sAction,'skill');
+                break;
+            case 'skill-remove':
+                skillRemove($(this),$(this).data('id'),$(this).data('sub_id'));
                 break;
             default:
                 console.error(`a[data-action], unknown sAction called with value: ${sAction}`);
                 break;
-        }
-        
-        if(bCheck) {
-            console.log(oCharacter);
-            $('#selection-modal').foundation('close');
         }
     });
 
