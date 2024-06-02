@@ -35,21 +35,50 @@ $(document).ready(function() {
     _construct($('input[name="character"]').val());
 
     //add extra functionality to the model
-    $('a[data-open]').on('click',function(){     
+    $('a[data-open="adventure-modal"]').on('click', function() {
+        const adventure_id = $(this).data('id');
+        const $modalLoading = $('div[data-id="modal-loading"]');
+        const $adventureForm = $('#adventure-form');
+        const $textareas = $('textarea[id^="question_"]');
+    
+        $.ajax({
+            url: `${domain}/action/get-adventure`,
+            data: { id: adventure_id },
+            type: 'POST',
+            dataType: 'json',
+            success: (data) => {
+                if (data) {
+                    console.warn('already adventure available');
+                    $textareas.each(function(index) {
+                        $(this).text(data[`question_${index + 1}`]);
+                    });
+                } else {
+                    console.warn('no available adventures');
+                }
+                $modalLoading.hide();
+                $adventureForm.show();
+            },
+            error: (error) => {
+                console.log('Error:', error);
+            }
+        });
+    });
+
+    $('a[data-open="selection-modal"]').on('click',function(){     
         var sAction = $(this).data("type");    
         //--set default status to loading
-        $('#modal-loading').show();
+        $('div[data-id="modal-loading"]').show();
         $('#modal-form').hide();    
         //--hide the elements in the reveal model
         $('select[name="type"]').hide();
         $('select[name="subtype"]').hide();
-        $('#choice-description').html('');
+        $('#choice-description').empty();
         //--remove the old types / remove the old sub types
         $('select[name="type"] option, select[name="subtype"] option').filter(function() {
             return $(this).attr('value') !== undefined && $(this).attr('value') !== "";
         }).remove();
         $('select[name="type"]').find('optgroup').remove();
-        $('#rank-options').html('');        
+        $('#rank-options').empty();        
         //--make call to fill the dropdown
         $.ajax({
             url: `${domain}/action/get-dropdown`,
@@ -108,7 +137,7 @@ $(document).ready(function() {
                 //select the first option per default
                 $('select[name="type"] option:first, select[name="subtype"] option:first').prop('selected', true);
                 $('select[name="type"]').data('name',sAction).show();
-                $('#modal-loading').hide();
+                $('div[data-id="modal-loading"]').hide();
                 $('#modal-form').show();
             },
             error: function(error) {

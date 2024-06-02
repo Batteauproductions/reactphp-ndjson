@@ -20,6 +20,12 @@ const oTranslations = Object.freeze({
         ,experience: "vaardigheidspunt(en)"
         ,more_info: "meer informatie"
         ,choose: "kiezen"
+        ,question_1: "Wat heb je dit evenement ondernomen?"
+        ,question_2: "Wat heeft dit met je personage gedaan?"
+        ,question_3: "Heb je relaties/contacten opgebouwd met npc’s?"
+        ,question_4: "Wat heb je bijgeleerd (info) en welke theorieën leid je er uit af?"
+        ,question_5: "Wat zijn je plannen komend evenement?"
+        ,question_6: "Overige toevoeging? (optioneel)"
     },
 });
 const icons = Object.freeze({

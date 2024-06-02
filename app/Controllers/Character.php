@@ -7,6 +7,7 @@ use App\Models\RaceModel;
 use App\Models\ProfessionModel;
 use App\Models\SkillModel;
 use App\Models\ItemModel;
+use App\Models\StoryModel;
 
 use App\Helpers\auth_helper;
 
@@ -18,6 +19,8 @@ class Character extends Controller
     protected $professionModel;
     protected $skillModel;
     protected $itemModel;
+    protected $storyModel;
+    protected $request;
 
     public function __construct() 
     {
@@ -27,6 +30,8 @@ class Character extends Controller
         $this->professionModel = new ProfessionModel();
         $this->skillModel = new SkillModel();
         $this->itemModel = new ItemModel();
+        $this->storyModel = new StoryModel();
+        $this->request = service('request');
         //collect the rights for the menu
         //1 -- admin | has all the rights needed to perform changes in the system
         //2 -- spelleiding | has rights to perform all but system changes
@@ -40,14 +45,23 @@ class Character extends Controller
         );
     }
 
+    public function getAdventure () 
+    {
+        $response = json_encode($this->storyModel->getStoryById(
+            $this->request->getPost('char_id'),
+            $this->request->getPost('post_id'))
+        );
+
+        echo $response;
+    }
+
     public function getDropdown () 
     {
         //collect user
-        $request = service('request');
         $arrData = array(
-            'id' => $request->getPost('id'),
-            'action' => $request->getPost('action'),
-            'character' => $request->getPost('character'),
+            'id' => $this->request->getPost('id'),
+            'action' => $this->request->getPost('action'),
+            'character' => $this->request->getPost('character'),
         );
         
         $arrProfessions = null;
@@ -90,10 +104,9 @@ class Character extends Controller
     public function getDetails () 
     {
         //collect user
-        $request = service('request');
         $arrData = array(
-            'id' => $request->getPost('id'),
-            'action' => $request->getPost('action'),
+            'id' => $this->request->getPost('id'),
+            'action' => $this->request->getPost('action'),
         );
 
         if (isset($arrData['action'])) {
