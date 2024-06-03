@@ -38,6 +38,12 @@
     padding-bottom: $padding;
 }
 
+.disabled {
+    filter: grayscale(100%);
+    pointer-events: none !important;
+    opacity: 0.7;
+}
+
 .event-container {
     
     background: $color-primary;

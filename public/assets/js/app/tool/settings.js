@@ -74,7 +74,16 @@ const iconset = Object.freeze({
 const jsonBaseChar = Object.freeze(JSON.parse($('input[name="jsonBaseChar"]').val()));
 const jsonStat = Object.freeze(JSON.parse($('input[name="jsonStat"]').val()));
 
+// Get the current date and time
+const currentDateTime = new Date();
+
 let oCharacter = {
+    meta: {
+        created_dt: currentDateTime.toISOString(),
+        modified_dt: '',
+        firstlocked_dt: '',
+        lastlocked_dt: '',
+    },
     build: Object.assign({}, jsonBaseChar),
     race: {},
     profession: [],

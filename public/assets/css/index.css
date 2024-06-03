@@ -200,6 +200,12 @@ ul li {
   padding-bottom: 1.25rem;
 }
 
+.disabled {
+  filter: grayscale(100%);
+  pointer-events: none !important;
+  opacity: 0.7;
+}
+
 .event-container {
   background: #1E1E1E;
   border-radius: 0.313rem;

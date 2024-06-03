@@ -21,6 +21,7 @@ function _construct(obj=null)
     } else {
         console.log('No character information received, treating as new');
         oCharacter.status = 'new';
+        $('body').find('[data-open="adventure-modal"]').addClass('disabled');
     }
 
     $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
