@@ -2,6 +2,8 @@ import {
     domain
     ,icons
     ,oCharacter
+    ,language
+    ,oTranslations
 } from './settings.js';
 
 import {
@@ -29,6 +31,7 @@ import {
     calculateSkillCost, 
     calculateProfessionCost, 
     handleChoice,
+    modalClear,
     modalSet, 
     updateCharacter,
 } from './functions.js';
@@ -76,16 +79,8 @@ $(document).ready(function() {
         $('div[data-id="modal-loading"]').show();
         $('#modal-form').hide();    
         //--hide the elements in the reveal model
-        $('select[name="type"]').hide();
-        $('select[name="subtype"]').hide();
-        $('#choice-description').empty();
-        $('#choice-details').empty();
-        //--remove the old types / remove the old sub types
-        $('select[name="type"] option, select[name="subtype"] option').filter(function() {
-            return $(this).attr('value') !== undefined && $(this).attr('value') !== "";
-        }).remove();
-        $('select[name="type"]').find('optgroup').remove();
-        $('#rank-options').empty();        
+        modalClear(true);
+        
         //--make call to fill the dropdown
         $.ajax({
             url: `${domain}/action/get-dropdown`,
@@ -96,50 +91,39 @@ $(document).ready(function() {
             type: 'POST',
             dataType: 'json',
             success: function(data) {
+                var select = $('select[name="type"]');
+                select.append(`<option value selected disabled>${oTranslations[language].choose_option}</option>`)
                 var optGroup = '';
-                for(var i=0; i< data.length; i++) {
-                    //check if we are dealing with skills, since they have a prof_name
-                    if(data[i].hasOwnProperty('prof_name')) {
-                        if(optGroup == '' || optGroup !== data[i].prof_name) {
-                            var optionGroup = $('<optgroup>', {
-                                label: data[i].prof_name
+
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i];
+                    var optionGroup, option;
+
+                    if (item.hasOwnProperty('prof_name') || item.hasOwnProperty('type_name')) {
+                        var groupName = item.prof_name || item.type_name;
+
+                        if (optGroup === '' || optGroup !== groupName) {
+                            optionGroup = $('<optgroup>', {
+                                label: groupName
                             });
-                            optGroup = data[i].prof_name;  
-                        } 
-                        if(optGroup == data[i].prof_name) {
-                            var option = $('<option>', {
-                                value: data[i].id,
-                                text: data[i].name
-                            });
-                            optionGroup.append(option);       
-                        } 
-                        $('select[name="type"]').append(optionGroup);
-                    } 
-                    //or if we are dealing with items, since they have a type_name but not a prof_name
-                    else if(data[i].hasOwnProperty('type_name')) {
-                        if(optGroup == '' || optGroup !== data[i].type_name) {
-                            var optionGroup = $('<optgroup>', {
-                                label: data[i].type_name
-                            });
-                            optGroup = data[i].type_name;  
-                        } 
-                        if(optGroup == data[i].type_name) {
-                            var option = $('<option>', {
-                                value: data[i].id,
-                                text: data[i].name
-                            });
-                            optionGroup.append(option);       
-                        } 
-                        $('select[name="type"]').append(optionGroup);
-                    } 
-                    //or something else (race/profession/basekit), since they have nothing like above
-                    else {
-                        var option = $('<option>', {
-                            value: data[i].id,
-                            text: data[i].name
+                            optGroup = groupName;
+                            select.append(optionGroup);
+                        }
+
+                        option = $('<option>', {
+                            value: item.id,
+                            text: item.name
                         });
-                        $('select[name="type"]').append(option); 
-                    }                    
+
+                        select.find('optgroup[label="' + groupName + '"]').append(option);
+                    } else {
+                        option = $('<option>', {
+                            value: item.id,
+                            text: item.name
+                        });
+
+                        select.append(option);
+                    }
                 }
                 //select the first option per default
                 $('select[name="type"] option:first, select[name="subtype"] option:first').prop('selected', true);
@@ -160,9 +144,7 @@ $(document).ready(function() {
     });
 
     $('select[name="type"]').on('change',function(){
-        //hide the dropdown with subtypes
-        $('select[name="subtype"]').hide();
-        $('#rank-options').html('');
+        modalClear();
         //collect data
         var iID = $(this).val();
         var sAction = $(this).data("name");

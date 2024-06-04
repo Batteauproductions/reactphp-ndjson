@@ -6,7 +6,7 @@ const oTranslations = Object.freeze({
     "nl-NL": {
         not_enough_vp: 'Je hebt niet genoeg vaardigheidspunten.'
         ,not_enough_coin: 'Je hebt niet genoeg geld om dit aan te schaffen.'
-        ,choose_sub: 'Kies een subtype'
+        ,choose_option: 'Maak een keuze'
         ,loresheet: 'Je krijgt hievoor een loresheet.'
         ,rank: "niveau"
         ,remove: "verwijderen"

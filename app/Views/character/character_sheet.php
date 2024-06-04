@@ -42,9 +42,7 @@
                                 Karakternaam
                             </div>
                             <div class="cell small-6">
-                                <a data-open="selection-modal" data-type="race">
-                                    <span id="race"><i class="fa-solid fa-plus"></i>toevoegen</span>
-                                </a>
+                                -
                             </div>
                             <div class="cell small-6 text-left">
                                 Raskeuze
@@ -294,14 +292,18 @@
             <select name="subtype" style="display:none;">
                 <option value="" disabled selected>Geen voorkeur</option>
             </select>
+            
+        </div>
+        <div class="cell small-12 medium-8 large-9">
+            <section id="choice-description">
+                <!-- dynamic filled -->
+            </section>
             <section id="choice-details">
                 <!-- dynamic filled -->
             </section>
-        </div>
-        <div class="cell small-12 medium-8 large-9">
-            <div id="choice-description">
+            <section id="choice-actions">
                 <!-- dynamic filled -->
-            </div>
+            </section>
         </div>
     </form>
     

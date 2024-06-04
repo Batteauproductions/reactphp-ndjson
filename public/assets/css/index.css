@@ -446,9 +446,26 @@ ul li {
   font-size: 0.8rem;
 }
 
+#choice-description {
+  display: block;
+}
+
+#choice-details {
+  display: block;
+  border: solid 1px #fff;
+  padding: 1.25rem;
+  margin: 1.25rem 0;
+}
+#choice-details p:last-child {
+  margin-bottom: 0;
+}
 #choice-details input {
   display: inline-block;
   width: auto;
+}
+
+#choice-actions {
+  display: block;
 }
 
 .reveal {

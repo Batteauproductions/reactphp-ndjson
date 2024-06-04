@@ -19,6 +19,7 @@ function raceAdd(obj) {
             modifier: null
         }
         if(obj.modifier.length>1) {
+            console.log('choice should be made')
             oRace.modifier = parseInt($('input[name="race-modifier"]').val());
         } else {
             oRace.modifier = parseInt(obj.modifier[0].id);
@@ -35,8 +36,10 @@ function raceAdd(obj) {
 
 //This function will remove a profession to the character
 //obj: The profession that is being parsed
-function raceRemove(element,main_id,sub_id) {
-    characterRemoveFrom(oCharacter.profession,element,main_id,sub_id)
+function raceRemove() {
+    oCharacter.race = {}
+    updateCharacterStats();
+    updateCharacter();
 }
 
 export {

@@ -343,11 +343,27 @@
     }
 }
 
+
+#choice-description {
+    display: block;
+}
 #choice-details {
+    display: block;
+    border: solid 1px #fff;
+    padding: $padding;
+    margin: $margin 0;
+    p {
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
     input {
         display: inline-block;
         width: auto;
     }
+}
+#choice-actions{
+    display: block;
 }
 
 .reveal {

@@ -16,7 +16,6 @@ function _construct(obj=null)
     
     if (obj !== null && obj !== undefined && obj !== '') {        
         let json_obj = JSON.parse(obj);
-        console.log('character received', json_obj);
         oCharacter.status = 'existing';
     } else {
         console.log('No character information received, treating as new');
@@ -27,6 +26,7 @@ function _construct(obj=null)
     $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
 }
 
+//
 function characterAddTo(attribute,subject) {
     //add the subject to the attribute called
     attribute.push(subject);
@@ -38,6 +38,14 @@ function characterAddTo(attribute,subject) {
     console.log('characterAddTo: ',oCharacter);
 }
 
+/*--characterRemoveFrom
+//-attribute: 
+---oCharacter.profession
+---oCharacter.skills
+---oCharacter.items
+//-element: The element that is calling the action, is is basically $(this)
+//-main_id: The main_id of the skill/profession/item
+//-sub_id: The sub_id of the skill/profession/item*/
 function characterRemoveFrom(attribute,element,main_id,sub_id=null) {
     let itemFound = false;
     let subject = {};
@@ -280,15 +288,30 @@ function handleChoice(oTempData,addFunction,action,type) {
     $('#selection-modal').foundation('close');
 }
 
-function modalSet(data, action) {
-    const $subtypeSelect = $('select[name="subtype"]');
-    const $container = $('#choice-description');
-    const $container_details = $('#choice-details');
+//--MODAL--//
+const $typeSelect = $('select[name="type"]');
+const $subtypeSelect = $('select[name="subtype"]');
+const $container = $('#choice-description');
+const $container_details = $('#choice-details');
+const $container_actions = $('#choice-actions');
 
+/*modalClear
+--complete, weither the modal should be completely cleared
+*/
+function modalClear(complete=false) {
     // Clear previous content
+    if(complete) {
+        $typeSelect.empty().hide();
+    }
     $subtypeSelect.empty().hide();
-    $container.empty();
-    $container_details.empty();
+    $container.empty().hide();
+    $container_details.empty().hide();
+    $container_actions.empty().hide();
+}
+
+function modalSet(data, action) {
+
+    modalClear();
 
     // Check if the data has a subtype and add new options
     if (data.subtype && data.subtype.length > 0) {
@@ -314,26 +337,15 @@ function modalSet(data, action) {
     if (data.details.disclaimer) {        
         contentElements.push($('<p>', { html: data.details.disclaimer }));
     }
-    contentElements.push($('<a>', { 
-        class: 'button solid','data-action': `${action}-choose`
-        ,html: `${icons.choose.icon} ${icons.choose.text}`})
-    )
-    if (data.details.rule_page) {
-        contentElements.push($('<a>', { 
-            class: 'button clear'
-            ,target: '_blank'
-            ,href: `https://larp.dalaria.nl/wp-content/uploads/documents/KvD-Basisregels.pdf#page=${data.details.rule_page}`
-            ,html: `${icons.more_info.icon} ${icons.more_info.text}`})
-        );
-    }
-    $container.append(contentElements);
+    
+    $container.append(contentElements).show();
 
     /*--contentDetailsElements-- */
     const contentDetailsElements = [];
     if (data.details.loresheet) {        
         contentDetailsElements.push($('<p>', { html: `${icons.loresheet.icon} ${icons.loresheet.text}` }));
     }    
-    if(data.modifier.length>1) {        
+    if(data.modifier.length > 1) {        
         for(let i = 0; i < data.modifier.length; i++) {
             var name = data.modifier[i].name;
             contentDetailsElements.push(                
@@ -341,7 +353,7 @@ function modalSet(data, action) {
                 ,$('<label>', { for: `modifier-${i}`, html: `${icons[name.toLowerCase()].icon} ${icons[name.toLowerCase()].text}` })
             );
         }        
-    } else if (data.modifier) {
+    } else if (data.modifier.length == 1) {
         var name = data.modifier[0].name;
         contentDetailsElements.push($('<p>', { html: `${icons[name.toLowerCase()].icon} ${icons[name.toLowerCase()].text}` }));
     }
@@ -362,7 +374,23 @@ function modalSet(data, action) {
     } else if (action === "item_add") {
         contentDetailsElements.push($('<p>', { html: convertCurrency(data.details.price) }));
     }
-    $container_details.append(contentDetailsElements);
+    $container_details.append(contentDetailsElements).show();;
+    
+    /*--contentActionsElements-- */
+    const contentActionsElements = [];
+    contentActionsElements.push($('<a>', { 
+        class: 'button solid','data-action': `${action}-choose`
+        ,html: `${icons.choose.icon} ${icons.choose.text}`})
+    )
+    if (data.details.rule_page) {
+        contentActionsElements.push($('<a>', { 
+            class: 'button clear'
+            ,target: '_blank'
+            ,href: `https://larp.dalaria.nl/wp-content/uploads/documents/KvD-Basisregels.pdf#page=${data.details.rule_page}`
+            ,html: `${icons.more_info.icon} ${icons.more_info.text}`})
+        );
+    }
+    $container_actions.append(contentActionsElements).show();;
 
 }
 
@@ -397,7 +425,6 @@ function calculateIncrease(id) {
                 } 
             });
         } else {
-            console.log(`${category.modifier} , ${id}`)
             if(category.modifier == id) {
                 increase ++
             }
@@ -425,14 +452,15 @@ function calculateIncrease(id) {
 //---10: INCREASE_BASE_CURRENCY
 //---11: INCREASE_BASE_FAVOR
 function updateCharacterStats() {
-    oCharacter.build.max_xp = jsonBaseChar.max_xp+(calculateIncrease(8)*jsonStat.max_xp);
+    oCharacter.build.max_xp = jsonBaseChar.max_xp+(calculateIncrease(8)*jsonStat.xp);
     oCharacter.build.currency = jsonBaseChar.currency+(calculateIncrease(10)*jsonStat.currency);
     //--adjust the stats of the character
 	oCharacter.build.hp = jsonBaseChar.hp+(calculateIncrease(2)*jsonStat.hp);
     oCharacter.build.sanity = jsonBaseChar.sanity+(calculateIncrease(1)*jsonStat.sanity);
-    oCharacter.build.mana = jsonBaseChar.mana+(calculateIncrease(7)*jsonStat.mana);
+    oCharacter.build.mana = jsonBaseChar.mana+(calculateIncrease(7)*jsonStat.mana)+(calculateIncrease(9)*jsonStat.mana_minor);
     oCharacter.build.gp = jsonBaseChar.gp+(calculateIncrease(6)*jsonStat.gp);
     //oCharacter.build.favour = jsonBaseChar.favour+(calculateIncrease(6)*jsonStat.favour);
+    //--adjust the powers of the character
     oCharacter.build.str = jsonBaseChar.str+(calculateIncrease(4)*jsonStat.str);
     oCharacter.build.dex = jsonBaseChar.dex+(calculateIncrease(3)*jsonStat.dex);
     oCharacter.build.intel = jsonBaseChar.intel+(calculateIncrease(5)*jsonStat.intel);
@@ -452,6 +480,7 @@ function updateCharacterStats() {
     });
     //update the object
     updateCharacter();
+    console.log(oCharacter);
 }
 
 export {  
@@ -466,6 +495,7 @@ export {
     experienceSpend,
     elementAdd,
     handleChoice,
+    modalClear,
     modalSet,
     showMessage,
     updateCharacter,    
