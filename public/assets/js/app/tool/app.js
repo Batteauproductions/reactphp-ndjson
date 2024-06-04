@@ -4,15 +4,20 @@ import {
     ,oCharacter
 } from './settings.js';
 
-import { 
-    skillAdd, 
-    skillRemove,
-} from './skills.js';
+import {
+    raceAdd,
+    raceRemove,
+} from './race.js'
 
 import {
     professionAdd,
     professionRemove,
 } from './professions.js'
+
+import { 
+    skillAdd, 
+    skillRemove,
+} from './skills.js';
 
 import {
     itemAdd,
@@ -25,6 +30,7 @@ import {
     calculateProfessionCost, 
     handleChoice,
     modalSet, 
+    updateCharacter,
 } from './functions.js';
 
 $(document).ready(function() {
@@ -73,6 +79,7 @@ $(document).ready(function() {
         $('select[name="type"]').hide();
         $('select[name="subtype"]').hide();
         $('#choice-description').empty();
+        $('#choice-details').empty();
         //--remove the old types / remove the old sub types
         $('select[name="type"] option, select[name="subtype"] option').filter(function() {
             return $(this).attr('value') !== undefined && $(this).attr('value') !== "";
@@ -147,6 +154,11 @@ $(document).ready(function() {
 
     });
     
+    $('body').on('change','input[name="rank"]',function(){
+        let value = $(this).val();
+        $('#rank_cost').text(calculateSkillCost(oTempData,value));
+    });
+
     $('select[name="type"]').on('change',function(){
         //hide the dropdown with subtypes
         $('select[name="subtype"]').hide();
@@ -190,14 +202,15 @@ $(document).ready(function() {
                 });
                 var icon = icons["change"];
                 $('a[data-type="base_kit"]').html(`${icon.icon} ${icon.text}`);
-                $element.html('').append(container)
-                bCheck = true;
+                $element.empty().append(container);
+                updateCharacter();
+                $('#selection-modal').foundation('close');
                 break;
             case 'item-remove':
                 itemRemove($(this),$(this).data('id'),$(this).data('sub_id'));
                 break;
             case 'item_add-choose':
-                oTempData.amount = ($('input[name="item_amount"]').val() !== '') ? parseInt($('input[item_amount"]').val()) : null;
+                oTempData.amount = ($('input[name="item_amount"]').val() !== '') ? parseInt($('input[name="item_amount"]').val()) : null;
                 oTempData.cost = parseInt(oTempData.details.price);
                 handleChoice(oTempData,itemAdd,sAction,'item');
                 break;
@@ -210,13 +223,7 @@ $(document).ready(function() {
                 professionRemove($(this),$(this).data('id'),$(this).data('sub_id'));
                 break;
             case 'race-choose':
-                var oRace = {
-                    id: parseInt(oTempData.details.id),
-                    //modifier: parseInt(),
-                }
-                $('#race').html(`<i class="fa-solid fa-rotate-right"></i>${oTempData.details.name}</span>`)
-                oCharacter.race = oRace
-                bCheck = true;
+                raceAdd(oTempData);                
                 break;
             case 'skill_base-choose':
             case 'skill_combat-choose':

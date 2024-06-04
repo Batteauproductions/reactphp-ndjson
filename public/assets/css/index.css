@@ -244,6 +244,10 @@ ul li {
   text-align: left;
 }
 
+.form-data {
+  font-weight: bold;
+}
+
 .input-error {
   display: block;
   padding: 1.25rem;
@@ -252,10 +256,6 @@ ul li {
   color: #fff;
   font-weight: bold;
   margin: 1.25rem 0;
-}
-
-.form-data {
-  font-weight: bold;
 }
 
 .navigation-site {
@@ -444,6 +444,11 @@ ul li {
 .profile .profile-role {
   display: block;
   font-size: 0.8rem;
+}
+
+#choice-details input {
+  display: inline-block;
+  width: auto;
 }
 
 .reveal {

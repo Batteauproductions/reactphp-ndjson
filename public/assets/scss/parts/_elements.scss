@@ -96,6 +96,10 @@
     }
 }
 
+.form-data {
+    font-weight: bold;
+}
+
 .input-error {
     display: block;
     padding: $padding;
@@ -104,10 +108,6 @@
     color: $color-font-body-light;
     font-weight: bold;
     margin: $margin 0;
-}
-
-.form-data {
-    font-weight: bold;
 }
 
 .navigation {
@@ -340,6 +340,13 @@
     .profile-role {
         display: block;
         font-size: calc(0.8*$paragraph-font-size);
+    }
+}
+
+#choice-details {
+    input {
+        display: inline-block;
+        width: auto;
     }
 }
 

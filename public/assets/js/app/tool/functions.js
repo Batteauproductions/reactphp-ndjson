@@ -282,13 +282,13 @@ function handleChoice(oTempData,addFunction,action,type) {
 
 function modalSet(data, action) {
     const $subtypeSelect = $('select[name="subtype"]');
-    const $rankOptions = $('#rank-options');
     const $container = $('#choice-description');
+    const $container_details = $('#choice-details');
 
     // Clear previous content
     $subtypeSelect.empty().hide();
-    $rankOptions.empty().hide();
     $container.empty();
+    $container_details.empty();
 
     // Check if the data has a subtype and add new options
     if (data.subtype && data.subtype.length > 0) {
@@ -299,21 +299,9 @@ function modalSet(data, action) {
         $subtypeSelect.append(options).show();
     }
 
-    // Check if the skill has more than one level to buy
-    if (data.details.max_rank) {
-        const rankElements = [];
-        for (let i = 1; i <= data.details.max_rank; i++) {
-            rankElements.push(
-                $('<label>', { for: `rank-${i}`, text: `${oTranslations[language].rank} - ${i}` }),
-                $('<input>', { id: `rank-${i}`, value: i, type: 'radio', name: 'rank' })
-            );
-        }
-        $rankOptions.append(rankElements).show();
-    }
-
     // Create and append content elements if they exist
+    /*--contentElements-- */
     const contentElements = [];
-
     if (data.details.name) {
         contentElements.push($('<h1>', { html: data.details.name }));
     }
@@ -326,24 +314,10 @@ function modalSet(data, action) {
     if (data.details.disclaimer) {        
         contentElements.push($('<p>', { html: data.details.disclaimer }));
     }
-    
-    if(data.modifier) {        
-        for(let i = 0; i < data.modifier.length; i++) {
-            contentElements.push($('<p>', { html: `<i class="fa-solid fa-arrow-up-right-dots"></i> ${data.modifier[i].description}` }));
-        }        
-    }
-    if (action ==="skill_base" || action === "skill_combat" || action === "skill_magic") {
-        contentElements.push($('<p>', { html: `${icons.experience.icon} ${data.details.xp_cost} ${icons.experience.text}`}));
-    } else if (action === "profession") {
-        contentElements.push($('<p>', { html: `${icons.experience.icon} ${data.details.rank_1_cost} ${icons.experience.text}`}));
-    } else if (action === "item_add") {
-        contentElements.push($('<p>', { html: convertCurrency(data.details.price) }));
-    }
     contentElements.push($('<a>', { 
         class: 'button solid','data-action': `${action}-choose`
         ,html: `${icons.choose.icon} ${icons.choose.text}`})
-    );
-
+    )
     if (data.details.rule_page) {
         contentElements.push($('<a>', { 
             class: 'button clear'
@@ -352,8 +326,44 @@ function modalSet(data, action) {
             ,html: `${icons.more_info.icon} ${icons.more_info.text}`})
         );
     }
-
     $container.append(contentElements);
+
+    /*--contentDetailsElements-- */
+    const contentDetailsElements = [];
+    if (data.details.loresheet) {        
+        contentDetailsElements.push($('<p>', { html: `${icons.loresheet.icon} ${icons.loresheet.text}` }));
+    }    
+    if(data.modifier.length>1) {        
+        for(let i = 0; i < data.modifier.length; i++) {
+            var name = data.modifier[i].name;
+            contentDetailsElements.push(                
+                $('<input>', { id: `modifier-${i}`, value: i, type: 'radio', name: 'race-modifier' })
+                ,$('<label>', { for: `modifier-${i}`, html: `${icons[name.toLowerCase()].icon} ${icons[name.toLowerCase()].text}` })
+            );
+        }        
+    } else if (data.modifier) {
+        var name = data.modifier[0].name;
+        contentDetailsElements.push($('<p>', { html: `${icons[name.toLowerCase()].icon} ${icons[name.toLowerCase()].text}` }));
+    }
+    if (data.details.max_rank) {
+        var $row = $('<div>', { html: `${icons.rank.icon}` })
+        for (let i = 1; i <= data.details.max_rank; i++) {
+            $row.append(
+                $('<input>', { id: `rank-${i}`, value: i, type: 'radio', name: 'rank' })
+                ,$('<label>', { for: `rank-${i}`, text: ` ${i}` })
+            );
+        }
+        contentDetailsElements.push($row)
+    }
+    if (action ==="skill_base" || action === "skill_combat" || action === "skill_magic") {
+        contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} <span id="rank_cost">${data.details.xp_cost}</span> ${icons.experience.text}`}));
+    } else if (action === "profession") {
+        contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} ${data.details.rank_1_cost} ${icons.experience.text}`}));
+    } else if (action === "item_add") {
+        contentDetailsElements.push($('<p>', { html: convertCurrency(data.details.price) }));
+    }
+    $container_details.append(contentDetailsElements);
+
 }
 
 //
@@ -376,15 +386,22 @@ function calculateIncrease(id) {
     let increase = 0;
     // Helper function to calculate the increase for each category
     var calculateForCategory = (category) => {
-        $.each(category, function(key, value) {
-            if ($.isArray(value.modifier)) {
-                for (let i = 0; i < value.modifier.length; i++) {
-                    if (value.modifier[i].id == id) {
-                        increase += value.rank > 1 ? value.rank : 1;
+        if ($.isArray(category)) {
+            $.each(category, function(key, value) {
+                if ($.isArray(value.modifier)) {
+                    for (let i = 0; i < value.modifier.length; i++) {
+                        if (value.modifier[i].id == id) {
+                            increase += value.rank > 1 ? value.rank : 1;
+                        }
                     }
-                }
-            } 
-        });
+                } 
+            });
+        } else {
+            console.log(`${category.modifier} , ${id}`)
+            if(category.modifier == id) {
+                increase ++
+            }
+        }
     }
 
     // Calculate increase for race, profession, and skills
@@ -408,8 +425,9 @@ function calculateIncrease(id) {
 //---10: INCREASE_BASE_CURRENCY
 //---11: INCREASE_BASE_FAVOR
 function updateCharacterStats() {
+    oCharacter.build.max_xp = jsonBaseChar.max_xp+(calculateIncrease(8)*jsonStat.max_xp);
+    oCharacter.build.currency = jsonBaseChar.currency+(calculateIncrease(10)*jsonStat.currency);
     //--adjust the stats of the character
-    //oCharacter.build.currency = jsonBaseChar.currency+(calculateIncrease(10)*jsonStat.currency);
 	oCharacter.build.hp = jsonBaseChar.hp+(calculateIncrease(2)*jsonStat.hp);
     oCharacter.build.sanity = jsonBaseChar.sanity+(calculateIncrease(1)*jsonStat.sanity);
     oCharacter.build.mana = jsonBaseChar.mana+(calculateIncrease(7)*jsonStat.mana);
@@ -418,10 +436,19 @@ function updateCharacterStats() {
     oCharacter.build.str = jsonBaseChar.str+(calculateIncrease(4)*jsonStat.str);
     oCharacter.build.dex = jsonBaseChar.dex+(calculateIncrease(3)*jsonStat.dex);
     oCharacter.build.intel = jsonBaseChar.intel+(calculateIncrease(5)*jsonStat.intel);
-    //oCharacter.build.clues = jsonBaseChar.clues+(calculateIncrease(6)*jsonStat.clues);
+    oCharacter.build.clues = jsonBaseChar.intel+(calculateIncrease(5)*jsonStat.intel);
     //--update the text on the sheet per modifier
     $.each(oCharacter.build, function(key,value) {
-        $(`#stat-${key}`).text(value);
+        let content;
+        switch (key) {
+            case "currency":
+                content = convertCurrency(value);
+                break;
+            default: 
+                content = value;
+                break;
+        }
+        $(`#stat-${key}`).html(content);
     });
     //update the object
     updateCharacter();

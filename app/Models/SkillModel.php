@@ -47,7 +47,7 @@ class SkillModel extends Model
         $query = $this
                 ->db
                 ->table(TBL_SKILL . ' s')
-                ->select('s.id, s.name, s.description, s.available, s.modifier, s.skill_type, s.profession_link, s.profession_sublink, s.profession_rank, s.sl_only,
+                ->select('s.id, s.name, s.description, s.available, s.skill_type, s.profession_link, s.profession_sublink, s.profession_rank, s.sl_only,
                             p.id as prof_id, p.name as prof_name,
                             sm.id as stat_id, sm.name as stat_name,
                             st.id as type_id, st.name as type_name')
@@ -101,7 +101,7 @@ class SkillModel extends Model
 		$query = $this
 					->db
 					->table(TBL_SKILL.' s')
-					->select('s.id, s.name, s.description, s.advanced_description, s.disclaimer, s.requirements, s.loresheet, s.max_rank, s.max_purchase, s.rank_description, s.xp_cost,s.modifier,s.profession_link,s.profession_sublink,s.profession_rank,s.sl_only,
+					->select('s.id, s.name, s.description, s.advanced_description, s.disclaimer, s.requirements, s.loresheet, s.max_rank, s.max_purchase, s.rank_description, s.xp_cost, s.modifier, s.profession_link, s.profession_sublink, s.profession_rank, s.sl_only,
 							p.id as prof_id, p.name as prof_name,
 							sm.id as stat_id, sm.name as stat_name,
 							st.id as type_id, st.name as type_name')								

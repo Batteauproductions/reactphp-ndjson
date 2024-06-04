@@ -2,7 +2,7 @@
 
 <div class="grid-container">
     <div class="page-wrapper transparent">
-        <form id="form-character" class="grid-x grid-padding-x grid-padding-y form-character" method="POST" action="<?php echo base_url(''); ?>">
+        <form id="form-character" class="grid-x grid-padding-x grid-padding-y form-character" method="POST">
 
             <!-- Tool information -->
             <input type="hidden" name="jsonBaseChar" value='<?php echo json_encode($jsonBaseChar) ?>'/>
@@ -42,7 +42,9 @@
                                 Karakternaam
                             </div>
                             <div class="cell small-6">
-                                sssss
+                                <a data-open="selection-modal" data-type="race">
+                                    <span id="race"><i class="fa-solid fa-plus"></i>toevoegen</span>
+                                </a>
                             </div>
                             <div class="cell small-6 text-left">
                                 Raskeuze
@@ -56,7 +58,7 @@
                                 Vaardigheid
                             </div>
                             <div class="cell small-6">
-                                <span id="spend_xp"><?php echo $jsonBaseChar['spend_xp']?></span>/<span id="max_xp"><?php echo $jsonBaseChar['max_xp'] ?></span>pt.
+                                <span id="stat-spend_xp"><?php echo $jsonBaseChar['spend_xp']?></span>/<span id="stat-max_xp"><?php echo $jsonBaseChar['max_xp'] ?></span>pt.
                             </div>
                             <div class="cell small-6 text-left">
                                 Geld
@@ -92,12 +94,14 @@
                             <div class="cell small-6">
                                 <span id="stat-gp"><?php echo $jsonBaseChar['gp'] ?></span>
                             </div>
-                            <div class="cell small-6 text-left">
-                                Favour
-                            </div>
-                            <div class="cell small-6">
-                                <span id="stat-favour">0</span>
-                            </div>
+                            <?php if (1==2): ?>
+                                <div class="cell small-6 text-left">
+                                    Patron gunst
+                                </div>
+                                <div class="cell small-6">
+                                    <span id="stat-favour">0</span>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="cell small-12">
@@ -269,8 +273,8 @@
                 </div>
             </div>
             <div class="cell small-12">
-                <button class="button solid"><i class="fa-regular fa-floppy-disk"></i> Opslaan</button>
-                <button class="button clear"><i class="fa-regular fa-share-from-square"></i> Opslaan en indienen</button>
+                <button class="button solid" formaction="<?php echo base_url('action/save-character'); ?>"><i class="fa-regular fa-floppy-disk"></i> Opslaan</button>
+                <button class="button clear" formaction="<?php echo base_url('action/submit-character'); ?>"><i class="fa-regular fa-share-from-square"></i> Opslaan en indienen</button>
             </div>
         </form>
     </div>
@@ -283,19 +287,18 @@
     </div>
 
     <form id="modal-form" class="grid-x grid-padding-x grid-padding-y" style="display:none;">
-        <div id="selection-modal-dropdowns" class="cell small-3">
+        <div id="selection-modal-dropdowns" class="cell small-12 medium-4 large-3">
             <select name="type" data-name="" data-action="collect" style="display:none;">
                 <option value="" disabled selected>Geen voorkeur</option>
             </select>
             <select name="subtype" style="display:none;">
                 <option value="" disabled selected>Geen voorkeur</option>
             </select>
-            <input type="number" name="item_amount" style="display:none;" value="">
-            <section id="rank-options" style="display:none;">
+            <section id="choice-details">
                 <!-- dynamic filled -->
             </section>
         </div>
-        <div class="cell small-9">
+        <div class="cell small-12 medium-8 large-9">
             <div id="choice-description">
                 <!-- dynamic filled -->
             </div>
