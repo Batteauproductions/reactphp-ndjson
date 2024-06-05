@@ -14,7 +14,7 @@ import {
 //obj: The profession that is being parsed
 function professionAdd(obj) {
     if (typeof obj === 'object') {
-        characterAddTo(oCharacter.profession,obj)
+        characterAddTo(oCharacter.profession,'profession',obj)
     } else {
         console.error("professionAdd is not an object: " +$.type(obj));
     }
@@ -23,7 +23,7 @@ function professionAdd(obj) {
 //This function will remove a profession to the character
 //obj: The profession that is being parsed
 function professionRemove(element,main_id,sub_id) {
-    characterRemoveFrom(oCharacter.profession,element,main_id,sub_id)
+    characterRemoveFrom(oCharacter.profession,element,'profession',main_id,sub_id)
 }
 
 export {

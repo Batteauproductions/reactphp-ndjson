@@ -192,7 +192,8 @@ $(document).ready(function() {
                 itemRemove($(this),$(this).data('id'),$(this).data('sub_id'));
                 break;
             case 'item_add-choose':
-                oTempData.amount = ($('input[name="item_amount"]').val() !== '') ? parseInt($('input[name="item_amount"]').val()) : null;
+                //oTempData.amount = ($('input[name="item_amount"]').val() !== '') ? parseInt($('input[name="item_amount"]').val()) : 1;
+                oTempData.amount = 1;
                 oTempData.cost = parseInt(oTempData.details.price);
                 handleChoice(oTempData,itemAdd,sAction,'item');
                 break;
@@ -206,6 +207,8 @@ $(document).ready(function() {
                 break;
             case 'race-choose':
                 raceAdd(oTempData);                
+                break;
+            case 'set-name':
                 break;
             case 'skill_base-choose':
             case 'skill_combat-choose':

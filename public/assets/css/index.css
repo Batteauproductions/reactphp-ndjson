@@ -239,6 +239,7 @@ ul li {
   border-radius: 0.313rem;
   background: #1E1E1E;
   padding: 1.25rem;
+  line-height: 1.8rem !important;
 }
 .form-character .info-container ul li {
   text-align: left;
@@ -246,6 +247,10 @@ ul li {
 
 .form-data {
   font-weight: bold;
+}
+
+.grid-container {
+  max-width: 80rem !important;
 }
 
 .input-error {

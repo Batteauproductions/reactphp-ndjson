@@ -68,10 +68,17 @@ class SkillModel extends Model
         // If arrProfessions is provided, add those conditions
         if ($arrProfessions !== null) {
             foreach ($arrProfessions as $key => $value) {
-                $query->orGroupStart()
-                      ->where('s.profession_link', $arrProfessions[$key]['main_id'])
-                      ->where('s.profession_rank <=', $arrProfessions[$key]['rank'])
-                      ->groupEnd();
+                $query->orGroupStart()          
+                    ->where('s.profession_rank <=', $arrProfessions[$key]['rank'])          
+                    ->where('s.profession_link', $arrProfessions[$key]['main_id'])
+                    //->where('s.profession_sublink', $arrProfessions[$key]['sub_id'])
+                    //->orWhere('s.profession_sublink',null)                                        
+                    ->groupEnd();
+                //for skills with no rank in the profession
+                $query->orGroupStart()                    
+                    ->where('s.profession_link', $arrProfessions[$key]['main_id'])
+                    ->where('s.profession_rank', null)
+                    ->groupEnd();
             }
         }
     
@@ -81,10 +88,10 @@ class SkillModel extends Model
         $result = $query->get()->getResultObject();
     
         // Optional: Retrieve and log the last executed query for debugging
-        // $lastQuery = $this->db->getLastQuery();
+         $lastQuery = $this->db->getLastQuery();
         // log_message('info', 'Last executed query: ' . $lastQuery);
         // echo $lastQuery;
-    
+        // exit;
         return $result;
     }
 

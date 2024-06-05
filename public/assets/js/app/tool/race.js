@@ -20,7 +20,7 @@ function raceAdd(obj) {
         }
         if(obj.modifier.length>1) {
             console.log('choice should be made')
-            oRace.modifier = parseInt($('input[name="race-modifier"]').val());
+            oRace.modifier = parseInt($('input[name="stat-modifier"]:checked').val());
         } else {
             oRace.modifier = parseInt(obj.modifier[0].id);
         }

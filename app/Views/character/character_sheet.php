@@ -42,7 +42,9 @@
                                 Karakternaam
                             </div>
                             <div class="cell small-6">
-                                -
+                                <a ata-open="text-modal" data-type="name">
+                                    <span id="charactername"><i class="fa-solid fa-plus"></i>toevoegen</span>
+                                </a>
                             </div>
                             <div class="cell small-6 text-left">
                                 Raskeuze
@@ -138,7 +140,7 @@
                         <h1>Beroep(en)</h1>
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
                         <div class="info-container">
-                            <div id="profession-list">
+                            <div data-id="profession-list">
                                 <!-- Dynamic filled -->
                             </div>
                             <a data-open="selection-modal" data-type="profession"><i class="fa-solid fa-plus"></i>toevoegen</a>
@@ -148,7 +150,7 @@
                         <h1>Beroeps vaardigheden</h1>
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
                         <div class="info-container">
-                            <div id="skill_base-list">
+                            <div data-id="skill_base-list">
                                 <!-- Dynamic filled -->
                             </div>
                             <a data-open="selection-modal" data-type="skill_base"><i class="fa-solid fa-plus"></i>toevoegen</a>
@@ -158,7 +160,7 @@
                         <h1>Gevechts vaardigheden</h1>
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
                         <div class="info-container">
-                            <div id="skill_combat-list">
+                            <div data-id="skill_combat-list">
                                 <!-- Dynamic filled -->
                             </div>
                             <a data-open="selection-modal" data-type="skill_combat"><i class="fa-solid fa-plus"></i>toevoegen</a>
@@ -168,7 +170,7 @@
                         <h1>Magische vaardigheden</h1>
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
                         <div class="info-container">
-                            <div id="skill_magic-list">
+                            <div data-id="skill_magic-list">
                                 <!-- Dynamic filled -->
                             </div>
                             <a data-open="selection-modal" data-type="skill_magic"><i class="fa-solid fa-plus"></i>toevoegen</a>
@@ -212,7 +214,7 @@
                             </div>
                             <div class="cell small-8">
                                 <div class="info-container">
-                                    <div data-id="item-list">
+                                    <div data-id="item_add-list">
                                         <!-- Dynamic filled -->
                                     </div>
                                     <a data-open="selection-modal" data-type="item_add"><i class="fa-solid fa-plus"></i>toevoegen</a>
@@ -260,7 +262,7 @@
                             </div>
                             <div class="cell small-12 medium-6">
                                 <div class="info-container">
-                                    <div data-id="item-list">
+                                    <div data-id="item_add-list">
                                         <!-- Dynamic filled -->
                                     </div>
                                     <a data-open="selection-modal" data-type="item_add"><i class="fa-solid fa-plus"></i>toevoegen</a>
@@ -311,6 +313,22 @@
         <span aria-hidden="true">&times;</span>
     </button>
 
+</div>
+
+<div class="reveal large" id="text-modal" data-reveal>
+    
+    <div data-id="modal-loading" class="text-center">
+        <i class="fa-solid fa-spinner fa-spin"></i> Gegevens laden
+    </div>
+
+    <form id="text-form" class="grid-x grid-padding-x grid-padding-y" style="display:none;">
+        <!-- dynamic filled -->
+    </form>
+    
+    <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    
 </div>
 
 <div class="reveal large" id="background-modal" data-reveal>

@@ -14,7 +14,7 @@ import {
 //obj: The skill that is being parsed
 function skillAdd(obj) {
     if (typeof obj === 'object') {
-        characterAddTo(oCharacter.skills,obj)
+        characterAddTo(oCharacter.skills,'skill',obj)
     } else {
         console.error("skillAdd is not an object: " +$.type(obj));
     }
@@ -23,7 +23,7 @@ function skillAdd(obj) {
 //This function will remove a skill from the character
 //obj: The skill that is being parsed
 function skillRemove(element,main_id,sub_id) {
-    characterRemoveFrom(oCharacter.skills,element,main_id,sub_id)
+    characterRemoveFrom(oCharacter.skills,element,'skill',main_id,sub_id)
 }
 
 export {  

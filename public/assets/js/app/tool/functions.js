@@ -27,14 +27,18 @@ function _construct(obj=null)
 }
 
 //
-function characterAddTo(attribute,subject) {
+function characterAddTo(attribute,type,subject) {
     //add the subject to the attribute called
     attribute.push(subject);
-    experienceSpend(subject.cost);
+    if (type === "profession" || type === "skill") {
+        experienceSpend(subject.cost);
+    } else if (type === "item") {
+        currencySpend(subject.cost);
+    } 
     // Check if the choice has a stat modifier
-    if (subject.modifier.length > 0) {
+     if (subject.modifier.length > 0) {
         updateCharacterStats();
-    }
+    }   
     console.log('characterAddTo: ',oCharacter);
 }
 
@@ -46,7 +50,7 @@ function characterAddTo(attribute,subject) {
 //-element: The element that is calling the action, is is basically $(this)
 //-main_id: The main_id of the skill/profession/item
 //-sub_id: The sub_id of the skill/profession/item*/
-function characterRemoveFrom(attribute,element,main_id,sub_id=null) {
+function characterRemoveFrom(attribute,element,type,main_id,sub_id=null) {
     let itemFound = false;
     let subject = {};
     for (let i = 0; i < attribute.length; i ++) {
@@ -59,11 +63,15 @@ function characterRemoveFrom(attribute,element,main_id,sub_id=null) {
     }
     if (!itemFound) {
         console.error('Item not found');
-    } else {        
+    } else {  
         if (subject.modifier.length > 0) {
             updateCharacterStats();
         }
-        experienceRefund(subject.cost);
+        if (type === "profession" || type === "skill") {
+            experienceRefund(subject.cost);
+        } else if (type === "item") {
+            currencyRefund(subject.cost);
+        }
         element.parent().parent().remove();
     }
     console.log('characterRemoveFrom: ',oCharacter);
@@ -108,7 +116,7 @@ function checkCurrencyCost(cost) {
         } 
         return false;
     } else {
-        console.error("checkXPCost is not an number: " +$.type(cost));
+        console.error("checkCurrencyCost is not an number: " +$.type(cost));
     }    
 };
 
@@ -130,6 +138,25 @@ function convertCurrency(iAmount) {
     return sCurrency;
 }
 
+//This function will handle the spending of experience
+//It should check if there is an attempt to spend more than available
+function currencySpend(cost) {
+    if((oCharacter.build.currency-cost) < 0) {
+        console.error(`Attempt to set currency over maximum`);
+        oCharacter.build.currency = 0;
+    } else {
+        oCharacter.build.currency -= cost;
+    }
+    $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
+}
+
+//This function will handle the refund of experience
+//It should check if there is an attempt to refund more than zero
+function currencyRefund(cost) {
+    oCharacter.build.currency += cost;
+    $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
+}
+
 //This function will add a container to the sheet
 //container: the element in the DOM to add elements to
 //element: the element that needs to be added
@@ -144,10 +171,10 @@ function elementAdd(container, element, type) {
         // Create main name column
         const column_name = $('<div>', {
             class: 'cell small-5 text-left',
-            text: `${element.main_name}${element.rank !== null ? ` (niveau ${element.rank})` : ''}`
+            text: `${element.main_name}${element.rank !== null ? ` (${icons.rank.text} ${element.rank})` : ''}`
         });
 
-        let column_subname, column_cost, local_icons;
+        let column_subname, column_amount, column_cost, local_icons;
 
         if (type === 'skill' || type === 'profession') {
             // Create sub name column (if exists)
@@ -155,7 +182,6 @@ function elementAdd(container, element, type) {
                 class: 'cell small-4 text-center',
                 text: element.sub_name !== null ? element.sub_name : '-',
             });
-
             // Create cost column
             column_cost = $('<div>', {
                 class: 'cell small-1 text-right',
@@ -163,11 +189,15 @@ function elementAdd(container, element, type) {
             });
             local_icons = iconset["new_skill_no_rank"];
         } else if (type === 'item') {
-            local_icons = iconset["new_item"];
-            column_cost = $('<div>', {
-                class: 'cell small-1 text-right',
-                html: `${convertCurrency(element.cost)}.`
+            column_amount = $('<div>', {
+                class: 'cell small-2 text-right',
+                text: `${element.amount}x`
             });
+            column_cost = $('<div>', {
+                class: 'cell small-3 text-right',
+                html: `${convertCurrency(element.cost)}`
+            });
+            local_icons = iconset["new_item"];
         }
 
         // Create icon set column
@@ -186,17 +216,17 @@ function elementAdd(container, element, type) {
         // Append columns to row
         row.append(column_name);
         if (column_subname) row.append(column_subname);
+        if (column_amount) row.append(column_amount);
         if (column_cost) row.append(column_cost);
         row.append(column_action);
 
         // Insert row into container alphabetically
-        const $container = $(`#${container}`);
+        const $container = $(`[data-id="${container}"]`);
         let inserted = false;
 
         $container.children('.choice-row').each(function () {
             const currentRow = $(this);
             const currentName = currentRow.find('.cell.small-5.text-left').text().trim();
-
             if (currentName.localeCompare(element.main_name, undefined, { sensitivity: 'base' }) > 0) {
                 currentRow.before(row);
                 inserted = true;
@@ -221,7 +251,7 @@ function experienceSpend(cost) {
     } else {
         oCharacter.build.spend_xp += cost;
     }
-    $('#spend_xp').text(oCharacter.build.spend_xp);
+    $('#stat-spend_xp').text(oCharacter.build.spend_xp);
 }
 
 //This function will handle the refund of experience
@@ -233,7 +263,7 @@ function experienceRefund(cost) {
     } else {
         oCharacter.build.spend_xp -= cost;
     }
-    $('#spend_xp').text(oCharacter.build.spend_xp);
+    $('#stat-spend_xp').text(oCharacter.build.spend_xp);
 }
 
 //This function will handle the choice of of Profession, Skill and Items
@@ -244,7 +274,7 @@ function experienceRefund(cost) {
 //--type: A simple rundown of the type of action being called. It should be profession, skill or item
 function handleChoice(oTempData,addFunction,action,type) {
 
-    const showErrorMessage = (msg) => showMessage($(this).parent(), 'error', `${oTranslations[language][msg]}`);
+    const showErrorMessage = (msg) => showMessage($('#choice-actions'), 'error', `${oTranslations[language][msg]}`);
     const $Container = action.replace('-choose','-list');
 
     //create a temporary object stripping it of all information we don't need
@@ -255,7 +285,8 @@ function handleChoice(oTempData,addFunction,action,type) {
         sub_name: ($('select[name="subtype"] option:selected').val() !== '') ? $('select[name="subtype"] option:selected').text() : null,        
         rank: oTempData.rank,  
         modifier: oTempData.modifier,  
-        cost: oTempData.cost,                                
+        cost: oTempData.cost,
+        amount: oTempData.amount,                 
     }
 
     //--Check if the costs can be deducted from the character
@@ -274,9 +305,7 @@ function handleChoice(oTempData,addFunction,action,type) {
             showErrorMessage('not_enough_coin');
             return;
         }
-    }
-
-    if (oTempData.subtype.length > 0 && oChoice.sub_id === null) { 
+    } else if (oTempData.subtype.length > 0 && oChoice.sub_id === null) { 
         showErrorMessage('choose_sub');                        
         return;
     }
@@ -336,8 +365,7 @@ function modalSet(data, action) {
     }
     if (data.details.disclaimer) {        
         contentElements.push($('<p>', { html: data.details.disclaimer }));
-    }
-    
+    }    
     $container.append(contentElements).show();
 
     /*--contentDetailsElements-- */
@@ -349,7 +377,7 @@ function modalSet(data, action) {
         for(let i = 0; i < data.modifier.length; i++) {
             var name = data.modifier[i].name;
             contentDetailsElements.push(                
-                $('<input>', { id: `modifier-${i}`, value: i, type: 'radio', name: 'race-modifier' })
+                $('<input>', { id: `modifier-${i}`, value: data.modifier[i].id, type: 'radio', name: 'stat-modifier' })
                 ,$('<label>', { for: `modifier-${i}`, html: `${icons[name.toLowerCase()].icon} ${icons[name.toLowerCase()].text}` })
             );
         }        
@@ -396,12 +424,13 @@ function modalSet(data, action) {
 
 //
 function showMessage (element,type, message) {    
+    console.log(`showMessage(${element},${type},${message})`)
     switch(type) {
         case 'done':
             console.log(message);
             break;
         case 'error':
-            $(element).append($('<p>',{ class: "input-message input-error", text: message}));
+            $(element).prepend($('<p>',{ class: "input-message input-error", text: message}));
             break;
     }
 }
