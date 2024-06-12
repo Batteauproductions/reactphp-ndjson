@@ -432,13 +432,17 @@ function modalSet(data, action) {
     if (data.details.advanced_description) {
         contentElements.push($('<p>', { html: data.details.advanced_description }));
     }
-    if (data.details.disclaimer) {        
-        contentElements.push($('<p>', { html: data.details.disclaimer }));
-    }    
+       
     $container.append(contentElements).show();
 
     /*--contentDetailsElements-- */
     const contentDetailsElements = [];
+    if (data.details.disclaimer) {        
+        contentDetailsElements.push($('<p>', { html: `${icons.disclaimer.icon} ${data.details.disclaimer}` }));
+    } 
+    if (data.details.requirement_name) {        
+        contentDetailsElements.push($('<p>', { html: `${icons.required.icon} ${data.details.requirement_name}` }));
+    } 
     if (data.details.loresheet) {        
         contentDetailsElements.push($('<p>', { html: `${icons.loresheet.icon} ${icons.loresheet.text}` }));
     }    

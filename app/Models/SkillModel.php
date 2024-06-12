@@ -104,23 +104,69 @@ class SkillModel extends Model
     }
 	
 	public function getSkillById($id) 
-    {		
-		$query = $this
-					->db
-					->table(TBL_SKILL.' s')
-					->select('s.id, s.name, s.description, s.advanced_description, s.disclaimer, s.requirements, s.loresheet, s.max_rank, s.max_purchase, s.rank_description, s.xp_cost, s.modifier, s.profession_link, s.profession_sublink, s.profession_rank, s.sl_only,
-							p.id as prof_id, p.name as prof_name,
-							sm.id as stat_id, sm.name as stat_name,
-							st.id as type_id, st.name as type_name')								
-					->join(TBL_PROF.' p','p.id = s.profession_link','left')
-					->join(TBL_STATMOD.' sm','sm.id = s.modifier','left')
-					->join(TBL_SKILL_TYPE.' st','st.id = s.skill_type','left')
-					->where('s.id', $id)
-					->orderBy('s.name','asc')		
-					->get();
+    {
+        $query = $this
+                    ->db
+                    ->table(TBL_SKILL . ' s')
+                    ->select('s.id, s.name, s.description, s.advanced_description, s.disclaimer, s.requirements, s.loresheet, s.max_rank, s.max_purchase, s.rank_description, s.xp_cost, s.modifier, s.profession_link, s.profession_sublink, s.profession_rank, s.sl_only,
+                            p.id as prof_id, p.name as prof_name,
+                            sm.id as stat_id, sm.name as stat_name,
+                            st.id as type_id, st.name as type_name')
+                    ->join(TBL_PROF . ' p', 'p.id = s.profession_link', 'left')
+                    ->join(TBL_STATMOD . ' sm', 'sm.id = s.modifier', 'left')
+                    ->join(TBL_SKILL_TYPE . ' st', 'st.id = s.skill_type', 'left')
+                    ->where('s.id', $id)
+                    ->orderBy('s.name', 'asc')
+                    ->get();
 
-        return $query->getRow();	
-	}	
+        $result = $query->getRow();
+        
+        if ($result) {
+            $result->requirement_name = $this->getRequirementNames($result->requirements);
+        } else {
+            // Debugging statement to check if result is empty
+            log_message('debug', 'No skill found with ID: ' . $id);
+        }
+        
+        return $result;
+    }
+
+    private function getRequirementNames($requirements)
+    {
+        if (!$requirements) {
+            return '';
+        }
+
+        $requirementParts = explode('|', $requirements);
+        $requirementNames = [];
+        
+        foreach ($requirementParts as $part) {
+            $partDetails = explode(',', $part);
+
+            // Extract skill ID and rank (if available)
+            $skillId = $partDetails[0];
+            $rank = isset($partDetails[1]) ? ' Rank ' . $partDetails[1] : '';
+
+            // Query skill name
+            $skillQuery = $this
+                        ->db
+                        ->table(TBL_SKILL)
+                        ->select('name')
+                        ->where('id', $skillId)
+                        ->get();
+            
+            $skill = $skillQuery->getRow();
+            
+            if ($skill) {
+                $requirementNames[] = $skill->name . $rank;
+            } else {
+                // Debugging statement to check if skill is found
+                log_message('debug', 'No skill found with ID: ' . $skillId);
+            }
+        }
+        
+        return implode(' | ', $requirementNames);
+    }
 
 	public function getSkillSubtype($id) 
     {

@@ -280,7 +280,8 @@
     </div>
 </div>
 
-<div class="reveal large" id="selection-modal" data-reveal>
+<!-- MODAL FOR MAKING CHOICES -->
+<div class="reveal" id="selection-modal" data-reveal>
     
     <div data-id="modal-loading" class="text-center">
         <i class="fa-solid fa-spinner fa-spin"></i> Gegevens laden
@@ -294,7 +295,7 @@
             <select name="subtype" style="display:none;">
                 <option value="" disabled selected>Geen voorkeur</option>
             </select>
-            
+            <input type="number" name="amount" value="1" style="display:none;"/>
         </div>
         <div class="cell small-12 medium-8 large-9">
             <section id="choice-description">
@@ -315,7 +316,8 @@
 
 </div>
 
-<div class="reveal small" id="text-modal" data-reveal>
+<!-- MODAL FOR SIMPLE TEXT POPUPS -->
+<div class="reveal" id="text-modal" data-reveal>
     
     <div data-id="modal-loading" class="text-center">
         <i class="fa-solid fa-spinner fa-spin"></i> Gegevens laden
@@ -331,6 +333,7 @@
     
 </div>
 
+<!-- MODAL FOR LOGGING BACKGROUND -->
 <div class="reveal large" id="background-modal" data-reveal>
     
     <div data-id="modal-loading" class="text-center">
@@ -368,6 +371,7 @@
     
 </div>
 
+<!-- MODAL FOR LOGGING ADVENTURES -->
 <div class="reveal large" id="adventure-modal" data-reveal>
     
     <div data-id="modal-loading" class="text-center">

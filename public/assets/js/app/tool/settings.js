@@ -4,41 +4,79 @@ const domain = window.location.origin;
 let language = 'nl-NL';
 const oTranslations = Object.freeze({
     "nl-NL": {
-        not_enough_vp: 'Je hebt niet genoeg vaardigheidspunten.'
-        ,not_enough_coin: 'Je hebt niet genoeg geld om dit aan te schaffen.'
-        ,character_name: 'Karakternaam'
-        ,choose_option: 'Maak een keuze'        
-        ,loresheet: 'Je krijgt hievoor een loresheet.'
-        ,rank: "niveau"
-        ,remove: "verwijderen"
-        ,edit: "aanpassen"
-        ,upgrade: "verhogen"
-        ,downgrade: "verlagen"
-        ,change: "veranderen"
-        ,gold: "goud"
-        ,silver: "zilver"
-        ,copper: "koper"
-        ,experience: "vaardigheidspunt(en)"
-        ,more_info: "meer informatie"
-        ,choose: "kiezen"
-        ,question_1: "Wat heb je dit evenement ondernomen?"
-        ,question_2: "Wat heeft dit met je personage gedaan?"
-        ,question_3: "Heb je relaties/contacten opgebouwd met npc’s?"
-        ,question_4: "Wat heb je bijgeleerd (info) en welke theorieën leid je er uit af?"
-        ,question_5: "Wat zijn je plannen komend evenement?"
-        ,question_6: "Overige toevoeging? (optioneel)"
-        ,increase_base_sanity: "Verhoogt de sanity"
-        ,increase_base_health: "Verhoogt de levenspunten"
-        ,increase_base_dex: "Verhoogt de behendigheid"
-        ,increase_base_str: "Verhoogt de kracht"
-        ,increase_base_intel: "Verhoogt de intelligentie"
-        ,increase_base_godpoints: "Verhoogt de godpunten"
-        ,increase_base_mana: "Verhoogt de mana-poel"
-        ,increase_base_points: "Verhoogt de vaardigheidspunten"
-        ,increase_base_mana_minor: "Verhoogt de mana-poel (minor)"
-        ,increase_base_currency: "Verhoogt het startbedrag"
-        ,increase_base_favor: "Verhoogt de patron gunst"
+        "change": "veranderen",
+        "character_name": "Karakternaam",
+        "choose": "kiezen",
+        "choose_option": "Maak een keuze",
+        "copper": "koper",
+        "disclaimer": "disclaimer",
+        "downgrade": "verlagen",
+        "edit": "aanpassen",
+        "experience": "vaardigheidspunt(en)",
+        "gold": "goud",
+        "increase_base_currency": "Verhoogt het startbedrag",
+        "increase_base_dex": "Verhoogt de behendigheid",
+        "increase_base_favor": "Verhoogt de patron gunst",
+        "increase_base_godpoints": "Verhoogt de godpunten",
+        "increase_base_health": "Verhoogt de levenspunten",
+        "increase_base_intel": "Verhoogt de intelligentie",
+        "increase_base_mana": "Verhoogt de mana-poel",
+        "increase_base_mana_minor": "Verhoogt de mana-poel (minor)",
+        "increase_base_points": "Verhoogt de vaardigheidspunten",
+        "increase_base_sanity": "Verhoogt de sanity",
+        "loresheet": "Je krijgt hievoor een loresheet.",
+        "more_info": "meer informatie",
+        "not_enough_coin": "Je hebt niet genoeg geld om dit aan te schaffen.",
+        "not_enough_vp": "Je hebt niet genoeg vaardigheidspunten.",
+        "question_1": "Wat heb je dit evenement ondernomen?",
+        "question_2": "Wat heeft dit met je personage gedaan?",
+        "question_3": "Heb je relaties/contacten opgebouwd met npc’s?",
+        "question_4": "Wat heb je bijgeleerd (info) en welke theorieën leid je er uit af?",
+        "question_5": "Wat zijn je plannen komend evenement?",
+        "question_6": "Overige toevoeging? (optioneel)",
+        "rank": "niveau",
+        "remove": "verwijderen",
+        "required": "verplicht",
+        "silver": "zilver",
+        "upgrade": "verhogen"
     },
+    "en-GB": {
+        "change": "change",
+        "character_name": "Character Name",
+        "choose": "choose",
+        "choose_option": "Make a choice",
+        "copper": "copper",
+        "disclaimer": "disclaimer",
+        "downgrade": "downgrade",
+        "edit": "edit",
+        "experience": "experience point(s)",
+        "gold": "gold",
+        "increase_base_currency": "Increases starting amount",
+        "increase_base_dex": "Increases dexterity",
+        "increase_base_favor": "Increases patron favour",
+        "increase_base_godpoints": "Increases god points",
+        "increase_base_health": "Increases health points",
+        "increase_base_intel": "Increases intelligence",
+        "increase_base_mana": "Increases mana pool",
+        "increase_base_mana_minor": "Increases mana pool (minor)",
+        "increase_base_points": "Increases skill points",
+        "increase_base_sanity": "Increases sanity",
+        "loresheet": "You receive a loresheet for this.",
+        "more_info": "more information",
+        "not_enough_coin": "You do not have enough money to purchase this.",
+        "not_enough_vp": "You do not have enough skill points.",
+        "question_1": "What did you undertake this event?",
+        "question_2": "What did this do to your character?",
+        "question_3": "Did you build relationships/contacts with NPCs?",
+        "question_4": "What did you learn (info) and what theories do you derive from it?",
+        "question_5": "What are your plans for the next event?",
+        "question_6": "Any additional notes? (optional)",
+        "rank": "rank",
+        "remove": "remove",
+        "required": "required",
+        "silver": "silver",
+        "upgrade": "upgrade"
+    }
 });
 const icons = Object.freeze({
     "change":{
@@ -49,10 +87,15 @@ const icons = Object.freeze({
         icon: '<i class="fa-regular fa-square-check"></i>',
         text: oTranslations[language].choose,
     },
+    "disclaimer":{
+        icon: '<i class="fa-solid fa-triangle-exclamation"></i>',
+        text: oTranslations[language].disclaimer,
+    },
     "downgrade":{
         icon: '<i class="fa-solid fa-circle-down"></i>',
         text: oTranslations[language].downgrade,
     },
+    
     "edit": {
         icon: '<i class="fa-solid fa-pen-to-square"></i>',
         text: oTranslations[language].edit,
@@ -76,6 +119,10 @@ const icons = Object.freeze({
     "remove": {
         icon: '<i class="fa-solid fa-xmark"></i>',
         text: oTranslations[language].remove,
+    },
+    "required": {
+        icon: '<i class="fa-solid fa-asterisk"></i>',
+        text: oTranslations[language].required,
     },
     "upgrade":{
         icon: '<i class="fa-solid fa-circle-up"></i>',
