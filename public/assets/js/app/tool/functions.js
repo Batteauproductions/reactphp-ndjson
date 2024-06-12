@@ -20,6 +20,7 @@ function _construct(obj=null)
     } else {
         console.log('No character information received, treating as new');
         oCharacter.status = 'new';
+        initiateEditor();
         $('body').find('[data-open="adventure-modal"]').addClass('disabled');
     }
 
@@ -317,6 +318,74 @@ function handleChoice(oTempData,addFunction,action,type) {
     $('#selection-modal').foundation('close');
 }
 
+function initiateEditor() {
+	/////////////////////////////////////////////////////////////////////////////////
+	/////LIBRARY FUNCTION FOR THE WYSIWYG EDITOR DOCUMENTATION CAN BE FOUND ON  /////
+	/////THE WEBSITE: https://ckeditor.com/ (ckeditor5-build-classic-34.1.0)	/////
+	/////////////////////////////////////////////////////////////////////////////////
+	const maxCharacters = 10000;
+	const container = document.querySelector('#ck-count-container' );
+	const progressCircle = document.querySelector( '.update__chart__circle' );
+	const charactersBox = document.querySelector( '.update__chart__characters' );
+	const wordsBox = document.querySelector( '.update__words' );
+	const circleCircumference = Math.floor( 2 * Math.PI * progressCircle.getAttribute( 'r' ) );
+	//const updateButton = document.querySelector( '#update-btn' );
+	//const saveButton = document.querySelector( '#save-btn' );
+	
+	ClassicEditor.create( document.querySelector( '#background' ), {
+		attributes: { 'color': '#fff' },
+		heading: {
+			options: [
+				{ model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+				{ model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+				{ model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+				{ model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+			]
+		},
+		wordCount: {			
+            onUpdate: stats => {
+                const charactersProgress = stats.characters / maxCharacters * circleCircumference;
+                const isLimitExceeded = stats.characters > maxCharacters;
+                const isCloseToLimit = !isLimitExceeded && stats.characters > maxCharacters * .8;
+                const circleDashArray = Math.min( charactersProgress, circleCircumference );
+
+                // Set the stroke of the circle to show how many characters were typed.
+                progressCircle.setAttribute( 'stroke-dasharray', `${ circleDashArray },${ circleCircumference }` );
+
+                // Display the number of characters in the progress chart. When the limit is exceeded,
+                // display how many characters should be removed.
+                if ( isLimitExceeded ) {
+                    charactersBox.textContent = `-${ stats.characters - maxCharacters }`;
+                } else {
+                    charactersBox.textContent = stats.characters;
+                }
+
+                wordsBox.textContent = `Woorden: ${ stats.words }`;
+
+                // If the content length is close to the character limit, add a CSS class to warn the user.
+                container.classList.toggle( 'update__limit-close', isCloseToLimit );
+
+                // If the character limit is exceeded, add a CSS class that makes the content's background red.
+                container.classList.toggle( 'update__limit-exceeded', isLimitExceeded );
+				
+				// If the character limit is exceeded, disable the send button.
+                //updateButton.toggleAttribute( 'disabled', isLimitExceeded );
+                //saveButton.toggleAttribute( 'disabled', isLimitExceeded );
+            }
+        }
+		
+	})
+	.then( editor => {
+		editor.model.document.on('change:data', (evt, data) => {
+			oCharacter.meta.background = editor.getData();
+            updateCharacter();
+		});
+	})
+	.catch( error => {
+		console.error(error)
+	});	
+}
+
 //--MODAL--//
 const $typeSelect = $('select[name="type"]');
 const $subtypeSelect = $('select[name="subtype"]');
@@ -524,6 +593,7 @@ export {
     experienceSpend,
     elementAdd,
     handleChoice,
+    initiateEditor,
     modalClear,
     modalSet,
     showMessage,

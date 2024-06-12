@@ -1,0 +1,12 @@
+/* CSS Document */
+.dataTables_filter, .dataTables_length {
+	label {
+		color: $clr-font;
+		@include base_font_sizing();
+	}
+}
+
+.pagination .current {
+	background: $clr-primary;
+	color: $clr-font;
+}

@@ -6,7 +6,8 @@ const oTranslations = Object.freeze({
     "nl-NL": {
         not_enough_vp: 'Je hebt niet genoeg vaardigheidspunten.'
         ,not_enough_coin: 'Je hebt niet genoeg geld om dit aan te schaffen.'
-        ,choose_option: 'Maak een keuze'
+        ,character_name: 'Karakternaam'
+        ,choose_option: 'Maak een keuze'        
         ,loresheet: 'Je krijgt hievoor een loresheet.'
         ,rank: "niveau"
         ,remove: "verwijderen"
@@ -138,6 +139,8 @@ const currentDateTime = new Date();
 
 let oCharacter = {
     meta: {
+        name: '',
+        background: '',
         created_dt: currentDateTime.toISOString(),
         modified_dt: '',
         firstlocked_dt: '',

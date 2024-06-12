@@ -39,17 +39,63 @@ import {
 $(document).ready(function() {
 
     let oTempData;
-    let formRules;
+    const $modalLoading = $('div[data-id="modal-loading"]');
 
     _construct($('input[name="character"]').val());
 
     //add extra functionality to the model
+    $('a[data-open="text-modal"]').on('click', function() {
+        let sAction = $(this).data("type");  
+        let contentElements = [];
+        const $Form = $('#text-form');
+
+        //--set default status to loading
+        $modalLoading.show();        
+        $Form.empty().hide();  
+
+        //--set default status to loading
+        switch(sAction) {
+            case 'name':
+                contentElements.push($('<label>', { 
+                    for: 'character-name', 
+                    text: oTranslations[language].character_name 
+                }));
+                contentElements.push($('<input>', { 
+                    id: 'character-name', 
+                    name: 'character-name', 
+                    type: 'text' 
+                }));
+                contentElements.push($('<a>', { 
+                    class: 'button solid','data-action': `${sAction}-choose`,
+                    html: `${icons.choose.icon} ${icons.choose.text}`
+                }));
+                $modalLoading.hide();
+                $Form.append(contentElements).show();
+                break;
+            default:
+                console.warn(`a[data-open="text-modal"], unknown sAction called with value: ${sAction}`);
+                break;
+        }
+        
+    });
+
+    $('a[data-open="background-modal"]').on('click', function() {
+        const $Form = $('#background-form');
+        //--set default status to loading
+        $modalLoading.hide();
+        $Form.show();
+    });
+
     $('a[data-open="adventure-modal"]').on('click', function() {
         const adventure_id = $(this).data('id');
-        const $modalLoading = $('div[data-id="modal-loading"]');
-        const $adventureForm = $('#adventure-form');
+        const $Form = $('#adventure-form');
         const $textareas = $('textarea[id^="question_"]');
-    
+        
+        //--set default status to loading
+        $modalLoading.show();        
+        $Form.hide();  
+
+        //--make call to fill the dropdown
         $.ajax({
             url: `${domain}/action/get-adventure`,
             data: { id: adventure_id },
@@ -65,7 +111,7 @@ $(document).ready(function() {
                     console.warn('no available adventures');
                 }
                 $modalLoading.hide();
-                $adventureForm.show();
+                $Form.show();
             },
             error: (error) => {
                 console.log('Error:', error);
@@ -73,11 +119,12 @@ $(document).ready(function() {
         });
     });
 
-    $('a[data-open="selection-modal"]').on('click',function(){     
+    $('a[data-open="selection-modal"]').on('click',function(){  
         var sAction = $(this).data("type");    
+        const $Form = $('#background-form');   
         //--set default status to loading
-        $('div[data-id="modal-loading"]').show();
-        $('#modal-form').hide();    
+        $modalLoading.show();        
+        $Form.hide();    
         //--hide the elements in the reveal model
         modalClear(true);
         
@@ -197,6 +244,12 @@ $(document).ready(function() {
                 oTempData.cost = parseInt(oTempData.details.price);
                 handleChoice(oTempData,itemAdd,sAction,'item');
                 break;
+            case 'name-choose':
+                oCharacter.meta.name = $('input[name="character-name"]').val();
+                $('#charactername').html(`<i class="fa-solid fa-rotate-right"></i>${oCharacter.meta.name}</span>`);   
+                $('#text-modal').foundation('close');
+                updateCharacter();
+                break;
             case 'profession-choose':
                 oTempData.rank = 1;
                 oTempData.cost = calculateProfessionCost(oTempData, oTempData.rank);
@@ -223,19 +276,6 @@ $(document).ready(function() {
             default:
                 console.error(`a[data-action], unknown sAction called with value: ${sAction}`);
                 break;
-        }
-    });
-
-    //form validatior
-    $("#update-character").validate({
-        rules: formRules
-        ,errorClass: 'input-error'
-        ,errorPlacement: function (error, element) {
-            error.insertAfter(element);
-        }
-        ,submitHandler: function(form) {
-            $('button[type="submit"]').attr('disabled',true);
-            form.submit();
         }
     });
     

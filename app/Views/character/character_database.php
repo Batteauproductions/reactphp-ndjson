@@ -19,10 +19,10 @@
                             </div>
                             <div class="tile-overlay">
                                 <ul>
-                                    <li><a href="<?php echo base_url('gamemaster/character/edit/'.$character->id);?>"><i class="fa-solid fa-pen-to-square"></i>aanpassen</a></li>
-                                    <li><a href="<?php echo base_url('gamemaster/character/print/'.$character->id);?>"><i class="fa-solid fa-print"></i>printen</a></li>
-                                    <li><a href="<?php echo base_url('gamemaster/character/view/'.$character->id);?>"><i class="fa-solid fa-eye"></i>bekijken</a></li>
-                                    <li><a href="<?php echo base_url('gamemaster/character/delete/'.$character->id);?>"><i class="fa-solid fa-trash"></i>verwijderen</a></wli>
+                                    <li><a href="<?php echo base_url('user/character/edit/'.$character->id);?>"><i class="fa-solid fa-pen-to-square"></i>aanpassen</a></li>
+                                    <li><a href="<?php echo base_url('user/character/print/'.$character->id);?>"><i class="fa-solid fa-print"></i>printen</a></li>
+                                    <li><a href="<?php echo base_url('user/character/view/'.$character->id);?>"><i class="fa-solid fa-eye"></i>bekijken</a></li>
+                                    <li><a href="<?php echo base_url('user/character/delete/'.$character->id);?>"><i class="fa-solid fa-trash"></i>verwijderen</a></wli>
                                 </ul>
                             </div>
                         </div>

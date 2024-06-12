@@ -35,6 +35,9 @@
         <script type="text/javascript" src="<?php echo vendor_path('validation/jquery.validate.min.js')?>"></script>
         <script type="text/javascript" src="<?php echo vendor_path('validation/additional-methods.min.js')?>"></script>
         <script type="text/javascript" src="<?php echo vendor_path('validation/localization/messages_nl.js')?>"></script>
+
+        <!-- CKEditor -->
+        <script type="text/javascript" src="<?php echo vendor_path('CKEditor/ckeditor.js')?>"></script>
         
         <!-- Global Styling -->
         <link rel="stylesheet" href="<?php echo base_url('assets/css/index.css')?>">

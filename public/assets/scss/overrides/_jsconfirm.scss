@@ -1,0 +1,32 @@
+/* CSS Document */
+.jconfirm-cell {	
+	background: rgba(0,0,0,0.7);			
+}
+
+.jconfirm {			
+	.jconfirm-box {
+		background: #000; 
+		background: linear-gradient(180deg, rgba(30,30,30,1) 0%, rgba(0,0,0,1) 100%);
+		border: double 0.363rem #787878 !important;
+		color: #fff !important;
+		max-width: 600px;
+		width: 100%;
+	}
+}
+
+.jconfirm-title {
+	font-size: 1.2rem;
+	font-family: 'fty_skorzhen_ncvregular', serif !important;
+}
+
+.jconfirm-content {
+	font-size: 1.0rem !important;
+
+	label {
+		color: #fff !important;
+		font-size: inherit !important;
+	}
+	select {
+		font-size: inherit !important;
+	}				
+}

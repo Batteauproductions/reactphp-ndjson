@@ -529,3 +529,90 @@ ul li {
 .content-wrapper.transparent {
   background-color: rgba(30, 30, 30, 0.5);
 }
+
+/* breakpoints */
+/* color sets for the application */
+/*font-sizings for different screens*/
+/* font settings for the headers */
+/* font settings for the body */
+/* font settings for the links */
+/* misc settings */
+/*For CKEditor*/
+.ck h1, .ck h2, .ck h3, .ck p {
+  color: #000 !important;
+}
+.ck h1 {
+  font-size: 1.875rem !important;
+}
+.ck h2 {
+  font-size: 1.625rem !important;
+}
+.ck h3 {
+  font-size: 1.375rem !important;
+}
+.ck p {
+  font-size: 1rem !important;
+}
+
+#ck-count-wrapper {
+  color: #fff !important;
+  width: 100%;
+}
+#ck-count-wrapper .update {
+  border: 1px solid #1E1E1E;
+  border-radius: 0.313rem;
+  box-shadow: 2px 2px 0px hsla(0, 0%, 0%, 0.1);
+  margin: 1.5em 0;
+  padding: 1em;
+}
+#ck-count-wrapper .update h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 0.5em;
+  padding: 0;
+}
+#ck-count-wrapper .update .ck.ck-editor__editable_inline {
+  border: 1px solid hsla(0, 0%, 0%, 0.15);
+  transition: background 0.5s ease-out;
+  min-height: 6em;
+  margin-bottom: 1em;
+}
+#ck-count-wrapper .update__controls {
+  background: #fff;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#ck-count-wrapper .update__chart {
+  margin: 1rem 0;
+  padding: 0;
+}
+#ck-count-wrapper .update__chart__circle {
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+#ck-count-wrapper .update__chart__characters {
+  font-size: 1rem;
+  font-weight: bold;
+}
+#ck-count-wrapper .update__words {
+  color: #000;
+  font-weight: bold;
+  flex-grow: 1;
+}
+#ck-count-wrapper .ck-editor__editable_inline {
+  min-height: 400px;
+}
+#ck-count-wrapper .update__limit-close .update__chart__circle {
+  stroke: hsl(30, 100%, 52%);
+}
+#ck-count-wrapper .update__limit-exceeded .ck.ck-editor__editable_inline {
+  background: hsl(0, 100%, 97%);
+}
+#ck-count-wrapper .update__limit-exceeded .update__chart__circle {
+  stroke: hsl(0, 100%, 52%);
+}
+#ck-count-wrapper .update__limit-exceeded .update__chart__characters {
+  fill: hsl(0, 100%, 52%);
+}
