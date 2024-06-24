@@ -281,7 +281,7 @@
 </div>
 
 <!-- MODAL FOR MAKING CHOICES -->
-<div class="reveal" id="selection-modal" data-reveal>
+<div class="reveal large" id="selection-modal" data-reveal>
     
     <div data-id="modal-loading" class="text-center">
         <i class="fa-solid fa-spinner fa-spin"></i> Gegevens laden
