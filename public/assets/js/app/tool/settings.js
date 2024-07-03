@@ -38,6 +38,7 @@ const oTranslations = Object.freeze({
         "remove": "verwijderen",
         "required": "verplicht",
         "silver": "zilver",
+        "speech": "Taal: Spreken",
         "upgrade": "verhogen"
     },
     "en-GB": {
@@ -75,6 +76,7 @@ const oTranslations = Object.freeze({
         "remove": "remove",
         "required": "required",
         "silver": "silver",
+        "speech": "Language: Speak",
         "upgrade": "upgrade"
     }
 });
@@ -171,6 +173,11 @@ const icons = Object.freeze({
     "increase_base_favor":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
         text: oTranslations[language].increase_base_favor,
+    },
+    // "Taal: Spreken" 
+    "14":{
+        icon: '<i class="fa-regular fa-comment"></i>',
+        text: oTranslations[language].speech,
     },
 });
 const iconset = Object.freeze({

@@ -435,7 +435,7 @@ function modalSet(data, action) {
        
     $container.append(contentElements).show();
 
-    /*--contentDetailsElements-- */
+    /* --contentDetailsElements-- */
     const contentDetailsElements = [];
     if (data.details.disclaimer) {        
         contentDetailsElements.push($('<p>', { html: `${icons.disclaimer.icon} ${data.details.disclaimer}` }));
@@ -446,15 +446,16 @@ function modalSet(data, action) {
     if (data.details.loresheet) {        
         contentDetailsElements.push($('<p>', { html: `${icons.loresheet.icon} ${icons.loresheet.text}` }));
     }    
-    if(data.modifier.length > 1) {        
+    if(data.modifier && data.modifier.length > 1) {        
         for(let i = 0; i < data.modifier.length; i++) {
             var name = data.modifier[i].name;
-            contentDetailsElements.push(                
-                $('<input>', { id: `modifier-${i}`, value: data.modifier[i].id, type: 'radio', name: 'stat-modifier' })
-                ,$('<label>', { for: `modifier-${i}`, html: `${icons[name.toLowerCase()].icon} ${icons[name.toLowerCase()].text}` })
-            );
+            var row = $('<div>', { class: `choice-row` });
+            var input = $('<input>', { id: `modifier-${i}`, value: data.modifier[i].id, type: 'radio', name: 'stat-modifier' });
+            var label = $('<label>', { for: `modifier-${i}`, html: `${icons[name.toLowerCase()].icon} ${icons[name.toLowerCase()].text}` });
+            row.append(input, label);
+            contentDetailsElements.push(row);
         }        
-    } else if (data.modifier.length == 1) {
+    } else if (data.modifier && data.modifier.length == 1) {
         var name = data.modifier[0].name;
         contentDetailsElements.push($('<p>', { html: `${icons[name.toLowerCase()].icon} ${icons[name.toLowerCase()].text}` }));
     }
@@ -468,6 +469,7 @@ function modalSet(data, action) {
         }
         contentDetailsElements.push($row)
     }
+    //
     if (action ==="skill_base" || action === "skill_combat" || action === "skill_magic") {
         contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} <span id="rank_cost">${data.details.xp_cost}</span> ${icons.experience.text}`}));
     } else if (action === "profession") {
@@ -475,8 +477,34 @@ function modalSet(data, action) {
     } else if (action === "item_add") {
         contentDetailsElements.push($('<p>', { html: convertCurrency(data.details.price) }));
     }
-    $container_details.append(contentDetailsElements).show();;
     
+    //--race skills
+    if (data.skills && data.skills.length > 1) {
+        for(let i = 0; i < data.skills.length; i++) {
+            let main_id = data.skills[i].main_id;
+            let main_name = data.skills[i].main_name;
+            let sub_id = data.skills[i].sub_id;
+            let sub_name = data.skills[i].sub_name;
+            let row = $('<div data-raceskill>', { class: `choice-row` });
+
+            if(data.skills[i].options && data.skills[i].options.length > 1) {
+                var input = $('<input>', { id: `modifier-${i}`, value: data.skills[i].id, type: 'radio', name: 'stat-modifier' });
+                var label = $('<label>', { for: `modifier-${i}`, html: `${sub_name}` });
+                row.append(input,label);
+            } else {
+                row = $('<div data-raceskill>', { 
+                    class: `choice-row`,
+                    html: `${icons[main_id].icon} ${main_name} ${sub_name}`
+                });
+            }                        
+            contentDetailsElements.push(row);
+        }
+    }
+
+    if(contentDetailsElements.length > 0) {
+        $container_details.append(contentDetailsElements).show();
+    }
+        
     /*--contentActionsElements-- */
     const contentActionsElements = [];
     contentActionsElements.push($('<a>', { 
