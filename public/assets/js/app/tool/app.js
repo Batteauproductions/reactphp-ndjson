@@ -216,6 +216,13 @@ $(document).ready(function() {
 
     });
 
+    $('select[name="subtype"]').on('change',function(){
+        console.log('change?')
+        let typeValue = $('[name="type"]').val();
+        let subtypeValue = $('[name="subtype"]').val();
+        $('#profession-image').attr('src',`${domain}/assets/images/profession/prof_${typeValue}_${subtypeValue}.jpg`);
+    });
+
     $('body').on('click', 'a[data-action]', function(){
         $('p.input-message').remove();
         //--sAction; will be used to collect what action is being called by clicking on choice

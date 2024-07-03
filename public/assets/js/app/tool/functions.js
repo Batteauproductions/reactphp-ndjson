@@ -1,6 +1,7 @@
 // Importing the variables
 import { 
         arrXP
+        ,domain
         ,icons
         ,iconset
         ,jsonBaseChar
@@ -421,6 +422,14 @@ function modalSet(data, action) {
     }
 
     // Create and append content elements if they exist
+    /*-- update the image --*/
+    let subtypeValue = $('[name="subtype"]').val();
+    if (data.details.id && subtypeValue) {
+        $('#profession-image').attr('src',`${domain}/assets/images/profession/prof_${data.details.id}_${subtypeValue}.jpg`);
+    } else if (data.details.id) {
+        $('#profession-image').attr('src',`${domain}/assets/images/profession/prof_${data.details.id}.jpg`);
+    }
+
     /*--contentElements-- */
     const contentElements = [];
     if (data.details.name) {
