@@ -390,6 +390,7 @@ function initiateEditor() {
 //--MODAL--//
 const $typeSelect = $('select[name="type"]');
 const $subtypeSelect = $('select[name="subtype"]');
+const $image = $('#choice-image');
 const $container = $('#choice-description');
 const $container_details = $('#choice-details');
 const $container_actions = $('#choice-actions');
@@ -402,6 +403,7 @@ function modalClear(complete=false) {
     if(complete) {
         $typeSelect.empty().hide();
     }
+    $image.attr('src','').hide();
     $subtypeSelect.empty().hide();
     $container.empty().hide();
     $container_details.empty().hide();
@@ -424,10 +426,12 @@ function modalSet(data, action) {
     // Create and append content elements if they exist
     /*-- update the image --*/
     let subtypeValue = $('[name="subtype"]').val();
-    if (data.details.id && subtypeValue) {
-        $('#profession-image').attr('src',`${domain}/assets/images/profession/prof_${data.details.id}_${subtypeValue}.png`);
-    } else if (data.details.id) {
-        $('#profession-image').attr('src',`${domain}/assets/images/profession/prof_${data.details.id}.png`);
+    if(action === "profession") {
+        if (data.details.id && subtypeValue) {
+            $image.attr('src',`${domain}/assets/images/profession/prof_${data.details.id}_${subtypeValue}.png`).show();
+        } else if (data.details.id) {
+            $image.attr('src',`${domain}/assets/images/profession/prof_${data.details.id}.png`).show();
+        }    
     }
 
     /*--contentElements-- */

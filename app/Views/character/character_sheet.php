@@ -297,10 +297,8 @@
             </select>
             <input type="number" name="amount" value="1" style="display:none;"/>
         </div>
-        <div class="cell small-6 medium-4 large-3">
-            <img id="profession-image" src="" alt=""/>
-        </div>
-        <div class="cell small-6 medium-8 large-6">
+        <img id="choice-image" src="" alt="" class="cell small-6 medium-4 large-3" style="display:none;"/>
+        <div class="cell auto">
             <section id="choice-description">
                 <!-- dynamic filled -->
             </section>
