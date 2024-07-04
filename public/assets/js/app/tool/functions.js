@@ -425,9 +425,9 @@ function modalSet(data, action) {
     /*-- update the image --*/
     let subtypeValue = $('[name="subtype"]').val();
     if (data.details.id && subtypeValue) {
-        $('#profession-image').attr('src',`${domain}/assets/images/profession/prof_${data.details.id}_${subtypeValue}.jpg`);
+        $('#profession-image').attr('src',`${domain}/assets/images/profession/prof_${data.details.id}_${subtypeValue}.png`);
     } else if (data.details.id) {
-        $('#profession-image').attr('src',`${domain}/assets/images/profession/prof_${data.details.id}.jpg`);
+        $('#profession-image').attr('src',`${domain}/assets/images/profession/prof_${data.details.id}.png`);
     }
 
     /*--contentElements-- */

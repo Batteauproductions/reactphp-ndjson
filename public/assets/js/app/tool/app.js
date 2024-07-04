@@ -220,7 +220,7 @@ $(document).ready(function() {
         console.log('change?')
         let typeValue = $('[name="type"]').val();
         let subtypeValue = $('[name="subtype"]').val();
-        $('#profession-image').attr('src',`${domain}/assets/images/profession/prof_${typeValue}_${subtypeValue}.jpg`);
+        $('#profession-image').attr('src',`${domain}/assets/images/profession/prof_${typeValue}_${subtypeValue}.png`);
     });
 
     $('body').on('click', 'a[data-action]', function(){
