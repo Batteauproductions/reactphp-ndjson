@@ -1,7 +1,6 @@
 // Importing the variables
 import { 
-        arrXP
-        ,domain
+        domain
         ,icons
         ,iconset
         ,jsonBaseChar
@@ -11,37 +10,57 @@ import {
         ,oCharacter
 } from './settings.js';
 
-function _construct(obj=null)
-{
-    console.log(oCharacter);
-    
-    if (obj !== null && obj !== undefined && obj !== '') {        
+/*
+This function will construct the sheet of the character based on information parsed.
+When the document is ready, this function will be called, it will call this function.
+The controller sets the content of the page and once iniatiated a the value of a hidden input field
+determenes if the character is new or existing:
+-- if new, the standard calls will be made
+-- if existing, data should be shown on the sheet
+*/
+function _construct(obj=null) {
+    console.log(oCharacter);    
+    if (obj !== null && obj !== undefined && obj !== '') { 
         let json_obj = JSON.parse(obj);
+        console.log('Character information received, treating as excisting');               
         oCharacter.status = 'existing';
     } else {
         console.log('No character information received, treating as new');
-        oCharacter.status = 'new';
-        initiateEditor();
+        oCharacter.status = 'new';        
         $('body').find('[data-open="adventure-modal"]').addClass('disabled');
     }
-
-    $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
+    initiateEditor();
+    $('#stat-currency').html(currencyConvert(oCharacter.build.currency));
 }
 
-//
+/*Add elements to the character
+//-attribute: 
+---oCharacter.profession
+---oCharacter.skills
+---oCharacter.items
+//-type:
+---profession
+---skill
+---item
+//-subject: the object that is being parsed
+*/
 function characterAddTo(attribute,type,subject) {
-    //add the subject to the attribute called
-    attribute.push(subject);
-    if (type === "profession" || type === "skill") {
-        experienceSpend(subject.cost);
-    } else if (type === "item") {
-        currencySpend(subject.cost);
-    } 
-    // Check if the choice has a stat modifier
-     if (subject.modifier.length > 0) {
-        updateCharacterStats();
-    }   
-    console.log('characterAddTo: ',oCharacter);
+    if (typeof subject === 'object') {
+        //spend the experience / currency     
+        if (type === "profession" || type === "skill") {
+            experienceSpend(subject.cost);
+        } else if (type === "item") {
+            currencySpend(subject.cost);
+        } 
+        //check if the subject has a modifier
+        if (subject.modifier.length > 0) {
+            updateCharacterStats();
+        }   
+        //add the subject to the attribute called
+        attribute.push(subject);
+    } else {
+        console.error("characterAddTo: argument 'subject' is not an object: " + $.type(subject));
+    }
 }
 
 /*--characterRemoveFrom
@@ -49,12 +68,14 @@ function characterAddTo(attribute,type,subject) {
 ---oCharacter.profession
 ---oCharacter.skills
 ---oCharacter.items
-//-element: The element that is calling the action, is is basically $(this)
+//-element: The element that is calling the action, is basically $(this)
 //-main_id: The main_id of the skill/profession/item
-//-sub_id: The sub_id of the skill/profession/item*/
+//-sub_id: The sub_id of the skill/profession/item
+*/
 function characterRemoveFrom(attribute,element,type,main_id,sub_id=null) {
     let itemFound = false;
     let subject = {};
+    //runs through the entire list of items in the attribute and stops when found
     for (let i = 0; i < attribute.length; i ++) {
         if(attribute[i].main_id == main_id && attribute[i].sub_id == sub_id) {            
             subject = attribute[i];
@@ -63,20 +84,23 @@ function characterRemoveFrom(attribute,element,type,main_id,sub_id=null) {
             break;
         } 
     }
-    if (!itemFound) {
-        console.error('Item not found');
-    } else {  
-        if (subject.modifier.length > 0) {
-            updateCharacterStats();
-        }
+    //since this function should only be called when removing an item, it should always find something
+    if (itemFound) {
+        //refund the experience / currency        
         if (type === "profession" || type === "skill") {
             experienceRefund(subject.cost);
         } else if (type === "item") {
             currencyRefund(subject.cost);
         }
+        //check if the subject has a modifier
+        if (subject.modifier.length > 0) {
+            updateCharacterStats();
+        }
+        //remove the element from the DOM
         element.parent().parent().remove();
+    } else {  
+        console.error('characterRemoveFrom: Item not found');        
     }
-    console.log('characterRemoveFrom: ',oCharacter);
 }
 
 //This function serves as a "helper", to calculate the proper costs
@@ -123,7 +147,7 @@ function checkCurrencyCost(cost) {
 };
 
 //A helper function to turn the complete integer of the currency of the user into setting correct text
-function convertCurrency(iAmount) {
+function currencyConvert(iAmount) {
     const iCurrency = parseInt(iAmount);
 
     const iGold = Math.floor(iCurrency / 100);
@@ -140,23 +164,22 @@ function convertCurrency(iAmount) {
     return sCurrency;
 }
 
+//This function will handle the refund of experience
+function currencyRefund(cost) {
+    oCharacter.build.currency += cost;
+    $('#stat-currency').html(currencyConvert(oCharacter.build.currency));
+}
+
 //This function will handle the spending of experience
 //It should check if there is an attempt to spend more than available
 function currencySpend(cost) {
     if((oCharacter.build.currency-cost) < 0) {
-        console.error(`Attempt to set currency over maximum`);
+        console.error(`Attempt to spend more than available currency over maximum`);
         oCharacter.build.currency = 0;
     } else {
         oCharacter.build.currency -= cost;
     }
-    $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
-}
-
-//This function will handle the refund of experience
-//It should check if there is an attempt to refund more than zero
-function currencyRefund(cost) {
-    oCharacter.build.currency += cost;
-    $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
+    $('#stat-currency').html(currencyConvert(oCharacter.build.currency));
 }
 
 //This function will add a container to the sheet
@@ -165,43 +188,55 @@ function currencyRefund(cost) {
 function elementAdd(container, element, type) {
     if (typeof element === 'object') {
 
-        // Create master container
+        // Create master row to hold information
         const row = $('<div>', {
             class: 'grid-x choice-row animate__animated animate__fadeInLeft',
         });
 
+        let column_name, column_subname, column_amount, column_cost, local_icons;
         // Create main name column
-        const column_name = $('<div>', {
+        column_name = $('<div>', {
             class: 'cell small-5 text-left',
             text: `${element.main_name}${element.rank !== null ? ` (${icons.rank.text} ${element.rank})` : ''}`
         });
 
-        let column_subname, column_amount, column_cost, local_icons;
-
-        if (type === 'skill' || type === 'profession') {
-            // Create sub name column (if exists)
-            column_subname = $('<div>', {
-                class: 'cell small-4 text-center',
-                text: element.sub_name !== null ? element.sub_name : '-',
-            });
-            // Create cost column
-            column_cost = $('<div>', {
-                class: 'cell small-1 text-right',
-                html: `${element.cost}pt.`
-            });
-            local_icons = iconset["new_skill_no_rank"];
-        } else if (type === 'item') {
-            column_amount = $('<div>', {
-                class: 'cell small-2 text-right',
-                text: `${element.amount}x`
-            });
-            column_cost = $('<div>', {
-                class: 'cell small-3 text-right',
-                html: `${convertCurrency(element.cost)}`
-            });
-            local_icons = iconset["new_item"];
+        // do something else based on the type of element being parsed
+        let arrColumn = [];
+        switch(type) {
+            case 'skill':
+            case 'profession':
+                //----
+                column_subname = $('<div>', {
+                    class: 'cell small-4 text-center',
+                    text: element.sub_name !== null ? element.sub_name : '-',
+                });
+                arrColumn.push(column_subname);
+                //----
+                column_cost = $('<div>', {
+                    class: 'cell small-1 text-right',
+                    html: `${element.cost}pt.`
+                });
+                arrColumn.push(column_cost);
+                //----
+                local_icons = iconset["new_skill_no_rank"];
+                break;
+            case 'item':
+                //----    
+                column_amount = $('<div>', {
+                    class: 'cell small-2 text-right',
+                    text: `${element.amount}x`
+                });
+                arrColumn.push(column_amount);
+                //----
+                column_cost = $('<div>', {
+                    class: 'cell small-3 text-right',
+                    html: `${currencyConvert(element.cost)}`
+                });
+                arrColumn.push(column_cost);
+                //----
+                local_icons = iconset["new_item"];
+                break;
         }
-
         // Create icon set column
         const arrIcons = local_icons.map(icon => $('<a>', {
             "data-action": `${type}-${icon}`,
@@ -209,18 +244,14 @@ function elementAdd(container, element, type) {
             "data-sub_id": element.sub_id,
             html: icons[icon].icon
         }));
-
         const column_action = $('<div>', {
             class: 'cell small-2 text-right',
             html: arrIcons
         });
+        arrColumn.push(column_action);
 
         // Append columns to row
-        row.append(column_name);
-        if (column_subname) row.append(column_subname);
-        if (column_amount) row.append(column_amount);
-        if (column_cost) row.append(column_cost);
-        row.append(column_action);
+        row.append(arrColumn);
 
         // Insert row into container alphabetically
         const $container = $(`[data-id="${container}"]`);
@@ -390,10 +421,10 @@ function initiateEditor() {
 //--MODAL--//
 const $typeSelect = $('select[name="type"]');
 const $subtypeSelect = $('select[name="subtype"]');
-const $image = $('#choice-image');
-const $container = $('#choice-description');
-const $container_details = $('#choice-details');
-const $container_actions = $('#choice-actions');
+const $choice_image = $('#choice-image');
+const $choice_description = $('#choice-description');
+const $choice_details = $('#choice-details');
+const $choice_actions = $('#choice-actions');
 
 /*modalClear
 --complete, weither the modal should be completely cleared
@@ -403,11 +434,11 @@ function modalClear(complete=false) {
     if(complete) {
         $typeSelect.empty().hide();
     }
-    $image.attr('src','').hide();
+    $choice_image.attr('src','').hide();
     $subtypeSelect.empty().hide();
-    $container.empty().hide();
-    $container_details.empty().hide();
-    $container_actions.empty().hide();
+    $choice_description.empty().hide();
+    $choice_details.empty().hide();
+    $choice_actions.empty().hide();
 }
 
 function modalSet(data, action) {
@@ -428,7 +459,7 @@ function modalSet(data, action) {
     let subtypeValue = $('[name="subtype"]').val();
     if(action === "profession") {
         if (data.details.id && subtypeValue) {
-            $image.attr('src',`${domain}/assets/images/profession/prof_${data.details.id}_${subtypeValue}.png`).show();
+            $choice_image.attr('src',`${domain}/assets/images/profession/prof_${data.details.id}_${subtypeValue}.png`).show();
         } else if (data.details.id) {
             $image.attr('src',`${domain}/assets/images/profession/prof_${data.details.id}.png`).show();
         }    
@@ -446,7 +477,7 @@ function modalSet(data, action) {
         contentElements.push($('<p>', { html: data.details.advanced_description }));
     }
        
-    $container.append(contentElements).show();
+    $choice_description.append(contentElements).show();
 
     /* --contentDetailsElements-- */
     const contentDetailsElements = [];
@@ -488,7 +519,7 @@ function modalSet(data, action) {
     } else if (action === "profession") {
         contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} ${data.details.rank_1_cost} ${icons.experience.text}`}));
     } else if (action === "item_add") {
-        contentDetailsElements.push($('<p>', { html: convertCurrency(data.details.price) }));
+        contentDetailsElements.push($('<p>', { html: currencyConvert(data.details.price) }));
     }
     
     //--race skills
@@ -515,7 +546,7 @@ function modalSet(data, action) {
     }
 
     if(contentDetailsElements.length > 0) {
-        $container_details.append(contentDetailsElements).show();
+        $choice_details.append(contentDetailsElements).show();
     }
         
     /*--contentActionsElements-- */
@@ -532,7 +563,7 @@ function modalSet(data, action) {
             ,html: `${icons.more_info.icon} ${icons.more_info.text}`})
         );
     }
-    $container_actions.append(contentActionsElements).show();;
+    $choice_actions.append(contentActionsElements).show();;
 
 }
 
@@ -613,7 +644,7 @@ function updateCharacterStats() {
         let content;
         switch (key) {
             case "currency":
-                content = convertCurrency(value);
+                content = currencyConvert(value);
                 break;
             default: 
                 content = value;
@@ -634,7 +665,7 @@ export {
     calculateSkillCost,
     checkXPCost,
     checkCurrencyCost,
-    convertCurrency,
+    currencyConvert,
     experienceSpend,
     elementAdd,
     handleChoice,
