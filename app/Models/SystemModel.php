@@ -37,6 +37,7 @@ class SystemModel extends Model
           ->db
           ->table(TBL_CHAR_STATUS)
           ->select('id, name, description')
+          ->orderBy('name')
           ->get()
           ->getResultObject();
   }
@@ -46,6 +47,7 @@ class SystemModel extends Model
           ->db
           ->table(TBL_CHAR_TYPES)
           ->select('id, name, description')
+          ->orderBy('name')
           ->get()
           ->getResultObject();
   }

@@ -66,9 +66,67 @@
                             <div class="cell small-6">
                                 <span id="stat-currency"><?php echo $jsonBaseChar['currency'] ?></span>
                             </div>
+                            <div class="cell small-6 text-left">
+                                Type
+                            </div>
+                            <div class="cell small-6">
+                                <select id="type" class="input-group-field" name="type" type="text">
+                                    <option value="">Geen voorkeur</option>
+                                    <?php foreach($arrType as $type):?>
+                                        <option value="<?php echo $type->id ?>"><?php echo $type->name ?></option>
+                                    <?php endforeach;?> 
+                                </select>
+                            </div>
+                            <div class="cell small-6 text-left">
+                                Status
+                            </div>
+                            <div class="cell small-6">
+                                <select id="status" class="input-group-field" name="status" type="text">
+                                    <option value="">Geen voorkeur</option>
+                                    <?php foreach($arrStatus as $status):?>
+                                        <option value="<?php echo $status->id ?>"><?php echo $status->name ?></option>
+                                    <?php endforeach;?> 
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="cell small-12">
+                        <h1>Notities</h1>
+                        <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
+                        <div class="grid-x align-middle info-container">
+                            <div class="cell small-6 text-left">
+                                Speler
+                            </div>
+                            <div class="cell small-6">
+                                <a data-open="notes-modal" data-type="player_notes">
+                                    <i class="fa-solid fa-plus"></i>toevoegen</span>
+                                </a>
+                            </div>
+                            <div class="cell small-6 text-left">
+                                Spelleiding
+                            </div>
+                            <div class="cell small-6">
+                                <a data-open="notes-modal" data-type="sl_notes">
+                                    <i class="fa-solid fa-plus"></i>toevoegen</span>
+                                </a>
+                            </div>
+                            <div class="cell small-6 text-left">
+                                Privé spelleiding
+                            </div>
+                            <div class="cell small-6">
+                                <a data-open="notes-modal" data-type="sl_private_notes">
+                                    <i class="fa-solid fa-plus"></i>toevoegen</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-8 large-9">
+                <div class="grid-x grid-padding-x grid-padding-y">
+                    <div class="cell small-12 large-6 text-center">
+                        <h1>Primaire stats</h1>
+                        <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
                         <div class="grid-x align-middle info-container">
                             <div class="cell small-6 text-left">
                                 Levenspunten
@@ -104,7 +162,9 @@
                             <?php endif; ?>
                         </div>
                     </div>
-                    <div class="cell small-12">
+                    <div class="cell small-12 large-6 text-center">
+                        <h1>Secundaire stats</h1>
+                        <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
                         <div class="grid-x align-middle info-container">
                             <div class="cell small-6 text-left">
                                 Kracht
@@ -132,10 +192,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="cell small-12 medium-8 large-9">
-                <div class="grid-x grid-padding-x grid-padding-y">
                     <div class="cell small-12 large-6 text-center">
                         <h1>Beroep(en)</h1>
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
@@ -176,29 +232,7 @@
                             <a data-open="selection-modal" data-type="skill_magic"><i class="fa-solid fa-plus"></i>toevoegen</a>
                         </div>
                     </div>
-                </div>
-                <div class="grid-x grid-padding-x grid-padding-y show-for-large">
-                    <div class="cell small-12 text-center">
-                        <h1>Avonturen</h1>
-                        <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
-                        <div class="grid-x grid-margin-x grid-margin-y">
-                            <a class="cell small-4 medium-3 large-2" data-open="background-modal">
-                                <div class="event-container">
-                                    <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>"/>
-                                    <span>Achtergrond</span>
-                                </div>                              
-                            </a>
-                            <?php foreach($arrEvents as $event):?>
-                                <a class="cell small-4 medium-3 large-2" data-open="adventure-modal" data-id="<?php echo $event->id ?>">
-                                    <div class="event-container">
-                                        <img src="<?php echo image_path('events/event_'.strtolower(str_replace([' ', '.'], '_',$event->name)).'.png')?>"/>
-                                        <span><?php echo $event->name ?></span>
-                                    </div>
-                                </a>    
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div>
+                </div>                
                 <div class="grid-x grid-padding-x grid-padding-y show-for-large">
                     <div class="cell small-12 text-center">
                         <h1>Uitrusting</h1>
@@ -220,6 +254,28 @@
                                     <a data-open="selection-modal" data-type="item_add"><i class="fa-solid fa-plus"></i>toevoegen</a>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-x grid-padding-x grid-padding-y show-for-large">
+                    <div class="cell small-12 text-center">
+                        <h1>Avonturen</h1>
+                        <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
+                        <div class="grid-x grid-margin-x grid-margin-y">
+                            <a class="cell small-4 medium-3 large-2" data-open="background-modal">
+                                <div class="event-container">
+                                    <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>"/>
+                                    <span>Achtergrond</span>
+                                </div>                              
+                            </a>
+                            <?php foreach($arrEvents as $event):?>
+                                <a class="cell small-4 medium-3 large-2" data-open="adventure-modal" data-id="<?php echo $event->id ?>">
+                                    <div class="event-container">
+                                        <img src="<?php echo image_path('events/event_'.strtolower(str_replace([' ', '.'], '_',$event->name)).'.png')?>"/>
+                                        <span><?php echo $event->name ?></span>
+                                    </div>
+                                </a>    
+                            <?php endforeach; ?>
                         </div>
                     </div>
                 </div>

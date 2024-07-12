@@ -35,6 +35,7 @@ const oTranslations = Object.freeze({
         "question_5": "Wat zijn je plannen komend evenement?",
         "question_6": "Overige toevoeging? (optioneel)",
         "rank": "niveau",
+        "racial": "ras",
         "remove": "verwijderen",
         "required": "verplicht",
         "silver": "zilver",
@@ -73,6 +74,7 @@ const oTranslations = Object.freeze({
         "question_5": "What are your plans for the next event?",
         "question_6": "Any additional notes? (optional)",
         "rank": "rank",
+        "racial": "racial",
         "remove": "remove",
         "required": "required",
         "silver": "silver",
@@ -188,6 +190,8 @@ const iconset = Object.freeze({
 const jsonBaseChar = Object.freeze(JSON.parse($('input[name="jsonBaseChar"]').val()));
 const jsonStat = Object.freeze(JSON.parse($('input[name="jsonStat"]').val()));
 
+let choice_skills = [];
+
 // Get the current date and time
 const currentDateTime = new Date();
 
@@ -210,6 +214,7 @@ let oCharacter = {
 
 export {
     arrXP,
+    choice_skills,
     domain,
     icons,
     iconset,

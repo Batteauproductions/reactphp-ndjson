@@ -1,6 +1,7 @@
 // Importing the variables
 import { 
         arrXP
+        ,choice_skills
         ,domain
         ,icons
         ,iconset
@@ -66,7 +67,7 @@ function characterRemoveFrom(attribute,element,type,main_id,sub_id=null) {
     if (!itemFound) {
         console.error('Item not found');
     } else {  
-        if (subject.modifier.length > 0) {
+        if (subject.modifier && subject.modifier.length > 0) {
             updateCharacterStats();
         }
         if (type === "profession" || type === "skill") {
@@ -164,6 +165,7 @@ function currencyRefund(cost) {
 //element: the element that needs to be added
 function elementAdd(container, element, type) {
     if (typeof element === 'object') {
+        console.log('element:',element)
 
         // Create master container
         const row = $('<div>', {
@@ -173,7 +175,7 @@ function elementAdd(container, element, type) {
         // Create main name column
         const column_name = $('<div>', {
             class: 'cell small-5 text-left',
-            text: `${element.main_name}${element.rank !== null ? ` (${icons.rank.text} ${element.rank})` : ''}`
+            text: `${element.main_name} ${element.rank != null ? ` (${icons.rank.text} ${element.rank})` : ''}`
         });
 
         let column_subname, column_amount, column_cost, local_icons;
@@ -187,7 +189,7 @@ function elementAdd(container, element, type) {
             // Create cost column
             column_cost = $('<div>', {
                 class: 'cell small-1 text-right',
-                html: `${element.cost}pt.`
+                html: element.race ? `${oTranslations[language].racial}` : `${element.cost}pt.`
             });
             local_icons = iconset["new_skill_no_rank"];
         } else if (type === 'item') {
@@ -414,7 +416,7 @@ function modalSet(data, action) {
 
     modalClear();
 
-    // Check if the data has a subtype and add new options
+    // Check if the data has a subtype, otherwise add new options
     if (data.subtype && data.subtype.length > 0) {
         const options = data.subtype.map(subtype => $('<option>', {
             value: subtype.id,
@@ -424,6 +426,8 @@ function modalSet(data, action) {
     }
 
     // Create and append content elements if they exist
+    //Always check if the attribute is set, if not do not add to the model
+
     /*-- update the image --*/
     let subtypeValue = $('[name="subtype"]').val();
     if(action === "profession") {
@@ -435,6 +439,7 @@ function modalSet(data, action) {
     }
 
     /*--contentElements-- */
+    //The base description of the race, profession or skill
     const contentElements = [];
     if (data.details.name) {
         contentElements.push($('<h1>', { html: data.details.name }));
@@ -444,11 +449,11 @@ function modalSet(data, action) {
     }
     if (data.details.advanced_description) {
         contentElements.push($('<p>', { html: data.details.advanced_description }));
-    }
-       
+    }       
     $container.append(contentElements).show();
 
     /* --contentDetailsElements-- */
+    //Extra information (shown in box) of the race, profession or skill
     const contentDetailsElements = [];
     if (data.details.disclaimer) {        
         contentDetailsElements.push($('<p>', { html: `${icons.disclaimer.icon} ${data.details.disclaimer}` }));
@@ -458,7 +463,8 @@ function modalSet(data, action) {
     } 
     if (data.details.loresheet) {        
         contentDetailsElements.push($('<p>', { html: `${icons.loresheet.icon} ${icons.loresheet.text}` }));
-    }    
+    }   
+    //if the choice has a option of modifier, give the option to choose, otherwise just show 
     if(data.modifier && data.modifier.length > 1) {        
         for(let i = 0; i < data.modifier.length; i++) {
             var name = data.modifier[i].name;
@@ -472,6 +478,7 @@ function modalSet(data, action) {
         var name = data.modifier[0].name;
         contentDetailsElements.push($('<p>', { html: `${icons[name.toLowerCase()].icon} ${icons[name.toLowerCase()].text}` }));
     }
+    //if the choice has ranks to choice, give the option to choose the rank
     if (data.details.max_rank) {
         var $row = $('<div>', { html: `${icons.rank.icon}` })
         for (let i = 1; i <= data.details.max_rank; i++) {
@@ -482,38 +489,57 @@ function modalSet(data, action) {
         }
         contentDetailsElements.push($row)
     }
-    //
-    if (action ==="skill_base" || action === "skill_combat" || action === "skill_magic") {
-        contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} <span id="rank_cost">${data.details.xp_cost}</span> ${icons.experience.text}`}));
-    } else if (action === "profession") {
-        contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} ${data.details.rank_1_cost} ${icons.experience.text}`}));
-    } else if (action === "item_add") {
-        contentDetailsElements.push($('<p>', { html: convertCurrency(data.details.price) }));
+
+    //split based on action, shows in the contentDetailsElements container
+    switch (action) {
+        case 'skill_base':
+        case 'skill_combat':
+        case 'skill_magic':
+            contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} <span id="rank_cost">${data.details.xp_cost}</span> ${icons.experience.text}`}));
+            break;
+        case 'profession':
+            contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} ${data.details.rank_1_cost} ${icons.experience.text}`}));
+            break;
+        case 'item_add':
+            contentDetailsElements.push($('<p>', { html: convertCurrency(data.details.price) }));
+            break;
+        default: 
+            console.warn(`Unused action of ${action} has been called`);
+            break;
+    }
+
+    //--choice skills
+    if (data.skills && data.skills.length > 1) {
+        data.skills.forEach(skill => {
+            //Declare variables
+            const { main_id, main_name, sub_id, sub_name, options } = skill;
+            const row = $('<div>', { 'data-raceskill': '', class: 'choice-row' });
+            // Check if the skills has options
+            if (options) {
+                //Create DOM elements
+                const $label = $('<label>', { text: main_name, for: 'subtype-dropdown' });
+                const $select = $('<select>', { id: 'subtype-dropdown' });
+                // Iterate over the object to create <option> elements
+                $.each(options, (key, value) => {
+                    const $option = $('<option>', {
+                        value: value.id,
+                        text: value.name
+                    });
+                    // Append the option to the select element
+                    $select.append($option);
+                });
+                row.append($label, $select);
+            } else {
+                row.html(`<p>${main_name} - ${sub_name}</p>`);
+                skill.race = true;
+                choice_skills.push(skill);
+            }
+            contentDetailsElements.push(row);
+        });
+
     }
     
-    //--race skills
-    if (data.skills && data.skills.length > 1) {
-        for(let i = 0; i < data.skills.length; i++) {
-            let main_id = data.skills[i].main_id;
-            let main_name = data.skills[i].main_name;
-            let sub_id = data.skills[i].sub_id;
-            let sub_name = data.skills[i].sub_name;
-            let row = $('<div data-raceskill>', { class: `choice-row` });
-
-            if(data.skills[i].options && data.skills[i].options.length > 1) {
-                var input = $('<input>', { id: `modifier-${i}`, value: data.skills[i].id, type: 'radio', name: 'stat-modifier' });
-                var label = $('<label>', { for: `modifier-${i}`, html: `${sub_name}` });
-                row.append(input,label);
-            } else {
-                row = $('<div data-raceskill>', { 
-                    class: `choice-row`,
-                    html: `${icons[main_id].icon} ${main_name} ${sub_name}`
-                });
-            }                        
-            contentDetailsElements.push(row);
-        }
-    }
-
+    //if there are details, show them on the page
     if(contentDetailsElements.length > 0) {
         $container_details.append(contentDetailsElements).show();
     }
@@ -595,33 +621,35 @@ function calculateIncrease(id) {
 //---10: INCREASE_BASE_CURRENCY
 //---11: INCREASE_BASE_FAVOR
 function updateCharacterStats() {
-    oCharacter.build.max_xp = jsonBaseChar.max_xp+(calculateIncrease(8)*jsonStat.xp);
-    oCharacter.build.currency = jsonBaseChar.currency+(calculateIncrease(10)*jsonStat.currency);
-    //--adjust the stats of the character
-	oCharacter.build.hp = jsonBaseChar.hp+(calculateIncrease(2)*jsonStat.hp);
-    oCharacter.build.sanity = jsonBaseChar.sanity+(calculateIncrease(1)*jsonStat.sanity);
-    oCharacter.build.mana = jsonBaseChar.mana+(calculateIncrease(7)*jsonStat.mana)+(calculateIncrease(9)*jsonStat.mana_minor);
-    oCharacter.build.gp = jsonBaseChar.gp+(calculateIncrease(6)*jsonStat.gp);
-    //oCharacter.build.favour = jsonBaseChar.favour+(calculateIncrease(6)*jsonStat.favour);
-    //--adjust the powers of the character
-    oCharacter.build.str = jsonBaseChar.str+(calculateIncrease(4)*jsonStat.str);
-    oCharacter.build.dex = jsonBaseChar.dex+(calculateIncrease(3)*jsonStat.dex);
-    oCharacter.build.intel = jsonBaseChar.intel+(calculateIncrease(5)*jsonStat.intel);
-    oCharacter.build.clues = jsonBaseChar.intel+(calculateIncrease(5)*jsonStat.intel);
-    //--update the text on the sheet per modifier
-    $.each(oCharacter.build, function(key,value) {
-        let content;
-        switch (key) {
-            case "currency":
-                content = convertCurrency(value);
-                break;
-            default: 
-                content = value;
-                break;
+    // Define calculation rules
+    const statMappings = {
+        max_xp: { base: jsonBaseChar.max_xp, factor: 8, stat: jsonStat.xp },
+        currency: { base: jsonBaseChar.currency, factor: 10, stat: jsonStat.currency },
+        hp: { base: jsonBaseChar.hp, factor: 2, stat: jsonStat.hp },
+        sanity: { base: jsonBaseChar.sanity, factor: 1, stat: jsonStat.sanity },
+        mana: { base: jsonBaseChar.mana, factor: 7, stat: jsonStat.mana, additionalFactor: 9, additionalStat: jsonStat.mana_minor },
+        gp: { base: jsonBaseChar.gp, factor: 6, stat: jsonStat.gp },
+        str: { base: jsonBaseChar.str, factor: 4, stat: jsonStat.str },
+        dex: { base: jsonBaseChar.dex, factor: 3, stat: jsonStat.dex },
+        intel: { base: jsonBaseChar.intel, factor: 5, stat: jsonStat.intel },
+        clues: { base: jsonBaseChar.intel, factor: 5, stat: jsonStat.intel }
+    };
+
+    // Calculate and update oCharacter.build properties
+    for (const [key, { base, factor, stat, additionalFactor, additionalStat }] of Object.entries(statMappings)) {
+        oCharacter.build[key] = base + (calculateIncrease(factor) * stat);
+        if (additionalFactor && additionalStat) {
+            oCharacter.build[key] += calculateIncrease(additionalFactor) * additionalStat;
         }
+    }
+
+    // Update the text on the sheet per modifier
+    $.each(oCharacter.build, function(key, value) {
+        const content = (key === "currency") ? convertCurrency(value) : value;
         $(`#stat-${key}`).html(content);
     });
-    //update the object
+
+    // Update the object
     updateCharacter();
     console.log(oCharacter);
 }

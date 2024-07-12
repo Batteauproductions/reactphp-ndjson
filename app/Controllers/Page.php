@@ -184,6 +184,8 @@ class Page extends BaseController
                                         'jsonBaseChar' => $this->arrSettings['jsonBaseChar'],
                                         'jsonStat' => $this->arrSettings['jsonStat'],
                                         'arrXP' => $this->arrSettings['arrXP'],
+                                        'arrType' => $this->arrSettings['options_character_types'],
+                                        'arrStatus' => $this->arrSettings['options_character_status'],
                                         'arrEvents' => array_reverse($this->eventModel->getEvents()),
                                         'viewAsAdmin' => false,
                                     );
