@@ -13,6 +13,7 @@ const oTranslations = Object.freeze({
         "downgrade": "verlagen",
         "edit": "aanpassen",
         "experience": "vaardigheidspunt(en)",
+        "gatherable": "verzamelbaar",
         "gold": "goud",
         "increase_base_currency": "Verhoogt het startbedrag",
         "increase_base_dex": "Verhoogt de behendigheid",
@@ -52,6 +53,7 @@ const oTranslations = Object.freeze({
         "downgrade": "downgrade",
         "edit": "edit",
         "experience": "experience point(s)",
+        "gatherable": "gatherable",
         "gold": "gold",
         "increase_base_currency": "Increases starting amount",
         "increase_base_dex": "Increases dexterity",
@@ -98,8 +100,7 @@ const icons = Object.freeze({
     "downgrade":{
         icon: '<i class="fa-solid fa-circle-down"></i>',
         text: oTranslations[language].downgrade,
-    },
-    
+    },    
     "edit": {
         icon: '<i class="fa-solid fa-pen-to-square"></i>',
         text: oTranslations[language].edit,
@@ -107,6 +108,10 @@ const icons = Object.freeze({
     "experience":{
         icon: '<i class="fa-solid fa-brain"></i>',
         text: oTranslations[language].experience,
+    },
+    "gatherable": {
+        icon: '<i class="fa-solid fa-leaf"></i>',
+        text: oTranslations[language].gatherable,
     },
     "loresheet":{
         icon: '<i class="fa-solid fa-scroll"></i>',

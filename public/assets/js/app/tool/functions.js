@@ -1,7 +1,6 @@
 // Importing the variables
 import { 
-        arrXP
-        ,choice_skills
+        choice_skills
         ,domain
         ,icons
         ,iconset
@@ -21,10 +20,10 @@ determenes if the character is new or existing:
 -- if existing, data should be shown on the sheet
 */
 function _construct(obj=null) {
-    console.log(oCharacter);    
     if (obj !== null && obj !== undefined && obj !== '') { 
-        let json_obj = JSON.parse(obj);
-        console.log('Character information received, treating as excisting');               
+        const json_obj = JSON.parse(obj);
+        console.log('Character information received, treating as excisting', json_obj);   
+        oCharacter = json_obj;            
         oCharacter.status = 'existing';
     } else {
         console.log('No character information received, treating as new');
@@ -84,7 +83,9 @@ function characterRemoveFrom(attribute,element,type,main_id,sub_id=null) {
             attribute.splice(i,1);
             itemFound = true;
             break;
-        } 
+        } else {  
+            console.error('characterRemoveFrom: Item not found');        
+        }
     }
     if (!itemFound) {
         console.error('Item not found');
@@ -103,9 +104,7 @@ function characterRemoveFrom(attribute,element,type,main_id,sub_id=null) {
         }
         //remove the element from the DOM
         element.parent().parent().remove();
-    } else {  
-        console.error('characterRemoveFrom: Item not found');        
-    }
+    } 
 }
 
 //This function serves as a "helper", to calculate the proper costs
@@ -199,14 +198,13 @@ function elementAdd(container, element, type) {
             class: 'grid-x choice-row animate__animated animate__fadeInLeft',
         });
 
-        let column_name, column_subname, column_amount, column_cost, local_icons;
+        let arrColumn = [], column_name, column_subname, column_amount, column_cost, local_icons;
         // Create main name column
         column_name = $('<div>', {
             class: 'cell small-5 text-left',
             text: `${element.main_name} ${element.rank != null ? ` (${icons.rank.text} ${element.rank})` : ''}`
         });
-
-        let column_subname, column_amount, column_cost, local_icons;
+        arrColumn.push(column_name);
 
         if (type === 'skill' || type === 'profession') {
             // Create sub name column (if exists)
@@ -214,22 +212,28 @@ function elementAdd(container, element, type) {
                 class: 'cell small-4 text-center',
                 text: element.sub_name !== null ? element.sub_name : '-',
             });
+            arrColumn.push(column_subname);
             // Create cost column
             column_cost = $('<div>', {
                 class: 'cell small-1 text-right',
                 html: element.race ? `${oTranslations[language].racial}` : `${element.cost}pt.`
-            });
+            });            
             local_icons = iconset["new_skill_no_rank"];
+            arrColumn.push(column_cost);
         } else if (type === 'item') {
+            // Add column with amount of items
             column_amount = $('<div>', {
                 class: 'cell small-2 text-right',
                 text: `${element.amount}x`
             });
+            arrColumn.push(column_amount);
+            // Create cost column with money
             column_cost = $('<div>', {
                 class: 'cell small-3 text-right',
-                html: `${convertCurrency(element.cost)}`
+                html: `${currencyConvert(element.cost)}`
             });
             local_icons = iconset["new_item"];
+            arrColumn.push(column_cost);
         }
         // Create icon set column
         const arrIcons = local_icons.map(icon => $('<a>', {
@@ -457,7 +461,7 @@ function modalSet(data, action) {
         if (data.details.id && subtypeValue) {
             $choice_image.attr('src',`${domain}/assets/images/profession/prof_${data.details.id}_${subtypeValue}.png`).show();
         } else if (data.details.id) {
-            $image.attr('src',`${domain}/assets/images/profession/prof_${data.details.id}.png`).show();
+            $choice_image.attr('src',`${domain}/assets/images/profession/prof_${data.details.id}.png`).show();
         }    
     }
 
@@ -473,7 +477,7 @@ function modalSet(data, action) {
     if (data.details.advanced_description) {
         contentElements.push($('<p>', { html: data.details.advanced_description }));
     }       
-    $container.append(contentElements).show();
+    $choice_description.append(contentElements).show();
 
     /* --contentDetailsElements-- */
     //Extra information (shown in box) of the race, profession or skill
@@ -524,7 +528,7 @@ function modalSet(data, action) {
             contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} ${data.details.rank_1_cost} ${icons.experience.text}`}));
             break;
         case 'item_add':
-            contentDetailsElements.push($('<p>', { html: convertCurrency(data.details.price) }));
+            contentDetailsElements.push($('<p>', { html: currencyConvert(data.details.price) }));
             break;
         default: 
             console.warn(`Unused action of ${action} has been called`);
@@ -598,6 +602,7 @@ function showMessage (element,type, message) {
     }
 }
 
+// A simple function to stringify the character object
 function updateCharacter() {
     $('input[name="character"]').val(JSON.stringify(oCharacter));
 }
@@ -644,6 +649,7 @@ function calculateIncrease(id) {
 //---10: INCREASE_BASE_CURRENCY
 //---11: INCREASE_BASE_FAVOR
 function updateCharacterStats() {
+
     // Define calculation rules
     const statMappings = {
         max_xp: { base: jsonBaseChar.max_xp, factor: 8, stat: jsonStat.xp },
@@ -668,7 +674,7 @@ function updateCharacterStats() {
 
     // Update the text on the sheet per modifier
     $.each(oCharacter.build, function(key, value) {
-        const content = (key === "currency") ? convertCurrency(value) : value;
+        const content = (key === "currency") ? currencyConvert(value) : value;
         $(`#stat-${key}`).html(content);
     });
 

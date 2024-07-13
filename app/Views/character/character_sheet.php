@@ -70,24 +70,26 @@
                                 Type
                             </div>
                             <div class="cell small-6">
-                                <select id="type" class="input-group-field" name="type" type="text">
+                                <select id="type" class="input-group-field" name="char_type" type="text">
                                     <option value="">Geen voorkeur</option>
                                     <?php foreach($arrType as $type):?>
                                         <option value="<?php echo $type->id ?>"><?php echo $type->name ?></option>
                                     <?php endforeach;?> 
                                 </select>
                             </div>
-                            <div class="cell small-6 text-left">
-                                Status
-                            </div>
-                            <div class="cell small-6">
-                                <select id="status" class="input-group-field" name="status" type="text">
-                                    <option value="">Geen voorkeur</option>
-                                    <?php foreach($arrStatus as $status):?>
-                                        <option value="<?php echo $status->id ?>"><?php echo $status->name ?></option>
-                                    <?php endforeach;?> 
-                                </select>
-                            </div>
+                            <?php if($viewAsAdmin): ?>
+                                <div class="cell small-6 text-left">
+                                    Status
+                                </div>                            
+                                <div class="cell small-6">
+                                    <select id="status" class="input-group-field" name="char_status" type="text">
+                                        <option value="">Geen voorkeur</option>
+                                        <?php foreach($arrStatus as $status):?>
+                                            <option value="<?php echo $status->id ?>"><?php echo $status->name ?></option>
+                                        <?php endforeach;?> 
+                                    </select>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="cell small-12">
@@ -462,6 +464,26 @@
         </div>
         <div class="cell small-12">
             <button class="button solid"><i class="fa-regular fa-floppy-disk"></i> Opslaan</button>
+        </div>
+    </form>
+    
+    <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    
+</div>
+
+<!-- MODAL FOR LOGGING NOTES -->
+<div class="reveal large" id="notes-modal" data-reveal>
+    
+    <div data-id="modal-loading" class="text-center">
+        <i class="fa-solid fa-spinner fa-spin"></i> Gegevens laden
+    </div>
+
+    <form id="notes-form" class="grid-x grid-padding-x grid-padding-y" style="display:none;">
+        <div class="cell small-12">
+            <label for="question_1">Wat heb je dit evenement ondernomen?</label>
+            <textarea id="question_1" name="question_1"></textarea>
         </div>
     </form>
     

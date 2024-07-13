@@ -213,13 +213,11 @@ $(document).ready(function() {
                 alert('Error:', error);
             }
         });
-
     });
 
     $('select[name="subtype"]').on('change',function(){
-        console.log('change?')
-        let typeValue = $('[name="type"]').val();
-        let subtypeValue = $('[name="subtype"]').val();
+        const typeValue = $('select[name="type"]').val();
+        const subtypeValue = $('select[name="subtype"]').val();
         $('#choice-image').attr('src',`${domain}/assets/images/profession/prof_${typeValue}_${subtypeValue}.png`).show();
     });
 
