@@ -47,18 +47,22 @@ function _construct(obj=null) {
 */
 function characterAddTo(attribute,type,subject) {
     if (typeof subject === 'object') {
-        //spend the experience / currency     
+        
+        //firstly: add the subject to the attribute called
+        attribute.push(subject);
+
+        //secondly: spend the experience / currency needed for this subject
         if (type === "profession" || type === "skill") {
             experienceSpend(subject.cost);
         } else if (type === "item") {
             currencySpend(subject.cost);
-        } 
-        //check if the subject has a modifier
+        }         
+
+        //thirdly: check if the subject has a modifier, if so update the character stats
         if (subject.modifier.length > 0) {
             updateCharacterStats();
         }   
-        //add the subject to the attribute called
-        attribute.push(subject);
+        
     } else {
         console.error("characterAddTo: argument 'subject' is not an object: " + $.type(subject));
     }

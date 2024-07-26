@@ -25,6 +25,7 @@ const oTranslations = Object.freeze({
         "increase_base_mana_minor": "Verhoogt de mana-poel (minor)",
         "increase_base_points": "Verhoogt de vaardigheidspunten",
         "increase_base_sanity": "Verhoogt de sanity",
+        "increase_base_str": "Verhoogt de kracht",
         "loresheet": "Je krijgt hievoor een loresheet.",
         "more_info": "meer informatie",
         "not_enough_coin": "Je hebt niet genoeg geld om dit aan te schaffen.",
@@ -65,6 +66,7 @@ const oTranslations = Object.freeze({
         "increase_base_mana_minor": "Increases mana pool (minor)",
         "increase_base_points": "Increases skill points",
         "increase_base_sanity": "Increases sanity",
+        "increase_base_str": "Increases the strength",
         "loresheet": "You receive a loresheet for this.",
         "more_info": "more information",
         "not_enough_coin": "You do not have enough money to purchase this.",
@@ -176,6 +178,10 @@ const icons = Object.freeze({
     "increase_base_currency":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
         text: oTranslations[language].increase_base_currency,
+    },
+    "increase_base_str":{
+        icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
+        text: oTranslations[language].increase_base_str,
     },
     "increase_base_favor":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
