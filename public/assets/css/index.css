@@ -255,9 +255,6 @@ ul li {
 
 .input-error {
   display: block;
-  padding: 1.25rem;
-  border: solid 1 #7D1717;
-  background: #E34646;
   color: #fff;
   font-weight: bold;
   margin: 1.25rem 0;
