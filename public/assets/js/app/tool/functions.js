@@ -62,6 +62,8 @@ function characterAddTo(attribute,type,subject) {
         if (subject.modifier.length > 0) {
             updateCharacterStats();
         }   
+
+        updateCharacter();
         
     } else {
         console.error("characterAddTo: argument 'subject' is not an object: " + $.type(subject));
@@ -195,7 +197,7 @@ function currencySpend(cost) {
 //element: the element that needs to be added
 function elementAdd(container, element, type) {
     if (typeof element === 'object') {
-        console.log('element:',element)
+        //console.log('element:',element)
 
         // Create master row to hold information
         const row = $('<div>', {
@@ -293,7 +295,7 @@ function experienceSpend(cost) {
 //It should check if there is an attempt to refund more than zero
 function experienceRefund(cost) {
     if((oCharacter.build.spend_xp-cost) < 0) {
-        console.warn(`Attempt to set XP under minimum`);
+        console.error(`Attempt to set XP under minimum`);
         oCharacter.build.spend_xp = 0;
     } else {
         oCharacter.build.spend_xp -= cost;
@@ -422,11 +424,13 @@ function initiateEditor() {
 
 //--MODAL--//
 const $typeSelect = $('select[name="type"]');
+const $typeAmount = $('[name="amount"]');
 const $subtypeSelect = $('select[name="subtype"]');
 const $choice_image = $('#choice-image');
 const $choice_description = $('#choice-description');
 const $choice_details = $('#choice-details');
 const $choice_actions = $('#choice-actions');
+
 
 /*modalClear
 --complete, weither the modal should be completely cleared
@@ -435,12 +439,13 @@ function modalClear(complete=false) {
     // Clear previous content
     if(complete) {
         $typeSelect.empty().hide();
+        $typeAmount.val('1').hide();
     }
     $choice_image.attr('src','').hide();
     $subtypeSelect.empty().hide();
     $choice_description.empty().hide();
     $choice_details.empty().hide();
-    $choice_actions.empty().hide();
+    $choice_actions.empty().hide();    
 }
 
 function modalSet(data, action) {
@@ -454,6 +459,13 @@ function modalSet(data, action) {
             text: subtype.name
         }));
         $subtypeSelect.append(options).show();
+    }
+
+    //items allow amount to be chosen
+    if(action == 'item_add') {
+        $('[name="amount"]').show();
+    } else {
+        $('[name="amount"]').hide();
     }
 
     // Create and append content elements if they exist
@@ -486,8 +498,16 @@ function modalSet(data, action) {
     /* --contentDetailsElements-- */
     //Extra information (shown in box) of the race, profession or skill
     const contentDetailsElements = [];
-    if (data.details.disclaimer) {        
-        contentDetailsElements.push($('<p>', { html: `${icons.disclaimer.icon} ${data.details.disclaimer}` }));
+    if (data.details.disclaimer) {  
+        const disclaimer = data.details.disclaimer;
+        if(disclaimer.includes('|')) {
+            const arrDisclaimer = disclaimer.split('|'); 
+            for (let i = 0; i < arrDisclaimer.length; i++) {
+                contentDetailsElements.push($('<p>', { class: `${icons.disclaimer.class}`, html: `${icons.disclaimer.icon} ${arrDisclaimer[i]}` }));
+            }
+        } else {
+            contentDetailsElements.push($('<p>', { html: `${icons.disclaimer.icon} ${disclaimer}` }));
+        }  
     } 
     if (data.details.requirement_name) {        
         contentDetailsElements.push($('<p>', { html: `${icons.required.icon} ${data.details.requirement_name}` }));
@@ -608,6 +628,7 @@ function showMessage (element,type, message) {
 
 // A simple function to stringify the character object
 function updateCharacter() {
+    console.log(oCharacter);
     $('input[name="character"]').val(JSON.stringify(oCharacter));
 }
 
@@ -681,10 +702,6 @@ function updateCharacterStats() {
         const content = (key === "currency") ? currencyConvert(value) : value;
         $(`#stat-${key}`).html(content);
     });
-
-    // Update the object
-    updateCharacter();
-    console.log(oCharacter);
 }
 
 export {  

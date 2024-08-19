@@ -120,14 +120,13 @@ $(document).ready(function() {
     });
 
     $('a[data-open="selection-modal"]').on('click',function(){  
-        var sAction = $(this).data("type");    
+        const sAction = $(this).data("type");    
         const $Form = $('#background-form');   
         //--set default status to loading
         $modalLoading.show();        
         $Form.hide();    
         //--hide the elements in the reveal model
         modalClear(true);
-        
         //--make call to fill the dropdown
         $.ajax({
             url: `${domain}/action/get-dropdown`,
@@ -138,23 +137,24 @@ $(document).ready(function() {
             type: 'POST',
             dataType: 'json',
             success: function(data) {
-                var select = $('select[name="type"]');
-                select.append(`<option value selected disabled>${oTranslations[language].choose_option}</option>`)
-                var optGroup = '';
+                const $select = $('select[name="type"]');
+                //allways add a disabled option to the dropdown so the user has to make a consious choice
+                $select.append(`<option value selected disabled>${oTranslations[language].choose_option}</option>`)
+                let optGroup = '';
 
-                for (var i = 0; i < data.length; i++) {
-                    var item = data[i];
-                    var optionGroup, option;
+                for (let i = 0; i < data.length; i++) {
+                    let item = data[i];
+                    let optionGroup, option;
 
                     if (item.hasOwnProperty('prof_name') || item.hasOwnProperty('type_name')) {
-                        var groupName = item.prof_name || item.type_name;
+                        let groupName = item.prof_name || item.type_name;
 
                         if (optGroup === '' || optGroup !== groupName) {
                             optionGroup = $('<optgroup>', {
                                 label: groupName
                             });
                             optGroup = groupName;
-                            select.append(optionGroup);
+                            $select.append(optionGroup);
                         }
 
                         option = $('<option>', {
@@ -162,19 +162,19 @@ $(document).ready(function() {
                             text: item.name
                         });
 
-                        select.find('optgroup[label="' + groupName + '"]').append(option);
+                        $select.find('optgroup[label="' + groupName + '"]').append(option);
                     } else {
                         option = $('<option>', {
                             value: item.id,
                             text: item.name
                         });
 
-                        select.append(option);
+                        $select.append(option);
                     }
                 }
                 //select the first option per default
                 $('select[name="type"] option:first, select[name="subtype"] option:first').prop('selected', true);
-                $('select[name="type"]').data('name',sAction).show();
+                $select.data('name',sAction).show();
                 $('div[data-id="modal-loading"]').hide();
                 $('#modal-form').show();
             },
@@ -186,15 +186,16 @@ $(document).ready(function() {
     });
     
     $('body').on('change','input[name="rank"]',function(){
-        let value = $(this).val();
+        const value = $(this).val();
         $('#rank_cost').text(calculateSkillCost(oTempData,value));
     });
 
+    //Handles the functionality of change the main type of profession, skill or item and returns the corresponding data subset
     $('select[name="type"]').on('change',function(){
         modalClear();
         //collect data
-        var iID = $(this).val();
-        var sAction = $(this).data("name");
+        const iID = $(this).val();
+        const sAction = $(this).data("name");
         //make call to collect details
         $.ajax({
             url: `${domain}/action/get-details`,
@@ -205,7 +206,7 @@ $(document).ready(function() {
             type: 'POST',
             dataType: 'json',
             success: function(data) {
-                console.log(data);
+                //console.log(data);
                 oTempData = data;
                 modalSet(data,sAction);
             },
@@ -215,38 +216,79 @@ $(document).ready(function() {
         });
     });
 
+    //Makes sure that the image changes the moment a nu sub type is chosen
     $('select[name="subtype"]').on('change',function(){
-        const typeValue = $('select[name="type"]').val();
-        const subtypeValue = $('select[name="subtype"]').val();
-        $('#choice-image').attr('src',`${domain}/assets/images/profession/prof_${typeValue}_${subtypeValue}.png`).show();
+        //sets the fields
+        const $image = $('#choice-image');
+        const $type = $('select[name="type"]');
+        const $subtype = $('select[name="subtype"]');
+        //--collects the values
+        const typeValue = $type.val();
+        const typeName = $type.data('name');
+        const subtypeValue = $subtype.val();
+        //--update the image based on type name
+        // currently only professions support sub-images
+        switch(typeName) {
+            case 'profession':
+                $image.attr('src',`${domain}/assets/images/profession/prof_${typeValue}_${subtypeValue}.png`).show();
+                break;
+            default:
+                $image.attr('src','').hide();
+                break;
+        }
     });
 
+    //this on generic on click handles all the button/links clicks that do not go to another page
     $('body').on('click', 'a[data-action]', function(){
         $('p.input-message').remove();
         //--sAction; will be used to collect what action is being called by clicking on choice
-        const sAction = $(this).data("action");
-        
+        const sAction = $(this).data("action");        
         //perform an action based on what is being done
         switch(sAction) {
+            //for choosing the basis kit an adventurer wears
             case 'base_kit-choose':
-                var $element = $('div[data-id="base_kit-list"]');
+                let $element = $('div[data-id="base_kit-list"]');
                 oCharacter.build.base_kit = parseInt(oTempData.details.id);
-                var container = $('<div>', {
+                let container = $('<div>', {
                     html: `<h3 data-title>${oTempData.details.name}</h3><p data-description>${oTempData.details.description}</p>`
                 });
-                var icon = icons["change"];
+                let icon = icons["change"];
                 $('a[data-type="base_kit"]').html(`${icon.icon} ${icon.text}`);
                 $element.empty().append(container);
                 updateCharacter();
                 $('#selection-modal').foundation('close');
                 break;
+            case 'character-save':
+                $(this).html(` data verwerken`)
+                $.ajax({
+                    url: `${domain}/action/character-save`,
+                    data: {
+                        id: iID,
+                        action: `character-save`,
+                        character: JSON.stringify(oCharacter)
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(data) {
+                        //console.log(data);
+                        oTempData = data;
+                        modalSet(data,sAction);
+                    },
+                    error: function(error) {
+                        alert('Error:', error);
+                    }
+                });
+                break;
+            case 'character-submit':
+                break;
+            //for removing items that a character has already chosen
             case 'item-remove':
                 itemRemove($(this),$(this).data('id'),$(this).data('sub_id'));
                 break;
+            //for adding new items to a character
             case 'item_add-choose':
-                //oTempData.amount = ($('input[name="item_amount"]').val() !== '') ? parseInt($('input[name="item_amount"]').val()) : 1;
-                oTempData.amount = 1;
-                oTempData.cost = parseInt(oTempData.details.price);
+                oTempData.amount = ($('input[name="amount"]').val() !== '') ? parseInt($('input[name="amount"]').val()) : 1;
+                oTempData.cost = parseInt(oTempData.amount) * parseInt(oTempData.details.price);
                 handleChoice(oTempData,itemAdd,sAction,'item');
                 break;
             case 'name-choose':

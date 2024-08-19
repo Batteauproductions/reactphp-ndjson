@@ -5,6 +5,9 @@ let language = 'nl-NL';
 const oTranslations = Object.freeze({
     "nl-NL": {
         "change": "veranderen",
+        "character_saving": "Opslaan bezig",
+        "character_submit": "Opslaan bezig",
+        "character_error": "Fout tijdens opslaan",
         "character_name": "Karakternaam",
         "choose": "kiezen",
         "choose_option": "Maak een keuze",
@@ -46,6 +49,9 @@ const oTranslations = Object.freeze({
     },
     "en-GB": {
         "change": "change",
+        "character_saving": "Saving in progress",
+        "character_submit": "Saving in progress",
+        "character_error": "Error during saving",
         "character_name": "Character Name",
         "choose": "choose",
         "choose_option": "Make a choice",
@@ -87,109 +93,150 @@ const oTranslations = Object.freeze({
     }
 });
 const icons = Object.freeze({
+    "character_saving":{
+        icon: '<i class="fa-solid fa-rotate-right"></i>',
+        class: '',
+        text: oTranslations[language].character_saving,
+    },
+    "character_submit":{
+        icon: '<i class="fa-solid fa-rotate-right"></i>',
+        class: '',
+        text: oTranslations[language].character_submit,
+    },
+    "character_error":{
+        icon: '<i class="fa-solid fa-xmark"></i>',
+        class: '',
+        text: oTranslations[language].character_error,
+    },
     "change":{
         icon: '<i class="fa-solid fa-rotate-right"></i>',
+        class: '',
         text: oTranslations[language].change,
     },
     "choose": {
         icon: '<i class="fa-regular fa-square-check"></i>',
+        class: '',
         text: oTranslations[language].choose,
     },
     "disclaimer":{
         icon: '<i class="fa-solid fa-triangle-exclamation"></i>',
+        class: 'warning',
         text: oTranslations[language].disclaimer,
     },
     "downgrade":{
         icon: '<i class="fa-solid fa-circle-down"></i>',
+        class: '',
         text: oTranslations[language].downgrade,
     },    
     "edit": {
         icon: '<i class="fa-solid fa-pen-to-square"></i>',
+        class: '',
         text: oTranslations[language].edit,
     },
     "experience":{
         icon: '<i class="fa-solid fa-brain"></i>',
+        class: '',
         text: oTranslations[language].experience,
     },
     "gatherable": {
         icon: '<i class="fa-solid fa-leaf"></i>',
+        class: '',
         text: oTranslations[language].gatherable,
     },
     "loresheet":{
         icon: '<i class="fa-solid fa-scroll"></i>',
+        class: '',
         text: oTranslations[language].loresheet,
     },
     "more_info":{
         icon: '<i class="fa-solid fa-circle-info"></i>',
+        class: '',
         text: oTranslations[language].more_info,
     },
     "rank":{
         icon: '<i class="fa-solid fa-hashtag"></i>',
+        class: '',
         text: oTranslations[language].rank,
     },
     "remove": {
         icon: '<i class="fa-solid fa-xmark"></i>',
+        class: '',
         text: oTranslations[language].remove,
     },
     "required": {
         icon: '<i class="fa-solid fa-asterisk"></i>',
+        class: '',
         text: oTranslations[language].required,
     },
     "upgrade":{
         icon: '<i class="fa-solid fa-circle-up"></i>',
+        class: '',
         text: oTranslations[language].upgrade,
     },
    "increase_base_sanity":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
+        class: '',
         text: oTranslations[language].increase_base_sanity,
     },
    "increase_base_health":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
+        class: '',
         text: oTranslations[language].increase_base_health,
     },
     "increase_base_dex":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
+        class: '',
         text: oTranslations[language].increase_base_dex,
     },
     "increase_base_str":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
+        class: '',
         text: oTranslations[language].increase_base_str,
     },
     "increase_base_intel":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
+        class: '',
         text: oTranslations[language].increase_base_intel,
     },
     "increase_base_godpoints":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
+        class: '',
         text: oTranslations[language].increase_base_godpoints,
     },
     "increase_base_mana":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
+        class: '',
         text: oTranslations[language].increase_base_mana,
     },
     "increase_base_points":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
+        class: '',
         text: oTranslations[language].increase_base_points,
     },
     "increase_base_mana_minor":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
+        class: '',
         text: oTranslations[language].increase_base_mana_minor,
     },
     "increase_base_currency":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
+        class: '',
         text: oTranslations[language].increase_base_currency,
     },
     "increase_base_str":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
+        class: '',
         text: oTranslations[language].increase_base_str,
     },
     "increase_base_favor":{
         icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
+        class: '',
         text: oTranslations[language].increase_base_favor,
     },
     // "Taal: Spreken" 
     "14":{
         icon: '<i class="fa-regular fa-comment"></i>',
+        class: '',
         text: oTranslations[language].speech,
     },
 });
@@ -208,12 +255,14 @@ const currentDateTime = new Date();
 
 let oCharacter = {
     meta: {
-        name: '',
-        background: '',
+        type: 1,
+        status: 1,
+        name: null,
+        background: null,        
         created_dt: currentDateTime.toISOString(),
-        modified_dt: '',
-        firstlocked_dt: '',
-        lastlocked_dt: '',
+        modified_dt: null,
+        firstlocked_dt: null,
+        lastlocked_dt: null,
     },
     build: Object.assign({}, jsonBaseChar),
     race: [],
