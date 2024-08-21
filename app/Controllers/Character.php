@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use CodeIgniter\Controller;
+use App\Models\CharacterModel;
 use App\Models\RaceModel;
 use App\Models\ProfessionModel;
 use App\Models\SkillModel;
@@ -15,6 +16,7 @@ class Character extends Controller
 {
     protected $session;
     protected $arrRights;
+    protected $characterModel;
     protected $raceModel;
     protected $professionModel;
     protected $skillModel;
@@ -26,6 +28,7 @@ class Character extends Controller
     {
         //declare variables to be used throughout the controller
         $this->session = session();
+        $this->characterModel = new CharacterModel();
         $this->raceModel = new RaceModel();
         $this->professionModel = new ProfessionModel();
         $this->skillModel = new SkillModel();
@@ -137,5 +140,28 @@ class Character extends Controller
             echo 'no action parsed';
         }
         
+    }
+
+    public function Process () 
+    {
+        //collect user
+        $arrData = array(
+            'uid' => $this->session->get('uid'),
+            'action' => $this->request->getPost('action'),
+            'character' => $this->request->getPost('character'),
+        );
+
+        if (isset($arrData['action'])) {
+            switch($arrData['action']) {
+                case "character-save":
+                    $this->characterModel->saveCharacter($arrData);
+                    break;
+                case "character-submit":
+                    $this->characterModel->saveCharacter($arrData);
+                    break;
+            }
+        } else {
+            echo 'no action parsed';
+        }
     }
 }

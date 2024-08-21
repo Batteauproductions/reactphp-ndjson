@@ -24,10 +24,10 @@ function _construct(obj=null) {
         const json_obj = JSON.parse(obj);
         console.log('Character information received, treating as excisting', json_obj);   
         oCharacter = json_obj;            
-        oCharacter.status = 'existing';
+        oCharacter.meta.status = 2;
     } else {
         console.log('No character information received, treating as new');
-        oCharacter.status = 'new';        
+        oCharacter.meta.status = 1;        
         $('body').find('[data-open="adventure-modal"]').addClass('disabled');
     }
     initiateEditor();

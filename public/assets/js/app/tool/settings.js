@@ -8,6 +8,7 @@ const oTranslations = Object.freeze({
         "character_saving": "Opslaan bezig",
         "character_submit": "Opslaan bezig",
         "character_error": "Fout tijdens opslaan",
+        "character_save_done": "Karakter opgeslagen",
         "character_name": "Karakternaam",
         "choose": "kiezen",
         "choose_option": "Maak een keuze",
@@ -52,6 +53,7 @@ const oTranslations = Object.freeze({
         "character_saving": "Saving in progress",
         "character_submit": "Saving in progress",
         "character_error": "Error during saving",
+        "character_save_done": "Character saved",
         "character_name": "Character Name",
         "choose": "choose",
         "choose_option": "Make a choice",
@@ -107,6 +109,11 @@ const icons = Object.freeze({
         icon: '<i class="fa-solid fa-xmark"></i>',
         class: '',
         text: oTranslations[language].character_error,
+    },
+    "character_save_done":{
+        icon: '<i class="fa-solid fa-xmark"></i>',
+        class: '',
+        text: oTranslations[language].character_save_done,
     },
     "change":{
         icon: '<i class="fa-solid fa-rotate-right"></i>',

@@ -240,6 +240,7 @@ $(document).ready(function() {
 
     //this on generic on click handles all the button/links clicks that do not go to another page
     $('body').on('click', 'a[data-action]', function(){
+        const $button = $(this);
         $('p.input-message').remove();
         //--sAction; will be used to collect what action is being called by clicking on choice
         const sAction = $(this).data("action");        
@@ -259,27 +260,45 @@ $(document).ready(function() {
                 $('#selection-modal').foundation('close');
                 break;
             case 'character-save':
-                $(this).html(` data verwerken`)
+                $button.attr('disabled', true);
+                $button.html(`${icons.character_saving.icon} ${icons.character_saving.text}`)
                 $.ajax({
                     url: `${domain}/action/character-save`,
                     data: {
-                        id: iID,
                         action: `character-save`,
                         character: JSON.stringify(oCharacter)
                     },
                     type: 'POST',
                     dataType: 'json',
                     success: function(data) {
-                        //console.log(data);
-                        oTempData = data;
-                        modalSet(data,sAction);
+                        $button.html(`${icons.character_save_done.icon} ${icons.character_save_done.text}`);
+                        $button.attr('disabled', false);
                     },
                     error: function(error) {
-                        alert('Error:', error);
+                        $button.html(`${icons.character_error.icon} ${icons.character_error.text}`);
+                        $button.attr('disabled', false);
                     }
                 });
                 break;
-            case 'character-submit':
+            case 'character-submit':                
+                $button.html(`${icons.character_submit.icon} ${icons.character_submit.text}`)
+                $.ajax({
+                    url: `${domain}/action/character-save`,
+                    data: {
+                        action: `character-save`,
+                        character: JSON.stringify(oCharacter)
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(data) {
+                        $button.html(`${icons.character_save_done.icon} ${icons.character_save_done.text}`);
+                        $button.attr('disabled', false);
+                    },
+                    error: function(error) {
+                        $button.html(`${icons.character_error.icon} ${icons.character_error.text}`);
+                        $button.attr('disabled', false);
+                    }
+                });
                 break;
             //for removing items that a character has already chosen
             case 'item-remove':
