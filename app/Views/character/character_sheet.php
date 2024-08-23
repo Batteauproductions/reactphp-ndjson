@@ -45,6 +45,8 @@
                                 <a data-open="text-modal" data-type="name">
                                     <span id="charactername"><i class="fa-solid fa-plus"></i>toevoegen</span>
                                 </a>
+                                <!--! hidden field for validation -->
+                                <input type="hidden" name="char_name" value=""/>
                             </div>
                             <div class="cell small-6 text-left">
                                 Raskeuze
@@ -53,6 +55,8 @@
                                 <a data-open="selection-modal" data-type="race">
                                     <span id="race"><i class="fa-solid fa-plus"></i>toevoegen</span>
                                 </a>
+                                <!--! hidden field for validation -->
+                                <input type="hidden" name="char_race" value=""/>
                             </div>
                             <div class="cell small-6 text-left">
                                 Vaardigheid
@@ -235,7 +239,7 @@
                         </div>
                     </div>
                 </div>                
-                <div class="grid-x grid-padding-x grid-padding-y show-for-large">
+                <div class="grid-x grid-padding-x grid-padding-y">
                     <div class="cell small-12 text-center">
                         <h1>Uitrusting</h1>
                         <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>

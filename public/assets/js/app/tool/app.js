@@ -259,46 +259,31 @@ $(document).ready(function() {
                 updateCharacter();
                 $('#selection-modal').foundation('close');
                 break;
+            case 'character-submit':
             case 'character-save':
-                $button.attr('disabled', true);
-                $button.html(`${icons.character_saving.icon} ${icons.character_saving.text}`)
-                $.ajax({
-                    url: `${domain}/action/character-save`,
-                    data: {
-                        action: `character-save`,
-                        character: JSON.stringify(oCharacter)
-                    },
-                    type: 'POST',
-                    dataType: 'json',
-                    success: function(data) {
-                        $button.html(`${icons.character_save_done.icon} ${icons.character_save_done.text}`);
-                        $button.attr('disabled', false);
-                    },
-                    error: function(error) {
-                        $button.html(`${icons.character_error.icon} ${icons.character_error.text}`);
-                        $button.attr('disabled', false);
-                    }
-                });
-                break;
-            case 'character-submit':                
-                $button.html(`${icons.character_submit.icon} ${icons.character_submit.text}`)
-                $.ajax({
-                    url: `${domain}/action/character-save`,
-                    data: {
-                        action: `character-save`,
-                        character: JSON.stringify(oCharacter)
-                    },
-                    type: 'POST',
-                    dataType: 'json',
-                    success: function(data) {
-                        $button.html(`${icons.character_save_done.icon} ${icons.character_save_done.text}`);
-                        $button.attr('disabled', false);
-                    },
-                    error: function(error) {
-                        $button.html(`${icons.character_error.icon} ${icons.character_error.text}`);
-                        $button.attr('disabled', false);
-                    }
-                });
+                if ($("#form-character").valid()) {                
+                    $button.attr('disabled', true);
+                    $button.html(`${icons.character_saving.icon} ${icons.character_saving.text}`)
+                    $.ajax({
+                        url: `${domain}/action/character-save`,
+                        data: {
+                            action: sAction,
+                            character: JSON.stringify(oCharacter)
+                        },
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function(data) {
+                            $button.html(`${icons.character_save_done.icon} ${icons.character_save_done.text}`);
+                            $button.attr('disabled', false);
+                        },
+                        error: function(error) {
+                            $button.html(`${icons.character_error.icon} ${icons.character_error.text}`);
+                            $button.attr('disabled', false);
+                        }
+                    });
+                } else {
+                    console.warn('Form is not valid');
+                }
                 break;
             //for removing items that a character has already chosen
             case 'item-remove':
@@ -312,6 +297,7 @@ $(document).ready(function() {
                 break;
             case 'name-choose':
                 oCharacter.meta.name = $('input[name="character-name"]').val();
+                $('[name="char_name"]').val(oCharacter.meta.name)
                 $('#charactername').html(`<i class="fa-solid fa-rotate-right"></i>${oCharacter.meta.name}</span>`);   
                 $('#text-modal').foundation('close');
                 updateCharacter();
@@ -319,7 +305,7 @@ $(document).ready(function() {
             case 'profession-choose':
                 oTempData.rank = 1;
                 oTempData.cost = calculateProfessionCost(oTempData, oTempData.rank);
-                handleChoice(oTempData,professionAdd,sAction,'profession');
+                handleChoice(oTempData,sAction,'profession');
                 break;
             case 'profession-remove':
                 professionRemove($(this),$(this).data('id'),$(this).data('sub_id'));
@@ -334,7 +320,7 @@ $(document).ready(function() {
             case 'skill_magic-choose':
                 oTempData.rank = $('input[name="rank"]:checked').val() !== undefined ? parseInt($('input[name="rank"]:checked').val()) : null;
                 oTempData.cost = calculateSkillCost(oTempData, oTempData.rank);
-                handleChoice(oTempData,skillAdd,sAction,'skill');
+                handleChoice(oTempData,sAction,'skill');
                 break;
             case 'skill-remove':
                 skillRemove($(this),$(this).data('id'),$(this).data('sub_id'));

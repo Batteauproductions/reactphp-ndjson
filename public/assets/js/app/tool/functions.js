@@ -11,6 +11,18 @@ import {
         ,oCharacter
 } from './settings.js';
 
+import { 
+    professionAdd
+} from './professions.js';
+
+import { 
+    skillAdd
+} from './skills.js';
+
+import { 
+    itemAdd
+} from './items.js';
+
 /*
 This function will construct the sheet of the character based on information parsed.
 When the document is ready, this function will be called, it will call this function.
@@ -46,25 +58,21 @@ function _construct(obj=null) {
 //-subject: the object that is being parsed
 */
 function characterAddTo(attribute,type,subject) {
-    if (typeof subject === 'object') {
-        
+    if (typeof subject === 'object') {        
         //firstly: add the subject to the attribute called
         attribute.push(subject);
-
         //secondly: spend the experience / currency needed for this subject
         if (type === "profession" || type === "skill") {
             experienceSpend(subject.cost);
         } else if (type === "item") {
             currencySpend(subject.cost);
         }         
-
         //thirdly: check if the subject has a modifier, if so update the character stats
         if (subject.modifier.length > 0) {
             updateCharacterStats();
         }   
-
-        updateCharacter();
-        
+        //finaly: update the visual part of the character sheet
+        updateCharacter();       
     } else {
         console.error("characterAddTo: argument 'subject' is not an object: " + $.type(subject));
     }
@@ -143,6 +151,18 @@ function checkXPCost(cost) {
         console.error("checkXPCost is not an number: " +$.type(cost));
     }    
 };
+
+//this function will check if an item already exists for the character
+function checkDupplicateItem(attribute,main_id,sub_id=null) {
+    let itemFound = false;
+    for (let i = 0; i < attribute.length; i ++) {
+        if(attribute[i].main_id == main_id && attribute[i].sub_id == sub_id) {            
+            itemFound = true;
+            break;
+        } 
+    }
+    return itemFound;
+}
 
 //This function will check if the character has enough xp available to buy the profession or skill
 function checkCurrencyCost(cost) {
@@ -309,7 +329,7 @@ function experienceRefund(cost) {
 //--addFunction, The function it should perform once an item can be added
 //--action: The action being called, it corresponds with a[data-action] from the app.js
 //--type: A simple rundown of the type of action being called. It should be profession, skill or item
-function handleChoice(oTempData,addFunction,action,type) {
+function handleChoice(oTempData,action,type) {
 
     const showErrorMessage = (msg) => showMessage($('#choice-actions'), 'error', `${oTranslations[language][msg]}`);
     const $Container = action.replace('-choose','-list');
@@ -329,29 +349,57 @@ function handleChoice(oTempData,addFunction,action,type) {
     //--Check if the costs can be deducted from the character
     //--bDeducted; will be used to check if the modal can be closed or should remain open
     let bDeducted = false;
+    let addFunction;
+    let attribute; 
 
-    if (type === "profession" || type === "skill") {
-        bDeducted = checkXPCost(oChoice.cost);
-        if (!bDeducted) {
-            showErrorMessage('not_enough_vp');
-            return;
-        }
-    } else if (type === "item") {
-        bDeducted = checkCurrencyCost(oChoice.cost);
-        if (!bDeducted) {
-            showErrorMessage('not_enough_coin');
-            return;
-        }
-    } else if (oTempData.subtype.length > 0 && oChoice.sub_id === null) { 
-        showErrorMessage('choose_sub');                        
-        return;
+    switch(type) {
+        case "profession":
+            attribute = oCharacter.profession;
+            addFunction = professionAdd;
+            bDeducted = checkXPCost(oChoice.cost);
+            if (!bDeducted) {
+                showErrorMessage('not_enough_vp');
+                return;
+            }
+            break;
+        case "skill":
+            attribute = oCharacter.skill;
+            addFunction = skillAdd;
+            bDeducted = checkXPCost(oChoice.cost);
+            if (!bDeducted) {
+                showErrorMessage('not_enough_vp');
+                return;
+            }
+            break;
+        case "item":
+            attribute = oCharacter.item;
+            addFunction = itemAdd;
+            bDeducted = checkCurrencyCost(oChoice.cost);
+            if (!bDeducted) {
+                showErrorMessage('not_enough_coin');
+                return;
+            }
+            break;
+        default:
+            if (oTempData.subtype.length > 0 && oChoice.sub_id === null) {
+                showErrorMessage('choose_sub');
+                return;
+            }
+            break;
     }
-
-    addFunction(oChoice);
-    elementAdd($Container, oChoice, type);
-
-    // Close the pop-up
-    $('#selection-modal').foundation('close');
+    // Ensure addFunction is assigned before calling it
+    if(!checkDupplicateItem(attribute,oChoice.main_id,oChoice.sub_id)){
+        if (typeof addFunction === 'function') {
+            addFunction(oChoice);
+            elementAdd($Container, oChoice, type);
+            // Close the pop-up
+            $('#selection-modal').foundation('close');
+        } else {
+            console.error(`No addFunction defined for type: ${type}`);
+        }
+    } else {
+        showErrorMessage('duplicate_choose');
+    }
 }
 
 function initiateEditor() {
@@ -708,6 +756,7 @@ export {
     _construct, 
     characterAddTo,
     characterRemoveFrom,
+    checkDupplicateItem,
     calculateProfessionCost,
     calculateSkillCost,
     checkXPCost,

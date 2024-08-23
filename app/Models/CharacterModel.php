@@ -21,11 +21,13 @@ class CharacterModel extends Model
     public function getCharacters($uid = null)
     {
         $query = $this->db->table(TBL_CHAR . ' c')
-                        ->select('c.id, c.user_id, c.name, c.avatar, c.race_id, c.created_dt, c.modified_dt,
+                        ->select('c.id, c.user_id, c.name, c.avatar, c.created_dt, c.modified_dt,
+                                cr.main_id as race_id,
                                 cs.id as status_id, cs.name as status_name, cs.description as status_description,
                                 ct.id as type_id, ct.name as type_name, ct.description as type_description,
-                                CONCAT(u.firstname, " ", u.lastname) as user_name', false)
+                                CONCAT(u.firstname, " ", u.lastname) as user_name', false)                        
                         ->join(TBL_CHAR_STATUS . ' cs', 'c.status_id = cs.id')
+                        ->join(TBL_CHAR_RACE . ' cr', 'c.id = cr.char_id')
                         ->join(TBL_CHAR_TYPES . ' ct', 'ct.id = c.type_id', 'left')
                         ->join(TBL_USER . ' u', 'c.user_id = u.id')
                         ->orderBy('c.name', 'asc');
@@ -113,8 +115,6 @@ class CharacterModel extends Model
 
             //races have chosen modifiers
             if (isset($item['modifier'])) {
-                print_r($item['modifier']);
-                exit;
                 $itemData['modifier'] = $item['modifier'][0]['id'];
             }
 

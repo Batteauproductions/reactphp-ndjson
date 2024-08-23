@@ -150,7 +150,7 @@ class Character extends Controller
             'action' => $this->request->getPost('action'),
             'character' => $this->request->getPost('character'),
         );
-
+/*
         if (isset($arrData['action'])) {
             switch($arrData['action']) {
                 case "character-save":
@@ -162,6 +162,6 @@ class Character extends Controller
             }
         } else {
             echo 'no action parsed';
-        }
+        }*/
     }
 }

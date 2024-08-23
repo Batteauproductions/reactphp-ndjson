@@ -7,7 +7,7 @@ import {
 import { 
     _construct, 
     characterAddTo,
-    characterRemoveFrom,
+    characterRemoveFrom
 } from './functions.js';
 
 //These functions deal with adding, altering or removing skills from the character

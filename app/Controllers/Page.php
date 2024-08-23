@@ -178,7 +178,7 @@ class Page extends BaseController
                             switch($subpage) {
                                 case 'view':
                                 case 'create':                                    
-                                    $arrContent['arrJS'] = ['app/tool/app.js'];
+                                    $arrContent['arrJS'] = ['app/tool/app.js','validation/character_validation.js'];
                                     $arrData = array (
                                         'oSession' => $this->session,
                                         'jsonBaseChar' => $this->arrSettings['jsonBaseChar'],
