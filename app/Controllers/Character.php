@@ -150,18 +150,18 @@ class Character extends Controller
             'action' => $this->request->getPost('action'),
             'character' => $this->request->getPost('character'),
         );
-/*
+
         if (isset($arrData['action'])) {
             switch($arrData['action']) {
                 case "character-save":
-                    $this->characterModel->saveCharacter($arrData);
+                    echo json_encode($this->characterModel->saveCharacter($arrData));
                     break;
                 case "character-submit":
-                    $this->characterModel->saveCharacter($arrData);
+                    echo json_encode($this->characterModel->saveCharacter($arrData));
                     break;
             }
         } else {
             echo 'no action parsed';
-        }*/
+        }
     }
 }

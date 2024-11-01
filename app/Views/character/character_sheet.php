@@ -158,14 +158,12 @@
                             <div class="cell small-6">
                                 <span id="stat-gp"><?php echo $jsonBaseChar['gp'] ?></span>
                             </div>
-                            <?php if (1==2): ?>
-                                <div class="cell small-6 text-left">
-                                    Patron gunst
-                                </div>
-                                <div class="cell small-6">
-                                    <span id="stat-favour">0</span>
-                                </div>
-                            <?php endif; ?>
+                            <div class="cell small-6 text-left">
+                                Patron gunst
+                            </div>
+                            <div class="cell small-6">
+                                <span id="stat-favour">0</span>
+                            </div>
                         </div>
                     </div>
                     <div class="cell small-12 large-6 text-center">
@@ -289,8 +287,8 @@
                 </div>
             </div>
             <div class="cell small-12">
-                <a class="button solid" data-action="character-save"><i class="fa-regular fa-floppy-disk"></i> Opslaan</button>
-                <a class="button clear" data-action="character-submit"><i class="fa-regular fa-share-from-square"></i> Opslaan en indienen</button>
+                <a class="button solid" data-action="character-save"><i class="fa-regular fa-floppy-disk"></i> Opslaan</a>
+                <a class="button clear" data-action="character-submit"><i class="fa-regular fa-share-from-square"></i> Opslaan en indienen</a>
             </div>
         </form>
     </div>

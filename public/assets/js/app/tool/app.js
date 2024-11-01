@@ -63,7 +63,8 @@ $(document).ready(function() {
                 contentElements.push($('<input>', { 
                     id: 'character-name', 
                     name: 'character-name', 
-                    type: 'text' 
+                    type: 'text',
+                    value: oCharacter.meta.name ? oCharacter.meta.name : ''
                 }));
                 contentElements.push($('<a>', { 
                     class: 'button solid','data-action': `${sAction}-choose`,
@@ -307,13 +308,13 @@ $(document).ready(function() {
                 oTempData.cost = calculateProfessionCost(oTempData, oTempData.rank);
                 handleChoice(oTempData,sAction,'profession');
                 break;
+            case 'profession-upgrade':
+                break;
             case 'profession-remove':
                 professionRemove($(this),$(this).data('id'),$(this).data('sub_id'));
-                break;
+                break;            
             case 'race-choose':
                 raceAdd(oTempData);                
-                break;
-            case 'set-name':
                 break;
             case 'skill_base-choose':
             case 'skill_combat-choose':

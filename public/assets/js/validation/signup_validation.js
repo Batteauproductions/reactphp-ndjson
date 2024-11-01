@@ -7,6 +7,10 @@ $("#form-signup").validate({
 			maxlength: 50,
 			alphanumeric: true,
 		}
+		,register_code: {
+			required: true,
+			maxlength: 50,
+		}
 		,email: {
 			required: true,
 			maxlength: 250,
@@ -53,7 +57,7 @@ $.validator.addMethod("lettersonly", function(value, element) {
   return this.optional(element) || /^[a-z]+$/i.test(value);
 }, "Gelieve enkel letters in te vullen");
 
- $.validator.addMethod("minAge", function(value, element, min) {
+$.validator.addMethod("minAge", function(value, element, min) {
     var today = new Date();
     var birthDate = new Date(value);
     var age = today.getFullYear() - birthDate.getFullYear();
@@ -70,5 +74,3 @@ $.validator.addMethod("lettersonly", function(value, element) {
 
     return age >= min;
   }, "Je moet ouder zijn dan 16 om deel te nemen aan onze evenementen");
-
-  

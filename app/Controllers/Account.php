@@ -97,8 +97,44 @@ class Account extends Controller
     {
         // Set validation rules
         $this->validation->setRules([
-            'username'          => 'required|max_length[50]|is_unique[user.username]',
-            'email'             => 'required|valid_email|max_length[250]|is_unique[user.email]',
+            'username'          => [
+                'label' => 'username',
+                'rules' => [
+                    'required',
+                    'max_length[50]',
+                    'is_unique[user.username]'
+                ],
+                'errors' => [
+                    'is_unique' => 'Het is niet mogelijk om deze gebruikersnaam te registreren, mogelijk dat deze al in gebruik is.'
+                ]
+            ],
+            'email'             => [
+                'label' => 'email',
+                'rules' => [
+                    'required',
+                    'max_length[50]',
+                    'is_unique[user.email]'
+                ],
+                'errors' => [
+                    'is_unique' => 'Het is niet mogelijk om op deze email te registreren, mogelijk dat deze al in gebruik is.'
+                ]
+            ],
+            'register_code'     => [
+                'label' => 'register_code',
+                'rules' => [
+                    'required',
+                    'max_length[50]',
+                    function($str, array $data) {
+                        if ($str !== 'Chronicle') {
+                            return false;
+                        }
+                        return true;
+                    }
+                ],
+                'errors' => [
+                    'custom_rule' => 'De registratie is onjuist, neem contact met de organisatie.'
+                ]
+            ],
             'firstname'         => 'required|max_length[50]',
             'lastname'          => 'required|max_length[50]',
             'birthday'          => 'required|valid_date',

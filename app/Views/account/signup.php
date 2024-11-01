@@ -26,6 +26,10 @@
                 <input id="username" type="text" name="username">
             </div>
             <div>
+                <label for="register_code">Register-code</label>
+                <input id="register_code" type="text" name="register_code">
+            </div>
+            <div>
                 <label for="email">Email</label>
                 <input id="email" type="email" name="email">
             </div>
@@ -54,7 +58,7 @@
                 <input id="password_repeat" type="password" name="password_repeat">
             </div>
             <div>
-                <button class="button solid" type="submit">
+                <button class="button solid">
                     <i class="fa-regular fa-address-card"></i>Inschrijven
                 </button>
                 <a class="button clear" href="<?php echo base_url() ?>">
@@ -64,3 +68,14 @@
         </form>
     </div>
 </section>
+
+<!-- Google recaptcha V3 -->
+<script src="https://www.google.com/recaptcha/api.js?render=6LfcGjcqAAAAAJwBxP9dC7fsc55pxd1Ww51gE8lA"></script>
+<script>
+    grecaptcha.ready(function() {
+        grecaptcha.execute('6LfcGjcqAAAAAJwBxP9dC7fsc55pxd1Ww51gE8lA', {action: 'homepage'}).then(function(token) {
+            document.getElementById('GRECAPTCHARESPONSE').value=token;
+        });
+    });
+</script>
+<!-- End Google recaptcha V3 -->

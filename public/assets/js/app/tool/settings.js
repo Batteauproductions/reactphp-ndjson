@@ -251,7 +251,7 @@ const icons = Object.freeze({
 });
 const iconset = Object.freeze({
     "new_skill_no_rank": Array("remove"),
-    "new_skill_with_rank": Array("remove","upgrade"),
+    "new_skill_with_rank": Array("upgrade","remove"),
     "new_item": Array("remove"),
 })
 const jsonBaseChar = Object.freeze(JSON.parse($('input[name="jsonBaseChar"]').val()));

@@ -218,7 +218,7 @@ function currencySpend(cost) {
 function elementAdd(container, element, type) {
     if (typeof element === 'object') {
         //console.log('element:',element)
-
+        console.log(`element`,element)
         // Create master row to hold information
         const row = $('<div>', {
             class: 'grid-x choice-row animate__animated animate__fadeInLeft',
@@ -243,8 +243,13 @@ function elementAdd(container, element, type) {
             column_cost = $('<div>', {
                 class: 'cell small-1 text-right',
                 html: element.race ? `${oTranslations[language].racial}` : `${element.cost}pt.`
-            });            
-            local_icons = iconset["new_skill_no_rank"];
+            });    
+            if(element.rank) {
+                local_icons = iconset["new_skill_with_rank"];
+            } else {
+                local_icons = iconset["new_skill_no_rank"];
+            }
+            
             arrColumn.push(column_cost);
         } else if (type === 'item') {
             // Add column with amount of items
@@ -334,6 +339,7 @@ function handleChoice(oTempData,action,type) {
     const showErrorMessage = (msg) => showMessage($('#choice-actions'), 'error', `${oTranslations[language][msg]}`);
     const $Container = action.replace('-choose','-list');
 
+    console.log(oTempData)
     //create a temporary object stripping it of all information we don't need
     const oChoice = {
         main_id: parseInt(oTempData.details.id),
@@ -343,7 +349,9 @@ function handleChoice(oTempData,action,type) {
         rank: oTempData.rank,  
         modifier: oTempData.modifier,  
         cost: oTempData.cost,
-        amount: oTempData.amount,                 
+        amount: oTempData.amount,
+        sl_skill: 1,
+        allow_multiple: oTempData.amount != 0 ? true : false,
     }
 
     //--Check if the costs can be deducted from the character
@@ -734,7 +742,8 @@ function updateCharacterStats() {
         str: { base: jsonBaseChar.str, factor: 4, stat: jsonStat.str },
         dex: { base: jsonBaseChar.dex, factor: 3, stat: jsonStat.dex },
         intel: { base: jsonBaseChar.intel, factor: 5, stat: jsonStat.intel },
-        clues: { base: jsonBaseChar.intel, factor: 5, stat: jsonStat.intel }
+        clues: { base: jsonBaseChar.intel, factor: 5, stat: jsonStat.intel },
+        favour: { base: jsonBaseChar.favour, factor: 11, stat: jsonStat.favour }
     };
 
     // Calculate and update oCharacter.build properties
