@@ -55,7 +55,7 @@
 
 	</head>
     <body>
-        <table class="outer-container" bgcolor="#F1F1F1" width="100%" style="width:100%; background-color: #F1F1F1;">
+        <table class="outer-container" role="presentation" bgcolor="#F1F1F1" width="100%" style="width:100%; background-color: #F1F1F1;">
             <tr>
                 <td align="center">
                     <div style="background-color:#F1F1F1;">
@@ -64,11 +64,11 @@
                     <v:fill type="tile" src="<?php base_url('/assets/images/backgrounds/bg_moutaincity.png'); ?>" color="#F1F1F1"/>
                     </v:background>
                     <![endif]-->
-                        <table height="100%" width="100%">
+                        <table height="100%" width="100%" role="presentation">
                             <tr>
                                 <td valign="top" align="center" style="background-image: <?php base_url('/assets/images/backgrounds/bg_moutaincity.png'); ?>">
                                     <!-- header -->
-                                    <table class="inner-container" bgcolor="#7D1717" width="480" style="width:480px; background-color:#7D1717;">
+                                    <table class="inner-container" bgcolor="#7D1717" role="presentation" width="480" style="width:480px; background-color:#7D1717;">
                                         <tr>
                                             <td align="center" style="padding:20px;">
                                                 <a href="<?php echo base_url(); ?>" target="_blank">
@@ -80,7 +80,7 @@
                                     <!-- /header -->
 
                                     <!-- content -->
-                                    <table class="outer-container" bgcolor="#1E1E1E" width="480" style="width:480; background-color: #1E1E1E;">
+                                    <table class="outer-container" bgcolor="#1E1E1E" role="presentation" width="480" style="width:480; background-color: #1E1E1E;">
                                         <tr>
                                             <td align="center">                                
                                                 <?php echo $content ?>
@@ -90,15 +90,25 @@
                                     <!-- /content -->
 
                                     <!-- footer -->
-                                    <table class="inner-container" bgcolor="#7D1717" width="480" style="width:480px; background-color:#7D1717;">
+                                    <table class="inner-container" bgcolor="#7D1717" role="presentation" width="480" style="width:480px; background-color:#7D1717;">
                                         <tr>
-                                            <td align="center" style="padding:20px;">
-                                                <table width="100%" style="width:100%;">
+                                            <td align="left" style="padding:20px;">
+                                                <table>
                                                     <tr>
-                                                        <td>
-                                                            <a href="<?php echo URL_DISCORD; ?>" target="_blank" style="color:#ffffff; text-decoration:underline;">Discord-Server</a> | 
-                                                            <a href="<?php echo URL_FACEBOOK; ?>" target="_blank" style="color:#ffffff; text-decoration:underline;">Facebook-groep</a> | 
-                                                            <a href="<?php echo URL_WORLD; ?>" target="_blank" style="color:#ffffff; text-decoration:underline;">Setting-informatie</a>
+                                                        <td style="padding-right:10px;">
+                                                            <a href="<?php echo URL_WORLD; ?>" target="_blank" style="color:#ffffff; text-decoration:underline;">
+                                                                <img src="<?php echo image_path('email/logo_setting.png');?>" alt="Setting Information" width="20" style="height:auto; width:20px;">
+                                                            </a>
+                                                        </td>
+                                                        <td style="padding-right:10px;">
+                                                            <a href="<?php echo URL_DISCORD; ?>" target="_blank" style="color:#ffffff; text-decoration:underline;">
+                                                                <img src="<?php echo image_path('email/logo_discord.png');?>" alt="Discord" width="20" style="height:auto; width:20px;">
+                                                            </a>
+                                                        </td>
+                                                        <td style="padding-right:10px;">
+                                                            <a href="<?php echo URL_FACEBOOK; ?>" target="_blank" style="color:#ffffff; text-decoration:underline;">
+                                                                <img src="<?php echo image_path('email/logo_facebook.png');?>" alt="Facebook-groep" width="20" style="height:auto; width:20px;">
+                                                            </a>                                                             
                                                         </td>
                                                     </tr>
                                                 </table>

@@ -10,9 +10,15 @@ import {
     characterRemoveFrom
 } from './functions.js';
 
+function chooseSkill() {
+    oTempData.rank = $('input[name="rank"]:checked').val() !== undefined ? parseInt($('input[name="rank"]:checked').val()) : null;
+                oTempData.cost = calculateSkillCost(oTempData, oTempData.rank);
+                handleChoice(oTempData,sAction,'skill');
+}
+
 //These functions deal with adding, altering or removing skills from the character
 //obj: The skill that is being parsed
-function skillAdd(obj) {
+function addSkill(obj) {
     if (typeof obj === 'object') {
         characterAddTo(oCharacter.skills,'skill',obj)
     } else {
@@ -20,13 +26,27 @@ function skillAdd(obj) {
     }
 }
 
+function pickSkillProfession () {
+
+}
+function pickSkillCombat () {
+    
+}
+function pickSkillMagic () {
+    
+}
+
 //This function will remove a skill from the character
 //obj: The skill that is being parsed
-function skillRemove(element,main_id,sub_id) {
+function removeSkill(element,main_id,sub_id) {
     characterRemoveFrom(oCharacter.skills,element,'skill',main_id,sub_id)
 }
 
 export {  
-    skillAdd,
-    skillRemove,    
+    addSkill,
+    chooseSkill,
+    pickSkillProfession,
+    pickSkillCombat,
+    pickSkillMagic,
+    removeSkill, 
 }

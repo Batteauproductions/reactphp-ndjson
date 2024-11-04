@@ -124,16 +124,8 @@ class Account extends Controller
                 'rules' => [
                     'required',
                     'max_length[50]',
-                    function($str, array $data) {
-                        if ($str !== 'Chronicle') {
-                            return false;
-                        }
-                        return true;
-                    }
+                    'registerCodeCheck'
                 ],
-                'errors' => [
-                    'custom_rule' => 'De registratie is onjuist, neem contact met de organisatie.'
-                ]
             ],
             'firstname'         => 'required|max_length[50]',
             'lastname'          => 'required|max_length[50]',

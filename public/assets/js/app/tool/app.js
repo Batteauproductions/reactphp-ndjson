@@ -1,335 +1,50 @@
-import { 
-    domain
-    ,icons
-    ,oCharacter
-    ,language
-    ,oTranslations
-} from './settings.js';
+import {
+    pickName
+} from './name.js'
 
 import {
-    raceAdd,
-    raceRemove,
-} from './race.js'
-
-import {
-    professionAdd,
-    professionRemove,
+    pickProfession
 } from './professions.js'
 
-import { 
-    skillAdd, 
-    skillRemove,
-} from './skills.js';
+import {
+    pickSkillProfession,
+    pickSkillCombat,
+    pickSkillMagic,
+} from './skills.js'
 
 import {
-    itemAdd,
-    itemRemove,
-} from './items.js'
-
-import { 
-    _construct, 
-    calculateSkillCost, 
-    calculateProfessionCost, 
-    handleChoice,
-    modalClear,
-    modalSet, 
-    updateCharacter,
-} from './functions.js';
+    pickBasekit,
+    pickItem,
+} from './equipment.js'
 
 $(document).ready(function() {
+    /*
+    This function will construct the sheet of the character based on information parsed.
+    The controller sets the content of the page and once iniatiated a the value of a hidden input field
+    determenes if the character is new or existing:
+    -- if new, the standard calls will be made
+    -- if existing, data should be shown on the sheet
+    */
+    const json_obj = JSON.parse($('input[name="character"]').val());
+    if (json_obj !== null && json_obj !== undefined && json_obj !== '') { 
+        debugLog('Character information received, treating as excisting', json_obj);   
+        oCharacter = json_obj;            
+        oCharacter.meta.status = 2;
+    } else {
+        debugLog('No character information received, treating as new');
+        oCharacter.meta.status = 1;        
+        $('body').find('[data-open="adventure-modal"]').addClass('disabled');
+    }
+    initiateEditor();
+    $('#stat-currency').html(currencyConvert(oCharacter.build.currency));
 
-    let oTempData;
-    const $modalLoading = $('div[data-id="modal-loading"]');
+    //binding clicks on static DOM elements
+    $('a[data-action="pick-name"]').on('click', pickName);
+    $('a[data-action="pick-profession"]').on('click', pickProfession);
+    $('a[data-action="pick-skill-profession"]').on('click', pickSkillProfession);
+    $('a[data-action="pick-skill-combat"]').on('click', pickSkillCombat);
+    $('a[data-action="pick-skill-magic"]').on('click', pickSkillMagic);
+    $('a[data-action="pick-basekit"]').on('click', pickBasekit);
+    $('a[data-action="pick-item"]').on('click', pickItem);
 
-    _construct($('input[name="character"]').val());
-
-    //add extra functionality to the model
-    $('a[data-open="text-modal"]').on('click', function() {
-        let sAction = $(this).data("type");  
-        let contentElements = [];
-        const $Form = $('#text-form');
-
-        //--set default status to loading
-        $modalLoading.show();        
-        $Form.empty().hide();  
-
-        //--set default status to loading
-        switch(sAction) {
-            case 'name':
-                contentElements.push($('<label>', { 
-                    for: 'character-name', 
-                    text: oTranslations[language].character_name 
-                }));
-                contentElements.push($('<input>', { 
-                    id: 'character-name', 
-                    name: 'character-name', 
-                    type: 'text',
-                    value: oCharacter.meta.name ? oCharacter.meta.name : ''
-                }));
-                contentElements.push($('<a>', { 
-                    class: 'button solid','data-action': `${sAction}-choose`,
-                    html: `${icons.choose.icon} ${icons.choose.text}`
-                }));
-                $modalLoading.hide();
-                $Form.append(contentElements).show();
-                break;
-            default:
-                console.warn(`a[data-open="text-modal"], unknown sAction called with value: ${sAction}`);
-                break;
-        }
-        
-    });
-
-    $('a[data-open="background-modal"]').on('click', function() {
-        const $Form = $('#background-form');
-        //--set default status to loading
-        $modalLoading.hide();
-        $Form.show();
-    });
-
-    $('a[data-open="adventure-modal"]').on('click', function() {
-        const adventure_id = $(this).data('id');
-        const $Form = $('#adventure-form');
-        const $textareas = $('textarea[id^="question_"]');
-        
-        //--set default status to loading
-        $modalLoading.show();        
-        $Form.hide();  
-
-        //--make call to fill the dropdown
-        $.ajax({
-            url: `${domain}/action/get-adventure`,
-            data: { id: adventure_id },
-            type: 'POST',
-            dataType: 'json',
-            success: (data) => {
-                if (data) {
-                    console.warn('already adventure available');
-                    $textareas.each(function(index) {
-                        $(this).text(data[`question_${index + 1}`]);
-                    });
-                } else {
-                    console.warn('no available adventures');
-                }
-                $modalLoading.hide();
-                $Form.show();
-            },
-            error: (error) => {
-                console.log('Error:', error);
-            }
-        });
-    });
-
-    $('a[data-open="selection-modal"]').on('click',function(){  
-        const sAction = $(this).data("type");    
-        const $Form = $('#background-form');   
-        //--set default status to loading
-        $modalLoading.show();        
-        $Form.hide();    
-        //--hide the elements in the reveal model
-        modalClear(true);
-        //--make call to fill the dropdown
-        $.ajax({
-            url: `${domain}/action/get-dropdown`,
-            data: {
-                action: `fill-dropdown-${sAction}`,
-                character: oCharacter,
-            },
-            type: 'POST',
-            dataType: 'json',
-            success: function(data) {
-                const $select = $('select[name="type"]');
-                //allways add a disabled option to the dropdown so the user has to make a consious choice
-                $select.append(`<option value selected disabled>${oTranslations[language].choose_option}</option>`)
-                let optGroup = '';
-
-                for (let i = 0; i < data.length; i++) {
-                    let item = data[i];
-                    let optionGroup, option;
-
-                    if (item.hasOwnProperty('prof_name') || item.hasOwnProperty('type_name')) {
-                        let groupName = item.prof_name || item.type_name;
-
-                        if (optGroup === '' || optGroup !== groupName) {
-                            optionGroup = $('<optgroup>', {
-                                label: groupName
-                            });
-                            optGroup = groupName;
-                            $select.append(optionGroup);
-                        }
-
-                        option = $('<option>', {
-                            value: item.id,
-                            text: item.name
-                        });
-
-                        $select.find('optgroup[label="' + groupName + '"]').append(option);
-                    } else {
-                        option = $('<option>', {
-                            value: item.id,
-                            text: item.name
-                        });
-
-                        $select.append(option);
-                    }
-                }
-                //select the first option per default
-                $('select[name="type"] option:first, select[name="subtype"] option:first').prop('selected', true);
-                $select.data('name',sAction).show();
-                $('div[data-id="modal-loading"]').hide();
-                $('#modal-form').show();
-            },
-            error: function(error) {
-                console.log('Error:', error);
-            }
-        });
-
-    });
-    
-    $('body').on('change','input[name="rank"]',function(){
-        const value = $(this).val();
-        $('#rank_cost').text(calculateSkillCost(oTempData,value));
-    });
-
-    //Handles the functionality of change the main type of profession, skill or item and returns the corresponding data subset
-    $('select[name="type"]').on('change',function(){
-        modalClear();
-        //collect data
-        const iID = $(this).val();
-        const sAction = $(this).data("name");
-        //make call to collect details
-        $.ajax({
-            url: `${domain}/action/get-details`,
-            data: {
-                id: iID,
-                action: `get-details-${sAction}`
-            },
-            type: 'POST',
-            dataType: 'json',
-            success: function(data) {
-                //console.log(data);
-                oTempData = data;
-                modalSet(data,sAction);
-            },
-            error: function(error) {
-                alert('Error:', error);
-            }
-        });
-    });
-
-    //Makes sure that the image changes the moment a nu sub type is chosen
-    $('select[name="subtype"]').on('change',function(){
-        //sets the fields
-        const $image = $('#choice-image');
-        const $type = $('select[name="type"]');
-        const $subtype = $('select[name="subtype"]');
-        //--collects the values
-        const typeValue = $type.val();
-        const typeName = $type.data('name');
-        const subtypeValue = $subtype.val();
-        //--update the image based on type name
-        // currently only professions support sub-images
-        switch(typeName) {
-            case 'profession':
-                $image.attr('src',`${domain}/assets/images/profession/prof_${typeValue}_${subtypeValue}.png`).show();
-                break;
-            default:
-                $image.attr('src','').hide();
-                break;
-        }
-    });
-
-    //this on generic on click handles all the button/links clicks that do not go to another page
-    $('body').on('click', 'a[data-action]', function(){
-        const $button = $(this);
-        $('p.input-message').remove();
-        //--sAction; will be used to collect what action is being called by clicking on choice
-        const sAction = $(this).data("action");        
-        //perform an action based on what is being done
-        switch(sAction) {
-            //for choosing the basis kit an adventurer wears
-            case 'base_kit-choose':
-                let $element = $('div[data-id="base_kit-list"]');
-                oCharacter.build.base_kit = parseInt(oTempData.details.id);
-                let container = $('<div>', {
-                    html: `<h3 data-title>${oTempData.details.name}</h3><p data-description>${oTempData.details.description}</p>`
-                });
-                let icon = icons["change"];
-                $('a[data-type="base_kit"]').html(`${icon.icon} ${icon.text}`);
-                $element.empty().append(container);
-                updateCharacter();
-                $('#selection-modal').foundation('close');
-                break;
-            case 'character-submit':
-            case 'character-save':
-                if ($("#form-character").valid()) {                
-                    $button.attr('disabled', true);
-                    $button.html(`${icons.character_saving.icon} ${icons.character_saving.text}`)
-                    $.ajax({
-                        url: `${domain}/action/character-save`,
-                        data: {
-                            action: sAction,
-                            character: JSON.stringify(oCharacter)
-                        },
-                        type: 'POST',
-                        dataType: 'json',
-                        success: function(data) {
-                            $button.html(`${icons.character_save_done.icon} ${icons.character_save_done.text}`);
-                            $button.attr('disabled', false);
-                        },
-                        error: function(error) {
-                            $button.html(`${icons.character_error.icon} ${icons.character_error.text}`);
-                            $button.attr('disabled', false);
-                        }
-                    });
-                } else {
-                    console.warn('Form is not valid');
-                }
-                break;
-            //for removing items that a character has already chosen
-            case 'item-remove':
-                itemRemove($(this),$(this).data('id'),$(this).data('sub_id'));
-                break;
-            //for adding new items to a character
-            case 'item_add-choose':
-                oTempData.amount = ($('input[name="amount"]').val() !== '') ? parseInt($('input[name="amount"]').val()) : 1;
-                oTempData.cost = parseInt(oTempData.amount) * parseInt(oTempData.details.price);
-                handleChoice(oTempData,itemAdd,sAction,'item');
-                break;
-            case 'name-choose':
-                oCharacter.meta.name = $('input[name="character-name"]').val();
-                $('[name="char_name"]').val(oCharacter.meta.name)
-                $('#charactername').html(`<i class="fa-solid fa-rotate-right"></i>${oCharacter.meta.name}</span>`);   
-                $('#text-modal').foundation('close');
-                updateCharacter();
-                break;
-            case 'profession-choose':
-                oTempData.rank = 1;
-                oTempData.cost = calculateProfessionCost(oTempData, oTempData.rank);
-                handleChoice(oTempData,sAction,'profession');
-                break;
-            case 'profession-upgrade':
-                break;
-            case 'profession-remove':
-                professionRemove($(this),$(this).data('id'),$(this).data('sub_id'));
-                break;            
-            case 'race-choose':
-                raceAdd(oTempData);                
-                break;
-            case 'skill_base-choose':
-            case 'skill_combat-choose':
-            case 'skill_magic-choose':
-                oTempData.rank = $('input[name="rank"]:checked').val() !== undefined ? parseInt($('input[name="rank"]:checked').val()) : null;
-                oTempData.cost = calculateSkillCost(oTempData, oTempData.rank);
-                handleChoice(oTempData,sAction,'skill');
-                break;
-            case 'skill-remove':
-                skillRemove($(this),$(this).data('id'),$(this).data('sub_id'));
-                break;
-            default:
-                console.error(`a[data-action], unknown sAction called with value: ${sAction}`);
-                break;
-        }
-    });
-    
 });

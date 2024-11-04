@@ -1,5 +1,6 @@
 //oSettings
 const arrXP = Object.freeze($('input[name="arrXP"]').val().split(","));
+const debug = true;
 const domain = window.location.origin;
 let language = 'nl-NL';
 const oTranslations = Object.freeze({
@@ -48,52 +49,6 @@ const oTranslations = Object.freeze({
         "silver": "zilver",
         "speech": "Taal: Spreken",
         "upgrade": "verhogen"
-    },
-    "en-GB": {
-        "change": "change",
-        "character_saving": "Saving in progress",
-        "character_submit": "Saving in progress",
-        "character_error": "Error during saving",
-        "character_save_done": "Character saved",
-        "character_name": "Character Name",
-        "choose": "choose",
-        "choose_option": "Make a choice",
-        "copper": "copper",
-        "disclaimer": "disclaimer",
-        "downgrade": "downgrade",
-        "duplicate_choose": "your character already has this",
-        "edit": "edit",
-        "experience": "experience point(s)",
-        "gatherable": "gatherable",
-        "gold": "gold",
-        "increase_base_currency": "Increases starting amount",
-        "increase_base_dex": "Increases dexterity",
-        "increase_base_favor": "Increases patron favour",
-        "increase_base_godpoints": "Increases god points",
-        "increase_base_health": "Increases health points",
-        "increase_base_intel": "Increases intelligence",
-        "increase_base_mana": "Increases mana pool",
-        "increase_base_mana_minor": "Increases mana pool (minor)",
-        "increase_base_points": "Increases skill points",
-        "increase_base_sanity": "Increases sanity",
-        "increase_base_str": "Increases the strength",
-        "loresheet": "You receive a loresheet for this.",
-        "more_info": "more information",
-        "not_enough_coin": "You do not have enough money to purchase this.",
-        "not_enough_vp": "You do not have enough skill points.",
-        "question_1": "What did you undertake this event?",
-        "question_2": "What did this do to your character?",
-        "question_3": "Did you build relationships/contacts with NPCs?",
-        "question_4": "What did you learn (info) and what theories do you derive from it?",
-        "question_5": "What are your plans for the next event?",
-        "question_6": "Any additional notes? (optional)",
-        "rank": "rank",
-        "racial": "racial",
-        "remove": "remove",
-        "required": "required",
-        "silver": "silver",
-        "speech": "Language: Speak",
-        "upgrade": "upgrade"
     }
 });
 const icons = Object.freeze({

@@ -1,6 +1,7 @@
 // Importing the variables
 import { 
         choice_skills
+        ,debug
         ,domain
         ,icons
         ,iconset
@@ -12,7 +13,10 @@ import {
 } from './settings.js';
 
 import { 
-    professionAdd
+    addProfession,
+    chooseProfession,
+    upgradeProfession,
+    removeProfession,
 } from './professions.js';
 
 import { 
@@ -21,104 +25,12 @@ import {
 
 import { 
     itemAdd
-} from './items.js';
+} from './equipment.js';
 
-/*
-This function will construct the sheet of the character based on information parsed.
-When the document is ready, this function will be called, it will call this function.
-The controller sets the content of the page and once iniatiated a the value of a hidden input field
-determenes if the character is new or existing:
--- if new, the standard calls will be made
--- if existing, data should be shown on the sheet
-*/
-function _construct(obj=null) {
-    if (obj !== null && obj !== undefined && obj !== '') { 
-        const json_obj = JSON.parse(obj);
-        console.log('Character information received, treating as excisting', json_obj);   
-        oCharacter = json_obj;            
-        oCharacter.meta.status = 2;
-    } else {
-        console.log('No character information received, treating as new');
-        oCharacter.meta.status = 1;        
-        $('body').find('[data-open="adventure-modal"]').addClass('disabled');
+function debugLog(message, ...optionalParams) {
+    if (debug) {
+        console.log(message, ...optionalParams);
     }
-    initiateEditor();
-    $('#stat-currency').html(currencyConvert(oCharacter.build.currency));
-}
-
-/*Add elements to the character
-//-attribute: 
----oCharacter.profession
----oCharacter.skills
----oCharacter.items
-//-type:
----profession
----skill
----item
-//-subject: the object that is being parsed
-*/
-function characterAddTo(attribute,type,subject) {
-    if (typeof subject === 'object') {        
-        //firstly: add the subject to the attribute called
-        attribute.push(subject);
-        //secondly: spend the experience / currency needed for this subject
-        if (type === "profession" || type === "skill") {
-            experienceSpend(subject.cost);
-        } else if (type === "item") {
-            currencySpend(subject.cost);
-        }         
-        //thirdly: check if the subject has a modifier, if so update the character stats
-        if (subject.modifier.length > 0) {
-            updateCharacterStats();
-        }   
-        //finaly: update the visual part of the character sheet
-        updateCharacter();       
-    } else {
-        console.error("characterAddTo: argument 'subject' is not an object: " + $.type(subject));
-    }
-}
-
-/*--characterRemoveFrom
-//-attribute: 
----oCharacter.profession
----oCharacter.skills
----oCharacter.items
-//-element: The element that is calling the action, is basically $(this)
-//-main_id: The main_id of the skill/profession/item
-//-sub_id: The sub_id of the skill/profession/item
-*/
-function characterRemoveFrom(attribute,element,type,main_id,sub_id=null) {
-    let itemFound = false;
-    let subject = {};
-    //runs through the entire list of items in the attribute and stops when found
-    for (let i = 0; i < attribute.length; i ++) {
-        if(attribute[i].main_id == main_id && attribute[i].sub_id == sub_id) {            
-            subject = attribute[i];
-            attribute.splice(i,1);
-            itemFound = true;
-            break;
-        } else {  
-            console.error('characterRemoveFrom: Item not found');        
-        }
-    }
-    if (!itemFound) {
-        console.error('Item not found');
-    } else {  
-        if (subject.modifier && subject.modifier.length > 0) {
-            updateCharacterStats();
-        }
-        if (type === "profession" || type === "skill") {
-            experienceRefund(subject.cost);
-        } else if (type === "item") {
-            currencyRefund(subject.cost);
-        }
-        //check if the subject has a modifier
-        if (subject.modifier.length > 0) {
-            updateCharacterStats();
-        }
-        //remove the element from the DOM
-        element.parent().parent().remove();
-    } 
 }
 
 //This function serves as a "helper", to calculate the proper costs
@@ -332,12 +244,11 @@ function experienceRefund(cost) {
 //The parameters it will use are as followed
 //--oTempData, The choice made by the user
 //--addFunction, The function it should perform once an item can be added
-//--action: The action being called, it corresponds with a[data-action] from the app.js
 //--type: A simple rundown of the type of action being called. It should be profession, skill or item
-function handleChoice(oTempData,action,type) {
+function handleChoice(oTempData,type) {
 
     const showErrorMessage = (msg) => showMessage($('#choice-actions'), 'error', `${oTranslations[language][msg]}`);
-    const $Container = action.replace('-choose','-list');
+    const $Container = `${type}-list`;
 
     console.log(oTempData)
     //create a temporary object stripping it of all information we don't need
@@ -363,7 +274,7 @@ function handleChoice(oTempData,action,type) {
     switch(type) {
         case "profession":
             attribute = oCharacter.profession;
-            addFunction = professionAdd;
+            addFunction = addProfession;
             bDeducted = checkXPCost(oChoice.cost);
             if (!bDeducted) {
                 showErrorMessage('not_enough_vp');
@@ -487,7 +398,6 @@ const $choice_description = $('#choice-description');
 const $choice_details = $('#choice-details');
 const $choice_actions = $('#choice-actions');
 
-
 /*modalClear
 --complete, weither the modal should be completely cleared
 */
@@ -598,6 +508,7 @@ function modalSet(data, action) {
     }
 
     //split based on action, shows in the contentDetailsElements container
+    let click_function = {};
     switch (action) {
         case 'skill_base':
         case 'skill_combat':
@@ -605,6 +516,7 @@ function modalSet(data, action) {
             contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} <span id="rank_cost">${data.details.xp_cost}</span> ${icons.experience.text}`}));
             break;
         case 'profession':
+            click_function = chooseProfession;
             contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} ${data.details.rank_1_cost} ${icons.experience.text}`}));
             break;
         case 'item_add':
@@ -653,10 +565,16 @@ function modalSet(data, action) {
         
     /*--contentActionsElements-- */
     const contentActionsElements = [];
-    contentActionsElements.push($('<a>', { 
-        class: 'button solid','data-action': `${action}-choose`
-        ,html: `${icons.choose.icon} ${icons.choose.text}`})
-    )
+    // Create the button element
+    let $button = $('<a>', {
+        class: 'button solid',
+        html: `${icons.choose.icon} ${icons.choose.text}`
+    });
+    // Bind the click event to the button
+    $button.on('click', click_function);
+    // Add the button to the contentActionsElements array
+    contentActionsElements.push($button);
+
     if (data.details.rule_page) {
         contentActionsElements.push($('<a>', { 
             class: 'button clear'
@@ -762,9 +680,7 @@ function updateCharacterStats() {
 }
 
 export {  
-    _construct, 
-    characterAddTo,
-    characterRemoveFrom,
+    debugLog,
     checkDupplicateItem,
     calculateProfessionCost,
     calculateSkillCost,
