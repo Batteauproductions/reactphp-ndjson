@@ -1,14 +1,8 @@
-// Importing the variables
-import { 
-    oCharacter    
-} from './settings.js';
-
-// Importing the functions needed for the file
-import { 
-    _construct, 
-    characterAddTo,
-    characterRemoveFrom,
-} from './functions.js';
+//Generic settings and functions
+import { oCharacter } from './settings.js'
+import { debugLog } from './functions.js'
+//Functions needed for actual app performance
+import { addToCharacter, removeFromCharacter } from './character.js';
 
 function pickBasekit () {
 
@@ -34,7 +28,7 @@ function addItem(obj) {
                 oTempData.cost = parseInt(oTempData.amount) * parseInt(oTempData.details.price);
                 handleChoice(oTempData,itemAdd,sAction,'item');   
     if (typeof obj === 'object') {
-        characterAddTo(oCharacter.items,'item',obj)
+        addToCharacter(oCharacter.items,'item',obj)
     } else {
         console.error("itemAdd is not an object: " +$.type(obj));
     }
@@ -47,7 +41,7 @@ function pickItem () {
 //This function will remove a items to the character
 //obj: The item that is being parsed
 function removeItem(element,main_id,sub_id) {
-    characterRemoveFrom(oCharacter.items,element,'item',main_id,sub_id)
+    removeFromCharacter(oCharacter.items,element,'item',main_id,sub_id)
 }
 
 export {

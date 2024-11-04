@@ -57,7 +57,7 @@
                                 Raskeuze
                             </div>
                             <div class="cell small-6">
-                                <a data-open="selection-modal" data-type="race">
+                                <a data-action="pick-race">
                                     <span id="race"><i class="fa-solid fa-plus"></i>toevoegen</span>
                                 </a>
                                 <!--! hidden field for validation -->

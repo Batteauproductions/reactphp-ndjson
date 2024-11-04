@@ -238,6 +238,7 @@ let oCharacter = {
 
 export {
     arrXP,
+    debug,
     choice_skills,
     domain,
     icons,

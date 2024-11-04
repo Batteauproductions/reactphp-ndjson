@@ -1,18 +1,9 @@
-// Importing the variables
-import { 
-    oCharacter    
-} from './settings.js';
-
-// Importing the functions needed for the file
-import { 
-    debugLog,
-    characterAddTo,
-    handleChoice,
-} from './functions.js';
-
-import {
-    openProfessionModal
-} from './modal.js'
+//Generic settings and functions
+import { oCharacter } from './settings.js'
+import { debugLog } from './functions.js'
+import { openProfessionModal } from './modal.js'
+//Functions needed for actual app performance
+import { addToCharacter, removeFromCharacter } from './character.js';
 
 //These functions deal with adding, altering or removing professions from the character
 //obj: The profession that is being parsed

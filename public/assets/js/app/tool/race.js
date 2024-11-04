@@ -6,8 +6,6 @@ import {
 
 // Importing the functions needed for the file
 import { 
-    _construct, 
-    characterRemoveFrom,
     elementAdd,
     updateCharacterStats,
     updateCharacter,
@@ -15,12 +13,16 @@ import {
 
 // Importing the functions needed for the file
 import {
-    skillAdd
+    addSkill
 } from './skills.js';
+
+function pickRace() {
+
+}
 
 //These functions deal with adding, altering or removing professions from the character
 //obj: The profession that is being parsed
-function raceAdd(obj) {
+function addRace(obj) {
     if (typeof obj === 'object') {
         //before you add, remove the existing race and everything associated with it
         raceRemove(obj);
@@ -36,7 +38,7 @@ function raceAdd(obj) {
         }
         //add racial skills
         if (choice_skills.length > 0) {
-            skillAdd(choice_skills[i]);
+            addSkill(choice_skills[i]);
             elementAdd("skill_base-list", choice_skills[i], "skill");
             choice_skills.length = 0;
         }          
@@ -54,7 +56,7 @@ function raceAdd(obj) {
 
 //This function will remove a race from the character
 //obj: The race that is being parsed
-function raceRemove(obj) {
+function removeRace(obj) {
     oCharacter.race = {}
     // Check if the skill attribute exists in race and equals true, then remove it
     oCharacter.skills.forEach(skill => {
@@ -70,6 +72,7 @@ function raceRemove(obj) {
 }
 
 export {
-    raceAdd,
-    raceRemove,
+    addRace,
+    pickRace,
+    removeRace,
 }
