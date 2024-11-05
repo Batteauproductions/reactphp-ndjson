@@ -1,53 +1,15 @@
 // Importing the variables
-import { 
-    choice_skills
-    ,debug
-    ,domain
-    ,icons
-    ,iconset
-    ,jsonBaseChar
-    ,jsonStat
-    ,language
-    ,oTranslations      
-    ,oCharacter
-} from './settings.js';
+import { debug, icons ,iconset,jsonBaseChar,jsonStat,language,oTranslations,oCharacter } from './settings.js';
+//Functions needed for actual app performance
+import { addProfession } from './professions.js';
+import { addSkill } from './skills.js';
+import { addItem } from './equipment.js';
 
-import { 
-    addProfession,
-    chooseProfession,
-} from './professions.js';
-
-import { 
-    addSkill
-} from './skills.js';
-
-import { 
-    addItem
-} from './equipment.js';
-
+// This function wil throw messages to the console when on debug mode
 function debugLog(message, ...optionalParams) {
     if (debug) {
         console.log(message, ...optionalParams);
     }
-}
-
-//This function serves as a "helper", to calculate the proper costs
-//obj: the rank of the profession or skill
-//--professions are based on the xp cost growth, this is not the same across ranks
-function calculateProfessionCost(obj,rank) {
-    let iTotalCost = 0;
-    for (let i = 1; i <= rank; i++) {
-        const cost = parseInt(obj.details[`rank_${i}_cost`]);
-        iTotalCost += cost;
-    }    
-    return iTotalCost;
-}
-//--skills are allways calculated by rank increase and initial cost
-function calculateSkillCost(obj,rank) {
-    if(rank !== null) {
-        return parseInt(obj.details.xp_cost) * parseInt(rank);
-    }
-    return parseInt(obj.details.xp_cost);
 }
 
 //This function will check if the character has enough xp available to buy the profession or skill
@@ -240,15 +202,13 @@ function experienceRefund(cost) {
 
 //This function will handle the choice of of Profession, Skill and Items
 //The parameters it will use are as followed
-//--oTempData, The choice made by the user
-//--addFunction, The function it should perform once an item can be added
-//--type: A simple rundown of the type of action being called. It should be profession, skill or item
-function handleChoice(oTempData,type) {
+//--sAction: A simple rundown of the type of action being called. It should be profession, skill or item
+//--oData, The choice made by the user
+function handleChoice(sAction,oData) {
 
     const showErrorMessage = (msg) => showMessage($('#choice-actions'), 'error', `${oTranslations[language][msg]}`);
     const $Container = `${type}-list`;
 
-    console.log(oTempData)
     //create a temporary object stripping it of all information we don't need
     const oChoice = {
         main_id: parseInt(oTempData.details.id),
@@ -387,22 +347,13 @@ function initiateEditor() {
 	});	
 }
 
-//
-function showMessage (element,type, message) {    
-    console.log(`showMessage(${element},${type},${message})`)
-    switch(type) {
-        case 'done':
-            console.log(message);
-            break;
-        case 'error':
-            $(element).prepend($('<p>',{ class: "input-message input-error", text: message}));
-            break;
-    }
+// A simple function to insert a paragraph into the dom with a class and message
+function showMessage(element,type,message) {    
+    $(element).prepend($('<p>',{ class: `input-message input-${type}`, text: message}));
 }
 
 // A simple function to stringify the character object
 function updateCharacter() {
-    console.log(oCharacter);
     $('input[name="character"]').val(JSON.stringify(oCharacter));
 }
 
@@ -482,8 +433,6 @@ function updateCharacterStats() {
 export {  
     debugLog,
     checkDupplicateItem,
-    calculateProfessionCost,
-    calculateSkillCost,
     checkXPCost,
     checkCurrencyCost,
     currencyConvert,
