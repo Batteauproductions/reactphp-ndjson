@@ -1,7 +1,7 @@
 //Generic settings and functions
-import { oCharacter } from './settings.js'
-import { debugLog } from './functions.js'
-import { openModal } from './modal.js'
+import { domain, oCharacter, language, oTranslations } from './settings.js'
+import { debugLog, checkXPCost, showMessage } from './functions.js'
+import { openModal, updateModalDropdown } from './modal.js'
 //Functions needed for actual app performance
 import { addToCharacter, removeFromCharacter } from './character.js';
 
@@ -23,13 +23,15 @@ function addSkill(obj) {
 }
 
 function pickSkill(sAction) {
-    //define modal and form
-    const $modal = $('#selection-modal')
-    const $form = $('#background-form');
-    openModal($modal,$form);
-    //--set default status to loading
-    $modalLoading.show();        
-    //--make call to fill the dropdown
+    debugLog('pickSkill');
+    // Define modal and form
+    const $modal = $('#selection-modal');
+    const $form = $('#modal-form');
+
+    // Open the modal
+    openModal(sAction,$modal);
+
+    // Make AJAX call to fill the dropdown
     $.ajax({
         url: `${domain}/action/get-dropdown`,
         data: {
@@ -39,63 +41,31 @@ function pickSkill(sAction) {
         type: 'POST',
         dataType: 'json',
         success: function(data) {
-            const $select = $('select[name="type"]');
-            //allways add a disabled option to the dropdown so the user has to make a consious choice
-            $select.append(`<option value selected disabled>${oTranslations[language].choose_option}</option>`)
-            let optGroup = '';
-
-            for (let i = 0; i < data.length; i++) {
-                let item = data[i];
-                let optionGroup, option;
-
-                if (item.hasOwnProperty('prof_name') || item.hasOwnProperty('type_name')) {
-                    let groupName = item.prof_name || item.type_name;
-
-                    if (optGroup === '' || optGroup !== groupName) {
-                        optionGroup = $('<optgroup>', {
-                            label: groupName
-                        });
-                        optGroup = groupName;
-                        $select.append(optionGroup);
-                    }
-
-                    option = $('<option>', {
-                        value: item.id,
-                        text: item.name
-                    });
-
-                    $select.find('optgroup[label="' + groupName + '"]').append(option);
-                } else {
-                    option = $('<option>', {
-                        value: item.id,
-                        text: item.name
-                    });
-                    $select.append(option);
-                }
-            }
-            //select the first option per default
-            $('select[name="type"] option:first, select[name="subtype"] option:first').prop('selected', true);
-            $select.data('name',sAction).show();
+            debugLog('pickSkill[data]', data);
+            const $select = $('select[name="type"]');            
+            // Hide loading and show form and select
             $('div[data-id="modal-loading"]').hide();
-            $('#modal-form').show();
+            updateModalDropdown($select, data);
+            $form.show();
+            $select.show();
         },
         error: function(error) {
-            console.log('Error:', error);
+            console.error('Error:', error);
         }
     });
 }
 
 function pickSkillProfession () {
     debugLog('pickSkillProfession');
-    pickSkill('profession');
+    pickSkill('skill_base');
 }
 function pickSkillCombat () {
     debugLog('pickSkillCombat');
-    pickSkill('combat');
+    pickSkill('skill_combat');
 }
 function pickSkillMagic () {
     debugLog('pickSkillMagic');
-    pickSkill('magic');
+    pickSkill('skill_magic');
 }
 
 

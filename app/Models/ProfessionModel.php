@@ -28,7 +28,7 @@ class ProfessionModel extends Model
         return $query->get()->getResultObject();
     }
 
-    public function getProfessionDetails($id) 
+    public function getProfessionDetails($id,$sub_id) 
     {
         $arrData['details'] = $this->getProfessionById($id);
         $arrData['subtype'] = $this->getProfessionSubtype($id);

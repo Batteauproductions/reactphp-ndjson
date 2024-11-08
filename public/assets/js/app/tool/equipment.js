@@ -5,10 +5,11 @@ import { debugLog } from './functions.js'
 import { addToCharacter, removeFromCharacter } from './character.js';
 
 function pickBasekit () {
-
+    debugLog('pickBasekit');
 }
 
-function chooseBasekit() {
+function chooseBasekit(obj) {
+    debugLog('chooseBasekit', obj);
     let $element = $('div[data-id="base_kit-list"]');
     oCharacter.build.base_kit = parseInt(oTempData.details.id);
     let container = $('<div>', {
@@ -24,6 +25,7 @@ function chooseBasekit() {
 //These functions deal with adding, altering or removing items from the character
 //obj: The item that is being parsed
 function addItem(obj) { 
+    debugLog('addItem', obj);
     oTempData.amount = ($('input[name="amount"]').val() !== '') ? parseInt($('input[name="amount"]').val()) : 1;
                 oTempData.cost = parseInt(oTempData.amount) * parseInt(oTempData.details.price);
                 handleChoice(oTempData,itemAdd,sAction,'item');   
@@ -35,18 +37,23 @@ function addItem(obj) {
 }
 
 function pickItem () {
-
+    debugLog('pickItem', obj);
 }
 
+function chooseItem () {
+
+}
 //This function will remove a items to the character
 //obj: The item that is being parsed
-function removeItem(element,main_id,sub_id) {
+function removeItem(obj) {
+    debugLog('removeItem', obj);
     removeFromCharacter(oCharacter.items,element,'item',main_id,sub_id)
 }
 
 export {
     pickBasekit,
     chooseBasekit,
+    chooseItem,
     addItem,
     pickItem,
     removeItem,

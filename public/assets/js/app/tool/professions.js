@@ -1,7 +1,7 @@
 //Generic settings and functions
 import { domain, oCharacter, language, oTranslations } from './settings.js'
-import { debugLog, checkXPCost, showMessage } from './functions.js'
-import { openModal } from './modal.js'
+import { debugLog, checkXPCost, checkDupplicateItem, showMessage } from './functions.js'
+import { openModal, updateModalDropdown } from './modal.js'
 //Functions needed for actual app performance
 import { addToCharacter, removeFromCharacter } from './character.js';
 
@@ -17,19 +17,34 @@ function addProfession(obj) {
     }
 }
 
-//Called when a user attemps to choose a profession
+// Called when a user attempts to choose a profession
 function chooseProfession(obj) {
-    debugLog('professionChoose',obj);
-    if (typeof obj === 'object') {
-        if(checkXPCost(obj.rank_1_cost)){ 
-            obj.rank = 1;           
-            addProfession(obj);
-        } else {
-            showMessage('#choice-actions','error',oTranslations[language].not_enough_vp);
-        }
-    } else {
-        console.error("professionAdd is not an object: " +$.type(obj));
+    debugLog('professionChoose', obj);
+
+    // Validate if obj is an object
+    if (typeof obj !== 'object' || obj === null) {
+        console.error("professionAdd is not an object: " + $.type(obj));
+        return;
     }
+
+    // Destructure the necessary properties from obj
+    const { details: { id, sub_id, rank_1_cost } } = obj;
+
+    // Check XP cost
+    if (!checkXPCost(rank_1_cost)) {
+        showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
+        return;
+    }
+
+    // Check for duplicate item
+    if (checkDupplicateItem(oCharacter.profession, id, sub_id)) {
+        showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
+        return;
+    }
+
+    // Add profession if no errors
+    obj.rank = 1;
+    addProfession(oCharacter.profession);
 }
 
 function pickProfession() {
@@ -41,7 +56,7 @@ function pickProfession() {
     const sAction = 'profession';
 
     // Open the modal
-    openModal($modal, $form, sAction);
+    openModal(sAction,$modal);
 
     // Make AJAX call to fill the dropdown
     $.ajax({
@@ -54,40 +69,10 @@ function pickProfession() {
         dataType: 'json',
         success: function(data) {
             debugLog('pickProfession[data]', data);
-
-            const $select = $('select[name="type"]');
-
-            // Create a fragment for option elements to minimize reflows
-            const optionsFragment = document.createDocumentFragment();
-
-            // Add a disabled option to ensure a conscious choice by the user
-            const initialOption = $('<option>', {
-                value: '',
-                text: oTranslations[language].choose_option,
-                selected: true,
-                disabled: true
-            }).get(0);
-
-            optionsFragment.appendChild(initialOption);
-
-            // Populate the dropdown with options
-            data.forEach(item => {
-                const option = $('<option>', {
-                    value: item.id,
-                    text: item.name
-                }).get(0);
-
-                optionsFragment.appendChild(option);
-            });
-
-            // Append options to the select element
-            $select.empty().append(optionsFragment);
-
-            // Select the first option by default
-            $select.find('option:first').prop('selected', true);
-
+            const $select = $('select[name="type"]');            
             // Hide loading and show form and select
             $('div[data-id="modal-loading"]').hide();
+            updateModalDropdown($select, data);
             $form.show();
             $select.show();
         },

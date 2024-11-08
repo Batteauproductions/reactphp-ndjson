@@ -109,6 +109,7 @@ class Character extends Controller
         //collect user
         $arrData = array(
             'id' => $this->request->getPost('id'),
+            'sub_id' => $this->request->getPost('sub_id'),
             'action' => $this->request->getPost('action'),
         );
 
@@ -118,7 +119,7 @@ class Character extends Controller
                     echo json_encode($this->raceModel->getRaceDetails($arrData['id']));
                     break;
                 case 'get-details-profession':
-                    echo json_encode($this->professionModel->getProfessionDetails($arrData['id']));
+                    echo json_encode($this->professionModel->getProfessionDetails($arrData['id'],$arrData['sub_id']));
                     break;
                 case 'get-details-skill_base':
                 case 'get-details-skill_combat':

@@ -4,205 +4,103 @@ import { debugLog } from './functions.js'
 //Functions needed for actual app performance
 import { chooseProfession } from './professions.js';
 import { chooseSkill } from './skills.js';
-import { chooseBasekit } from './equipment.js';
+import { chooseItem, chooseBasekit } from './equipment.js';
 
-//DOM Elements
-const $modalLoading = $('div[data-id="modal-loading"]');
+// Static DOM Elements
 const $typeSelect = $('select[name="type"]');
-const $typeAmount = $('[name="amount"]');
 const $subtypeSelect = $('select[name="subtype"]');
+const $modalLoading = $('div[data-id="modal-loading"]');
+const $typeAmount = $('[name="amount"]');
 const $choice_image_container = $('#choice-image-container');
 const $choice_image = $('#choice-image');
 const $choice_description = $('#choice-description');
 const $choice_details = $('#choice-details');
 const $choice_actions = $('#choice-actions');
 
+let oTmpData = {};
+
 /*clearModal
---complete, weither the modal should be completely cleared
+--bClear, weither the modal should be completely cleared
 */
-function clearModal($form, bClear) {
-    // Clear previous content
+function clearModal(bClear) {
+    oTmpData = {};
     if(bClear) {
         $typeSelect.empty().hide();
         $typeAmount.val('1').hide();
-    } 
-    $choice_image.attr('src','').hide();
+    }    
+    updateModalImage(); 
     $subtypeSelect.empty().hide();
     $choice_description.empty().hide();
     $choice_details.empty().hide();
-    $choice_actions.empty().hide();     
+    $choice_actions.empty().hide();
 }
 
 //basic function to open the modal
 //requires a modal DOM element to target
-//requires a form to be cleared
-function openModal($modal,$form,sAction){
-    $modalLoading.show();
-    clearModal($form);
+//requires a action to be linked
+function openModal(sAction,$modal) {
+    debugLog('openModal:',sAction,$modal);
+    //default open state for the modal
+    clearModal();
+    $modalLoading.show();      
     $modal.foundation('open');
-    //Bind functions to the elements within the modal
-    //-- changing of the rank input field
-    $modal.off('change').on('change','input[name="rank"]',function(){
-        const value = $(this).val();
-        $('#rank_cost').text(calculateSkillCost(oTempData,value));
-    });
-    //-- changing of the 'type' select option values
-    $modal.find('select[name="type"]').off('change').on('change',function(){
-        clearModal($form,false);
-        //collect data
-        const iID = $(this).val();
+    //Bind functions to the elements within the modal    
+    //-- changing of the 'type/subtype' select option values
+    $modal.find('select[name="type"]').off('change').on('change',function() {
+        clearModal();        
         //make call to collect details
         $.ajax({
             url: `${domain}/action/get-details`,
             data: {
-                id: iID,
+                id: $typeSelect.val(),
                 action: `get-details-${sAction}`
             },
             type: 'POST',
             dataType: 'json',
-            success: function(data) {
-                debugLog('select[name="type"][data]',data);
-                buildModal(sAction,data);
+            success: function(oData) {
+                debugLog('select[name="type"][data]',oData);
+                oTmpData = oData;
+                if (oTmpData.subtype && oTmpData.subtype.length > 0) {
+                    updateModalDropdown($subtypeSelect, oTmpData.subtype);
+                    $subtypeSelect.show();
+                } else {
+                    $subtypeSelect.hide();
+                }
+                updateModal(sAction,oTmpData);
             },
             error: function(error) {
-                alert('Error:', error);
+                console.error(error);
             }
         });
     });
-    //-- changing of the 'subtype' select option values
-    $modal.find('select[name="subtype"]').off('change').on('change',function(){
-        //--collects the values
-        const typeValue = $typeSelect.val();
-        const typeName = $typeSelect.data('name');
-        const subtypeValue = $subtypeSelect.val();
-        //--update the image based on type name
-        // currently only professions support sub-images
-        switch(typeName) {
-            case 'profession':
-                $choice_image.attr('src',`${domain}/assets/images/profession/prof_${typeValue}_${subtypeValue}.png`);
-                $choice_image_container.show();
-                break;
-            default:
-                $choice_image.attr('src','');
-                $choice_image_container.hide();
-                break;
-        }
+    $modal.find('select[name="subtype"]').off('change').on('change',function() {
+        oTmpData.details.sub_id = $subtypeSelect.val(); 
+        oTmpData.details.sub_name = $subtypeSelect.text();
+        updateModalImage(oTmpData.details);
+    });
+    //-- changing of the rank input field
+    $modal.off('change').on('change','input[name="rank"]',function() {
+        const value = $(this).val();
+        $('#rank_cost').text(calculateSkillCost(oTempData,value));
     });
 }
 
-//This function builds the content of the modal based on the action and data received
-function buildModal(sAction,oData) {
-    debugLog('buildModal',sAction, oData);
-
-    // Check if the data has a subtype, otherwise add new options
-    if (oData.subtype && oData.subtype.length > 0) {
-        const options = oData.subtype.map(subtype => $('<option>', {
-            value: subtype.id,
-            text: subtype.name
-        }));
-        $subtypeSelect.append(options).show();
-    }
-
+//This function updates the modal image
+//Checks the id and sub_id, uses different path which is available
+function updateModal (sAction,oData) {
+    debugLog('updateModal: ',sAction,oData);
+    //update parts of the Modal
+    updateModalImage(oData.details);
+    updateModelContent(oData.details);
+    updateModelDetails(sAction,oData.details,oData.modifier);
+    updateModelButtons(sAction,oData.details);
     //items allow amount to be chosen
     if(sAction == 'item') {
         $('[name="amount"]').show();
     } else {
         $('[name="amount"]').hide();
     }
-
-    // Create and append content elements if they exist
-    //Always check if the attribute is set, if not do not add to the model
-    /*-- update the image --*/
-    let subtypeValue = $('[name="subtype"]').val();
-    if(sAction === "profession") {
-        if (oData.details.id && subtypeValue) {
-            $choice_image.attr('src',`${domain}/assets/images/profession/prof_${oData.details.id}_${subtypeValue}.png`).show();
-            $choice_image_container.show();
-        } else if (oData.details.id) {
-            $choice_image.attr('src',`${domain}/assets/images/profession/prof_${oData.details.id}.png`).show();
-            $choice_image_container.show();
-        }    
-    }
-    /*--contentElements-- */
-    //The base description of the race, profession or skill
-    const contentElements = [];
-    if (oData.details.name) {
-        contentElements.push($('<h1>', { html: oData.details.name }));
-    }
-    if (oData.details.description) {
-        contentElements.push($('<p>', { html: oData.details.description }));
-    }
-    if (oData.details.advanced_description) {
-        contentElements.push($('<p>', { html: oData.details.advanced_description }));
-    }       
-    $choice_description.append(contentElements).show();
-
-    /* --contentDetailsElements-- */
-    //Extra information (shown in box) of the race, profession or skill
-    const contentDetailsElements = [];
-    if (oData.details.disclaimer) {  
-        const disclaimer = oData.details.disclaimer;
-        if(disclaimer.includes('|')) {
-            const arrDisclaimer = disclaimer.split('|'); 
-            for (let i = 0; i < arrDisclaimer.length; i++) {
-                contentDetailsElements.push($('<p>', { class: `${icons.disclaimer.class}`, html: `${icons.disclaimer.icon} ${arrDisclaimer[i]}` }));
-            }
-        } else {
-            contentDetailsElements.push($('<p>', { html: `${icons.disclaimer.icon} ${disclaimer}` }));
-        }  
-    } 
-    if (oData.details.requirement_name) {        
-        contentDetailsElements.push($('<p>', { html: `${icons.required.icon} ${data.details.requirement_name}` }));
-    } 
-    if (oData.details.loresheet) {        
-        contentDetailsElements.push($('<p>', { html: `${icons.loresheet.icon} ${icons.loresheet.text}` }));
-    }   
-    //if the choice has a option of modifier, give the option to choose, otherwise just show 
-    if(oData.modifier && oData.modifier.length > 1) {        
-        for(let i = 0; i < oData.modifier.length; i++) {
-            var name = oData.modifier[i].name;
-            var row = $('<div>', { class: `choice-row` });
-            var input = $('<input>', { id: `modifier-${i}`, value: oData.modifier[i].id, type: 'radio', name: 'stat-modifier' });
-            var label = $('<label>', { for: `modifier-${i}`, html: `${icons[name.toLowerCase()].icon} ${icons[name.toLowerCase()].text}` });
-            row.append(input, label);
-            contentDetailsElements.push(row);
-        }        
-    } else if (oData.modifier && oData.modifier.length == 1) {
-        var name = oData.modifier[0].name;
-        contentDetailsElements.push($('<p>', { html: `${icons[name.toLowerCase()].icon} ${icons[name.toLowerCase()].text}` }));
-    }
-    //if the choice has ranks to choice, give the option to choose the rank
-    if (oData.details.max_rank) {
-        var $row = $('<div>', { html: `${icons.rank.icon}` })
-        for (let i = 1; i <= oData.details.max_rank; i++) {
-            $row.append(
-                $('<input>', { id: `rank-${i}`, value: i, type: 'radio', name: 'rank' })
-                ,$('<label>', { for: `rank-${i}`, text: ` ${i}` })
-            );
-        }
-        contentDetailsElements.push($row)
-    }
-
-    //split based on action, shows in the contentDetailsElements container
-    let click_function = {};
-    switch (sAction) {
-        case 'skill_base':
-        case 'skill_combat':
-        case 'skill_magic':
-            contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} <span id="rank_cost">${oData.details.xp_cost}</span> ${icons.experience.text}`}));
-            break;
-        case 'profession':
-            click_function = chooseProfession;
-            contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} ${oData.details.rank_1_cost} ${icons.experience.text}`}));
-            break;
-        case 'item_add':
-            contentDetailsElements.push($('<p>', { html: currencyConvert(oData.details.price) }));
-            break;
-        default: 
-            console.warn(`Unused action of ${sAction} has been called`);
-            break;
-    }
-
+/*
     //--choice skills
     if (oData.skills && oData.skills.length > 1) {
         oData.skills.forEach(skill => {
@@ -234,35 +132,259 @@ function buildModal(sAction,oData) {
 
     }
     
-    //if there are details, show them on the page
-    if(contentDetailsElements.length > 0) {
-        $choice_details.append(contentDetailsElements).show();
-    }
-        
-    /*--contentActionsElements-- */
-    const contentActionsElements = [];
-    // Create the button element
-    let $button = $('<a>', {
-        class: 'button solid',
-        html: `${icons.choose.icon} ${icons.choose.text}`
-    });
-    // Bind the click event to the button
-    $button.on('click', function() {
-        click_function(oData);
-    });
-    // Add the button to the contentActionsElements array
-    contentActionsElements.push($button);
+    */
+    
+}
 
-    if (oData.details.rule_page) {
-        contentActionsElements.push($('<a>', { 
-            class: 'button clear'
-            ,target: '_blank'
-            ,href: `https://larp.dalaria.nl/wp-content/uploads/documents/KvD-Basisregels.pdf#page=${oData.details.rule_page}`
-            ,html: `${icons.more_info.icon} ${icons.more_info.text}`})
-        );
-    }
-    $choice_actions.append(contentActionsElements).show();;
+function updateModalDropdown($element, oData) {
+    // Clear existing options to ensure a fresh start
+    $element.empty();
 
+    // Ensure oData is an array
+    if (!Array.isArray(oData)) {
+        console.error('Invalid data: oData should be an array.');
+        return;
+    }
+
+    // Add a disabled option to ensure a conscious choice by the user
+    const initialOption = $('<option>', {
+        value: '',
+        text: oTranslations[language].choose_option,
+        selected: true,
+        disabled: true
+    });
+
+    // Append the initial option directly to the select element
+    $element.append(initialOption);
+
+    // Populate the dropdown with options and append them directly
+    oData.forEach(item => {
+        $('<option>', {
+            value: item.id,
+            text: item.name
+        }).appendTo($element);
+    });
+
+    /*
+    let optGroup = '';
+
+            for (let i = 0; i < data.length; i++) {
+                let item = data[i];
+                let optionGroup, option;
+
+                if (item.hasOwnProperty('prof_name') || item.hasOwnProperty('type_name')) {
+                    let groupName = item.prof_name || item.type_name;
+
+                    if (optGroup === '' || optGroup !== groupName) {
+                        optionGroup = $('<optgroup>', {
+                            label: groupName
+                        });
+                        optGroup = groupName;
+                        $select.append(optionGroup);
+                    }
+
+                    option = $('<option>', {
+                        value: item.id,
+                        text: item.name
+                    });
+
+                    $select.find('optgroup[label="' + groupName + '"]').append(option);
+                } else {
+                    option = $('<option>', {
+                        value: item.id,
+                        text: item.name
+                    });
+                    $select.append(option);
+                }
+            }
+    */
+}
+
+function updateModalImage(oDetails) {
+    if(oDetails) {
+        //destructures the parameter
+        const { id, sub_id } = oDetails;
+        //sets up the path and visibility of the image
+        if (id && sub_id) {
+            $choice_image.attr('src',`${domain}/assets/images/profession/prof_${id}_${sub_id}.png`);
+            $choice_image_container.show();
+        } else if (id) {
+            $choice_image.attr('src',`${domain}/assets/images/profession/prof_${id}.png`);
+            $choice_image_container.show();
+        }
+    } else {
+        $choice_image.attr('src',``);
+        $choice_image_container.hide();
+    }
+}
+
+function updateModelContent(oDetails) {
+    // Check if oDetails is valid
+    if (oDetails) {
+        // Destructure the parameter with default values
+        const {
+            id_name = '',
+            description = '',
+            advanced_description = ''
+        } = oDetails;
+
+        // Array for batch DOM adding
+        const contentElements = [];
+
+        // Create and push content elements only if they have content
+        if (id_name) {
+            contentElements.push($('<h1>', { text: id_name }));
+        }
+        if (description) {
+            contentElements.push($('<article>', { html: description }));
+        }
+        if (advanced_description) {
+            contentElements.push($('<article>', { html: advanced_description }));
+        }
+
+        // Clear existing content and append new content elements
+        $choice_description.empty().append(contentElements).show();
+    } else {
+        // Hide the description if no details are provided
+        $choice_description.hide();
+    }
+}
+
+function updateModelDetails(sAction, oDetails = {}, arrModifier = []) {
+    // Check if action and details are valid or if there's a modifier
+    if ((sAction && oDetails) || arrModifier.length > 0) {
+        // Destructure parameters with defaults
+        const {
+            disclaimer = "",
+            requirement_name = "",
+            loresheet = "",
+            max_rank = 0,
+            xp_cost = "",
+            rank_1_cost = "",
+            price = ""
+        } = oDetails;
+
+        // Array for batch DOM adding
+        const contentDetailsElements = [];
+        // Cost-related text to the element
+        switch (sAction) {
+            case 'skill_base':
+            case 'skill_combat':
+            case 'skill_magic':
+                contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} <span id="rank_cost">${xp_cost}</span> ${icons.experience.text}` }));
+                break;
+            case 'profession':
+                contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} ${rank_1_cost} ${icons.experience.text}` }));
+                break;
+            case 'item_add':
+                contentDetailsElements.push($('<p>', { html: currencyConvert(price) }));
+                break;
+            default:
+                console.warn(`Unused action of ${sAction} has been called`);
+                break;
+        }
+        // Add disclaimer paragraphs
+        if (disclaimer) {
+            const arrDisclaimer = disclaimer.split('|');
+            arrDisclaimer.forEach(text => {
+                contentDetailsElements.push($('<p>', { class: `${icons.disclaimer.class}`, html: `${icons.disclaimer.icon} ${text}` }));
+            });
+        }
+        // Add requirement name
+        if (requirement_name) {
+            contentDetailsElements.push($('<p>', { html: `${icons.required.icon} ${requirement_name}` }));
+        }
+        // Add loresheet
+        if (loresheet) {
+            contentDetailsElements.push($('<p>', { html: `${icons.loresheet.icon} ${icons.loresheet.text}` }));
+        }
+        // Handle modifiers
+        if (arrModifier.length > 0) {
+            arrModifier.forEach((mod, i) => {
+                const name = mod.name.toLowerCase();
+                const iconHtml = `${icons[name].icon} ${icons[name].text}`;
+                if (arrModifier.length > 1) {
+                    const row = $('<div>', { class: 'choice-row' });
+                    const input = $('<input>', { id: `modifier-${i}`, value: mod.id, type: 'radio', name: 'stat-modifier' });
+                    const label = $('<label>', { for: `modifier-${i}`, html: iconHtml });
+                    row.append(input, label);
+                    contentDetailsElements.push(row);
+                } else {
+                    contentDetailsElements.push($('<p>', { html: iconHtml }));
+                }
+            });
+        }
+        // Handle ranks
+        if (max_rank > 0) {
+            const $row = $('<div>', { html: `${icons.rank.icon}` });
+            for (let i = 1; i <= max_rank; i++) {
+                $row.append(
+                    $('<input>', { id: `rank-${i}`, value: i, type: 'radio', name: 'rank' }),
+                    $('<label>', { for: `rank-${i}`, text: ` ${i}` })
+                );
+            }
+            contentDetailsElements.push($row);
+        }
+        // Append all elements to the DOM in one go
+        $choice_details.empty().append(contentDetailsElements).show();
+    } else {
+        $choice_details.hide();
+    }
+}
+
+function updateModelButtons(sAction, oDetails) {
+    if (sAction && oDetails) {
+        const { rule_page } = oDetails;
+        let click_function = null;
+
+        // Determine the click function based on the action
+        switch (sAction) {
+            case 'skill_base':
+            case 'skill_combat':
+            case 'skill_magic':
+                click_function = chooseSkill;
+                break;
+            case 'profession':
+                click_function = chooseProfession;
+                break;
+            case 'item_add':
+                click_function = chooseItem;
+                break;
+            default:
+                console.warn(`Unused action of ${sAction} has been called`);
+                break;
+        }
+
+        // Prepare content actions elements
+        const contentActionsElements = [];
+
+        // Create and bind the button element if click_function is valid
+        if (click_function) {
+            const $button = $('<a>', {
+                class: 'button solid',
+                html: `${icons.choose.icon} ${icons.choose.text}`
+            }).on('click', function() {
+                click_function(oTmpData);
+            });
+            contentActionsElements.push($button);
+        }
+
+        // Add a link to the rule page if available
+        if (rule_page) {
+            const rulePageLink = $('<a>', {
+                class: 'button clear',
+                target: '_blank',
+                href: `https://larp.dalaria.nl/wp-content/uploads/documents/KvD-Basisregels.pdf#page=${rule_page}`,
+                html: `${icons.more_info.icon} ${icons.more_info.text}`
+            });
+            contentActionsElements.push(rulePageLink);
+        }
+
+        // Append elements to the DOM and show
+        $choice_actions.empty().append(contentActionsElements).show();
+    } else {
+        $choice_actions.hide();
+    }
 }
 
 //This function opens the plain text modal
@@ -351,4 +473,5 @@ export {
     clearModal,
     openTextModal,
     openStoryModal,
+    updateModalDropdown
 } 

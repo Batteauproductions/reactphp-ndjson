@@ -1,5 +1,5 @@
-// Importing the variables
-import { debug, icons ,iconset,jsonBaseChar,jsonStat,language,oTranslations,oCharacter } from './settings.js';
+//Generic settings and functions
+import { debug, icons, iconset, jsonBaseChar, jsonStat, language, oTranslations, oCharacter } from './settings.js';
 //Functions needed for actual app performance
 import { addProfession } from './professions.js';
 import { addSkill } from './skills.js';
@@ -14,14 +14,11 @@ function debugLog(message, ...optionalParams) {
 
 //This function will check if the character has enough xp available to buy the profession or skill
 function checkXPCost(cost) {
-    if (typeof cost === 'number') {
-        if(oCharacter.build.spend_xp + cost <= oCharacter.build.max_xp) {
-            return true;
-        } 
-        return false;
-    } else {
-        console.error("checkXPCost is not an number: " +$.type(cost));
-    }    
+    const deduction = parseInt(cost);
+    if(oCharacter.build.spend_xp + deduction <= oCharacter.build.max_xp) {
+        return true;
+    } 
+    return false;
 };
 
 //this function will check if an item already exists for the character
@@ -349,7 +346,7 @@ function initiateEditor() {
 
 // A simple function to insert a paragraph into the dom with a class and message
 function showMessage(element,type,message) {    
-    $(element).prepend($('<p>',{ class: `input-message input-${type}`, text: message}));
+    $(element).prepend($('<p>',{ class: `input-message input-${type} animate__animated animate__shakeX`, text: message}));
 }
 
 // A simple function to stringify the character object

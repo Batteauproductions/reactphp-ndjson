@@ -1,14 +1,6 @@
-// Importing the variables
-import { 
-    domain
-    ,icons
-    ,oCharacter
-} from './settings.js';
-
-// Importing the functions needed for the file
-import { 
-    debugLog,
-} from './functions.js';
+//Generic settings and functions
+import { domain, icons, oCharacter } from './settings.js';
+import { debugLog } from './functions.js';
 
 /*Add elements to the character
 //-attribute: 

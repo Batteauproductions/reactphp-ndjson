@@ -1,20 +1,10 @@
-// Importing the variables
-import { 
-    oCharacter,
-    choice_skills    
-} from './settings.js';
-
-// Importing the functions needed for the file
-import { 
-    elementAdd,
-    updateCharacterStats,
-    updateCharacter,
-} from './functions.js';
-
-// Importing the functions needed for the file
-import {
-    addSkill
-} from './skills.js';
+//Generic settings and functions
+import { domain, oCharacter, language, oTranslations } from './settings.js'
+import { debugLog, checkXPCost, showMessage } from './functions.js'
+import { openModal } from './modal.js'
+//Functions needed for actual app performance
+import { addToCharacter, removeFromCharacter } from './character.js';
+import { addSkill } from './skills.js';
 
 function pickRace() {
 
