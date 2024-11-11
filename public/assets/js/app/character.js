@@ -1,13 +1,13 @@
 //Generic settings and functions
-import { oCharacter } from './settings.js'
-import { debugLog, initiateEditor } from './functions.js'
+import { oCharacter } from './tool/settings.js'
+import { debugLog, initiateEditor } from './tool/functions.js'
 //Page functions
-import { pickName } from './name.js'
-import { pickRace } from './race.js'
-import { pickProfession } from './professions.js'
-import { convertCurrency } from './currency.js'
-import { pickSkillProfession, pickSkillCombat, pickSkillMagic } from './skills.js'
-import { pickBasekit, pickItem } from './equipment.js'
+import { pickName } from './tool/name.js'
+import { pickRace } from './tool/race.js'
+import { pickProfession } from './tool/professions.js'
+import { convertCurrency } from './tool/currency.js'
+import { pickSkillProfession, pickSkillCombat, pickSkillMagic } from './tool/skills.js'
+import { pickBasekit, pickItem } from './tool/equipment.js'
 
 
 $(document).ready(function() {
