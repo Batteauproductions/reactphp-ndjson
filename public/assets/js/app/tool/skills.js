@@ -1,9 +1,11 @@
 //Generic settings and functions
 import { domain, oCharacter, language, oTranslations } from './settings.js'
-import { debugLog, checkXPCost, showMessage } from './functions.js'
+import { debugLog, showMessage } from './functions.js'
+import { checkExperienceCost } from './experience.js';
 import { openModal, updateModalDropdown } from './modal.js'
-//Functions needed for actual app performance
 import { addToCharacter, removeFromCharacter } from './character.js';
+
+// Page functions
 
 function chooseSkill() {
     oTempData.rank = $('input[name="rank"]:checked').val() !== undefined ? parseInt($('input[name="rank"]:checked').val()) : null;

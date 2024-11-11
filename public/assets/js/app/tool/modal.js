@@ -1,7 +1,7 @@
 //Generic settings and functions
 import { domain, icons, oCharacter, language, oTranslations } from './settings.js';
 import { debugLog } from './functions.js'
-//Functions needed for actual app performance
+//Page functions
 import { chooseProfession } from './professions.js';
 import { chooseSkill } from './skills.js';
 import { chooseItem, chooseBasekit } from './equipment.js';
@@ -41,7 +41,7 @@ function clearModal(bClear) {
 function openModal(sAction,$modal) {
     debugLog('openModal:',sAction,$modal);
     //default open state for the modal
-    clearModal();
+    clearModal(true);
     $modalLoading.show();      
     $modal.foundation('open');
     //Bind functions to the elements within the modal    

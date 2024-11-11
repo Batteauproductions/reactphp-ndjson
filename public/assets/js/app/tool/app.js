@@ -1,10 +1,11 @@
 //Generic settings and functions
 import { oCharacter } from './settings.js'
-import { debugLog, initiateEditor, currencyConvert } from './functions.js'
+import { debugLog, initiateEditor } from './functions.js'
 //Page functions
 import { pickName } from './name.js'
 import { pickRace } from './race.js'
 import { pickProfession } from './professions.js'
+import { convertCurrency } from './currency.js'
 import { pickSkillProfession, pickSkillCombat, pickSkillMagic } from './skills.js'
 import { pickBasekit, pickItem } from './equipment.js'
 
@@ -29,7 +30,7 @@ $(document).ready(function() {
         $('body').find('[data-open="adventure-modal"]').addClass('disabled');
     }
     initiateEditor();
-    $('#stat-currency').html(currencyConvert(oCharacter.build.currency));
+    $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
 
     //This will bind the page function to their respective static elements
     $('a[data-action="pick-name"]').on('click', pickName);

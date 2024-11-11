@@ -1,114 +1,122 @@
-//Generic settings and functions
-import { domain, oCharacter, language, oTranslations } from './settings.js'
-import { debugLog, checkXPCost, checkDupplicateItem, showMessage } from './functions.js'
-import { openModal, updateModalDropdown } from './modal.js'
-//Functions needed for actual app performance
+// Generic settings and functions
+import { domain, oCharacter, language, oTranslations } from './settings.js';
+import { debugLog, checkDupplicateItem, showMessage, addElement } from './functions.js';
+import { checkExperienceCost } from './experience.js';
+import { openModal, updateModalDropdown } from './modal.js';
 import { addToCharacter, removeFromCharacter } from './character.js';
 
-//These functions deal with adding, altering or removing professions from the character
-//obj: The profession that is being parsed
+// Page functions
+
+/**
+ * Add a profession to the character.
+ * @param {Object} obj - The profession object.
+ */
 function addProfession(obj) {
-    debugLog('professionAdd',obj);
-    if (typeof obj === 'object') {
-        handleChoice('profession',obj)
-        addToCharacter('profession',obj);
+    debugLog('professionAdd', obj);
+    if (typeof obj === 'object' && obj !== null) {
+        addElement('profession', obj);
+        addToCharacter(oCharacter.profession, 'profession', obj);
+        $('#selection-modal').foundation('close');
     } else {
-        console.error("professionAdd is not an object: " +$.type(obj));
+        console.error("addProfession: 'obj' is not a valid object: " + $.type(obj));
     }
 }
 
-// Called when a user attempts to choose a profession
+/**
+ * Choose a profession for the character.
+ * @param {Object} obj - The profession object.
+ */
 function chooseProfession(obj) {
     debugLog('professionChoose', obj);
 
-    // Validate if obj is an object
     if (typeof obj !== 'object' || obj === null) {
-        console.error("professionAdd is not an object: " + $.type(obj));
+        console.error("chooseProfession: 'obj' is not a valid object: " + $.type(obj));
         return;
     }
 
-    // Destructure the necessary properties from obj
     const { details: { id, sub_id, rank_1_cost } } = obj;
 
-    // Check XP cost
-    if (!checkXPCost(rank_1_cost)) {
+    if (!checkExperienceCost(rank_1_cost)) {
         showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
         return;
     }
 
-    // Check for duplicate item
     if (checkDupplicateItem(oCharacter.profession, id, sub_id)) {
         showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
         return;
     }
 
-    // Add profession if no errors
     obj.rank = 1;
-    addProfession(oCharacter.profession);
+    addProfession(obj);
 }
 
+/**
+ * Pick a profession from a modal.
+ */
 function pickProfession() {
     debugLog('pickProfession');
 
-    // Define modal and form
     const $modal = $('#selection-modal');
     const $form = $('#modal-form');
     const sAction = 'profession';
 
-    // Open the modal
-    openModal(sAction,$modal);
+    openModal(sAction, $modal);
 
-    // Make AJAX call to fill the dropdown
     $.ajax({
         url: `${domain}/action/get-dropdown`,
+        type: 'POST',
+        dataType: 'json',
         data: {
             action: `fill-dropdown-${sAction}`,
             character: oCharacter,
         },
-        type: 'POST',
-        dataType: 'json',
         success: function(data) {
             debugLog('pickProfession[data]', data);
-            const $select = $('select[name="type"]');            
-            // Hide loading and show form and select
+            const $select = $('select[name="type"]');
             $('div[data-id="modal-loading"]').hide();
             updateModalDropdown($select, data);
             $form.show();
             $select.show();
         },
         error: function(error) {
-            console.error('Error:', error);
+            console.error('pickProfession: Error fetching data:', error);
         }
     });
 }
 
-//This function will remove a profession from the character
-//obj: The profession that is being parsed
+/**
+ * Remove a profession from the character.
+ * @param {Object} obj - The profession object.
+ */
 function removeProfession(obj) {
-    debugLog('professionRemove');
-    removeFromCharacter('profession',obj);
-    if (typeof obj === 'object') {
-        removeFromCharacter('profession',obj);
+    debugLog('professionRemove', obj);
+
+    if (typeof obj === 'object' && obj !== null) {
+        removeFromCharacter(oCharacter.profession, obj, 'profession', obj.details.id, obj.details.sub_id);
     } else {
-        console.error("removeProfession is not an object: " +$.type(obj));
+        console.error("removeProfession: 'obj' is not a valid object: " + $.type(obj));
     }
 }
 
-//This function will upgrade a profession currently linked to the character
-//obj: The profession that is being parsed
+/**
+ * Upgrade a profession linked to the character.
+ * @param {Object} obj - The profession object.
+ */
 function upgradeProfession(obj) {
-    debugLog('professionChoose',obj);
-    if (typeof obj === 'object') {
-        if(checkXPCost(obj.rank_1_cost)){            
+    debugLog('professionUpgrade', obj);
+
+    if (typeof obj === 'object' && obj !== null) {
+        if (checkExperienceCost(obj.rank_1_cost)) {
             addProfession(obj);
         } else {
-            showMessage('#choice-actions','error',oTranslations[language].not_enough_vp);
+            showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
         }
     } else {
-        console.error("upgradeProfession is not an object: " +$.type(obj));
+        console.error("upgradeProfession: 'obj' is not a valid object: " + $.type(obj));
     }
 }
 
+// Export functions
 export {
     pickProfession,
     addProfession,
