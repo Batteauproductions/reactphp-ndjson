@@ -79,7 +79,7 @@ function openModal(sAction,$modal) {
             sub_name: $subtypeSelect.text(),
         }
         if(sAction === 'profession') {
-            updateModalImage(oData.details);
+            updateModalImage(oTmpData);
         } else {
             updateModalImage();
         } 
@@ -97,7 +97,7 @@ function updateModal (sAction,oData) {
     debugLog('updateModal: ',sAction,oData);
     //update parts of the Modal
     if(sAction === 'profession') {
-        updateModalImage(oData.details);
+        updateModalImage(oData);
     } else {
         updateModalImage();
     }    
@@ -165,20 +165,20 @@ function updateModalDropdown($element, oData) {
     });
 }
 
-function updateModalImage(oDetails) {
-    if(oDetails) {
-        //destructures the parameter
-        const { id, sub_id } = oDetails;
-        //sets up the path and visibility of the image
-        if (id && sub_id) {
-            $choice_image.attr('src',`${domain}/assets/images/profession/prof_${id}_${sub_id}.png`);
-            $choice_image_container.show();
-        } else if (id) {
-            $choice_image.attr('src',`${domain}/assets/images/profession/prof_${id}.png`);
-            $choice_image_container.show();
-        }
+function updateModalImage(oData) { 
+    // Check if oData and its nested properties are defined
+    const id = oData?.details?.id || null;
+    const sub_id = oData?.current?.sub_id || null;
+
+    // Sets up the path and visibility of the image
+    if (id && sub_id) {
+        $choice_image.attr('src', `${domain}/assets/images/profession/prof_${id}_${sub_id}.png`);
+        $choice_image_container.show();
+    } else if (id) {
+        $choice_image.attr('src', `${domain}/assets/images/profession/prof_${id}.png`);
+        $choice_image_container.show();
     } else {
-        $choice_image.attr('src',``);
+        $choice_image.attr('src', ``);
         $choice_image_container.hide();
     }
 }
