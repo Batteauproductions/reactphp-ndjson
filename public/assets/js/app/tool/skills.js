@@ -1,27 +1,35 @@
 //Generic settings and functions
 import { domain, oCharacter, language, oTranslations } from './settings.js'
-import { debugLog, showMessage } from './functions.js'
+import { debugLog, showMessage, addElement } from './functions.js'
 import { checkExperienceCost } from './experience.js';
 import { openModal, updateModalDropdown } from './modal.js'
-import { addToCharacter, removeFromCharacter } from './character.js';
+import { addToCharacter, removeFromCharacter, checkDuplicateItem } from './character.js';
+
+/*
+Logical progression for the user interactions explained:
+//-1-- The action you invoke on the UX is that you pick a skill via one of the following functions
+//-1a- You either pick a skill related to professions via: pickSkillProfession, which in turn calls the fuction: pickSkill
+//-1b- You either pick a skill related to combat via: pickSkillCombat, which in turn calls the fuction: pickSkill
+//-1c- You either pick a skill related to magic via: pickSkillMagic, which in turn calls the fuction: pickSkill
+//-2-- Then you make choice from the options available to you by: chooseSkill
+//-3-- After the choice is validated, it is then added to the character by: addSkill
+//-4a- Once the skill is added to the character you can remove it again by: removeSkill
+//-4b- If available you can also upgrade the level of your skill by: upgradeSkill
+*/
 
 // Page functions
 
-function chooseSkill() {
-    oTempData.rank = $('input[name="rank"]:checked').val() !== undefined ? parseInt($('input[name="rank"]:checked').val()) : null;
-    oTempData.cost = calculateSkillCost(oTempData, oTempData.rank);
-    handleChoice(oTempData,sAction,'skill');
+function pickSkillProfession () {
+    debugLog('pickSkillProfession');
+    pickSkill('skill_base');
 }
-
-//These functions deal with adding, altering or removing skills from the character
-//obj: The skill that is being parsed
-function addSkill(obj) {
-    debugLog('addSkill', obj);
-    if (typeof obj === 'object') {
-        addToCharacter(oCharacter.skills,'skill',obj)
-    } else {
-        console.error("skillAdd is not an object: " +$.type(obj));
-    }
+function pickSkillCombat () {
+    debugLog('pickSkillCombat');
+    pickSkill('skill_combat');
+}
+function pickSkillMagic () {
+    debugLog('pickSkillMagic');
+    pickSkill('skill_magic');
 }
 
 function pickSkill(sAction) {
@@ -57,25 +65,80 @@ function pickSkill(sAction) {
     });
 }
 
-function pickSkillProfession () {
-    debugLog('pickSkillProfession');
-    pickSkill('skill_base');
-}
-function pickSkillCombat () {
-    debugLog('pickSkillCombat');
-    pickSkill('skill_combat');
-}
-function pickSkillMagic () {
-    debugLog('pickSkillMagic');
-    pickSkill('skill_magic');
+/**
+ * Choose a skill for the character.
+ * @param {Object} obj - The skill object.
+ */
+function chooseSkill(obj) {
+    debugLog('chooseSkill', obj);
+
+    if (typeof obj !== 'object' || obj === null) {
+        console.error("chooseSkill: 'obj' is not a valid object: " + $.type(obj));
+        return;
+    }
+
+    const { details: { id, sub_id, xp_cost } } = obj;
+
+    if (!checkExperienceCost(xp_cost)) {
+        showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
+        return;
+    }
+
+    if (checkDuplicateItem(oCharacter.skills, id, sub_id)) {
+        showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
+        return;
+    }
+
+    const $subtype = $('input[name="subtype"]');
+    obj.current = { 
+        sub_id: $subtype.val() ? parseInt($subtype.val()) : null,
+        sub_name: $subtype.text() ? $subtype.text() : null,
+        rank: 1,
+        cost: parseInt(xp_cost)
+    }
+    addSkill(obj);
 }
 
+/**
+ * Add a skill to the character.
+ * @param {Object} obj - The skill object.
+ */
+function addSkill(obj) {
+    if (typeof obj !== 'object' || obj === null) {
+        console.error("addSkill: 'obj' is not a valid object: " + $.type(obj));
+        return;
+    }
 
+    addElement('skill', obj);
+    addToCharacter(oCharacter.skills, 'skill', obj);
+    $('#selection-modal').foundation('close');
+}
 
-//This function will remove a skill from the character
-//obj: The skill that is being parsed
-function removeSkill(element,main_id,sub_id) {
-    removeFromCharacter(oCharacter.skills,element,'skill',main_id,sub_id)
+/**
+ * Remove a skill from the character.
+ * @param {Object} obj - The skill object.
+ */
+function removeSkill(obj) {
+    if (typeof obj !== 'object' || obj === null) {
+        console.error("removeSkill: 'obj' is not a valid object: " + $.type(obj));
+        return;
+    }
+
+    debugLog('removeSkill', obj);
+    removeFromCharacter('skill', obj, oCharacter.skills);
+}
+
+/**
+ * Upgrade a skill linked to the character.
+ * @param {Object} obj - The skill object.
+ */
+function upgradeSkill(obj) {
+    if (typeof obj !== 'object' || obj === null) {
+        console.error("upgradeSkill: 'obj' is not a valid object: " + $.type(obj));
+    }
+
+    debugLog('upgradeSkill', obj);
+    //-- Needs implementation
 }
 
 export {  
@@ -85,4 +148,5 @@ export {
     pickSkillCombat,
     pickSkillMagic,
     removeSkill, 
+    upgradeSkill,
 }

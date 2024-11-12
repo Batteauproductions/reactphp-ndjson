@@ -1,6 +1,10 @@
 // Generic settings and functions
 import { debug, icons, iconset, language, oTranslations, oCharacter } from './settings.js';
-// Functions needed for actual app performance
+import { removeProfession, upgradeProfession } from './professions.js';
+import { removeSkill, upgradeSkill } from './skills.js';
+import { removeItem } from './equipment.js';
+
+// Page functions
 
 /**
  * Logs messages to the console when in debug mode.
@@ -14,17 +18,6 @@ function debugLog(message, ...optionalParams) {
 }
 
 /**
- * Checks if an item already exists for the character.
- * @param {Array} attribute - The attribute array of the character.
- * @param {string} main_id - The main ID of the item.
- * @param {string|null} sub_id - The sub ID of the item (optional).
- * @returns {boolean} True if the item is duplicate, otherwise false.
- */
-function checkDupplicateItem(attribute, main_id, sub_id = null) {
-    return attribute.some(item => item.main_id === main_id && item.sub_id === sub_id);
-}
-
-/**
  * Adds an element to the specified container in the DOM.
  * @param {string} sAction - The action type (e.g., 'skill', 'profession', 'item').
  * @param {Object} element - The element to add.
@@ -34,73 +27,103 @@ function addElement(sAction, element) {
         console.error("addElement: 'element' is not a valid object: " + $.type(element));
         return;
     }
+    
+    debugLog('addElement', sAction, element);
 
-    debugLog('addElement',sAction,element)
+    const {
+        details: { id, name },
+        current: { sub_id = null, sub_name = null, race = null, rank = null, cost = null, amount = null }
+    } = element;
 
     const row = $('<div>', {
         class: 'grid-x choice-row animate__animated animate__fadeInLeft',
+        "data-id": id,
+        "data-sub_id": sub_id
     });
 
-    const arrColumn = [];
-    const column_name = $('<div>', {
-        class: 'cell small-5 text-left',
-        text: `${element.name} ${element.rank != null ? ` (${icons.rank.text} ${element.rank})` : ''}`
-    });
-    arrColumn.push(column_name);
+    const arrColumn = [
+        $('<div>', {
+            class: 'cell small-5 text-left',
+            text: `${name} ${rank != null ? ` (${icons.rank.text} ${rank})` : ''}`
+        })
+    ];
 
     let local_icons;
+    switch (sAction) {
+        case 'skill':
+        case 'profession':
+            arrColumn.push($('<div>', {
+                class: 'cell small-4 text-center',
+                text: sub_name !== null ? sub_name : '-'
+            }));
 
-    if (sAction === 'skill' || sAction === 'profession') {
-        const column_subname = $('<div>', {
-            class: 'cell small-4 text-center',
-            text: element.sub_name !== null ? element.sub_name : '-',
-        });
-        arrColumn.push(column_subname);
+            arrColumn.push($('<div>', {
+                class: 'cell small-1 text-right',
+                html: race ? `${oTranslations[language].racial}` : `${cost}pt.`
+            }));
 
-        const column_cost = $('<div>', {
-            class: 'cell small-1 text-right',
-            html: element.race ? `${oTranslations[language].racial}` : `${element.cost}pt.`
-        });
-        arrColumn.push(column_cost);
+            local_icons = rank ? iconset["new_skill_with_rank"] : iconset["new_skill_no_rank"];
+            break;
+        case 'item':
+            arrColumn.push($('<div>', {
+                class: 'cell small-2 text-right',
+                text: `${amount}x`
+            }));
 
-        local_icons = element.rank ? iconset["new_skill_with_rank"] : iconset["new_skill_no_rank"];
-    } else if (sAction === 'item') {
-        const column_amount = $('<div>', {
-            class: 'cell small-2 text-right',
-            text: `${element.amount}x`
-        });
-        arrColumn.push(column_amount);
+            arrColumn.push($('<div>', {
+                class: 'cell small-3 text-right',
+                html: `${currencyConvert(cost)}`
+            }));
 
-        const column_cost = $('<div>', {
-            class: 'cell small-3 text-right',
-            html: `${currencyConvert(element.cost)}`
-        });
-        arrColumn.push(column_cost);
-
-        local_icons = iconset["new_item"];
+            local_icons = iconset["new_item"];
+            break;
     }
 
-    const arrIcons = local_icons.map(icon => $('<a>', {
-        "data-action": `${sAction}-${icon}`,
-        "data-id": element.id,
-        "data-sub_id": element.sub_id,
-        html: icons[icon].icon
-    }));
+    const actionHandlers = {
+        profession: { removeFunction: removeProfession, upgradeFunction: upgradeProfession },
+        skill: { removeFunction: removeSkill, upgradeFunction: upgradeSkill },
+        item: { removeFunction: removeItem, upgradeFunction: null }
+    };
 
-    const column_action = $('<div>', {
+    const { removeFunction, upgradeFunction } = actionHandlers[sAction] || {};
+
+    const arrIcons = $.map(local_icons, function(icon) {
+        let clickEventHandler = null;
+        if (icon.includes('remove')) {
+            clickEventHandler = removeFunction;
+        } else if (icon.includes('update')) {
+            clickEventHandler = upgradeFunction;
+        }
+
+        const $anchor = $('<a>', {
+            "data-action": `${sAction}-${icon}`,
+            "data-id": id,
+            "data-sub_id": sub_id,
+            html: icons[icon].icon
+        });
+
+        if (clickEventHandler) {
+            $anchor.on('click', function() {
+                clickEventHandler(element);
+            });
+        }
+
+        return $anchor;
+    });
+
+    arrColumn.push($('<div>', {
         class: 'cell small-2 text-right',
         html: arrIcons
-    });
-    arrColumn.push(column_action);
+    }));
 
     row.append(arrColumn);
 
     const $container = $(`[data-id="${sAction}-list"]`);
     let inserted = false;
-    $container.children('.choice-row').each(function () {
+    $container.children('.choice-row').each(function() {
         const currentRow = $(this);
         const currentName = currentRow.find('.cell.small-5.text-left').text().trim();
-        if (currentName.localeCompare(element.name, undefined, { sensitivity: 'base' }) > 0) {
+        if (currentName.localeCompare(name, undefined, { sensitivity: 'base' }) > 0) {
             currentRow.before(row);
             inserted = true;
             return false;
@@ -175,7 +198,6 @@ function showMessage(element, type, message) {
 // Export functions
 export {
     debugLog,
-    checkDupplicateItem,
     addElement,
     initiateEditor,
     showMessage,

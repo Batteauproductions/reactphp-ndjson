@@ -1,18 +1,18 @@
 // Generic settings and functions
 import { domain, icons, oCharacter, jsonBaseChar, jsonStat } from './settings.js';
 import { debugLog } from './functions.js';
-import { spendCurrency, convertCurrency } from './currency.js';
-import { spendExperience } from './experience.js';
+import { spendCurrency, convertCurrency, refundCurrency } from './currency.js';
+import { spendExperience, refundExperience } from './experience.js';
 
 // Page functions
 
 /**
  * Add elements to the character.
- * @param {Array} attribute - The character attribute array (e.g., profession, skills, items).
- * @param {string} type - The type of element being added (profession, skill, item).
+ * @param {string} sAction - The type of element being added (profession, skill, item).
  * @param {Object} subject - The object representing the element being added.
+ * @param {Array} attribute - The character attribute array (e.g., profession, skills, items).
  */
-function addToCharacter(attribute, type, subject) {
+function addToCharacter(sAction, subject, attribute) {
     debugLog('addToCharacter');
 
     if (typeof subject !== 'object' || subject === null) {
@@ -24,10 +24,10 @@ function addToCharacter(attribute, type, subject) {
     attribute.push(subject);
 
     // Spend experience or currency based on the type
-    if (type === "profession" || type === "skill") {
-        spendExperience(subject.cost);
-    } else if (type === "item") {
-        spendCurrency(subject.cost);
+    if (sAction === "profession" || sAction === "skill") {
+        spendExperience(subject.current.cost);
+    } else if (sAction === "item") {
+        spendCurrency(subject.current.cost);
     }
 
     // Update character stats if the subject has a modifier
@@ -39,46 +39,90 @@ function addToCharacter(attribute, type, subject) {
     updateCharacter();
 }
 
-/**
- * Remove elements from the character.
- * @param {Array} attribute - The character attribute array.
- * @param {Object} element - The jQuery element calling the action.
- * @param {string} type - The type of element being removed.
- * @param {string} main_id - The main ID of the element.
- * @param {string|null} sub_id - The sub ID of the element (optional).
- */
-function removeFromCharacter(attribute, element, type, main_id, sub_id = null) {
-    debugLog('removeFromCharacter');
-    let itemFound = false;
-    let subject = {};
-
-    // Find and remove the item from the attribute array
-    for (let i = 0; i < attribute.length; i++) {
-        if (attribute[i].main_id === main_id && attribute[i].sub_id === sub_id) {
-            subject = attribute[i];
-            attribute.splice(i, 1);
-            itemFound = true;
-            break;
+function calculateIncrease(id) {
+    let increase = 0;
+    // Helper function to calculate the increase for each category
+    var calculateForCategory = (category) => {
+        if ($.isArray(category)) {
+            $.each(category, function(key, value) {
+                if ($.isArray(value.modifier)) {
+                    for (let i = 0; i < value.modifier.length; i++) {
+                        if (value.modifier[i].id == id) {
+                            increase += value.rank > 1 ? value.rank : 1;
+                        }
+                    }
+                } 
+            });
+        } else {
+            if(category.modifier == id) {
+                increase ++
+            }
         }
     }
 
-    if (!itemFound) {
+    // Calculate increase for race, profession, and skills
+    calculateForCategory(oCharacter.race);
+    calculateForCategory(oCharacter.profession);
+    calculateForCategory(oCharacter.skills);
+
+    return increase;
+}
+
+/**
+ * Checks if an item already exists for the character.
+ * @param {Array} attribute - The attribute array of the character.
+ * @param {string} main_id - The main ID of the item.
+ * @param {string|null} sub_id - The sub ID of the item (optional).
+ * @returns {boolean} True if the item is duplicate, otherwise false.
+ */
+function checkDuplicateItem(attribute, main_id, sub_id = null) {
+    return attribute.some(item => item.main_id === main_id && item.sub_id === sub_id);
+}
+
+/**
+ * Remove elements from the character.
+ * @param {string} sAction - The type of element being removed.
+ * @param {Object} element - The jQuery element calling the action.
+ * @param {Array} attribute - The character attribute array.
+ */
+function removeFromCharacter(sAction, element, attribute) {
+    debugLog('removeFromCharacter', element);
+
+    const { details: { id }, modifier, current: { sub_id = null, cost = null } } = element;
+    const index = attribute.findIndex(item => item.details.id === id && item.current.sub_id === sub_id);
+
+    //Remove from the character object if found, otherwise return error in console
+    //Note: this should not be possible for a user to invoke unless he intentionally tries to break the UI
+    if (index === -1) {
         console.error('removeFromCharacter: Item not found');
         return;
     }
+    attribute.splice(index, 1)[0];
 
-    // Handle refund and update based on the type
-    if (subject.modifier && subject.modifier.length > 0) {
+    //Remove the row from the DOM associated with the element
+    let selector;    
+    if (sub_id === null) {
+        selector = `div[data-id="${id}"]`;
+    } else {
+        selector = `div[data-id="${id}"][data-sub_id="${sub_id}"]`;
+    }    
+    $(selector).remove();
+    
+    // Refund the cost of the element
+    // Currently only experience and currency are spendable resources
+    if (sAction === "profession" || sAction === "skill") {
+        refundExperience(cost);
+    } else if (sAction === "item") {
+        refundCurrency(cost);
+    }
+
+    // Update the stats if there was a modifier present
+    if (modifier && modifier.length > 0) {
         updateCharacterStats();
     }
-    if (type === "profession" || type === "skill") {
-        experienceRefund(subject.cost);
-    } else if (type === "item") {
-        currencyRefund(subject.cost);
-    }
 
-    // Remove the element from the DOM
-    element.parent().parent().remove();
+    // Update the character object in the interface
+    updateCharacter();
 }
 
 /**
@@ -93,11 +137,6 @@ function saveCharacter() {
  */
 function submitCharacter() {
     transferCharacter('submit');
-}
-
-// A simple function to stringify the character object
-function updateCharacter() {
-    $('input[name="character"]').val(JSON.stringify(oCharacter));
 }
 
 /**
@@ -133,33 +172,10 @@ function transferCharacter(sAction) {
     });
 }
 
-function calculateIncrease(id) {
-    let increase = 0;
-    // Helper function to calculate the increase for each category
-    var calculateForCategory = (category) => {
-        if ($.isArray(category)) {
-            $.each(category, function(key, value) {
-                if ($.isArray(value.modifier)) {
-                    for (let i = 0; i < value.modifier.length; i++) {
-                        if (value.modifier[i].id == id) {
-                            increase += value.rank > 1 ? value.rank : 1;
-                        }
-                    }
-                } 
-            });
-        } else {
-            if(category.modifier == id) {
-                increase ++
-            }
-        }
-    }
-
-    // Calculate increase for race, profession, and skills
-    calculateForCategory(oCharacter.race);
-    calculateForCategory(oCharacter.profession);
-    calculateForCategory(oCharacter.skills);
-
-    return increase;
+// A simple function to stringify the character object
+function updateCharacter() {
+    debugLog('updateCharacter',oCharacter);
+    $('input[name="character"]').val(JSON.stringify(oCharacter));
 }
 
 //This function updates the stats of the character	
@@ -213,5 +229,6 @@ export {
     removeFromCharacter,
     updateCharacterStats,
     saveCharacter,
-    submitCharacter
+    submitCharacter,
+    checkDuplicateItem
 }

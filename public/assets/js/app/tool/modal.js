@@ -74,12 +74,18 @@ function openModal(sAction,$modal) {
         });
     });
     $modal.find('select[name="subtype"]').off('change').on('change',function() {
-        oTmpData.details.sub_id = $subtypeSelect.val(); 
-        oTmpData.details.sub_name = $subtypeSelect.text();
-        updateModalImage(oTmpData.details);
+        oTmpData.current = {
+            sub_id: $subtypeSelect.val(),
+            sub_name: $subtypeSelect.text(),
+        }
+        if(sAction === 'profession') {
+            updateModalImage(oData.details);
+        } else {
+            updateModalImage();
+        } 
     });
     //-- changing of the rank input field
-    $modal.off('change').on('change','input[name="rank"]',function() {
+    $modal.find('input[name="rank"]').off('change').on('change',function() {
         const value = $(this).val();
         $('#rank_cost').text(calculateSkillCost(oTempData,value));
     });
@@ -90,7 +96,11 @@ function openModal(sAction,$modal) {
 function updateModal (sAction,oData) {
     debugLog('updateModal: ',sAction,oData);
     //update parts of the Modal
-    updateModalImage(oData.details);
+    if(sAction === 'profession') {
+        updateModalImage(oData.details);
+    } else {
+        updateModalImage();
+    }    
     updateModelContent(oData.details);
     updateModelDetails(sAction,oData.details,oData.modifier);
     updateModelButtons(sAction,oData.details);
@@ -100,42 +110,14 @@ function updateModal (sAction,oData) {
     } else {
         $('[name="amount"]').hide();
     }
-/*
-    //--choice skills
-    if (oData.skills && oData.skills.length > 1) {
-        oData.skills.forEach(skill => {
-            //Declare variables
-            const { main_id, main_name, sub_id, sub_name, options } = skill;
-            const row = $('<div>', { 'data-raceskill': '', class: 'choice-row' });
-            // Check if the skills has options
-            if (options) {
-                //Create DOM elements
-                const $label = $('<label>', { text: main_name, for: 'subtype-dropdown' });
-                const $select = $('<select>', { id: 'subtype-dropdown' });
-                // Iterate over the object to create <option> elements
-                $.each(options, (key, value) => {
-                    const $option = $('<option>', {
-                        value: value.id,
-                        text: value.name
-                    });
-                    // Append the option to the select element
-                    $select.append($option);
-                });
-                row.append($label, $select);
-            } else {
-                row.html(`<p>${main_name} - ${sub_name}</p>`);
-                skill.race = true;
-                choice_skills.push(skill);
-            }
-            contentDetailsElements.push(row);
-        });
-
-    }
-    
-    */
-    
 }
 
+/**
+ * Updates the dropdown menu in a modal with new options.
+ * @param {jQuery} $element - The jQuery object of the select element to update.
+ * @param {Array} oData - An array of objects containing the data for the dropdown options.
+ * Each object can contain properties like id, name, prof_name, or type_name.
+ */
 function updateModalDropdown($element, oData) {
     // Clear existing options to ensure a fresh start
     $element.empty();
@@ -146,58 +128,41 @@ function updateModalDropdown($element, oData) {
         return;
     }
 
-    // Add a disabled option to ensure a conscious choice by the user
+    // Add a disabled initial option for user choice
     const initialOption = $('<option>', {
         value: '',
         text: oTranslations[language].choose_option,
         selected: true,
         disabled: true
     });
-
-    // Append the initial option directly to the select element
     $element.append(initialOption);
 
-    // Populate the dropdown with options and append them directly
+    // Variable to track current option group
+    let currentGroup = '';
+
+    // Populate the dropdown with options
     oData.forEach(item => {
-        $('<option>', {
-            value: item.id,
-            text: item.name
-        }).appendTo($element);
-    });
-
-    /*
-    let optGroup = '';
-
-            for (let i = 0; i < data.length; i++) {
-                let item = data[i];
-                let optionGroup, option;
-
-                if (item.hasOwnProperty('prof_name') || item.hasOwnProperty('type_name')) {
-                    let groupName = item.prof_name || item.type_name;
-
-                    if (optGroup === '' || optGroup !== groupName) {
-                        optionGroup = $('<optgroup>', {
-                            label: groupName
-                        });
-                        optGroup = groupName;
-                        $select.append(optionGroup);
-                    }
-
-                    option = $('<option>', {
-                        value: item.id,
-                        text: item.name
-                    });
-
-                    $select.find('optgroup[label="' + groupName + '"]').append(option);
-                } else {
-                    option = $('<option>', {
-                        value: item.id,
-                        text: item.name
-                    });
-                    $select.append(option);
-                }
+        let option;
+        if (item.prof_name || item.type_name) {
+            const groupName = item.prof_name || item.type_name;
+            if (currentGroup !== groupName) {
+                const optionGroup = $('<optgroup>', { label: groupName });
+                $element.append(optionGroup);
+                currentGroup = groupName;
             }
-    */
+            option = $('<option>', {
+                value: item.id,
+                text: item.name
+            });
+            $element.find(`optgroup[label="${groupName}"]`).append(option);
+        } else {
+            option = $('<option>', {
+                value: item.id,
+                text: item.name
+            });
+            $element.append(option);
+        }
+    });
 }
 
 function updateModalImage(oDetails) {
