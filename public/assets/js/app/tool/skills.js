@@ -3,7 +3,7 @@ import { domain, oCharacter, language, oTranslations } from './settings.js'
 import { debugLog, showMessage, addElement } from './functions.js'
 import { checkExperienceCost } from './experience.js';
 import { openModal, updateModalDropdown } from './modal.js'
-import { addToCharacter, removeFromCharacter, checkDuplicateItem } from './character.js';
+import { addToCharacter, removeFromCharacter, findItemIndex } from './character.js';
 
 /*
 Logical progression for the user interactions explained:
@@ -77,26 +77,30 @@ function chooseSkill(obj) {
         return;
     }
 
-    const { details: { id, sub_id, xp_cost } } = obj;
+    //--Add the current attribute to the object
+    const $subtype = $('input[name="subtype"]');
+    obj.current = { 
+        sub_id: $subtype.val() ? parseInt($subtype.val()) : null,
+        sub_name: $subtype.text() ? $subtype.text() : null,
+        rank: 1,
+        cost: parseInt(obj.details.xp_cost)
+    }
+
+    //--Nested destructuring of the Object
+    const { details: { id, xp_cost }, current: { sub_id } } = obj;
 
     if (!checkExperienceCost(xp_cost)) {
         showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
         return;
     }
 
-    if (checkDuplicateItem(oCharacter.skills, id, sub_id)) {
+    if (findItemIndex(oCharacter.profession, id, sub_id) !== -1) {
         showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
         return;
     }
 
-    const $subtype = $('input[name="subtype"]');
-    obj.current = { 
-        sub_id: $subtype.val() ? parseInt($subtype.val()) : null,
-        sub_name: $subtype.text() ? $subtype.text() : null,
-        rank: 1,
-        cost: parseInt(xp_cost)
-    }
     addSkill(obj);
+
 }
 
 /**

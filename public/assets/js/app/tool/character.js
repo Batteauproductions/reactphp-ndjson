@@ -69,14 +69,19 @@ function calculateIncrease(id) {
 }
 
 /**
- * Checks if an item already exists for the character.
+ * Finds the index of an item in the character's attribute array.
  * @param {Array} attribute - The attribute array of the character.
  * @param {string} main_id - The main ID of the item.
  * @param {string|null} sub_id - The sub ID of the item (optional).
- * @returns {boolean} True if the item is duplicate, otherwise false.
+ * @returns {number} The index of the item if found, otherwise -1.
  */
-function checkDuplicateItem(attribute, main_id, sub_id = null) {
-    return attribute.some(item => item.main_id === main_id && item.sub_id === sub_id);
+function findItemIndex(attribute, id, sub_id = null) {
+    return attribute.findIndex(item => {
+        const itemMainId = item.details?.id;
+        const itemSubId = item.current?.sub_id;
+
+        return itemMainId === id && (itemSubId === sub_id || sub_id === null);
+    });
 }
 
 /**
@@ -89,7 +94,7 @@ function removeFromCharacter(sAction, element, attribute) {
     debugLog('removeFromCharacter', element);
 
     const { details: { id }, modifier, current: { sub_id = null, cost = null } } = element;
-    const index = attribute.findIndex(item => item.details.id === id && item.current.sub_id === sub_id);
+    const index = findItemIndex(attribute, id, sub_id);
 
     //Remove from the character object if found, otherwise return error in console
     //Note: this should not be possible for a user to invoke unless he intentionally tries to break the UI
@@ -230,5 +235,5 @@ export {
     updateCharacterStats,
     saveCharacter,
     submitCharacter,
-    checkDuplicateItem
+    findItemIndex
 }
