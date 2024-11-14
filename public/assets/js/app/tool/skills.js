@@ -1,9 +1,52 @@
 //Generic settings and functions
 import { domain, oCharacter, language, oTranslations } from './settings.js'
-import { debugLog, showMessage, addElement } from './functions.js'
+import { debugLog, showMessage, addCharacterAsset } from './functions.js'
 import { checkExperienceCost } from './experience.js';
 import { openModal, updateModalDropdown } from './modal.js'
 import { addToCharacter, removeFromCharacter, findItemIndex } from './character.js';
+
+// Define the class
+class Skill {
+    constructor({
+        details: {
+            id,
+            name,
+            modifier,
+            xp_cost,
+            allow_multiple
+        },
+        current: {
+            sub_id = null,
+            sub_name = null,
+            rank,
+            cost = 0
+        } = {} // Provide a default empty object for destructuring
+    }) {
+        this.id = parseInt(id);
+        this.name = name;
+        this.sub_id = sub_id !== null ? parseInt(sub_id) : null;
+        this.sub_name = sub_name !== null ? sub_name : null;;
+        this.rank = parseInt(rank);
+        this.cost = parseInt(cost);
+        this.modifier = parseInt(modifier);
+        this.xp_cost = parseInt(xp_cost);
+        this.allow_multiple = allow_multiple === 1;
+        this.cost = parseInt(cost)
+    }
+
+    // Updated method to display all attributes
+    displayInfo() {
+        console.log(`ID: ${this.id}`);
+        console.log(`Name: ${this.name}`);
+        console.log(`Sub ID: ${this.sub_id}`);
+        console.log(`Sub Name: ${this.sub_name}`);
+        console.log(`Rank: ${this.rank}`);
+        console.log(`Cost: ${this.cost}`);
+        console.log(`Modifier: ${this.modifier}`);
+        console.log(`XP Cost: ${this.xp_cost}`);
+        console.log(`Allow Multiple: ${this.allow_multiple}`);
+    }
+}
 
 /*
 Logical progression for the user interactions explained:
@@ -113,7 +156,7 @@ function addSkill(obj) {
         return;
     }
 
-    addElement('skill', obj);
+    addCharacterAsset('skill', obj);
     addToCharacter(oCharacter.skills, 'skill', obj);
     $('#selection-modal').foundation('close');
 }

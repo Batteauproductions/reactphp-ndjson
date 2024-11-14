@@ -20,31 +20,26 @@ function debugLog(message, ...optionalParams) {
 /**
  * Adds an element to the specified container in the DOM.
  * @param {string} sAction - The action type (e.g., 'skill', 'profession', 'item').
- * @param {Object} element - The element to add.
+ * @param {Object} characterAsset - The element to add.
  */
-function addElement(sAction, element) {
-    if (typeof element !== 'object' || element === null) {
-        console.error("addElement: 'element' is not a valid object: " + $.type(element));
+function addCharacterAsset(sAction, characterAsset) {
+    if (typeof characterAsset !== 'object' || characterAsset === null) {
+        console.error("addCharacterAsset: 'element' is not a valid object: " + $.type(element));
         return;
     }
     
-    debugLog('addElement', sAction, element);
-
-    const {
-        details: { id, name },
-        current: { sub_id = null, sub_name = null, race = null, rank = null, cost = null, amount = null }
-    } = element;
+    debugLog('addCharacterAsset', sAction, characterAsset);
 
     const row = $('<div>', {
         class: 'grid-x choice-row animate__animated animate__fadeInLeft',
-        "data-id": id,
-        "data-sub_id": sub_id
+        "data-id": characterAsset.id,
+        "data-sub_id": characterAsset.sub_id
     });
 
     const arrColumn = [
         $('<div>', {
             class: 'cell small-5 text-left',
-            text: `${name} ${rank != null ? ` (${icons.rank.text} ${rank})` : ''}`
+            text: `${characterAsset.name} ${characterAsset.rank != null ? ` (${icons.rank.text} ${characterAsset.rank})` : ''}`
         })
     ];
 
@@ -54,25 +49,25 @@ function addElement(sAction, element) {
         case 'profession':
             arrColumn.push($('<div>', {
                 class: 'cell small-4 text-center',
-                text: sub_name !== null ? sub_name : '-'
+                text: characterAsset.sub_name !== null ? characterAsset.sub_name : '-'
             }));
 
             arrColumn.push($('<div>', {
                 class: 'cell small-1 text-right',
-                html: race ? `${oTranslations[language].racial}` : `${cost}pt.`
+                html: characterAsset.race ? `${oTranslations[language].racial}` : `${characterAsset.cost}pt.`
             }));
 
-            local_icons = rank ? iconset["new_skill_with_rank"] : iconset["new_skill_no_rank"];
+            local_icons = characterAsset.rank ? iconset["new_skill_with_rank"] : iconset["new_skill_no_rank"];
             break;
         case 'item':
             arrColumn.push($('<div>', {
                 class: 'cell small-2 text-right',
-                text: `${amount}x`
+                text: `${characterAsset.amount}x`
             }));
 
             arrColumn.push($('<div>', {
                 class: 'cell small-3 text-right',
-                html: `${currencyConvert(cost)}`
+                html: `${currencyConvert(characterAsset.cost)}`
             }));
 
             local_icons = iconset["new_item"];
@@ -88,23 +83,24 @@ function addElement(sAction, element) {
     const { removeFunction, upgradeFunction } = actionHandlers[sAction] || {};
 
     const arrIcons = $.map(local_icons, function(icon) {
+
         let clickEventHandler = null;
         if (icon.includes('remove')) {
             clickEventHandler = removeFunction;
-        } else if (icon.includes('update')) {
+        } else if (icon.includes('upgrade')) {
             clickEventHandler = upgradeFunction;
         }
 
         const $anchor = $('<a>', {
             "data-action": `${sAction}-${icon}`,
-            "data-id": id,
-            "data-sub_id": sub_id,
+            "data-id": characterAsset.id,
+            "data-sub_id": characterAsset.sub_id,
             html: icons[icon].icon
         });
 
         if (clickEventHandler) {
             $anchor.on('click', function() {
-                clickEventHandler(element);
+                clickEventHandler(characterAsset);
             });
         }
 
@@ -123,7 +119,7 @@ function addElement(sAction, element) {
     $container.children('.choice-row').each(function() {
         const currentRow = $(this);
         const currentName = currentRow.find('.cell.small-5.text-left').text().trim();
-        if (currentName.localeCompare(name, undefined, { sensitivity: 'base' }) > 0) {
+        if (currentName.localeCompare(characterAsset.name, undefined, { sensitivity: 'base' }) > 0) {
             currentRow.before(row);
             inserted = true;
             return false;
@@ -198,7 +194,7 @@ function showMessage(element, type, message) {
 // Export functions
 export {
     debugLog,
-    addElement,
+    addCharacterAsset,
     initiateEditor,
     showMessage,
 }

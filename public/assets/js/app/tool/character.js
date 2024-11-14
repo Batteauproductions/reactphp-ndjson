@@ -9,29 +9,29 @@ import { spendExperience, refundExperience } from './experience.js';
 /**
  * Add elements to the character.
  * @param {string} sAction - The type of element being added (profession, skill, item).
- * @param {Object} subject - The object representing the element being added.
+ * @param {Object} characterAsset - The object representing the element being added.
  * @param {Array} attribute - The character attribute array (e.g., profession, skills, items).
  */
-function addToCharacter(sAction, subject, attribute) {
+function addToCharacter(sAction, characterAsset, attribute) {
     debugLog('addToCharacter');
 
-    if (typeof subject !== 'object' || subject === null) {
-        console.error("addToCharacter: 'subject' is not a valid object: " + $.type(subject));
+    if (typeof characterAsset !== 'object' || characterAsset === null) {
+        console.error("addToCharacter: 'characterAsset' is not a valid object: " + $.type(characterAsset));
         return;
     }
 
-    // Add the subject to the specified attribute
-    attribute.push(subject);
+    // Add the characterAsset to the specified attribute
+    attribute.push(characterAsset);
 
     // Spend experience or currency based on the type
     if (sAction === "profession" || sAction === "skill") {
-        spendExperience(subject.current.cost);
+        spendExperience(characterAsset.cost);
     } else if (sAction === "item") {
-        spendCurrency(subject.current.cost);
+        spendCurrency(characterAsset.cost);
     }
 
     // Update character stats if the subject has a modifier
-    if (subject.modifier && subject.modifier.length > 0) {
+    if (characterAsset.modifier) {
         updateCharacterStats();
     }
 
@@ -45,13 +45,9 @@ function calculateIncrease(id) {
     var calculateForCategory = (category) => {
         if ($.isArray(category)) {
             $.each(category, function(key, value) {
-                if ($.isArray(value.modifier)) {
-                    for (let i = 0; i < value.modifier.length; i++) {
-                        if (value.modifier[i].id == id) {
-                            increase += value.rank > 1 ? value.rank : 1;
-                        }
-                    }
-                } 
+                if (value.modifier == id) {
+                    increase += value.rank > 1 ? value.rank : 1;
+                }
             });
         } else {
             if(category.modifier == id) {
@@ -77,8 +73,8 @@ function calculateIncrease(id) {
  */
 function findItemIndex(attribute, id, sub_id = null) {
     return attribute.findIndex(item => {
-        const itemMainId = item.details?.id;
-        const itemSubId = item.current?.sub_id;
+        const itemMainId = item?.id;
+        const itemSubId = item?.sub_id;
 
         return itemMainId === id && (itemSubId === sub_id || sub_id === null);
     });
@@ -87,14 +83,13 @@ function findItemIndex(attribute, id, sub_id = null) {
 /**
  * Remove elements from the character.
  * @param {string} sAction - The type of element being removed.
- * @param {Object} element - The jQuery element calling the action.
+ * @param {Object} characterAsset - The jQuery element calling the action.
  * @param {Array} attribute - The character attribute array.
  */
-function removeFromCharacter(sAction, element, attribute) {
-    debugLog('removeFromCharacter', element);
+function removeFromCharacter(sAction, characterAsset, attribute) {
+    debugLog('removeFromCharacter', characterAsset);
 
-    const { details: { id }, modifier, current: { sub_id = null, cost = null } } = element;
-    const index = findItemIndex(attribute, id, sub_id);
+    const index = findItemIndex(attribute, characterAsset.id, characterAsset.sub_id);
 
     //Remove from the character object if found, otherwise return error in console
     //Note: this should not be possible for a user to invoke unless he intentionally tries to break the UI
@@ -122,7 +117,7 @@ function removeFromCharacter(sAction, element, attribute) {
     }
 
     // Update the stats if there was a modifier present
-    if (modifier && modifier.length > 0) {
+    if (modifier) {
         updateCharacterStats();
     }
 

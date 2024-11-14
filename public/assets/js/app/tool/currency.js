@@ -40,7 +40,7 @@ function convertCurrency(iAmount) {
  * @param {number} cost - The currency cost to refund.
  */
 function refundCurrency(cost) {
-    oCharacter.build.currency += parseInt(cost,10);
+    oCharacter.build.currency += cost;
     updateCurrencyDisplay();
 }
 

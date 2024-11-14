@@ -9,7 +9,7 @@ import { oCharacter } from './settings.js';
  * @returns {boolean} True if there is enough XP, false otherwise.
  */
 function checkExperienceCost(cost) {
-    const deduction = parseInt(cost, 10);
+    const deduction = cost;
     return oCharacter.build.spend_xp + deduction <= oCharacter.build.max_xp;
 }
 
@@ -19,7 +19,7 @@ function checkExperienceCost(cost) {
  * @param {number} cost - The XP cost to spend.
  */
 function spendExperience(cost) {
-    const refund = parseInt(cost, 10);
+    const refund = cost;
     if (oCharacter.build.spend_xp + refund > oCharacter.build.max_xp) {
         console.error('Attempt to set XP over maximum');
         oCharacter.build.spend_xp = oCharacter.build.max_xp;
@@ -35,7 +35,7 @@ function spendExperience(cost) {
  * @param {number} cost - The XP cost to refund.
  */
 function refundExperience(cost) {
-    const deduction = parseInt(cost, 10);
+    const deduction = cost;
     if (oCharacter.build.spend_xp - deduction < 0) {
         console.error('Attempt to set XP under minimum');
         oCharacter.build.spend_xp = 0;
