@@ -43,6 +43,7 @@ const oTranslations = Object.freeze({
         "question_5": "Wat zijn je plannen komend evenement?",
         "question_6": "Overige toevoeging? (optioneel)",
         "rank": "niveau",
+        "rank_max": "Maximale niveau behaald",
         "racial": "ras",
         "remove": "verwijderen",
         "required": "verplicht",
@@ -231,8 +232,8 @@ let oCharacter = {
     build: Object.assign({}, jsonBaseChar),
     race: [],
     profession: [],
-    skills: [], 
-    items: [],
+    skill: [], 
+    item: [],
     stories: [],
 }
 

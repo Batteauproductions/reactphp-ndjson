@@ -10,9 +10,8 @@ import { spendExperience, refundExperience } from './experience.js';
  * Add elements to the character.
  * @param {string} sAction - The type of element being added (profession, skill, item).
  * @param {Object} characterAsset - The object representing the element being added.
- * @param {Array} attribute - The character attribute array (e.g., profession, skills, items).
  */
-function addToCharacter(sAction, characterAsset, attribute) {
+function addToCharacter(sAction, characterAsset) {
     debugLog('addToCharacter');
 
     if (typeof characterAsset !== 'object' || characterAsset === null) {
@@ -21,7 +20,7 @@ function addToCharacter(sAction, characterAsset, attribute) {
     }
 
     // Add the characterAsset to the specified attribute
-    attribute.push(characterAsset);
+    oCharacter[sAction].push(characterAsset);
 
     // Spend experience or currency based on the type
     if (sAction === "profession" || sAction === "skill") {
@@ -59,65 +58,65 @@ function calculateIncrease(id) {
     // Calculate increase for race, profession, and skills
     calculateForCategory(oCharacter.race);
     calculateForCategory(oCharacter.profession);
-    calculateForCategory(oCharacter.skills);
+    calculateForCategory(oCharacter.skill);
 
     return increase;
 }
 
 /**
- * Finds the index of an item in the character's attribute array.
- * @param {Array} attribute - The attribute array of the character.
- * @param {string} main_id - The main ID of the item.
+ * Finds the index of an item in the character's specified attribute array.
+ * @param {Array} sAction - The attribute to search ('skill' or 'profession').
+ * @param {string} id - The main ID of the item.
  * @param {string|null} sub_id - The sub ID of the item (optional).
  * @returns {number} The index of the item if found, otherwise -1.
  */
 function findItemIndex(attribute, id, sub_id = null) {
-    return attribute.findIndex(item => {
-        const itemMainId = item?.id;
-        const itemSubId = item?.sub_id;
+    // Access the specified attribute array directly from oCharacter
+    const attributeArray = attribute;
 
-        return itemMainId === id && (itemSubId === sub_id || sub_id === null);
-    });
+    // Ensure the attributeArray is an array and search for the item by id and sub_id
+    return Array.isArray(attributeArray) 
+        ? attributeArray.findIndex(item => item?.id === id && (item?.sub_id === sub_id || sub_id === null))
+        : -1;
 }
 
 /**
  * Remove elements from the character.
  * @param {string} sAction - The type of element being removed.
  * @param {Object} characterAsset - The jQuery element calling the action.
- * @param {Array} attribute - The character attribute array.
  */
-function removeFromCharacter(sAction, characterAsset, attribute) {
+function removeFromCharacter(sAction, characterAsset) {
     debugLog('removeFromCharacter', characterAsset);
 
-    const index = findItemIndex(attribute, characterAsset.id, characterAsset.sub_id);
+    const index = findItemIndex(oCharacter[sAction], characterAsset.id, characterAsset.sub_id);
 
     //Remove from the character object if found, otherwise return error in console
     //Note: this should not be possible for a user to invoke unless he intentionally tries to break the UI
     if (index === -1) {
-        console.error('removeFromCharacter: Item not found');
+        console.error(`Trying to remove ${sAction}, non-existent`)
         return;
     }
-    attribute.splice(index, 1)[0];
+    oCharacter[sAction].splice(index, 1)[0];
 
     //Remove the row from the DOM associated with the element
     let selector;    
-    if (sub_id === null) {
-        selector = `div[data-id="${id}"]`;
+    if (characterAsset.sub_id === null) {
+        selector = `div[data-id="${characterAsset.id}"]`;
     } else {
-        selector = `div[data-id="${id}"][data-sub_id="${sub_id}"]`;
+        selector = `div[data-id="${characterAsset.id}"][data-sub_id="${characterAsset.sub_id}"]`;
     }    
     $(selector).remove();
     
     // Refund the cost of the element
     // Currently only experience and currency are spendable resources
     if (sAction === "profession" || sAction === "skill") {
-        refundExperience(cost);
+        refundExperience(characterAsset.cost);
     } else if (sAction === "item") {
-        refundCurrency(cost);
+        refundCurrency(characterAsset.cost);
     }
 
     // Update the stats if there was a modifier present
-    if (modifier) {
+    if (characterAsset.modifier) {
         updateCharacterStats();
     }
 

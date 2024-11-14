@@ -1,6 +1,6 @@
 // Generic settings and functions
 import { domain, oCharacter, language, oTranslations } from './settings.js';
-import { debugLog, showMessage, addCharacterAsset } from './functions.js';
+import { debugLog, showMessage, addCharacterAsset, showPopup } from './functions.js';
 import { checkExperienceCost } from './experience.js';
 import { openModal, updateModalDropdown } from './modal.js';
 import { addToCharacter, updateCharacterStats, updateCharacter, removeFromCharacter, findItemIndex } from './character.js';
@@ -129,7 +129,7 @@ function chooseProfession(obj) {
     }
 
     // Check for duplicates
-    if (findItemIndex(oCharacter.profession, profClass.id, profClass.sub_id) !== -1) {
+    if (findItemIndex('profession', profClass.id, profClass.sub_id) !== -1) {
         showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
         return;
     }
@@ -152,7 +152,7 @@ function addProfession(profession) {
     }
     
     addCharacterAsset('profession', profession);
-    addToCharacter('profession', profession, oCharacter.profession);
+    addToCharacter('profession', profession);
     $('#selection-modal').foundation('close');
 }
 
@@ -169,7 +169,7 @@ function removeProfession(profession) {
         return;
     }
     
-    removeFromCharacter('profession', profession, oCharacter.profession);
+    removeFromCharacter('profession', profession);
 }
 
 /**
@@ -187,15 +187,15 @@ function upgradeProfession(profession) {
 
     //attempt to find the proffesion within the character object
     const index = findItemIndex(oCharacter.profession, profession.id, profession.sub_id)
-    if (index !== -1) {
+    if (index === -1) {
         console.error('Trying to upgrade profession, non-existent')
         return;
     }
 
     //get the new rank of the profession
-    const new_rank = profession.rank++;
+    const new_rank = profession.rank+1;
     if (new_rank > 3) {
-        showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
+        showPopup(oTranslations[language].rank_max);
         return;
     }
 
@@ -203,7 +203,7 @@ function upgradeProfession(profession) {
     const new_cost = getRankCost(profession, new_rank);
     // Check if the character has enough experience
     if (!checkExperienceCost(new_cost)) {
-        showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
+        showPopup(oTranslations[language].not_enough_vp);
         return;
     }
 

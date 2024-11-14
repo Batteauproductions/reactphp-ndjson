@@ -78,6 +78,11 @@ function openModal(sAction,$modal) {
             sub_id: $subtypeSelect.val(),
             sub_name: $subtypeSelect.text(),
         }
+        if ($subtypeSelect.val()) {
+            $('#choose-characterAsset').attr('disabled',false);
+        } else {
+            $('#choose-characterAsset').attr('disabled',true);
+        }
         if(sAction === 'profession') {
             updateModalImage(oTmpData);
         } else {
@@ -326,6 +331,7 @@ function updateModelButtons(sAction, oDetails) {
         // Create and bind the button element if click_function is valid
         if (click_function) {
             const $button = $('<a>', {
+                id: 'choose-characterAsset',
                 class: 'button solid',
                 html: `${icons.choose.icon} ${icons.choose.text}`
             }).on('click', function() {

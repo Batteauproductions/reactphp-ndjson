@@ -181,18 +181,30 @@ function initiateEditor() {
     });
 }
 
+function showPopup(message) {
+    alert(message);
+}
+
 /**
- * Inserts a message into the DOM.
- * @param {string} element - The element selector to prepend the message to.
+ * Inserts a message into the DOM, replacing any existing messages.
+ * @param {string} element - The element selector to insert the message into.
  * @param {string} type - The type of message (e.g., 'error', 'success').
  * @param {string} message - The message text.
  */
 function showMessage(element, type, message) {
-    $(element).prepend($('<p>', { class: `input-message input-${type} animate__animated animate__shakeX`, text: message }));
+    // Remove any existing message within the element
+    $(element).find('.input-message').remove();
+    
+    // Insert the new message
+    $(element).append($('<p>', { 
+        class: `input-message input-${type} animate__animated animate__shakeX`, 
+        text: message 
+    }));
 }
 
 // Export functions
 export {
+    showPopup,
     debugLog,
     addCharacterAsset,
     initiateEditor,
