@@ -69,19 +69,19 @@ class SkillModel extends Model
         if ($arrProfessions !== null) {
             foreach ($arrProfessions as $key => $value) {
                 $query->orGroupStart()                              
-                    ->where('s.profession_link', intval($arrProfessions[$key]['main_id']))
+                    ->where('s.profession_link', intval($arrProfessions[$key]['id']))
                     ->where('s.profession_sublink', intval($arrProfessions[$key]['sub_id']))
                     ->where('s.profession_rank <=', intval($arrProfessions[$key]['rank']))          
                     ->groupEnd();
                 //for skills with a rank in the profession, but no sublink
                 $query->orGroupStart()                    
-                    ->where('s.profession_link', intval($arrProfessions[$key]['main_id']))
+                    ->where('s.profession_link', intval($arrProfessions[$key]['id']))
                     ->where('s.profession_sublink', null)
                     ->where('s.profession_rank <=', intval($arrProfessions[$key]['rank']))
                     ->groupEnd();
                 //for skills with no rank in the profession
                 $query->orGroupStart()                    
-                    ->where('s.profession_link', intval($arrProfessions[$key]['main_id']))
+                    ->where('s.profession_link', intval($arrProfessions[$key]['id']))
                     ->where('s.profession_rank', null)
                     ->groupEnd();
             }

@@ -1,9 +1,9 @@
 // Generic settings and functions
 import { domain, oCharacter, language, oTranslations } from './settings.js';
-import { debugLog, showMessage, addCharacterAsset, showPopup } from './functions.js';
+import { debugLog, showMessage, showPopup } from './functions.js';
 import { checkExperienceCost } from './experience.js';
 import { openModal, updateModalDropdown } from './modal.js';
-import { addToCharacter, updateCharacterStats, updateCharacter, removeFromCharacter, findItemIndex } from './character.js';
+import { addToCharacter, removeFromCharacter, findItemIndex, addCharacterAsset, updateCharacterAsset, } from './character.js';
 
 // Define the class
 class Profession {
@@ -161,7 +161,7 @@ function addProfession(profession) {
  * @param {Object} profession - The profession object.
  */
 function removeProfession(profession) {
-    debugLog('professionRemove', profession);
+    debugLog('removeProfession', profession);
     
     //check if the profession is a valid object
     if (typeof profession !== 'object' || profession === null) {
@@ -186,7 +186,7 @@ function upgradeProfession(profession) {
     }
 
     //attempt to find the proffesion within the character object
-    const index = findItemIndex(oCharacter.profession, profession.id, profession.sub_id)
+    const index = findItemIndex('profession', profession.id, profession.sub_id)
     if (index === -1) {
         console.error('Trying to upgrade profession, non-existent')
         return;
@@ -207,16 +207,7 @@ function upgradeProfession(profession) {
         return;
     }
 
-    //Update the character object
-    oCharacter.profession[index].rank = new_rank;
-    oCharacter.profession[index].cost = new_cost;
-
-    // Update the stats if there was a modifier present
-    if (profession.modifier) {
-        updateCharacterStats();
-    }
-    // Update the character object in the interface
-    updateCharacter();
+    updateCharacterAsset('profession',profession,index,new_rank,new_cost);
 }
 
 /**

@@ -1,9 +1,9 @@
 //Generic settings and functions
 import { domain, oCharacter, language, oTranslations } from './settings.js'
-import { debugLog, showMessage, addCharacterAsset } from './functions.js'
+import { debugLog, showMessage } from './functions.js'
 import { checkExperienceCost } from './experience.js';
 import { openModal, updateModalDropdown } from './modal.js'
-import { addToCharacter, removeFromCharacter, findItemIndex } from './character.js';
+import { addToCharacter, removeFromCharacter, findItemIndex, addCharacterAsset, updateCharacterAsset } from './character.js';
 
 // Define the class
 class Skill {
@@ -28,7 +28,7 @@ class Skill {
         this.sub_name = sub_name !== null ? sub_name : null;;
         this.rank = parseInt(rank);
         this.cost = parseInt(cost);
-        this.modifier = parseInt(modifier);
+        this.modifier = modifier[0].id !== undefined ? parseInt(modifier[0].id) : null;
         this.xp_cost = parseInt(xp_cost);
         this.allow_multiple = allow_multiple === 1;
         this.cost = parseInt(cost)
@@ -76,7 +76,8 @@ function pickSkillMagic () {
 }
 
 function pickSkill(sAction) {
-    debugLog('pickSkill');
+    debugLog('pickSkill', sAction);
+    
     // Define modal and form
     const $modal = $('#selection-modal');
     const $form = $('#modal-form');
@@ -129,63 +130,93 @@ function chooseSkill(obj) {
         cost: parseInt(obj.details.xp_cost)
     }
 
-    //--Nested destructuring of the Object
-    const { details: { id, xp_cost }, current: { sub_id } } = obj;
+    const skillClass = new Skill(obj);
 
-    if (!checkExperienceCost(xp_cost)) {
+    // Check if the character has enough experience
+    if (!checkExperienceCost(skillClass.xp_cost)) {
         showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
         return;
     }
 
-    if (findItemIndex(oCharacter.profession, id, sub_id) !== -1) {
+    // Check for duplicates
+    if (findItemIndex('skill', skillClass.id, skillClass.sub_id) !== -1) {
         showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
         return;
     }
 
-    addSkill(obj);
+    addSkill(skillClass);
 
 }
 
 /**
  * Add a skill to the character.
- * @param {Object} obj - The skill object.
+ * @param {Object} skill - The skill object.
  */
-function addSkill(obj) {
-    if (typeof obj !== 'object' || obj === null) {
+function addSkill(skill) {
+    debugLog('addSkill', skill);
+
+    //check if the skill is a valid object
+    if (typeof skill !== 'object' || skill === null) {
         console.error("addSkill: 'obj' is not a valid object: " + $.type(obj));
         return;
     }
 
-    addCharacterAsset('skill', obj);
-    addToCharacter(oCharacter.skills, 'skill', obj);
+    addCharacterAsset('skill', skill);
+    addToCharacter('skill', skill);
     $('#selection-modal').foundation('close');
 }
 
 /**
  * Remove a skill from the character.
- * @param {Object} obj - The skill object.
+ * @param {Object} skill - The skill object.
  */
-function removeSkill(obj) {
-    if (typeof obj !== 'object' || obj === null) {
-        console.error("removeSkill: 'obj' is not a valid object: " + $.type(obj));
+function removeSkill(skill) {
+    debugLog('removeSkill', skill);
+
+    if (typeof skill !== 'object' || skill === null) {
+        console.error("removeSkill: 'obj' is not a valid object: " + $.type(skill));
         return;
     }
-
-    debugLog('removeSkill', obj);
-    removeFromCharacter('skill', obj, oCharacter.skills);
+    
+    removeFromCharacter('skill', skill);
 }
 
 /**
  * Upgrade a skill linked to the character.
- * @param {Object} obj - The skill object.
+ * @param {Object} skill - The skill object.
  */
-function upgradeSkill(obj) {
-    if (typeof obj !== 'object' || obj === null) {
-        console.error("upgradeSkill: 'obj' is not a valid object: " + $.type(obj));
+function upgradeSkill(skill) {
+    debugLog('upgradeSkill', skill);
+
+    //check if the skill is a valid object
+    if (typeof skill !== 'object' || skill === null) {
+        console.error("upgradeSkill: 'obj' is not a valid object: " + $.type(skill));
+        return;
     }
 
-    debugLog('upgradeSkill', obj);
-    //-- Needs implementation
+    //attempt to find the proffesion within the character object
+    const index = findItemIndex('skill', skill.id, skill.sub_id)
+    if (index === -1) {
+        console.error('Trying to upgrade skill, non-existent')
+        return;
+    }
+
+    //get the new rank of the skill
+    const new_rank = skill.rank+1;
+    if (new_rank > 3) {
+        showPopup(oTranslations[language].rank_max);
+        return;
+    }
+
+    //get the new cost of the skill based on the new rank
+    const new_cost = getRankCost(skill, new_rank);
+    // Check if the character has enough experience
+    if (!checkExperienceCost(new_cost)) {
+        showPopup(oTranslations[language].not_enough_vp);
+        return;
+    }
+
+    updateCharacterAsset('skill',skill,index,new_rank,new_cost);
 }
 
 export {  
