@@ -92,7 +92,7 @@ class Character extends Controller
                 case 'fill-dropdown-base_kit':
                     echo json_encode($this->itemModel->getBasicKit());
                     break;
-                case 'fill-dropdown-item_add':
+                case 'fill-dropdown-item':
                     echo json_encode($this->itemModel->getItems());
                     break;
                 default:
@@ -129,7 +129,7 @@ class Character extends Controller
                 case 'get-details-base_kit':
                     echo json_encode($this->itemModel->getBasicKitDetails($arrData['id']));
                     break;
-                case 'get-details-item_add':
+                case 'get-details-item':
                     echo json_encode($this->itemModel->getItemDetails($arrData['id']));
                     break;
                 default:

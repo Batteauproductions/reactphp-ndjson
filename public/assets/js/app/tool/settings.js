@@ -118,6 +118,11 @@ const icons = Object.freeze({
         class: '',
         text: oTranslations[language].more_info,
     },
+    "racial": {
+        icon: '<i class="fa-solid fa-users"></i>',
+        class: '',
+        text: oTranslations[language].racial,
+    },
     "rank":{
         icon: '<i class="fa-solid fa-hashtag"></i>',
         class: '',

@@ -85,8 +85,29 @@ function showMessage(element, type, message) {
     }));
 }
 
+/**
+ * Checks whether the input fields 'type' and 'sub_type' are valid for choosing based on visibility and values.
+ * @returns {boolean} Returns `true` if the conditions for choosing are met, otherwise `false`.
+ */
+function allowChoose() {
+    const $type = $('select[name="type"]');
+    const $sub_type = $('select[name="subtype"]');
+
+    if(($type.is(':visible') && $type.val()) && !$sub_type.is(':visible')) {
+        return true;
+    }
+
+    if($sub_type.is(':visible') && $sub_type.val()) {
+        return true;
+    }
+
+    return false;
+}
+
+
 // Export functions
 export {
+    allowChoose,
     showPopup,
     debugLog,
     initiateEditor,

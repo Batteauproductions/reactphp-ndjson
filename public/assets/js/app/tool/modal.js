@@ -1,7 +1,9 @@
 //Generic settings and functions
 import { domain, icons, oCharacter, language, oTranslations } from './settings.js';
-import { debugLog } from './functions.js'
-//Page functions
+import { debugLog, allowChoose } from './functions.js'
+import { convertCurrency } from './currency.js'
+import { chooseRace } from './race.js'
+import { changeName } from './name.js';
 import { chooseProfession } from './professions.js';
 import { chooseSkill } from './skills.js';
 import { chooseItem, chooseBasekit } from './equipment.js';
@@ -18,6 +20,7 @@ const $choice_details = $('#choice-details');
 const $choice_actions = $('#choice-actions');
 
 let oTmpData = {};
+let oTmpSelector = null;
 
 /*clearModal
 --bClear, weither the modal should be completely cleared
@@ -38,8 +41,8 @@ function clearModal(bClear) {
 //basic function to open the modal
 //requires a modal DOM element to target
 //requires a action to be linked
-function openModal(sAction,$modal) {
-    debugLog('openModal:',sAction,$modal);
+function openSelectionModal(sAction,$modal) {
+    debugLog('openSelectionModal:',sAction,$modal);
     //default open state for the modal
     clearModal(true);
     $modalLoading.show();      
@@ -60,6 +63,7 @@ function openModal(sAction,$modal) {
             success: function(oData) {
                 debugLog('select[name="type"][data]',oData);
                 oTmpData = oData;
+                allowChoose();
                 if (oTmpData.subtype && oTmpData.subtype.length > 0) {
                     updateModalDropdown($subtypeSelect, oTmpData.subtype);
                     $subtypeSelect.show();
@@ -78,16 +82,8 @@ function openModal(sAction,$modal) {
             sub_id: $subtypeSelect.val(),
             sub_name: $subtypeSelect.text(),
         }
-        if ($subtypeSelect.val()) {
-            $('#choose-characterAsset').attr('disabled',false);
-        } else {
-            $('#choose-characterAsset').attr('disabled',true);
-        }
-        if(sAction === 'profession') {
-            updateModalImage(oTmpData);
-        } else {
-            updateModalImage();
-        } 
+        allowChoose();
+        updateModal(sAction,oTmpData); 
     });
     //-- changing of the rank input field
     $modal.find('input[name="rank"]').off('change').on('change',function() {
@@ -101,8 +97,8 @@ function openModal(sAction,$modal) {
 function updateModal (sAction,oData) {
     debugLog('updateModal: ',sAction,oData);
     //update parts of the Modal
-    if(sAction === 'profession') {
-        updateModalImage(oData);
+    if(sAction === 'profession' || sAction === 'race') {
+        updateModalImage(sAction,oData);
     } else {
         updateModalImage();
     }    
@@ -170,20 +166,35 @@ function updateModalDropdown($element, oData) {
     });
 }
 
-function updateModalImage(oData) { 
-    // Check if oData and its nested properties are defined
+/**
+ * Updates the modal image based on the provided data.
+ * 
+ * This function sets the image's path and visibility depending on the presence of 
+ * `id` and `sub_id` values within the provided data object.
+ *
+ * @param {Object} oData - The data object containing image details.
+ * @param {Object} [oData.details] - The details object.
+ * @param {number|string|null} [oData.details.id] - The ID for the image.
+ * @param {Object} [oData.current] - The current object.
+ * @param {number|string|null} [oData.current.sub_id] - The sub-ID for the image.
+ */
+function updateModalImage(sAction, oData) {
     const id = oData?.details?.id || null;
     const sub_id = oData?.current?.sub_id || null;
 
-    // Sets up the path and visibility of the image
+    // Determine the image source and visibility
+    let src = '';
     if (id && sub_id) {
-        $choice_image.attr('src', `${domain}/assets/images/profession/prof_${id}_${sub_id}.png`);
-        $choice_image_container.show();
+        src = `${domain}/assets/images/${sAction}/${sAction}_${id}_${sub_id}.jpg`;
     } else if (id) {
-        $choice_image.attr('src', `${domain}/assets/images/profession/prof_${id}.png`);
+        src = `${domain}/assets/images/${sAction}/${sAction}_${id}.jpg`;
+    }
+
+    if (src) {
+        $choice_image.attr('src', src);
         $choice_image_container.show();
     } else {
-        $choice_image.attr('src', ``);
+        $choice_image.attr('src', '');
         $choice_image_container.hide();
     }
 }
@@ -246,8 +257,8 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = []) {
             case 'profession':
                 contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} ${rank_1_cost} ${icons.experience.text}` }));
                 break;
-            case 'item_add':
-                contentDetailsElements.push($('<p>', { html: currencyConvert(price) }));
+            case 'item':
+                contentDetailsElements.push($('<p>', { html: convertCurrency(price) }));
                 break;
             default:
                 console.warn(`Unused action of ${sAction} has been called`);
@@ -306,20 +317,22 @@ function updateModelButtons(sAction, oDetails) {
     if (sAction && oDetails) {
         const { rule_page } = oDetails;
         let click_function = null;
-
+        oTmpSelector = sAction;
         // Determine the click function based on the action
         switch (sAction) {
             case 'skill_base':
             case 'skill_combat':
-            case 'skill_magic':
-                click_function = chooseSkill;
+            case 'skill_magic':                
+                click_function = chooseSkill;                
                 break;
             case 'profession':
                 click_function = chooseProfession;
                 break;
-            case 'item_add':
+            case 'item':
                 click_function = chooseItem;
                 break;
+            case 'race': 
+                click_function = chooseRace;
             default:
                 console.warn(`Unused action of ${sAction} has been called`);
                 break;
@@ -330,11 +343,13 @@ function updateModelButtons(sAction, oDetails) {
 
         // Create and bind the button element if click_function is valid
         if (click_function) {
-            const $button = $('<a>', {
+            const $button = $('<button>', {
                 id: 'choose-characterAsset',
                 class: 'button solid',
-                html: `${icons.choose.icon} ${icons.choose.text}`
-            }).on('click', function() {
+                html: `${icons.choose.icon} ${icons.choose.text}`,
+                disabled: !allowChoose() //logic is reversed because of how disable attribute works                
+            }).on('click', function(e) {
+                e.preventDefault();
                 click_function(oTmpData);
             });
             contentActionsElements.push($button);
@@ -364,7 +379,7 @@ function updateModelButtons(sAction, oDetails) {
 function openTextModal(sAction) {
     const $modal = $('#text-modal')
     const $form = $('#text-form');
-    openModal($modal,$form,sAction);
+    $modal.foundation('open');
     //container of elements to be place within the modal
     let contentElements = [];
     //switch the content of the modal based on action
@@ -383,6 +398,9 @@ function openTextModal(sAction) {
             contentElements.push($('<a>', { 
                 class: 'button solid','data-action': `${sAction}-choose`,
                 html: `${icons.choose.icon} ${icons.choose.text}`
+            }).on('click', function(e) {
+                e.preventDefault();
+                changeName();
             }));
             $modalLoading.hide();
             $form.append(contentElements).show();
@@ -430,7 +448,7 @@ function openStoryModal(sAction) {
                     $Form.show();
                 },
                 error: (error) => {
-                    console.log('Error:', error);
+                    console.error('Error:', error);
                 }
             });
             break;
@@ -440,7 +458,8 @@ function openStoryModal(sAction) {
 }
 
 export {
-    openModal,
+    oTmpSelector,
+    openSelectionModal,
     clearModal,
     openTextModal,
     openStoryModal,

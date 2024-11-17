@@ -1,9 +1,34 @@
 // Generic settings and functions
-import { oCharacter } from './settings.js';
+import { domain, oCharacter, language, oTranslations } from './settings.js';
 import { debugLog, showMessage } from './functions.js';
-import { openModal } from './modal.js';
-import { addSkill } from './skills.js';
-import { updateCharacter, updateCharacterStats, removeFromCharacter } from './character.js';
+import { openSelectionModal, updateModalDropdown } from './modal.js';
+import { Skill, addSkill } from './skills.js';
+import { updateCharacter, updateCharacterStats, addToCharacter } from './character.js';
+
+// Define the class
+class Race {
+    constructor({
+        details: {
+            id,
+            name,
+        },
+        modifier = [], // Default to an empty array for safety
+        skills = [], // Default to an empty array for safety
+    }) {
+        this.id = parseInt(id);
+        this.name = name;
+        this.modifier = modifier.length > 0 && modifier[0]?.id !== undefined ? parseInt(modifier[0].id) : null;
+        this.skills = skills.length > 0 ? skills : null;
+    }
+
+    // Updated method to display all attributes
+    displayInfo() {
+        console.log(`ID: ${this.id}`);
+        console.log(`Name: ${this.name}`);
+        console.log(`Modifier: ${this.modifier}`);
+        console.log(`Skills: ${this.skills}`);
+    }
+}
 
 // Page functions
 
@@ -11,7 +36,50 @@ import { updateCharacter, updateCharacterStats, removeFromCharacter } from './ch
  * Pick a race (functionality not implemented).
  */
 function pickRace() {
-    // Implementation needed
+    debugLog('pickRace');
+
+    const $modal = $('#selection-modal');
+    const $form = $('#modal-form');
+    const sAction = 'race';
+
+    openSelectionModal(sAction, $modal);
+
+    $.ajax({
+        url: `${domain}/action/get-dropdown`,
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            action: `fill-dropdown-${sAction}`,
+        },
+        success: function(data) {
+            debugLog('pickRace[data]', data);
+            const $select = $('select[name="type"]');
+            $('div[data-id="modal-loading"]').hide();
+            updateModalDropdown($select, data);
+            $form.show();
+            $select.show();
+        },
+        error: function(error) {
+            console.error('pickProfession: Error fetching data:', error);
+        }
+    });
+}
+
+/**
+ * Choose a race for the character.
+ * @param {Object} obj - The race object.
+ */
+function chooseRace(obj) {
+    debugLog('pickRace', obj);
+
+    // Validate that the input is a valid object
+    if (typeof obj !== 'object' || obj === null) {
+        console.error("chooseRace: 'obj' is not a valid object: " + $.type(obj));
+        return;
+    }
+
+    const raceClass = new Race(obj);
+    addRace(raceClass);
 }
 
 /**
@@ -25,35 +93,23 @@ function addRace(obj) {
     }
 
     // Remove existing race and associated elements
-    removeRace(obj);
+    //removeRace(obj);
 
-    // Declare a new usable race variable
-    const oRace = {
-        id: parseInt(obj.details.id, 10),
-        modifier: null
-    };
+    // Add race modifier 
 
-    // Determine race modifier
-    if (obj.modifier && obj.modifier.length > 0) {
-        oRace.modifier = parseInt(obj.modifier.length > 1 ? $('input[name="stat-modifier"]:checked').val() : obj.modifier[0].id, 10);
-    }
 
     // Add racial skills
-    if (choice_skills.length > 0) {
-        for (let i = 0; i < choice_skills.length; i++) {
-            addSkill(choice_skills[i]);
-            elementAdd("skill_base-list", choice_skills[i], "skill");
-        }
-        choice_skills.length = 0;
+    if (obj.skills.length > 0) {
+        obj.skills.forEach(skill => addSkill(new Skill(skill)));
     }
 
     // Assign race to character
-    oCharacter.race = oRace;
+    oCharacter.race = obj;
     updateCharacterStats();
     updateCharacter();
 
     // Allow race to be re-chosen
-    $('#race').html(`<i class="fa-solid fa-rotate-right"></i>${obj.details.name}</span>`);
+    $('#race').html(`<i class="fa-solid fa-rotate-right"></i>${obj.name}</span>`);
     $('#selection-modal').foundation('close');
 }
 
@@ -62,26 +118,13 @@ function addRace(obj) {
  * @param {Object} obj - The race object.
  */
 function removeRace(obj) {
-    oCharacter.race = {};
-
-    // Remove skills associated with the race
-    oCharacter.skills.forEach(skill => {
-        const { main_id, sub_id } = skill;
-        removeFromCharacter(oCharacter.skills, 'skill_base-list', 'skill', main_id, sub_id);
-    });
-
-    // Filter out skills associated with the race
-    oCharacter.skills = oCharacter.skills.filter(skill => {
-        return !(obj.skills && obj.skills[skill.main_id] === true);
-    });
-
-    updateCharacterStats();
-    updateCharacter();
+    // needs implementation
 }
 
 // Export functions
 export {
-    addRace,
     pickRace,
+    chooseRace,
+    addRace,
     removeRace,
 }

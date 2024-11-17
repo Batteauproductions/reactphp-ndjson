@@ -1,6 +1,7 @@
 // Generic settings and functions
 import { domain, icons, oCharacter, jsonBaseChar, jsonStat, iconset } from './settings.js';
 import { debugLog } from './functions.js';
+import { oTmpSelector } from './modal.js';
 import { spendCurrency, convertCurrency, refundCurrency } from './currency.js';
 import { spendExperience, refundExperience } from './experience.js';
 import { removeProfession, upgradeProfession } from './professions.js';
@@ -46,7 +47,7 @@ function addToCharacter(sAction, characterAsset) {
  * @param {string} sAction - The action type (e.g., 'skill', 'profession', 'item').
  * @param {Object} characterAsset - The element to add.
  */
-function addCharacterAsset(sAction, characterAsset) {
+function addCharacterAsset(sAction, characterAsset, selector = null) {
     if (typeof characterAsset !== 'object' || characterAsset === null) {
         console.error("addCharacterAsset: 'element' is not a valid object: " + $.type(element));
         return;
@@ -68,7 +69,6 @@ function addCharacterAsset(sAction, characterAsset) {
         })
     ];
 
-    console.log('sAction,',sAction)
     let local_icons;
     switch (sAction) {
         case 'skill':
@@ -85,7 +85,7 @@ function addCharacterAsset(sAction, characterAsset) {
                 html: characterAsset.race ? `${oTranslations[language].racial}` : `${characterAsset.cost}pt.`
             }));
 
-            local_icons = characterAsset.rank ? iconset["new_skill_with_rank"] : iconset["new_skill_no_rank"];
+            local_icons = characterAsset.rank !== characterAsset.max_rank ? iconset["new_skill_with_rank"] : iconset["new_skill_no_rank"];
             break;
         case 'item':
             arrColumn.push($('<div>', {
@@ -97,7 +97,7 @@ function addCharacterAsset(sAction, characterAsset) {
             arrColumn.push($('<div>', {
                 'data-column': 'cost',
                 class: 'cell small-3 text-right',
-                html: `${currencyConvert(characterAsset.cost)}`
+                html: `${characterAsset.costText()}`
             }));
 
             local_icons = iconset["new_item"];
@@ -145,7 +145,8 @@ function addCharacterAsset(sAction, characterAsset) {
 
     row.append(arrColumn);
 
-    const $container = $(`[data-id="${sAction}-list"]`);
+    const $container =  $(`[data-id="${oTmpSelector}-list"]`);
+
     let inserted = false;
     $container.children('.choice-row').each(function() {
         const currentRow = $(this);
@@ -247,7 +248,7 @@ function findItemIndex(attribute, id, sub_id = null) {
 function removeFromCharacter(sAction, characterAsset) {
     debugLog('removeFromCharacter', characterAsset);
 
-    const index = findItemIndex(oCharacter[sAction], characterAsset.id, characterAsset.sub_id);
+    const index = findItemIndex(sAction, characterAsset.id, characterAsset.sub_id);
 
     //Remove from the character object if found, otherwise return error in console
     //Note: this should not be possible for a user to invoke unless he intentionally tries to break the UI

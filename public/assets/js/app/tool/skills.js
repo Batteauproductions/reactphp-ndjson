@@ -1,8 +1,8 @@
 //Generic settings and functions
 import { domain, oCharacter, language, oTranslations } from './settings.js'
-import { debugLog, showMessage } from './functions.js'
+import { debugLog, showMessage, showPopup } from './functions.js'
 import { checkExperienceCost } from './experience.js';
-import { openModal, updateModalDropdown } from './modal.js'
+import { openSelectionModal, updateModalDropdown } from './modal.js'
 import { addToCharacter, removeFromCharacter, findItemIndex, addCharacterAsset, updateCharacterAsset } from './character.js';
 
 // Define the class
@@ -11,15 +11,17 @@ class Skill {
         details: {
             id,
             name,
-            modifier,
             xp_cost,
+            max_rank,
             allow_multiple
         },
+        modifier = [], // Default to an empty array for safety
         current: {
             sub_id = null,
             sub_name = null,
             rank,
-            cost = 0
+            cost = 0,
+            racial = false
         } = {} // Provide a default empty object for destructuring
     }) {
         this.id = parseInt(id);
@@ -27,11 +29,13 @@ class Skill {
         this.sub_id = sub_id !== null ? parseInt(sub_id) : null;
         this.sub_name = sub_name !== null ? sub_name : null;;
         this.rank = parseInt(rank);
+        this.max_rank = !isNaN(parseInt(max_rank)) ? parseInt(max_rank) : 1;
         this.cost = parseInt(cost);
-        this.modifier = modifier[0].id !== undefined ? parseInt(modifier[0].id) : null;
+        this.modifier = modifier.length > 0 && modifier[0]?.id !== undefined ? parseInt(modifier[0].id) : null;
         this.xp_cost = parseInt(xp_cost);
         this.allow_multiple = allow_multiple === 1;
-        this.cost = parseInt(cost)
+        this.racial = racial; // a skill can be added as part as a racial bonus
+        this.cost = this.racial ? 0 : parseInt(cost) // all racial skills are 0 cost        
     }
 
     // Updated method to display all attributes
@@ -75,6 +79,11 @@ function pickSkillMagic () {
     pickSkill('skill_magic');
 }
 
+/**
+ * Handles the process of selecting a skill by opening a modal, fetching dropdown data via AJAX, 
+ * and populating the modal form with the fetched data.
+ * @param {string} sAction - The action type, used to determine the context for the skill selection.
+ */
 function pickSkill(sAction) {
     debugLog('pickSkill', sAction);
     
@@ -83,7 +92,7 @@ function pickSkill(sAction) {
     const $form = $('#modal-form');
 
     // Open the modal
-    openModal(sAction,$modal);
+    openSelectionModal(sAction,$modal);
 
     // Make AJAX call to fill the dropdown
     $.ajax({
@@ -153,7 +162,7 @@ function chooseSkill(obj) {
  * @param {Object} skill - The skill object.
  */
 function addSkill(skill) {
-    debugLog('addSkill', skill);
+    debugLog('addSkill');
 
     //check if the skill is a valid object
     if (typeof skill !== 'object' || skill === null) {
@@ -203,7 +212,7 @@ function upgradeSkill(skill) {
 
     //get the new rank of the skill
     const new_rank = skill.rank+1;
-    if (new_rank > 3) {
+    if (new_rank > skill.max_rank) {
         showPopup(oTranslations[language].rank_max);
         return;
     }
@@ -219,7 +228,18 @@ function upgradeSkill(skill) {
     updateCharacterAsset('skill',skill,index,new_rank,new_cost);
 }
 
+/**
+ * Calculates the cumulative rank cost up to a specified rank.
+ * @param {Object} profession - The object containing rank cost properties.
+ * @param {number} rank - The rank up to which the costs should be summed.
+ * @returns {number} The total cumulative cost for ranks from 1 up to the specified rank.
+ */
+function getRankCost(skill, new_rank) {
+    return skill.xp_cost * new_rank;
+}
+
 export {  
+    Skill,
     addSkill,
     chooseSkill,
     pickSkillProfession,

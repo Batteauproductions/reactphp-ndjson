@@ -11,7 +11,7 @@
     </div>
     <div class="cell small-8">
         <div class="info-container">
-            <div data-id="item_add-list">
+            <div data-id="item-list">
                 <!-- Dynamic filled -->
             </div>
             <a data-action="pick-item"><i class="fa-solid fa-plus"></i>toevoegen</a>

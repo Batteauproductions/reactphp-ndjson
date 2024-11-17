@@ -1,8 +1,189 @@
 //Generic settings and functions
-import { oCharacter } from './settings.js'
-import { debugLog } from './functions.js'
-//Functions needed for actual app performance
-import { addToCharacter, removeFromCharacter } from './character.js';
+import { domain, oCharacter, language, oTranslations } from './settings.js'
+import { debugLog, showMessage } from './functions.js'
+import { checkCurrencyCost, convertCurrency } from './currency.js';
+import { openSelectionModal, updateModalDropdown } from './modal.js'
+import { addToCharacter, removeFromCharacter, findItemIndex, addCharacterAsset, updateCharacterAsset } from './character.js';
+
+// Define the class
+class Item {
+    constructor({
+        details: {
+            id,
+            name,
+            price,
+        },
+        modifier = [], // Default to an empty array for safety
+        current: {
+            amount,
+            cost = 0
+        } = {} // Provide a default empty object for destructuring
+    }) {
+        this.id = parseInt(id);
+        this.name = name;
+        this.price = parseInt(price);
+        this.modifier = modifier.length > 0 && modifier[0]?.id !== undefined ? parseInt(modifier[0].id) : null;
+        this.amount = parseInt(amount);
+        this.cost = this.price * this.amount;
+    }
+
+    costText() {
+        return convertCurrency(this.cost);
+    }
+
+    // Updated method to display all attributes
+    displayInfo() {
+        console.log(`ID: ${this.id}`);
+        console.log(`Name: ${this.name}`);
+        console.log(`Price: ${this.price}`);
+        console.log(`Modifier: ${this.modifier}`);
+        console.log(`Amount: ${this.amount}`);
+        console.log(`Cost: ${this.cost}`);
+    }
+}
+
+/*
+Logical progression for the user interactions explained:
+//-1-- The action you invoke on the UX is that you pick a item via the function: pickItem
+//-2-- Then you make choice from the options available to you by: chooseItem
+//-3-- After the choice is validated, it is then added to the character by: addProfession
+//-4a- Once the profession is added to the character you can remove it again by: removeItem
+//-4b- If available you can also upgrade the level of your profession by: upgradeProfession 
+*/
+
+// Page functions
+
+/**
+ * Pick a Item from a modal.
+ */
+function pickItem () {
+    debugLog('pickItem');
+
+    const $modal = $('#selection-modal');
+    const $form = $('#modal-form');
+    const sAction = 'item';
+
+    openSelectionModal(sAction, $modal);
+
+    $.ajax({
+        url: `${domain}/action/get-dropdown`,
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            action: `fill-dropdown-${sAction}`,
+            character: oCharacter,
+        },
+        success: function(data) {
+            debugLog('pickItem[data]', data);
+            const $select = $('select[name="type"]');
+            $('div[data-id="modal-loading"]').hide();
+            updateModalDropdown($select, data);
+            $form.show();
+            $select.show();
+        },
+        error: function(error) {
+            console.error('pickItem: Error fetching data:', error);
+        }
+    });
+}
+
+function chooseItem (obj) {
+    debugLog('chooseItem', obj);
+
+    // Validate that the input is a valid object
+    if (typeof obj !== 'object' || obj === null) {
+        console.error("chooseItem: 'obj' is not a valid object: " + $.type(obj));
+        return;
+    }
+
+    // Add the current attribute to the object
+    obj.current = { 
+        amount: $('input[name="amount"]').val(),
+    };
+    
+    const itemClass = new Item(obj);
+
+    // Check if the character has enough experience
+    if (!checkCurrencyCost(itemClass.cost)) {
+        showMessage('#choice-actions', 'error', oTranslations[language].not_enough_coin);
+        return;
+    }
+
+    // Check for duplicates
+    if (findItemIndex('item', itemClass.id) !== -1) {
+        showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
+        return;
+    }
+
+    // Add the profession to the character
+    addItem(itemClass);
+}
+
+/**
+ * Add a item to the character.
+ * @param {Object} item - The profession object.
+ */
+function addItem(item) {
+    debugLog('addItem', item);
+
+    //check if the item is a valid object
+    if (typeof item !== 'object' || item === null) {
+        console.error("addItem: 'obj' is not a valid object: " + $.type(item));
+        return;
+    }
+    
+    addCharacterAsset('item', item);
+    addToCharacter('item', item);
+    $('#selection-modal').foundation('close');
+}
+
+/**
+ * Remove a item from the character.
+ * @param {Object} item - The profession object.
+ */
+function removeItem(item) {
+    debugLog('removeItem', item);
+    
+    //check if the profession is a valid object
+    if (typeof item !== 'object' || item === null) {
+        console.error("removeItem: 'obj' is not a valid object: " + $.type(item));
+        return;
+    }
+    
+    removeFromCharacter('item', item);
+}
+
+/**
+ * Upgrade a profession linked to the character.
+ * @param {Object} item - The profession object.
+ */
+function adjustItemAmount(item,adjustment) {
+    debugLog('adjustItemAmount', item);
+
+    //check if the profession is a valid object
+    if (typeof item !== 'object' || item === null) {
+        console.error("adjustItemAmount: 'obj' is not a valid object: " + $.type(item));
+        return;
+    }
+
+    //attempt to find the proffesion within the character object
+    const index = findItemIndex('item', item.id)
+    if (index === -1) {
+        console.error('Trying to adjust item amount, non-existent')
+        return;
+    }
+
+    //get the new cost of the profession based on the new rank
+    const new_cost = getRankCost(profession, new_rank);
+    // Check if the character has enough experience
+    if (!checkExperienceCost(new_cost)) {
+        showPopup(oTranslations[language].not_enough_vp);
+        return;
+    }
+
+    updateCharacterAsset('profession',profession,index,new_rank,new_cost);
+}
+
 
 function pickBasekit () {
     debugLog('pickBasekit');
@@ -22,39 +203,12 @@ function chooseBasekit(obj) {
     $('#selection-modal').foundation('close');
 }
 
-//These functions deal with adding, altering or removing items from the character
-//obj: The item that is being parsed
-function addItem(obj) { 
-    debugLog('addItem', obj);
-    oTempData.amount = ($('input[name="amount"]').val() !== '') ? parseInt($('input[name="amount"]').val()) : 1;
-                oTempData.cost = parseInt(oTempData.amount) * parseInt(oTempData.details.price);
-                handleChoice(oTempData,itemAdd,sAction,'item');   
-    if (typeof obj === 'object') {
-        addToCharacter(oCharacter.items,'item',obj)
-    } else {
-        console.error("itemAdd is not an object: " +$.type(obj));
-    }
-}
-
-function pickItem () {
-    debugLog('pickItem', obj);
-}
-
-function chooseItem () {
-
-}
-//This function will remove a items to the character
-//obj: The item that is being parsed
-function removeItem(obj) {
-    debugLog('removeItem', obj);
-    removeFromCharacter(oCharacter.items,element,'item',main_id,sub_id)
-}
-
 export {
-    pickBasekit,
-    chooseBasekit,
+    pickItem,
     chooseItem,
     addItem,
-    pickItem,
     removeItem,
+    adjustItemAmount,
+    pickBasekit,
+    chooseBasekit,
 }

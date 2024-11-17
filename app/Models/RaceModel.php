@@ -42,8 +42,8 @@ class RaceModel extends Model
             foreach ($parsedSkills as $parsedSkill) {
                 $mainSkill = $this->getRaceSkills([$parsedSkill['id']])[0];
                 $skillData = [
-                    'main_id' => $mainSkill->id,
-                    'main_name' => $mainSkill->name
+                    'id' => $mainSkill->id,
+                    'name' => $mainSkill->name
                 ];
                 if (isset($parsedSkill['subid'])) {
                     $subSkill = $this->getSubSkillById($parsedSkill['subid']);

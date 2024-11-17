@@ -1,10 +1,5 @@
-import { 
-    oCharacter
-} from './settings.js';
-
-import {
-    openTextModal,
-} from './modal.js';
+import { oCharacter } from './settings.js';
+import { openTextModal } from './modal.js';
 
 
 function pickName() {

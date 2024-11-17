@@ -2,7 +2,7 @@
 import { domain, oCharacter, language, oTranslations } from './settings.js';
 import { debugLog, showMessage, showPopup } from './functions.js';
 import { checkExperienceCost } from './experience.js';
-import { openModal, updateModalDropdown } from './modal.js';
+import { openSelectionModal, updateModalDropdown } from './modal.js';
 import { addToCharacter, removeFromCharacter, findItemIndex, addCharacterAsset, updateCharacterAsset, } from './character.js';
 
 // Define the class
@@ -16,7 +16,7 @@ class Profession {
             rank_3_cost,
             allow_multiple
         },
-        modifier = [], // Default to an empty object for safety
+        modifier = [], // Default to an empty array for safety
         current: {
             sub_id = null,
             sub_name = null,
@@ -29,8 +29,9 @@ class Profession {
         this.sub_id = sub_id !== null ? parseInt(sub_id) : null;
         this.sub_name = sub_name;
         this.rank = rank !== undefined ? parseInt(rank) : null;
+        this.max_rank = 3;
         this.cost = parseInt(cost);
-        this.modifier = modifier[0].id !== undefined ? parseInt(modifier[0].id) : null;
+        this.modifier = modifier.length > 0 && modifier[0]?.id !== undefined ? parseInt(modifier[0].id) : null;
         this.rank_1_cost = parseInt(rank_1_cost);
         this.rank_2_cost = parseInt(rank_2_cost);
         this.rank_3_cost = parseInt(rank_3_cost);
@@ -74,7 +75,7 @@ function pickProfession() {
     const $form = $('#modal-form');
     const sAction = 'profession';
 
-    openModal(sAction, $modal);
+    openSelectionModal(sAction, $modal);
 
     $.ajax({
         url: `${domain}/action/get-dropdown`,
@@ -143,11 +144,11 @@ function chooseProfession(obj) {
  * @param {Object} profession - The profession object.
  */
 function addProfession(profession) {
-    debugLog('professionAdd', profession);
+    debugLog('addProfession', profession);
 
     //check if the profession is a valid object
     if (typeof profession !== 'object' || profession === null) {
-        console.error("removeProfession: 'obj' is not a valid object: " + $.type(profession));
+        console.error("addProfession: 'obj' is not a valid object: " + $.type(profession));
         return;
     }
     
@@ -194,7 +195,7 @@ function upgradeProfession(profession) {
 
     //get the new rank of the profession
     const new_rank = profession.rank+1;
-    if (new_rank > 3) {
+    if (new_rank > profession.max_rank) {
         showPopup(oTranslations[language].rank_max);
         return;
     }
