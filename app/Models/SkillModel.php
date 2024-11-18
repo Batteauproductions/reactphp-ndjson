@@ -103,7 +103,7 @@ class SkillModel extends Model
 	public function getSkillDetails($id) 
     {
         $arrData['details'] = $this->getSkillById($id);
-		$arrData['subtype'] = $this->getSkillSubtype($id);
+		$arrData['subtype'] = $this->getSkillSubtypeByParent($id);
         $arrData['modifier'] = $this->getSkillModifer(explode('|',$arrData['details']->modifier));
         return $arrData;
     }
@@ -173,7 +173,7 @@ class SkillModel extends Model
         return implode(' | ', $requirementNames);
     }
 
-	public function getSkillSubtype($id) 
+	public function getSkillSubtypeByParent($id) 
     {
 		$query = $this
 			->db
@@ -183,6 +183,18 @@ class SkillModel extends Model
             ->get();
 					
         return $query->getResultObject();
+	}
+
+    public function getSkillSubtypeByID($id) 
+    {
+		$query = $this
+			->db
+            ->table(TBL_SKILL_SUB)
+			->select('id, name, description')
+			->where('id', $id)
+            ->get();
+					
+        return $query->getRow();
 	}
 
 	public function getSkillModifer($ids) 
@@ -196,5 +208,35 @@ class SkillModel extends Model
 					
         return $query->getResultObject();
 	}
+
+    /*
+    // Function to fetch sub-skill details by sub-ID
+    public function getSubSkillById($id) 
+    {
+        $query = $this
+            ->db
+            ->table(TBL_SKILL_SUB)
+            ->select('id, name')
+            ->where('id', $id)
+            ->where('available', 1)
+            ->get();
+
+        return $query->getRow();
+    }
+
+    // Function to fetch sub-skills by parent ID
+    public function getSubSkillsByParentId($parentId) 
+    {
+        $query = $this
+            ->db
+            ->table(TBL_SKILL_SUB)
+            ->select('id, name')
+            ->where('parent_id', $parentId)
+            ->where('available', 1)
+            ->get();
+
+        return $query->getResultObject();
+    }
+        */
 	
 }

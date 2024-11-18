@@ -19,7 +19,7 @@ class Skill {
         current: {
             sub_id = null,
             sub_name = null,
-            rank,
+            rank = null,
             cost = 0,
             racial = false
         } = {} // Provide a default empty object for destructuring
@@ -161,7 +161,7 @@ function chooseSkill(obj) {
  * Add a skill to the character.
  * @param {Object} skill - The skill object.
  */
-function addSkill(skill) {
+function addSkill(skill, selector=null) {
     debugLog('addSkill');
 
     //check if the skill is a valid object
@@ -170,7 +170,7 @@ function addSkill(skill) {
         return;
     }
 
-    addCharacterAsset('skill', skill);
+    addCharacterAsset('skill', skill, selector);
     addToCharacter('skill', skill);
     $('#selection-modal').foundation('close');
 }

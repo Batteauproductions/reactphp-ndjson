@@ -1,7 +1,7 @@
 // Generic settings and functions
 import { domain, oCharacter, language, oTranslations } from './settings.js';
 import { debugLog, showMessage } from './functions.js';
-import { openSelectionModal, updateModalDropdown } from './modal.js';
+import { oTmpSelector, openSelectionModal, updateModalDropdown } from './modal.js';
 import { Skill, addSkill } from './skills.js';
 import { updateCharacter, updateCharacterStats, addToCharacter } from './character.js';
 
@@ -93,19 +93,24 @@ function addRace(obj) {
     }
 
     // Remove existing race and associated elements
-    //removeRace(obj);
-
-    // Add race modifier 
-
-
-    // Add racial skills
-    if (obj.skills.length > 0) {
-        obj.skills.forEach(skill => addSkill(new Skill(skill)));
-    }
+    removeRace();
 
     // Assign race to character
     oCharacter.race = obj;
-    updateCharacterStats();
+
+    // Add racial skills
+    if (obj.skills.length > 0) {
+        obj.skills.forEach(skill => {
+            addSkill(new Skill(skill), "skill_base");
+        });
+    }
+
+    // Update the stats if a modifier is present
+    if (obj.modifier) {
+        updateCharacterStats();
+    }
+
+    // Update the character object in the interface
     updateCharacter();
 
     // Allow race to be re-chosen
@@ -115,10 +120,13 @@ function addRace(obj) {
 
 /**
  * Remove a race from the character.
- * @param {Object} obj - The race object.
  */
-function removeRace(obj) {
-    // needs implementation
+function removeRace() {
+    oCharacter.race = null;
+    //remove all racial skills
+    oCharacter.skill.forEach(skill => {
+        
+    })
 }
 
 // Export functions

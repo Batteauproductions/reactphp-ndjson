@@ -3,14 +3,17 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Models\SkillModel; // Import the SkillModel
 
 class RaceModel extends Model
 {
     protected $db;
+    protected $skillModel; // Declare a variable to hold the SkillModel instance
 
     public function __construct()
     {
         $this->db = \Config\Database::connect();
+        $this->skillModel = new SkillModel(); 
     }
 
     public function getRaces() 
@@ -30,32 +33,33 @@ class RaceModel extends Model
     {
         $arrData['details'] = $this->getRaceById($id);
         $arrData['modifier'] = $this->getRaceModifer(explode('|', $arrData['details']->modifier));
-        
+        $arrData['skills'] = [];
         // Check if the skills attribute is set and not empty
         if (!empty($arrData['details']->skills)) {
             // Parse the skills string
             $parsedSkills = $this->parseSkills($arrData['details']->skills);
             // Collect all selected subids to exclude them from options
             $selectedSubIds = array_column($parsedSkills, 'subid');
-            
             // Process each parsed skill to fetch main and sub skill details
+            $skillID;
             foreach ($parsedSkills as $parsedSkill) {
-                $mainSkill = $this->getRaceSkills([$parsedSkill['id']])[0];
-                $skillData = [
-                    'id' => $mainSkill->id,
-                    'name' => $mainSkill->name
-                ];
+                $skillData = $this->skillModel->getSkillDetails($parsedSkill['id']);
+                //check if a subid is already present
                 if (isset($parsedSkill['subid'])) {
-                    $subSkill = $this->getSubSkillById($parsedSkill['subid']);
-                    $skillData['sub_id'] = $parsedSkill['subid'];
-                    $skillData['sub_name'] = $subSkill->name;
+                    $subSkill = $this->skillModel->getSkillSubtypeByID($parsedSkill['subid']);
+                    $skillData['current'] = new \stdClass();
+                    $skillData['current']->sub_id = $subSkill->id;
+                    $skillData['current']->sub_name = $subSkill->name;
+                    $skillID = $subSkill->id;
+                //otherwise keep the options  but remove the already existent
                 } else {
                     // Fetch all sub-skills for this main skill, excluding already selected ones
-                    $subSkills = $this->getSubSkillsByParentId($parsedSkill['id']);
-                    $filteredSubSkills = array_filter($subSkills, function($subSkill) use ($selectedSubIds) {
-                        return !in_array($subSkill->id, $selectedSubIds);
-                    });
-                    $skillData['options'] = $filteredSubSkills;
+                    foreach ($skillData['subtype'] as $key => $item) {
+                        // Ensure you're unsetting from the correct array
+                        if ($item->id == $skillID) {
+                            unset($skillData['subtype'][$key]);
+                        }
+                    }
                 }
                 $arrData['skills'][] = $skillData;
             }
@@ -93,46 +97,6 @@ class RaceModel extends Model
         }
 
         return $parsedSkills;
-    }
-
-    public function getRaceSkills($ids) 
-    {
-        $query = $this
-            ->db
-            ->table(TBL_SKILL)
-            ->select('id, name, description')
-            ->whereIn('id', $ids)
-            ->get();
-    
-        return $query->getResultObject();
-    }
-
-    // Function to fetch sub-skill details by sub-ID
-    public function getSubSkillById($id) 
-    {
-        $query = $this
-            ->db
-            ->table(TBL_SKILL_SUB)
-            ->select('id, name')
-            ->where('id', $id)
-            ->where('available', 1)
-            ->get();
-
-        return $query->getRow();
-    }
-
-    // Function to fetch sub-skills by parent ID
-    public function getSubSkillsByParentId($parentId) 
-    {
-        $query = $this
-            ->db
-            ->table(TBL_SKILL_SUB)
-            ->select('id, name')
-            ->where('parent_id', $parentId)
-            ->where('available', 1)
-            ->get();
-
-        return $query->getResultObject();
     }
 
     private function getRaceModifer($ids) 

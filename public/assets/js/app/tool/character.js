@@ -52,6 +52,8 @@ function addCharacterAsset(sAction, characterAsset, selector = null) {
         console.error("addCharacterAsset: 'element' is not a valid object: " + $.type(element));
         return;
     }
+
+    console.log('selector',selector)
     
     debugLog('addCharacterAsset', sAction, characterAsset);
 
@@ -145,7 +147,12 @@ function addCharacterAsset(sAction, characterAsset, selector = null) {
 
     row.append(arrColumn);
 
-    const $container =  $(`[data-id="${oTmpSelector}-list"]`);
+    let $container;
+    if(selector === null) {
+        $container =  $(`[data-id="${oTmpSelector}-list"]`);
+    } else {
+        $container =  $(`[data-id="${selector}-list"]`);
+    }
 
     let inserted = false;
     $container.children('.choice-row').each(function() {
