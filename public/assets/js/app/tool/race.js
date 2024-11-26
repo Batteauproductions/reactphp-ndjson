@@ -2,7 +2,7 @@
 import { domain, oCharacter, language, oTranslations } from './settings.js';
 import { debugLog, showMessage } from './functions.js';
 import { oTmpSelector, openSelectionModal, updateModalDropdown } from './modal.js';
-import { Skill, addSkill } from './skills.js';
+import { Skill } from './skills.js';
 import { updateCharacter, updateCharacterStats, addToCharacter } from './character.js';
 
 // Define the class
@@ -101,7 +101,9 @@ function addRace(obj) {
     // Add racial skills
     if (obj.skills.length > 0) {
         obj.skills.forEach(skill => {
-            addSkill(new Skill(skill), "skill_base");
+            let cSkill = new Skill(skill);
+            skill.add();
+            //addSkill(new Skill(skill), "skill_base");
         });
     }
 

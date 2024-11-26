@@ -21,7 +21,8 @@ class Profession {
             sub_id = null,
             sub_name = null,
             rank,
-            cost = 0
+            cost = 0,
+            container = 'profession-list'
         } = {} // Provide a default empty object for destructuring
     }) {
         this.id = parseInt(id);
@@ -36,6 +37,7 @@ class Profession {
         this.rank_2_cost = parseInt(rank_2_cost);
         this.rank_3_cost = parseInt(rank_3_cost);
         this.allow_multiple = allow_multiple === 1;
+        this.container = container;
     }
 
     // Method to display all attributes
@@ -51,6 +53,66 @@ class Profession {
         console.log(`Rank 2 Cost: ${this.rank_2_cost}`);
         console.log(`Rank 3 Cost: ${this.rank_3_cost}`);
         console.log(`Allow Multiple: ${this.allow_multiple}`);
+    }
+
+    add() {
+        // Check if the character has enough experience
+        if (!checkExperienceCost(this.rank_1_cost)) {
+            showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
+            return false;
+        }
+
+        // Check for duplicates
+        if (findItemIndex('profession', this.id, this.sub_id) !== -1) {
+            showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
+            return false;
+        }
+
+        addCharacterAsset('profession', this);
+        addToCharacter('profession', this);
+
+        return true;
+    }
+    
+    remove() {
+        removeFromCharacter('profession', this);
+    }
+
+    upgrade() {
+        //attempt to find the proffesion within the character object
+        const index = findItemIndex('profession', this.id, this.sub_id)
+        if (index === -1) {
+            console.error('Trying to upgrade profession, non-existent')
+            return;
+        }
+
+        //get the new rank of the profession
+        const new_rank = this.rank+1;
+        if (new_rank > this.max_rank) {
+            showPopup(oTranslations[language].rank_max);
+            return;
+        }
+
+        //get the new cost of the profession based on the new rank
+        const new_cost = this.getRankCost(new_rank);
+        // Check if the character has enough experience
+        if (!checkExperienceCost(new_cost)) {
+            showPopup(oTranslations[language].not_enough_vp);
+            return;
+        }
+
+        updateCharacterAsset('profession',this,index,new_rank,new_cost);
+    }
+
+    getRankCost(new_rank) {
+        let totalCost = 0;
+        for (let i = 1; i <= new_rank; i++) {
+            const propertyName = `rank_${i}_cost`;
+            if (this[propertyName] !== undefined) {
+                totalCost += this[propertyName];
+            }
+        }
+        return totalCost;
     }
 }
 
@@ -123,116 +185,14 @@ function chooseProfession(obj) {
     
     const profClass = new Profession(obj);
 
-    // Check if the character has enough experience
-    if (!checkExperienceCost(profClass.rank_1_cost)) {
-        showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
-        return;
+    if(profClass.add()) {
+        $('#selection-modal').foundation('close');
     }
-
-    // Check for duplicates
-    if (findItemIndex('profession', profClass.id, profClass.sub_id) !== -1) {
-        showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
-        return;
-    }
-
-    // Add the profession to the character
-    addProfession(profClass);
-}
-
-/**
- * Add a profession to the character.
- * @param {Object} profession - The profession object.
- */
-function addProfession(profession) {
-    debugLog('addProfession', profession);
-
-    //check if the profession is a valid object
-    if (typeof profession !== 'object' || profession === null) {
-        console.error("addProfession: 'obj' is not a valid object: " + $.type(profession));
-        return;
-    }
-    
-    addCharacterAsset('profession', profession);
-    addToCharacter('profession', profession);
-    $('#selection-modal').foundation('close');
-}
-
-/**
- * Remove a profession from the character.
- * @param {Object} profession - The profession object.
- */
-function removeProfession(profession) {
-    debugLog('removeProfession', profession);
-    
-    //check if the profession is a valid object
-    if (typeof profession !== 'object' || profession === null) {
-        console.error("removeProfession: 'obj' is not a valid object: " + $.type(profession));
-        return;
-    }
-    
-    removeFromCharacter('profession', profession);
-}
-
-/**
- * Upgrade a profession linked to the character.
- * @param {Object} profession - The profession object.
- */
-function upgradeProfession(profession) {
-    debugLog('professionUpgrade', profession);
-
-    //check if the profession is a valid object
-    if (typeof profession !== 'object' || profession === null) {
-        console.error("upgradeProfession: 'obj' is not a valid object: " + $.type(profession));
-        return;
-    }
-
-    //attempt to find the proffesion within the character object
-    const index = findItemIndex('profession', profession.id, profession.sub_id)
-    if (index === -1) {
-        console.error('Trying to upgrade profession, non-existent')
-        return;
-    }
-
-    //get the new rank of the profession
-    const new_rank = profession.rank+1;
-    if (new_rank > profession.max_rank) {
-        showPopup(oTranslations[language].rank_max);
-        return;
-    }
-
-    //get the new cost of the profession based on the new rank
-    const new_cost = getRankCost(profession, new_rank);
-    // Check if the character has enough experience
-    if (!checkExperienceCost(new_cost)) {
-        showPopup(oTranslations[language].not_enough_vp);
-        return;
-    }
-
-    updateCharacterAsset('profession',profession,index,new_rank,new_cost);
-}
-
-/**
- * Calculates the cumulative rank cost up to a specified rank.
- * @param {Object} profession - The object containing rank cost properties.
- * @param {number} rank - The rank up to which the costs should be summed.
- * @returns {number} The total cumulative cost for ranks from 1 up to the specified rank.
- */
-function getRankCost(profession, rank) {
-    let totalCost = 0;
-    for (let i = 1; i <= rank; i++) {
-        const propertyName = `rank_${i}_cost`;
-        if (profession[propertyName] !== undefined) {
-            totalCost += profession[propertyName];
-        }
-    }
-    return totalCost;
 }
 
 // Export functions
 export {
+    Profession,
     pickProfession,
     chooseProfession,
-    addProfession,     
-    removeProfession,
-    upgradeProfession,
 }

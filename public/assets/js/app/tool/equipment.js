@@ -40,6 +40,29 @@ class Item {
         console.log(`Amount: ${this.amount}`);
         console.log(`Cost: ${this.cost}`);
     }
+
+    add() {
+
+        // Check if the character has enough experience
+        if (!checkCurrencyCost(this.cost)) {
+            showMessage('#choice-actions', 'error', oTranslations[language].not_enough_coin);
+            return;
+        }
+
+        // Check for duplicates
+        if (findItemIndex('item', this.id) !== -1) {
+            showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
+            return;
+        }
+        
+        addCharacterAsset('item', this);
+        addToCharacter('item', this);
+        $('#selection-modal').foundation('close');
+    }
+
+    remove() {
+        removeFromCharacter('item', this);
+    }
 }
 
 /*
@@ -103,54 +126,9 @@ function chooseItem (obj) {
     
     const itemClass = new Item(obj);
 
-    // Check if the character has enough experience
-    if (!checkCurrencyCost(itemClass.cost)) {
-        showMessage('#choice-actions', 'error', oTranslations[language].not_enough_coin);
-        return;
+    if(itemClass.add()) {
+        $('#selection-modal').foundation('close');
     }
-
-    // Check for duplicates
-    if (findItemIndex('item', itemClass.id) !== -1) {
-        showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
-        return;
-    }
-
-    // Add the profession to the character
-    addItem(itemClass);
-}
-
-/**
- * Add a item to the character.
- * @param {Object} item - The profession object.
- */
-function addItem(item) {
-    debugLog('addItem', item);
-
-    //check if the item is a valid object
-    if (typeof item !== 'object' || item === null) {
-        console.error("addItem: 'obj' is not a valid object: " + $.type(item));
-        return;
-    }
-    
-    addCharacterAsset('item', item);
-    addToCharacter('item', item);
-    $('#selection-modal').foundation('close');
-}
-
-/**
- * Remove a item from the character.
- * @param {Object} item - The profession object.
- */
-function removeItem(item) {
-    debugLog('removeItem', item);
-    
-    //check if the profession is a valid object
-    if (typeof item !== 'object' || item === null) {
-        console.error("removeItem: 'obj' is not a valid object: " + $.type(item));
-        return;
-    }
-    
-    removeFromCharacter('item', item);
 }
 
 /**
@@ -206,8 +184,6 @@ function chooseBasekit(obj) {
 export {
     pickItem,
     chooseItem,
-    addItem,
-    removeItem,
     adjustItemAmount,
     pickBasekit,
     chooseBasekit,

@@ -4,9 +4,6 @@ import { debugLog } from './functions.js';
 import { oTmpSelector } from './modal.js';
 import { spendCurrency, convertCurrency, refundCurrency } from './currency.js';
 import { spendExperience, refundExperience } from './experience.js';
-import { removeProfession, upgradeProfession } from './professions.js';
-import { removeSkill, upgradeSkill } from './skills.js';
-import { removeItem } from './equipment.js';
 
 // Page functions
 
@@ -106,36 +103,31 @@ function addCharacterAsset(sAction, characterAsset, selector = null) {
             break;
     }
 
-    const actionHandlers = {
-        profession: { removeFunction: removeProfession, upgradeFunction: upgradeProfession },
-        skill: { removeFunction: removeSkill, upgradeFunction: upgradeSkill },
-        item: { removeFunction: removeItem, upgradeFunction: null }
-    };
-
-    const { removeFunction, upgradeFunction } = actionHandlers[sAction] || {};
-
     const arrIcons = $.map(local_icons, function(icon) {
-
         let clickEventHandler = null;
+    
+        // Ensure that characterAsset is an instance of the class
+        // Bind the method to the instance to retain context
         if (icon.includes('remove')) {
-            clickEventHandler = removeFunction;
+            clickEventHandler = characterAsset.remove.bind(characterAsset);
         } else if (icon.includes('upgrade')) {
-            clickEventHandler = upgradeFunction;
+            clickEventHandler = characterAsset.upgrade.bind(characterAsset);
         }
-
+    
         const $anchor = $('<a>', {
             "data-action": `${sAction}-${icon}`,
             "data-id": characterAsset.id,
             "data-sub_id": characterAsset.sub_id,
             html: icons[icon].icon
         });
-
+    
         if (clickEventHandler) {
-            $anchor.on('click', function() {
-                clickEventHandler(characterAsset);
+            $anchor.on('click', function(event) {
+                event.preventDefault(); // Prevent default anchor behavior
+                clickEventHandler(); // Call the bound method without arguments
             });
         }
-
+    
         return $anchor;
     });
 

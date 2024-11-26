@@ -21,13 +21,14 @@ class Skill {
             sub_name = null,
             rank = null,
             cost = 0,
-            racial = false
+            racial = false,
+            container = 'skill_base-list'
         } = {} // Provide a default empty object for destructuring
     }) {
         this.id = parseInt(id);
         this.name = name;
         this.sub_id = sub_id !== null ? parseInt(sub_id) : null;
-        this.sub_name = sub_name !== null ? sub_name : null;;
+        this.sub_name = sub_name !== null ? sub_name : null;
         this.rank = parseInt(rank);
         this.max_rank = !isNaN(parseInt(max_rank)) ? parseInt(max_rank) : 1;
         this.cost = parseInt(cost);
@@ -35,7 +36,8 @@ class Skill {
         this.xp_cost = parseInt(xp_cost);
         this.allow_multiple = allow_multiple === 1;
         this.racial = racial; // a skill can be added as part as a racial bonus
-        this.cost = this.racial ? 0 : parseInt(cost) // all racial skills are 0 cost        
+        this.cost = this.racial ? 0 : parseInt(cost); // all racial skills are 0 cost      
+        this.container = container;
     }
 
     // Updated method to display all attributes
@@ -49,6 +51,57 @@ class Skill {
         console.log(`Modifier: ${this.modifier}`);
         console.log(`XP Cost: ${this.xp_cost}`);
         console.log(`Allow Multiple: ${this.allow_multiple}`);
+    }
+
+    add () {
+        // Check if the character has enough experience
+        if (!checkExperienceCost(this.xp_cost)) {
+            showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
+            return;
+        }
+
+        // Check for duplicates
+        if (findItemIndex('skill', this.id, this.sub_id) !== -1) {
+            showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
+            return;
+        }
+
+        addCharacterAsset('skill', this, selector);
+        addToCharacter('skill', this);
+    }
+
+    remove () {
+        removeFromCharacter('skill', this);
+    }
+
+    upgrade () {
+        //attempt to find the proffesion within the character object
+        const index = findItemIndex('skill', skill.id, skill.sub_id)
+        if (index === -1) {
+            console.error('Trying to upgrade skill, non-existent')
+            return;
+        }
+
+        //get the new rank of the skill
+        const new_rank = skill.rank+1;
+        if (new_rank > skill.max_rank) {
+            showPopup(oTranslations[language].rank_max);
+            return;
+        }
+
+        //get the new cost of the skill based on the new rank
+        const new_cost = this.getRankCost(skill, new_rank);
+        // Check if the character has enough experience
+        if (!checkExperienceCost(new_cost)) {
+            showPopup(oTranslations[language].not_enough_vp);
+            return;
+        }
+
+        updateCharacterAsset('skill',skill,index,new_rank,new_cost);
+    }
+
+    getRankCost(new_rank) {
+        return this.xp_cost * new_rank;
     }
 }
 
@@ -122,7 +175,7 @@ function pickSkill(sAction) {
  * Choose a skill for the character.
  * @param {Object} obj - The skill object.
  */
-function chooseSkill(obj) {
+function chooseSkill(obj,sAction) {
     debugLog('chooseSkill', obj);
 
     if (typeof obj !== 'object' || obj === null) {
@@ -136,115 +189,22 @@ function chooseSkill(obj) {
         sub_id: $subtype.val() ? parseInt($subtype.val()) : null,
         sub_name: $subtype.text() ? $subtype.text() : null,
         rank: 1,
-        cost: parseInt(obj.details.xp_cost)
+        cost: parseInt(obj.details.xp_cost),
+        container: sAction
     }
 
     const skillClass = new Skill(obj);
 
-    // Check if the character has enough experience
-    if (!checkExperienceCost(skillClass.xp_cost)) {
-        showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
-        return;
+    if(skillClass.add()) {
+        $('#selection-modal').foundation('close');
     }
 
-    // Check for duplicates
-    if (findItemIndex('skill', skillClass.id, skillClass.sub_id) !== -1) {
-        showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
-        return;
-    }
-
-    addSkill(skillClass);
-
-}
-
-/**
- * Add a skill to the character.
- * @param {Object} skill - The skill object.
- */
-function addSkill(skill, selector=null) {
-    debugLog('addSkill');
-
-    //check if the skill is a valid object
-    if (typeof skill !== 'object' || skill === null) {
-        console.error("addSkill: 'obj' is not a valid object: " + $.type(obj));
-        return;
-    }
-
-    addCharacterAsset('skill', skill, selector);
-    addToCharacter('skill', skill);
-    $('#selection-modal').foundation('close');
-}
-
-/**
- * Remove a skill from the character.
- * @param {Object} skill - The skill object.
- */
-function removeSkill(skill) {
-    debugLog('removeSkill', skill);
-
-    if (typeof skill !== 'object' || skill === null) {
-        console.error("removeSkill: 'obj' is not a valid object: " + $.type(skill));
-        return;
-    }
-    
-    removeFromCharacter('skill', skill);
-}
-
-/**
- * Upgrade a skill linked to the character.
- * @param {Object} skill - The skill object.
- */
-function upgradeSkill(skill) {
-    debugLog('upgradeSkill', skill);
-
-    //check if the skill is a valid object
-    if (typeof skill !== 'object' || skill === null) {
-        console.error("upgradeSkill: 'obj' is not a valid object: " + $.type(skill));
-        return;
-    }
-
-    //attempt to find the proffesion within the character object
-    const index = findItemIndex('skill', skill.id, skill.sub_id)
-    if (index === -1) {
-        console.error('Trying to upgrade skill, non-existent')
-        return;
-    }
-
-    //get the new rank of the skill
-    const new_rank = skill.rank+1;
-    if (new_rank > skill.max_rank) {
-        showPopup(oTranslations[language].rank_max);
-        return;
-    }
-
-    //get the new cost of the skill based on the new rank
-    const new_cost = getRankCost(skill, new_rank);
-    // Check if the character has enough experience
-    if (!checkExperienceCost(new_cost)) {
-        showPopup(oTranslations[language].not_enough_vp);
-        return;
-    }
-
-    updateCharacterAsset('skill',skill,index,new_rank,new_cost);
-}
-
-/**
- * Calculates the cumulative rank cost up to a specified rank.
- * @param {Object} profession - The object containing rank cost properties.
- * @param {number} rank - The rank up to which the costs should be summed.
- * @returns {number} The total cumulative cost for ranks from 1 up to the specified rank.
- */
-function getRankCost(skill, new_rank) {
-    return skill.xp_cost * new_rank;
 }
 
 export {  
     Skill,
-    addSkill,
-    chooseSkill,
     pickSkillProfession,
     pickSkillCombat,
     pickSkillMagic,
-    removeSkill, 
-    upgradeSkill,
+    chooseSkill,    
 }
