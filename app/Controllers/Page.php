@@ -58,193 +58,9 @@ class Page extends BaseController
             'arrProfLevel'             => $this->models['system']->getProfModSetting(),
         ];
     }
-
-
-    /*public function view($access=null,$page=null,$subpage=null,$id=null) 
-    {         
-
-        //collect the base view containers
-        if ($this->arrRights['isAdmin'] || $this->arrRights['isGameMaster'] || $this->arrRights['isEditor'] || $this->arrRights['isUser']) {
-            $arrContent['header'] = view('_templates/site_menu',$this->arrRights);
-            $arrContent['footer'] = view('_templates/site_footer');
-        } else {
-            $arrContent['header'] = '';
-            $arrContent['footer'] = ''; 
-        }        
-        $arrContent['content'] = '';        
-        //set the custom js per page
-        $arrContent['arrJS'] = [];
-
-        switch($access) {
-            case 'admin':
-                if($this->arrRights['isAdmin']) {
-                    switch($page) {
-                        case 'user':
-                            switch($subpage) {
-                                case 'database':
-                                    $arrData = array (
-                                        'arrRoles' => $this->arrSettings['options_user_roles'],
-                                        'arrStatus' => $this->arrSettings['options_user_status'],
-                                        'arrUsers' => $this->accountModel->getUsers(),
-                                    );
-                                    $arrContent['content'] = view('admin/user_database',$arrData);
-                                    break;
-                            }
-                            break;
-                        case 'settings':
-                            $arrData = array (
-                                'arrRace' => $this->arrSettings['options_race_types'],
-                                'arrProf' => $this->arrSettings['options_profession_types'],
-                                'arrSkill' => $this->arrSettings['options_skill_types'],
-                                'jsonBaseChar' => $this->arrSettings['jsonBaseChar'],
-                                'arrXP' => $this->arrSettings['arrXP'],
-                                'jsonStat' => $this->arrSettings['jsonStat'],
-                                'arrProfLevel' => $this->arrSettings['arrProfLevel'],
-                                'viewAsAdmin' => true,
-                            );
-                            $arrContent['content'] = view('_templates/settings',$arrData);
-                            break;
-                    }                    
-                } else {
-                    return $this->noPageAcces();
-                }
-                break;
-            case 'gamemaster':
-                if($this->arrRights['isGameMaster']) {
-                    switch($page) {
-                        case 'character':
-                            switch($subpage) {
-                                case 'database':
-                                    $arrContent['arrJS'] = ['app/grid_sorting.js'];
-                                    //---
-                                    $arrData = array (
-                                        'arrStatus' => $this->arrSettings['options_character_status'],
-                                        'arrType' => $this->arrSettings['options_character_types'],
-                                        'arrCharacters' => $this->characterModel->getCharacters(), 
-                                        'arrRace' => $this->arrSettings['options_race_types'],
-                                        'arrProf' => $this->arrSettings['options_profession_types'],
-                                        'arrSkill' => $this->arrSettings['options_skill_types'],
-                                    );
-                                    $arrContent['content'] = view('gamemaster/character_database',$arrData);
-                                    break;
-                            } 
-                            break;
-                        case 'event':
-                            switch($subpage) {
-                                case 'database':
-                                    $arrData['arrEvents'] = $this->models['event']->getEvents();
-                                    $arrContent['content'] = view('gamemaster/events_database',$arrData);
-                                    break;
-                                case 'edit':
-                                    $arrData['arrEvents'] = $this->models['event']->getEvent($id);
-                                    $arrContent['content'] = view('gamemaster/events_database',$arrData);
-                                    break;
-                            }
-                            break;
-                        case 'tools':
-                            $arrContent['arrJS'] = ['app/encoder_script.js'];
-                            $arrContent['content'] = view('gamemaster/tools');
-                            break;
-                        case 'settings':
-                            $arrData = array (
-                                'arrRace' => $this->arrSettings['options_race_types'],
-                                'arrProf' => $this->arrSettings['options_profession_types'],
-                                'arrSkill' => $this->arrSettings['options_skill_types'],
-                                'jsonBaseChar' => $this->arrSettings['jsonBaseChar'],
-                                'arrXP' => $this->arrSettings['arrXP'],
-                                'jsonStat' => $this->arrSettings['jsonStat'],
-                                'arrProfLevel' => $this->arrSettings['arrProfLevel'],
-                                'viewAsAdmin' => false,
-                            );
-                            $arrContent['content'] = view('_templates/settings',$arrData);
-                            break;
-                    }
-                } else {
-                    return $this->noPageAcces();
-                }
-                break;
-            case 'user':
-                if($this->arrRights['isUser']) {
-                    switch($page) {
-                        case 'character':
-                            switch($subpage) {
-                                case 'view':
-                                case 'create':                                    
-                                    $arrContent['arrJS'] = ['app/character.js','validation/character_validation.js'];
-                                    $arrData = array (
-                                        'oSession' => $this->session,
-                                        'jsonBaseChar' => $this->arrSettings['jsonBaseChar'],
-                                        'jsonStat' => $this->arrSettings['jsonStat'],
-                                        'arrXP' => $this->arrSettings['arrXP'],
-                                        'arrType' => $this->arrSettings['options_character_types'],
-                                        'arrStatus' => $this->arrSettings['options_character_status'],
-                                        'arrEvents' => array_reverse($this->models['event']->getEvents()),
-                                        'viewAsAdmin' => false,
-                                    );
-                                    $arrContent['content'] = view('character/character_sheet',$arrData);
-                                    break;
-                                case 'database':
-                                    $arrData['arrCharacters'] = $this->characterModel->getCharacters($this->session->get('uid'));
-                                    $arrContent['content'] = view('character/character_database',$arrData);
-                                    break;
-                            }
-                            break;
-                        case 'manual':
-                            switch($subpage) {
-                                case 'help':
-                                    //$arrContent['content'] = view('manual/help');
-                                    $arrContent['content'] = view('_templates/work_in_progress');
-                                    break;
-                                case 'rulebooks':
-                                    $arrContent['content'] = view('manual/rulebooks');
-                                    break;
-                                case 'skills':
-                                    //$arrContent['content'] = view('manual/skills');
-                                    $arrContent['content'] = view('_templates/work_in_progress');
-                                    break;
-                                case 'faq':
-                                    //$arrContent['content'] = view('manual/faq');
-                                    $arrContent['content'] = view('_templates/work_in_progress');
-                                    break;
-                            }
-                            break;
-                        case 'profile':
-                            $arrContent['arrJS'] = ['validation/profile_validation.js']; 
-                            $arrData['oUser'] = $this->accountModel->getUserDetails($this->session->get('uid'));                                       
-                            $arrContent['content'] = view('account/profile',$arrData); 
-                            break;                        
-                    }
-                } else {
-                    return $this->noPageAcces();
-                }
-                break;
-            case 'page':
-            default:
-                switch($page) {
-                    case 'password_forget':
-                        $arrContent['arrJS'] = ['validation/password_forget_validation.js'];
-                        $arrContent['content'] = view('account/password_forget');
-                        break;
-                    case 'signup':
-                        $arrContent['arrJS'] = ['validation/signup_validation.js'];
-                        $arrContent['content'] = view('account/signup');
-                        break;
-                    case 'login':
-                        $arrContent['arrJS'] = ['validation/login_validation.js'];
-                        $arrContent['content'] = view('account/login');
-                    default:
-                        if(!$this->arrRights['isUser']) {
-                            $arrContent['arrJS'] = ['validation/login_validation.js'];
-                            $arrContent['content'] = view('account/login');
-                        }                        
-                        break;
-                }
-                break;
-        }
-        return view('_templates/framework', $arrContent);
-    }*/
     
-    public function viewGeneric ($page) {
+    public function viewGeneric ($page) 
+    {
         //these page are public and require no login
         
         //define baseline variables
@@ -276,8 +92,8 @@ class Page extends BaseController
     }
 
     
-    public function viewCharacters ($page) {
-        
+    public function viewCharacters ($page) 
+    {        
         // You need to be logged in to view this page
         if (!$this->arrRights['isUser']) {
             return $this->noPageAccess();
@@ -312,7 +128,8 @@ class Page extends BaseController
         return $this->constructView($content,$arrJS);
     }
 
-    public function viewGameMaster ($page,$child_page=null,$id=null) {
+    public function viewGameMaster ($page,$child_page=null,$id=null) 
+    {
         // You need to be logged in, and have gamemaster rights, to view this page
         if (!$this->arrRights['isGameMaster']) {
             return $this->noPageAccess();
@@ -377,7 +194,8 @@ class Page extends BaseController
         return $this->constructView($content,$arrJS);
     }
     
-    public function viewAdmin ($page,$child_page=null,$id=null) {
+    public function viewAdmin ($page,$child_page=null,$id=null) 
+    {
         // You need to be logged in and have at least admin rights to view this page
         if (!$this->arrRights['isAdmin']) {
             return $this->noPageAccess();
