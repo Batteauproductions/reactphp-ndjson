@@ -7,23 +7,25 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 //-----Page View Related Routes------//
-//--admin
-$routes->get('admin/(:any)', 'Page::view/admin/$1');
-$routes->get('admin/(:any)/(:any)', 'Page::view/admin/$1/$2');
-$routes->get('admin/(:any)/(:any)/(:any)', 'Page::view/admin/$1/$2/$3');
+//--character
+$routes->get('user/character/(:any)', 'Page::viewCharacters/$1');
 //--gamemaster
-$routes->get('gamemaster/(:any)', 'Page::view/gamemaster/$1');
-$routes->get('gamemaster/(:any)/(:any)', 'Page::view/gamemaster/$1/$2');
-$routes->get('gamemaster/(:any)/(:any)/(:any)', 'Page::view/gamemaster/$1/$2/$3');
+$routes->get('gamemaster/(:any)', 'Page::viewGameMaster/$1');
+$routes->get('gamemaster/(:any)/(:any)', 'Page::viewGameMaster/$1/$2');
+$routes->get('gamemaster/(:any)/(:any)/(:any)', 'Page::viewGameMaster/$1/$2/$3');
+//--admin
+$routes->get('admin/(:any)', 'Page::viewAdmin/$1');
+$routes->get('admin/(:any)/(:any)', 'Page::viewAdmin/$1/$2');
+$routes->get('admin/(:any)/(:any)/(:any)', 'Page::viewAdmin/$1/$2/$3');
+//--manual
+$routes->get('manual/(:any)', 'Page::viewManual/$1');
 //--user
-$routes->get('user/(:any)', 'Page::view/user/$1');
-$routes->get('user/(:any)/(:any)', 'Page::view/user/$1/$2');
-$routes->get('user/(:any)/(:any)/(:any)', 'Page::view/user/$1/$2/$3');
+$routes->get('user/(:any)', 'Page::viewGeneric/$1');
 //--account
 $routes->get('account/activate/(:any)/(:any)', 'Account::activateUser/$1/$2');
 $routes->get('account/password_reset/(:any)/(:any)', 'Account::passwordReset/$1/$2');
 $routes->get('account/logout', 'Account::signOutProcess');
-$routes->get('account/(:any)', 'Page::view/page/$1');
+$routes->get('account/(:any)', 'Page::viewGeneric/$1');
 
 $routes->post('action/character-save', 'Character::Process');
 $routes->post('action/character-submit', 'Character::Process');
@@ -38,4 +40,4 @@ $routes->post('account/update-profile', 'Account::updateProfile');
 $routes->post('account/update-profile', 'Account::updateProfile');
 
 //------
-$routes->get('/', 'Page::view/page/$1');
+$routes->get('/', 'Page::viewGeneric/$1');

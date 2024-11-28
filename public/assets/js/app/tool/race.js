@@ -28,6 +28,34 @@ class Race {
         console.log(`Modifier: ${this.modifier}`);
         console.log(`Skills: ${this.skills}`);
     }
+
+    //adds the race to the character
+    add() {
+        // Assign race to character
+        oCharacter.race = this;
+        // Add racial skills
+        if (this.skills.length > 0) {
+            this.skills.forEach(skill => {
+                let cSkill = new Skill(skill);
+                skill.add();
+                //addSkill(new Skill(skill), "skill_base");
+            });
+        }        
+        // Update the character object in the interface
+        updateCharacter();
+        // Update the stats if a modifier is present
+        if (this.modifier) {
+            updateCharacterStats();
+        }
+        // Allow race to be re-chosen
+        $('#race').html(`<i class="fa-solid fa-rotate-right"></i>${obj.name}</span>`);
+        return true;
+    }
+
+    //removes the race from the character
+    remove () {
+        oCharacter.race = null;
+    }
 }
 
 // Page functions
@@ -79,62 +107,13 @@ function chooseRace(obj) {
     }
 
     const raceClass = new Race(obj);
-    addRace(raceClass);
-}
-
-/**
- * Add a race to the character.
- * @param {Object} obj - The race object.
- */
-function addRace(obj) {
-    if (typeof obj !== 'object' || obj === null) {
-        console.error("addRace: 'obj' is not a valid object: " + $.type(obj));
-        return;
+    if (raceClass.add()) {
+        $('#selection-modal').foundation('close');
     }
-
-    // Remove existing race and associated elements
-    removeRace();
-
-    // Assign race to character
-    oCharacter.race = obj;
-
-    // Add racial skills
-    if (obj.skills.length > 0) {
-        obj.skills.forEach(skill => {
-            let cSkill = new Skill(skill);
-            skill.add();
-            //addSkill(new Skill(skill), "skill_base");
-        });
-    }
-
-    // Update the stats if a modifier is present
-    if (obj.modifier) {
-        updateCharacterStats();
-    }
-
-    // Update the character object in the interface
-    updateCharacter();
-
-    // Allow race to be re-chosen
-    $('#race').html(`<i class="fa-solid fa-rotate-right"></i>${obj.name}</span>`);
-    $('#selection-modal').foundation('close');
-}
-
-/**
- * Remove a race from the character.
- */
-function removeRace() {
-    oCharacter.race = null;
-    //remove all racial skills
-    oCharacter.skill.forEach(skill => {
-        
-    })
 }
 
 // Export functions
 export {
     pickRace,
     chooseRace,
-    addRace,
-    removeRace,
 }

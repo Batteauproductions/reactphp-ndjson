@@ -350,7 +350,7 @@ function updateModelButtons(sAction, oDetails) {
                 disabled: !allowChoose() //logic is reversed because of how disable attribute works                
             }).on('click', function(e) {
                 e.preventDefault();
-                click_function(oTmpData);
+                click_function(sAction,oTmpData);
             });
             contentActionsElements.push($button);
         }

@@ -175,7 +175,7 @@ function pickSkill(sAction) {
  * Choose a skill for the character.
  * @param {Object} obj - The skill object.
  */
-function chooseSkill(obj,sAction) {
+function chooseSkill(sAction, obj) {
     debugLog('chooseSkill', obj);
 
     if (typeof obj !== 'object' || obj === null) {
@@ -186,8 +186,8 @@ function chooseSkill(obj,sAction) {
     //--Add the current attribute to the object
     const $subtype = $('input[name="subtype"]');
     obj.current = { 
-        sub_id: $subtype.val() ? parseInt($subtype.val()) : null,
-        sub_name: $subtype.text() ? $subtype.text() : null,
+        sub_id: $subtype.val() || null,
+        sub_name: $subtype.find('option:selected').text() || null,
         rank: 1,
         cost: parseInt(obj.details.xp_cost),
         container: sAction

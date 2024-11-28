@@ -165,7 +165,7 @@ function pickProfession() {
  * Choose a profession for the character.
  * @param {Object} obj - The profession object.
  */
-function chooseProfession(obj) {
+function chooseProfession(sAction, obj) {
     debugLog('professionChoose', obj);
 
     // Validate that the input is a valid object
@@ -180,7 +180,8 @@ function chooseProfession(obj) {
         sub_id: $subtype.val() || null,
         sub_name: $subtype.find('option:selected').text() || null,
         rank: 1,
-        cost: obj.details.rank_1_cost
+        cost: obj.details.rank_1_cost,
+        container: sAction,
     };
     
     const profClass = new Profession(obj);

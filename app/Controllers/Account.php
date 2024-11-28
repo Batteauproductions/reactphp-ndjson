@@ -26,7 +26,7 @@ class Account extends Controller
     public function signOutProcess() 
     {
         $this->session->destroy();
-        return redirect()->to('/');
+        return redirect()->to('/user/login');
     }
 
     public function signInProcess() 

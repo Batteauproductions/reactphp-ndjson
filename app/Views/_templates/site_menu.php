@@ -31,10 +31,10 @@
             <div class="cell shrink dropdown">
                 <a href="#"><i class="fa-solid fa-book"></i>Handleiding</a>
                 <div class="dropdown-content">
-                    <a href="<?php echo base_url('user/manual/help')?>"><i class="fa-solid fa-circle-question"></i>Help</a>
-                    <a href="<?php echo base_url('user/manual/rulebooks')?>"><i class="fa-solid fa-book"></i>Regelboeken</a>
-                    <a href="<?php echo base_url('user/manual/skills')?>"><i class="fa-solid fa-kitchen-set"></i>Vaardigheden</a>
-                    <a href="<?php echo base_url('user/manual/faq')?>"><i class="fa-solid fa-book" aria-hidden="true"></i>F.A.Q.</a>
+                    <a href="<?php echo base_url('manual/help')?>"><i class="fa-solid fa-circle-question"></i>Help</a>
+                    <a href="<?php echo base_url('manual/rulebooks')?>"><i class="fa-solid fa-book"></i>Regelboeken</a>
+                    <a href="<?php echo base_url('manual/skills')?>"><i class="fa-solid fa-kitchen-set"></i>Vaardigheden</a>
+                    <a href="<?php echo base_url('manual/faq')?>"><i class="fa-solid fa-book" aria-hidden="true"></i>F.A.Q.</a>
                     
                 </div>
             </div>
