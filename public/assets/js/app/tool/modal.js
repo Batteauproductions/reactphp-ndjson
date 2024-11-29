@@ -1,5 +1,6 @@
 //Generic settings and functions
-import { domain, icons, oCharacter, language, oTranslations } from './settings.js';
+import { oCharacter } from '../generator.js';
+import { domain, icons, language, oTranslations } from './settings.js';
 import { debugLog, allowChoose } from './functions.js'
 import { convertCurrency } from './currency.js'
 import { chooseRace } from './race.js'

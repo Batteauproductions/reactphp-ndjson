@@ -1,9 +1,10 @@
 // Generic settings and functions
-import { domain, oCharacter, language, oTranslations } from './settings.js';
-import { debugLog, showMessage } from './functions.js';
-import { oTmpSelector, openSelectionModal, updateModalDropdown } from './modal.js';
+import { oCharacter } from '../generator.js';
+import { domain, } from './settings.js';
+import { debugLog } from './functions.js';
+import { openSelectionModal, updateModalDropdown } from './modal.js';
 import { Skill } from './skills.js';
-import { updateCharacter, updateCharacterStats, addToCharacter } from './character.js';
+import { updateCharacter, updateCharacterStats } from './character.js';
 
 // Define the class
 class Race {
@@ -114,6 +115,7 @@ function chooseRace(obj) {
 
 // Export functions
 export {
+    Race,
     pickRace,
     chooseRace,
 }

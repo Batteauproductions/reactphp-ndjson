@@ -17,6 +17,7 @@ class Page extends BaseController
     protected $arrRights = [];
     protected $arrSettings = [];
     protected $models = [];
+    protected $characterData = [];
 
     public function __construct()
     {
@@ -57,6 +58,17 @@ class Page extends BaseController
             'jsonStat'                 => $this->models['system']->getStatModSetting(),
             'arrProfLevel'             => $this->models['system']->getProfModSetting(),
         ];
+
+        $this->characterData = [
+            'oSession'      => $this->session,
+            'jsonBaseChar'  => $this->arrSettings['jsonBaseChar'],
+            'jsonStat'      => $this->arrSettings['jsonStat'],
+            'arrXP'         => $this->arrSettings['arrXP'],
+            'arrType'       => $this->arrSettings['options_character_types'],
+            'arrStatus'     => $this->arrSettings['options_character_status'],
+            'arrEvents'     => array_reverse($this->models['event']->getEvents()),
+            'viewAsAdmin'   => $this->arrRights['isAdmin'],
+        ];
     }
     
     public function viewGeneric ($page) 
@@ -92,7 +104,7 @@ class Page extends BaseController
     }
 
     
-    public function viewCharacters ($page) 
+    public function viewCharacters ($page, $id=null) 
     {        
         // You need to be logged in to view this page
         if (!$this->arrRights['isUser']) {
@@ -105,19 +117,15 @@ class Page extends BaseController
 
         switch($page) {
             case 'view':
-            case 'create':                                 
-                $arrData = array (
-                    'oSession' => $this->session,
-                    'jsonBaseChar' => $this->arrSettings['jsonBaseChar'],
-                    'jsonStat' => $this->arrSettings['jsonStat'],
-                    'arrXP' => $this->arrSettings['arrXP'],
-                    'arrType' => $this->arrSettings['options_character_types'],
-                    'arrStatus' => $this->arrSettings['options_character_status'],
-                    'arrEvents' => array_reverse($this->models['event']->getEvents()),
-                    'viewAsAdmin' => $this->arrRights['isAdmin'],
-                );
-                $content = view('character/character_sheet',$arrData);
-                $arrJS = ['app/character.js','validation/character_validation.js'];
+            case 'edit':
+                $this->characterData['oCharacter'] =  $this->models['character']->getCharacterByID($id,$this->session->get('uid'),$this->arrRights['isGameMaster']);
+                $content = view('character/character_sheet',$this->characterData);
+                $arrJS = ['app/generator.js','validation/character_validation.js'];
+                break;
+            case 'create':  
+                $this->characterData['oCharacter'] = null;
+                $content = view('character/character_sheet',$this->characterData);
+                $arrJS = ['app/generator.js','validation/character_validation.js'];
                 break;
             case 'database':
                 $arrData['arrCharacters'] = $this->models['character']->getCharacters($this->session->get('uid'));
@@ -127,6 +135,8 @@ class Page extends BaseController
 
         return $this->constructView($content,$arrJS);
     }
+
+    
 
     public function viewGameMaster ($page,$child_page=null,$id=null) 
     {
@@ -276,13 +286,14 @@ class Page extends BaseController
         return $this->constructView($content,$arrJS);
     }
 
-    private function constructView($content = '', $arrJS = []) 
+    private function constructView($content = '', $arrJS = [])
     {
-        $arrContent['header'] = view('_templates/site_menu',$this->arrRights);
+        // Check if 'isUser' is true and assign the appropriate view
+        $arrContent['header'] = $this->arrRights['isUser'] ? view('_templates/site_menu', $this->arrRights) : '';
         $arrContent['content'] = $content;
         $arrContent['arrJS'] = $arrJS;
-        $arrContent['footer'] = view('_templates/site_footer');
-
+        $arrContent['footer'] = $this->arrRights['isUser'] ? view('_templates/site_footer') : '';
+        
         return view('_templates/framework', $arrContent);
     }
 

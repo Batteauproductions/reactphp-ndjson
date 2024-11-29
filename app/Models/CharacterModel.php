@@ -3,19 +3,77 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Models\ProfessionModel;
+use App\Models\SkillModel;
 
 class CharacterModel extends Model
 {
-    
+
     protected $db;
+    protected $professionModel;
+    protected $skillModel;
 
     public function __construct()
     {
         $this->db = \Config\Database::connect();
+        $this->professionModel = new ProfessionModel();
+        $this->skillModel = new SkillModel(); 
     }
 
-    public function getCharacterById($iID) {
-
+    public function getCharacterById($cid, $uid, $gamemaster) {
+        //-----------------------------------
+        // This code ensures that if a non-gamemaster tries to access the page,
+        // they can't call up a character that isn't theirs.
+        $query = $this->db->table(TBL_CHAR)
+            ->select('id')
+            ->where('id', $cid);
+    
+        // Check if the user is not a gamemaster, add a where clause to filter by user_id
+        if (!$gamemaster) {
+            $query->where('user_id', $uid);
+        }
+    
+        // Execute the query and retrieve the result
+        $result = $query->get()->getRow();
+    
+        // Make sure there is a result, otherwise return with nothing
+        if (empty($result)) {
+            return null;
+        }
+    
+        //-----------------------------------
+        // The following code will start building the character object
+        $oCharacter = new \stdClass();
+    
+        // Query for character build
+        $oCharacter->build = $this->db
+            ->table(TBL_CHAR_BUILD . ' cb')
+            ->select('cb.hp, cb.mana, cb.sanity, cb.gp, cb.str, cb.dex, cb.intel, cb.spend_xp, cb.max_xp, cb.currency, cb.base_kit', false)
+            ->where('cb.char_id', $cid)
+            ->get()
+            ->getRowObject();
+        
+        // Query for character profession(s)
+        $oCharacter->profession = $this->db
+                        ->table(TBL_CHAR_PROF . ' cp')
+                        ->select('cp.main_id, cp.sub_id, cp.rank, cp.created_dt, cp.modified_dt,
+                            p.name, p.modifier, p.rank_1_cost, p.rank_2_cost, p.rank_3_cost, p.allow_multiple,
+                            ps.name as sub_name', false)
+                        ->join(TBL_PROF . ' p', 'cp.main_id = p.id')
+                        ->join(TBL_PROF_SUB . ' ps', 'cp.sub_id = ps.id')
+                        ->where('cp.char_id', $cid)
+                        ->get()
+                        ->getResultObject();
+                        
+        // Query for character items
+        $oCharacter->item = $this->db
+            ->table(TBL_CHAR_ITEMS . ' ci')
+            ->select('ci.item_id, ci.name, ci.price, ci.amount', false)
+            ->where('ci.char_id', $cid)
+            ->get()
+            ->getResultObject();
+    
+        return json_encode($oCharacter);
     }
 
     public function getCharacters($uid = null)

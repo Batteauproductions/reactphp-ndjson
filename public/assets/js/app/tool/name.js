@@ -1,4 +1,4 @@
-import { oCharacter } from './settings.js';
+import { oCharacter } from '../generator.js';
 import { openTextModal } from './modal.js';
 
 

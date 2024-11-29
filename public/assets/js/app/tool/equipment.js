@@ -1,9 +1,10 @@
 //Generic settings and functions
-import { domain, oCharacter, language, oTranslations } from './settings.js'
-import { debugLog, showMessage } from './functions.js'
+import { oCharacter } from '../generator.js';
+import { domain, language, oTranslations } from './settings.js';
+import { debugLog, showMessage } from './functions.js';
 import { checkCurrencyCost, convertCurrency } from './currency.js';
-import { openSelectionModal, updateModalDropdown } from './modal.js'
-import { addToCharacter, removeFromCharacter, findItemIndex, addCharacterAsset, updateCharacterAsset } from './character.js';
+import { openSelectionModal, updateModalDropdown } from './modal.js';
+import { findItemIndex } from './character.js';
 
 // Define the class
 class Item {
@@ -55,13 +56,13 @@ class Item {
             return;
         }
         
-        addCharacterAsset('item', this);
-        addToCharacter('item', this);
+        oCharacter.addAsset('item', this);
+        oCharacter.AddAssetToSheet('item', this);
         $('#selection-modal').foundation('close');
     }
 
     remove() {
-        removeFromCharacter('item', this);
+        oCharacter.removeAsset('item', this);
     }
 }
 
@@ -159,7 +160,7 @@ function adjustItemAmount(item,adjustment) {
         return;
     }
 
-    updateCharacterAsset('profession',profession,index,new_rank,new_cost);
+    oCharacter.updateAsset('profession',index,new_rank,new_cost);
 }
 
 

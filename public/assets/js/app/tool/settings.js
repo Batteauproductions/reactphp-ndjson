@@ -1,6 +1,6 @@
 //oSettings
-const arrXP = Object.freeze($('input[name="arrXP"]').val().split(","));
 const debug = true;
+const currentDateTime = new Date();
 const domain = window.location.origin;
 let language = 'nl-NL';
 const oTranslations = Object.freeze({
@@ -214,44 +214,22 @@ const iconset = Object.freeze({
     "new_skill_no_rank": Array("remove"),
     "new_skill_with_rank": Array("upgrade","remove"),
     "new_item": Array("remove"),
-})
+});
+
+//Character related assignments
+const arrXP = Object.freeze($('input[name="arrXP"]').val().split(","));
 const jsonBaseChar = Object.freeze(JSON.parse($('input[name="jsonBaseChar"]').val()));
 const jsonStat = Object.freeze(JSON.parse($('input[name="jsonStat"]').val()));
-
-let choice_skills = [];
-
-// Get the current date and time
-const currentDateTime = new Date();
-
-let oCharacter = {
-    meta: {
-        type: 1,
-        status: 1,
-        name: null,
-        background: null,        
-        created_dt: currentDateTime.toISOString(),
-        modified_dt: null,
-        firstlocked_dt: null,
-        lastlocked_dt: null,
-    },
-    build: Object.assign({}, jsonBaseChar),
-    race: [],
-    profession: [],
-    skill: [], 
-    item: [],
-    stories: [],
-}
 
 export {
     arrXP,
     debug,
-    choice_skills,
+    currentDateTime,
     domain,
     icons,
     iconset,
     jsonBaseChar,
     jsonStat,
     language,
-    oCharacter,    
     oTranslations,
 }

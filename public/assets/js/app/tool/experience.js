@@ -1,5 +1,5 @@
 // Generic settings and functions
-import { oCharacter } from './settings.js';
+import { oCharacter } from '../generator.js';
 
 // Functions needed for actual app performance
 

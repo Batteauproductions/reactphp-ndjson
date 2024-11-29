@@ -10,7 +10,7 @@ use App\Models\SkillModel;
 use App\Models\ItemModel;
 use App\Models\StoryModel;
 
-use App\Helpers\auth_helper;
+use App\Helpers\AuthHelper; 
 
 class Character extends Controller
 {
@@ -41,10 +41,10 @@ class Character extends Controller
         //3 -- editor | has rights to perform minor changes
         //4 -- user | this user account has been banned from the system
         $this->arrRights = array(
-            'isAdmin'       => auth_helper::isLoggedIn($this->session->get('role'),RIGHTS_ADMIN),
-            'isGameMaster'  => auth_helper::isLoggedIn($this->session->get('role'),RIGHTS_GAMEMASTER),
-            'isEditor'      => auth_helper::isLoggedIn($this->session->get('role'),RIGHTS_EDITOR),
-            'isUser'        => auth_helper::isLoggedIn($this->session->get('role'),RIGHTS_ALL),
+            'isAdmin'       => AuthHelper::isLoggedIn($this->session->get('role'),RIGHTS_ADMIN),
+            'isGameMaster'  => AuthHelper::isLoggedIn($this->session->get('role'),RIGHTS_GAMEMASTER),
+            'isEditor'      => AuthHelper::isLoggedIn($this->session->get('role'),RIGHTS_EDITOR),
+            'isUser'        => AuthHelper::isLoggedIn($this->session->get('role'),RIGHTS_ALL),
         );
     }
 

@@ -1,200 +1,227 @@
 // Generic settings and functions
-import { domain, icons, oCharacter, jsonBaseChar, jsonStat, iconset } from './settings.js';
+import { oCharacter } from '../generator.js';
+import { domain, icons, jsonBaseChar, currentDateTime, jsonStat, iconset } from './settings.js';
 import { debugLog } from './functions.js';
-import { oTmpSelector } from './modal.js';
 import { spendCurrency, convertCurrency, refundCurrency } from './currency.js';
 import { spendExperience, refundExperience } from './experience.js';
 
 // Page functions
-
-/**
- * Add elements to the character.
- * @param {string} sAction - The type of element being added (profession, skill, item).
- * @param {Object} characterAsset - The object representing the element being added.
- */
-function addToCharacter(sAction, characterAsset) {
-    debugLog('addToCharacter');
-
-    if (typeof characterAsset !== 'object' || characterAsset === null) {
-        console.error("addToCharacter: 'characterAsset' is not a valid object: " + $.type(characterAsset));
-        return;
+class Character {
+    constructor({
+        meta: {
+            type = 1,
+            status = 1,
+            name = null,
+            background = null,        
+            created_dt = currentDateTime.toISOString(),
+            modified_dt = null,
+            firstlocked_dt = null,
+            lastlocked_dt = null,
+        },
+        build = Object.assign({}, jsonBaseChar),
+        race = [], // Default to an empty array for safety
+        profession = [],
+        skill = [],
+        item = [],
+        stories = [], // Fix syntax error and provide default
+    }) {
+        // Assign properties to the instance's meta object
+        this.meta = {
+            type: parseInt(type),
+            status: parseInt(status),
+            name: name,
+            background: background,
+            created_dt: created_dt,
+            modified_dt: modified_dt,
+            firstlocked_dt: firstlocked_dt,
+            lastlocked_dt: lastlocked_dt,
+        };
+        this.build = build;
+        this.race = race;
+        this.profession = profession;
+        this.skill = skill;
+        this.item = item;
+        this.stories = stories;
     }
 
-    // Add the characterAsset to the specified attribute
-    oCharacter[sAction].push(characterAsset);
-
-    // Spend experience or currency based on the type
-    if (sAction === "profession" || sAction === "skill") {
-        spendExperience(characterAsset.cost);
-    } else if (sAction === "item") {
-        spendCurrency(characterAsset.cost);
-    }
-
-    // Update character stats if the subject has a modifier
-    if (characterAsset.modifier) {
-        updateCharacterStats();
-    }
-
-    // Update the visual part of the character sheet
-    updateCharacter();
-}
-
-/**
- * Adds an element to the specified container in the DOM.
- * @param {string} sAction - The action type (e.g., 'skill', 'profession', 'item').
- * @param {Object} characterAsset - The element to add.
- */
-function addCharacterAsset(sAction, characterAsset, selector = null) {
-    if (typeof characterAsset !== 'object' || characterAsset === null) {
-        console.error("addCharacterAsset: 'element' is not a valid object: " + $.type(element));
-        return;
-    }
-
-    console.log('selector',selector)
-    
-    debugLog('addCharacterAsset', sAction, characterAsset);
-
-    const row = $('<div>', {
-        class: 'grid-x choice-row animate__animated animate__fadeInLeft',
-        [`data-${sAction}_id`]: characterAsset.id, 
-        [`data-${sAction}_sub_id`]: characterAsset.sub_id,
-    });
-
-    const arrColumn = [
-        $('<div>', {
-            'data-column': 'name',
-            class: 'cell small-5 text-left',
-            text: `${characterAsset.name} ${characterAsset.rank != null ? ` (${icons.rank.text} ${characterAsset.rank})` : ''}`
-        })
-    ];
-
-    let local_icons;
-    switch (sAction) {
-        case 'skill':
-        case 'profession':
-            arrColumn.push($('<div>', {
-                'data-column': 'sub_name',
-                class: 'cell small-4 text-center',
-                text: characterAsset.sub_name !== null ? characterAsset.sub_name : '-'
-            }));
-
-            arrColumn.push($('<div>', {
-                'data-column': 'cost',
-                class: 'cell small-1 text-right',
-                html: characterAsset.race ? `${oTranslations[language].racial}` : `${characterAsset.cost}pt.`
-            }));
-
-            local_icons = characterAsset.rank !== characterAsset.max_rank ? iconset["new_skill_with_rank"] : iconset["new_skill_no_rank"];
-            break;
-        case 'item':
-            arrColumn.push($('<div>', {
-                'data-column': 'amount',
-                class: 'cell small-2 text-right',
-                text: `${characterAsset.amount}x`
-            }));
-
-            arrColumn.push($('<div>', {
-                'data-column': 'cost',
-                class: 'cell small-3 text-right',
-                html: `${characterAsset.costText()}`
-            }));
-
-            local_icons = iconset["new_item"];
-            break;
-    }
-
-    const arrIcons = $.map(local_icons, function(icon) {
-        let clickEventHandler = null;
-    
-        // Ensure that characterAsset is an instance of the class
-        // Bind the method to the instance to retain context
-        if (icon.includes('remove')) {
-            clickEventHandler = characterAsset.remove.bind(characterAsset);
-        } else if (icon.includes('upgrade')) {
-            clickEventHandler = characterAsset.upgrade.bind(characterAsset);
+    addAsset (attribute,asset) {
+        // Add the asset to the specified attribute
+        this[attribute].push(asset);
+        // Spend experience or currency based on the type
+        if (attribute === "profession" || attribute === "skill") {
+            spendExperience(asset.cost);
+        } else if (attribute === "item") {
+            spendCurrency(asset.cost);
         }
+        // Update character stats if the subject has a modifier
+        if (asset.modifier) {
+            updateCharacterStats();
+        }
+        // Update the character object in the interface
+        updateCharacter();
+    }
+
+    updateAsset (attribute,index,new_rank,new_cost) {
+        // Update the character object
+        const asset = this[attribute][index];
+        oCharacter.build.spend_xp -= asset.cost; // Deduct the old cost
+        asset.rank = new_rank;
+        asset.cost = new_cost;
+
+        // Target the row being updated
+        const subIdSelector = asset.sub_id !== null ? `[data-${attribute}_sub_id="${asset.sub_id}"]` : '';
+        const $row = $(`div[data-${attribute}_id="${asset.id}"]${subIdSelector}`);
+
+        // Update visual elements
+        $row.find('[data-column="name"]').text(`${asset.name} (${icons.rank.text} ${new_rank})`);
+        $row.find('[data-column="cost"]').text(`${new_cost}pt.`);
+
+        // Spend the new cost
+        spendExperience(asset.cost);
+
+        // Update the stats if a modifier is present
+        if (asset.modifier) {
+            updateCharacterStats();
+        }
+
+        // Update the character object in the interface
+        updateCharacter();
+    }
+
+    removeAsset (attribute,asset) {
+        const index = findItemIndex(attribute, asset.id, asset.sub_id);
+
+        //Remove from the character object if found, otherwise return error in console
+        //Note: this should not be possible for a user to invoke unless he intentionally tries to break the UI
+        if (index === -1) {
+            console.error(`Trying to remove ${attribute}, non-existent`)
+            return;
+        }
+        oCharacter[attribute].splice(index, 1)[0];
     
-        const $anchor = $('<a>', {
-            "data-action": `${sAction}-${icon}`,
-            "data-id": characterAsset.id,
-            "data-sub_id": characterAsset.sub_id,
-            html: icons[icon].icon
+        // Target the row being updated
+        const subIdSelector = asset.sub_id !== null ? `[data-${attribute}_sub_id="${asset.sub_id}"]` : '';
+        const $row = $(`div[data-${attribute}_id="${asset.id}"]${subIdSelector}`);
+        $row.remove();
+        
+        // Refund the cost of the element
+        if (attribute === "profession" || attribute === "skill") {
+            refundExperience(asset.cost);
+        } else if (attribute === "item") {
+            refundCurrency(asset.cost);
+        }
+
+        // Update the stats if there was a modifier present
+        if (asset.modifier) {
+            updateCharacterStats();
+        }
+
+        // Update the character object in the interface
+        updateCharacter();
+    }
+
+    AddAssetToSheet (attribute,asset) {
+        const row = $('<div>', {
+            class: 'grid-x choice-row animate__animated animate__fadeInLeft',
+            [`data-${attribute}_id`]: asset.id, 
+            [`data-${attribute}_sub_id`]: asset.sub_id,
         });
     
-        if (clickEventHandler) {
-            $anchor.on('click', function(event) {
-                event.preventDefault(); // Prevent default anchor behavior
-                clickEventHandler(); // Call the bound method without arguments
-            });
+        const arrColumn = [
+            $('<div>', {
+                'data-column': 'name',
+                class: 'cell small-5 text-left',
+                text: `${asset.name} ${asset.rank != null ? ` (${icons.rank.text} ${asset.rank})` : ''}`
+            })
+        ];
+    
+        let local_icons;
+        switch (attribute) {
+            case 'skill':
+            case 'profession':
+                arrColumn.push($('<div>', {
+                    'data-column': 'sub_name',
+                    class: 'cell small-4 text-center',
+                    text: asset.sub_name !== null ? asset.sub_name : '-'
+                }));
+    
+                arrColumn.push($('<div>', {
+                    'data-column': 'cost',
+                    class: 'cell small-1 text-right',
+                    html: asset.race ? `${oTranslations[language].racial}` : `${asset.cost}pt.`
+                }));
+    
+                local_icons = asset.rank !== asset.max_rank ? iconset["new_skill_with_rank"] : iconset["new_skill_no_rank"];
+                break;
+            case 'item':
+                arrColumn.push($('<div>', {
+                    'data-column': 'amount',
+                    class: 'cell small-2 text-right',
+                    text: `${asset.amount}x`
+                }));
+    
+                arrColumn.push($('<div>', {
+                    'data-column': 'cost',
+                    class: 'cell small-3 text-right',
+                    html: `${asset.costText()}`
+                }));
+    
+                local_icons = iconset["new_item"];
+                break;
         }
     
-        return $anchor;
-    });
-
-    arrColumn.push($('<div>', {
-        'data-column': 'action',
-        class: 'cell small-2 text-right',
-        html: arrIcons
-    }));
-
-    row.append(arrColumn);
-
-    let $container;
-    if(selector === null) {
-        $container =  $(`[data-id="${oTmpSelector}-list"]`);
-    } else {
-        $container =  $(`[data-id="${selector}-list"]`);
-    }
-
-    let inserted = false;
-    $container.children('.choice-row').each(function() {
-        const currentRow = $(this);
-        const currentName = currentRow.find('.cell.small-5.text-left').text().trim();
-        if (currentName.localeCompare(characterAsset.name, undefined, { sensitivity: 'base' }) > 0) {
-            currentRow.before(row);
-            inserted = true;
-            return false;
+        const arrIcons = $.map(local_icons, function(icon) {
+            let clickEventHandler = null;
+        
+            // Ensure that asset is an instance of the class
+            // Bind the method to the instance to retain context
+            if (icon.includes('remove')) {
+                clickEventHandler = asset.remove.bind(asset);
+            } else if (icon.includes('upgrade')) {
+                clickEventHandler = asset.upgrade.bind(asset);
+            }
+        
+            const $anchor = $('<a>', {
+                "data-action": `${attribute}-${icon}`,
+                "data-id": asset.id,
+                "data-sub_id": asset.sub_id,
+                html: icons[icon].icon
+            });
+        
+            if (clickEventHandler) {
+                $anchor.on('click', function(event) {
+                    event.preventDefault(); // Prevent default anchor behavior
+                    clickEventHandler(); // Call the bound method without arguments
+                });
+            }
+        
+            return $anchor;
+        });
+    
+        arrColumn.push($('<div>', {
+            'data-column': 'action',
+            class: 'cell small-2 text-right',
+            html: arrIcons
+        }));
+    
+        row.append(arrColumn);
+        const $container = $(`[data-id="${asset.container}-list"]`);
+        let inserted = false;
+        
+        $container.children('.choice-row').each(function() {
+            const currentRow = $(this);
+            const currentName = currentRow.find('.cell.small-5.text-left').text().trim();
+            if (currentName.localeCompare(asset.name, undefined, { sensitivity: 'base' }) > 0) {
+                currentRow.before(row);
+                inserted = true;
+                return false;
+            }
+        });
+    
+        if (!inserted) {
+            $container.append(row);
         }
-    });
-
-    if (!inserted) {
-        $container.append(row);
     }
-}
-
-/**
- * Updates the character's asset and its visual representation.
- * @param {string} sAction - The action type (e.g., 'skill', 'profession', 'item').
- * @param {Object} characterAsset - The character asset object containing details like id and sub_id.
- * @param {number} index - The index of the asset in the character's asset array.
- * @param {number} new_rank - The new rank assigned to the asset.
- * @param {number} new_cost - The new cost associated with the asset.
- */
-function updateCharacterAsset(sAction, characterAsset, index, new_rank, new_cost) {
-    // Update the character object
-    const asset = oCharacter[sAction][index];
-    oCharacter.build.spend_xp -= asset.cost; // Deduct the old cost
-    asset.rank = new_rank;
-    asset.cost = new_cost;
-
-    // Target the row being updated
-    const subIdSelector = characterAsset.sub_id !== null ? `[data-${sAction}_sub_id="${characterAsset.sub_id}"]` : '';
-    const $row = $(`div[data-${sAction}_id="${characterAsset.id}"]${subIdSelector}`);
-
-    // Update visual elements
-    $row.find('[data-column="name"]').text(`${characterAsset.name} (${icons.rank.text} ${new_rank})`);
-    $row.find('[data-column="cost"]').text(`${new_cost}pt.`);
-
-    // Spend the new cost
-    spendExperience(asset.cost);
-
-    // Update the stats if a modifier is present
-    if (characterAsset.modifier) {
-        updateCharacterStats();
-    }
-
-    // Update the character object in the interface
-    updateCharacter();
 }
 
 function calculateIncrease(id) {
@@ -224,7 +251,7 @@ function calculateIncrease(id) {
 
 /**
  * Finds the index of an item in the character's specified attribute array.
- * @param {Array} sAction - The attribute to search ('skill' or 'profession').
+ * @param {Array} attribute - The attribute to search ('skill' or 'profession').
  * @param {string} id - The main ID of the item.
  * @param {string|null} sub_id - The sub ID of the item (optional).
  * @returns {number} The index of the item if found, otherwise -1.
@@ -237,50 +264,6 @@ function findItemIndex(attribute, id, sub_id = null) {
     return Array.isArray(attributeArray) 
         ? attributeArray.findIndex(item => item?.id === id && (item?.sub_id === sub_id || sub_id === null))
         : -1;
-}
-
-/**
- * Remove elements from the character.
- * @param {string} sAction - The type of element being removed.
- * @param {Object} characterAsset - The jQuery element calling the action.
- */
-function removeFromCharacter(sAction, characterAsset) {
-    debugLog('removeFromCharacter', characterAsset);
-
-    const index = findItemIndex(sAction, characterAsset.id, characterAsset.sub_id);
-
-    //Remove from the character object if found, otherwise return error in console
-    //Note: this should not be possible for a user to invoke unless he intentionally tries to break the UI
-    if (index === -1) {
-        console.error(`Trying to remove ${sAction}, non-existent`)
-        return;
-    }
-    oCharacter[sAction].splice(index, 1)[0];
-
-    //Remove the row from the DOM associated with the element
-    let selector;    
-    if (characterAsset.sub_id === null) {
-        selector = `div[data-${sAction}_id="${characterAsset.id}"]`;
-    } else {
-        selector = `div[data-${sAction}_id="${characterAsset.id}"][data-${sAction}_sub_id="${characterAsset.sub_id}"]`;
-    }    
-    $(selector).remove();
-    
-    // Refund the cost of the element
-    // Currently only experience and currency are spendable resources
-    if (sAction === "profession" || sAction === "skill") {
-        refundExperience(characterAsset.cost);
-    } else if (sAction === "item") {
-        refundCurrency(characterAsset.cost);
-    }
-
-    // Update the stats if there was a modifier present
-    if (characterAsset.modifier) {
-        updateCharacterStats();
-    }
-
-    // Update the character object in the interface
-    updateCharacter();
 }
 
 /**
@@ -299,9 +282,9 @@ function submitCharacter() {
 
 /**
  * Transfer the character data.
- * @param {string} sAction - The action to perform (save or submit).
+ * @param {string} attribute - The action to perform (save or submit).
  */
-function transferCharacter(sAction) {
+function transferCharacter(attribute) {
     if (!$("#form-character").valid()) {
         console.warn('Form is not valid');
         return;
@@ -316,7 +299,7 @@ function transferCharacter(sAction) {
         type: 'POST',
         dataType: 'json',
         data: {
-            action: sAction,
+            action: attribute,
             character: JSON.stringify(oCharacter)
         },
         success: function() {
@@ -382,11 +365,8 @@ function updateCharacterStats() {
 
 // Export functions
 export {
-    addToCharacter,
+    Character,
     updateCharacter,
-    addCharacterAsset,
-    updateCharacterAsset,
-    removeFromCharacter,
     updateCharacterStats,
     saveCharacter,
     submitCharacter,

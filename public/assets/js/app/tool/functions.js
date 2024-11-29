@@ -1,5 +1,6 @@
 // Generic settings and functions
-import { debug, oCharacter } from './settings.js';
+import { oCharacter } from '../generator.js';
+import { debug } from './settings.js';
 
 // Page functions
 

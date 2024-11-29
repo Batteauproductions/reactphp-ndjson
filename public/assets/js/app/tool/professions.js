@@ -1,9 +1,10 @@
 // Generic settings and functions
-import { domain, oCharacter, language, oTranslations } from './settings.js';
+import { oCharacter } from '../generator.js';
+import { domain, language, oTranslations } from './settings.js';
 import { debugLog, showMessage, showPopup } from './functions.js';
 import { checkExperienceCost } from './experience.js';
 import { openSelectionModal, updateModalDropdown } from './modal.js';
-import { addToCharacter, removeFromCharacter, findItemIndex, addCharacterAsset, updateCharacterAsset, } from './character.js';
+import { findItemIndex } from './character.js';
 
 // Define the class
 class Profession {
@@ -22,7 +23,9 @@ class Profession {
             sub_name = null,
             rank,
             cost = 0,
-            container = 'profession-list'
+            container = 'profession',
+            created_dt = null,
+            modified_dt = null,
         } = {} // Provide a default empty object for destructuring
     }) {
         this.id = parseInt(id);
@@ -38,6 +41,8 @@ class Profession {
         this.rank_3_cost = parseInt(rank_3_cost);
         this.allow_multiple = allow_multiple === 1;
         this.container = container;
+        this.created_dt = created_dt;
+        this.modified_dt = modified_dt;
     }
 
     // Method to display all attributes
@@ -68,14 +73,14 @@ class Profession {
             return false;
         }
 
-        addCharacterAsset('profession', this);
-        addToCharacter('profession', this);
+        oCharacter.addAsset('profession', this);
+        oCharacter.AddAssetToSheet('profession', this);
 
         return true;
     }
     
     remove() {
-        removeFromCharacter('profession', this);
+        oCharacter.removeAsset('profession', this);
     }
 
     upgrade() {
@@ -101,7 +106,7 @@ class Profession {
             return;
         }
 
-        updateCharacterAsset('profession',this,index,new_rank,new_cost);
+        oCharacter.updateAsset('profession',index,new_rank,new_cost);
     }
 
     getRankCost(new_rank) {

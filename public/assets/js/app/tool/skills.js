@@ -1,9 +1,10 @@
 //Generic settings and functions
-import { domain, oCharacter, language, oTranslations } from './settings.js'
+import { oCharacter } from '../generator.js';
+import { domain, language, oTranslations } from './settings.js'
 import { debugLog, showMessage, showPopup } from './functions.js'
 import { checkExperienceCost } from './experience.js';
 import { openSelectionModal, updateModalDropdown } from './modal.js'
-import { addToCharacter, removeFromCharacter, findItemIndex, addCharacterAsset, updateCharacterAsset } from './character.js';
+import { findItemIndex } from './character.js';
 
 // Define the class
 class Skill {
@@ -22,7 +23,7 @@ class Skill {
             rank = null,
             cost = 0,
             racial = false,
-            container = 'skill_base-list'
+            container = 'skill_base'
         } = {} // Provide a default empty object for destructuring
     }) {
         this.id = parseInt(id);
@@ -66,12 +67,13 @@ class Skill {
             return;
         }
 
-        addCharacterAsset('skill', this, selector);
-        addToCharacter('skill', this);
+        oCharacter.AddAsset('skill', this);
+        oCharacter.AddAssetToSheet('skill', this);
+        
     }
 
     remove () {
-        removeFromCharacter('skill', this);
+        oCharacter.removeAsset('skill', this);
     }
 
     upgrade () {
@@ -97,7 +99,7 @@ class Skill {
             return;
         }
 
-        updateCharacterAsset('skill',skill,index,new_rank,new_cost);
+        oCharacter.updateAsset('skill',skill,index,new_rank,new_cost);
     }
 
     getRankCost(new_rank) {
