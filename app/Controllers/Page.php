@@ -154,14 +154,14 @@ class Page extends BaseController
                 switch($child_page) {
                     case 'database':
                         $arrData['arrEvents'] = $this->models['event']->getEvents();
-                        $content = view('gamemaster/events_database',$arrData);
+                        $content = view('gamemaster/event/events_database',$arrData);
                         break;
                     case 'create':
-                        //----TODO
+                        $content = view('gamemaster/event/events_form',$arrData);
                         break;
                     case 'edit':
                         $arrData['arrEvents'] = $this->models['event']->getEvent($id);
-                        $content = view('gamemaster/events_database',$arrData);
+                        $content = view('gamemaster/event/events_form',$arrData);
                         break;
                 }
                 break;

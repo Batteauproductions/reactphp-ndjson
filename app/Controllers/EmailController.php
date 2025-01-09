@@ -16,7 +16,7 @@ class EmailController extends Controller
 
     public function sendSignupConfirmation ($arrData) 
     {
-        $subject = 'Stichting Dalaria | Activeer je account';
+        $subject = 'Spelleiding Dalaria | Activeer je account';
         $this->email->setTo($arrData['email']);
         $this->email->setSubject($subject);
         // Load PHP view file and capture its output
@@ -42,7 +42,7 @@ class EmailController extends Controller
 
     public function sendPasswordReset($oData)
     {    
-        $subject = 'Stichting Dalaria | Wachtwoord vergeten';
+        $subject = 'Spelleiding Dalaria | Wachtwoord vergeten';
         // Set email parameters
         $this->email->setTo($oData->email);
         $this->email->setSubject($subject);
@@ -68,7 +68,7 @@ class EmailController extends Controller
 
     public function sendCharacterApproved ($arrData) 
     {
-        $subject = 'Stichting Dalaria | Personage goedgekeurd';
+        $subject = 'Spelleiding Dalaria | Personage goedgekeurd';
         $this->email->setTo($arrData['email']);
         $this->email->setSubject($subject);
         // Load PHP view file and capture its output

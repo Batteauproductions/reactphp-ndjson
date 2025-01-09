@@ -3,7 +3,7 @@ import { oCharacter } from '../generator.js';
 import { domain, language, oTranslations } from './settings.js'
 import { debugLog, showMessage, showPopup } from './functions.js'
 import { checkExperienceCost } from './experience.js';
-import { openSelectionModal, updateModalDropdown } from './modal.js'
+import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } from './modal.js'
 import { findItemIndex } from './character.js';
 
 // Define the class
@@ -32,7 +32,6 @@ class Skill {
         this.sub_name = sub_name !== null ? sub_name : null;
         this.rank = parseInt(rank);
         this.max_rank = !isNaN(parseInt(max_rank)) ? parseInt(max_rank) : 1;
-        this.cost = parseInt(cost);
         this.modifier = modifier.length > 0 && modifier[0]?.id !== undefined ? parseInt(modifier[0].id) : null;
         this.xp_cost = parseInt(xp_cost);
         this.allow_multiple = allow_multiple === 1;
@@ -56,7 +55,7 @@ class Skill {
 
     add () {
         // Check if the character has enough experience
-        if (!checkExperienceCost(this.xp_cost)) {
+        if (!checkExperienceCost(this.cost, this.xp_cost)) {
             showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
             return;
         }
@@ -67,39 +66,43 @@ class Skill {
             return;
         }
 
-        oCharacter.AddAsset('skill', this);
-        oCharacter.AddAssetToSheet('skill', this);
+        oCharacter.addAsset('skill', this);
+        oCharacter.addAssetToSheet('skill', this);
         
+        return true;
     }
 
     remove () {
         oCharacter.removeAsset('skill', this);
+        return true;
     }
 
     upgrade () {
         //attempt to find the proffesion within the character object
-        const index = findItemIndex('skill', skill.id, skill.sub_id)
+        const index = findItemIndex('skill', this.id, this.sub_id)
         if (index === -1) {
             console.error('Trying to upgrade skill, non-existent')
             return;
         }
 
         //get the new rank of the skill
-        const new_rank = skill.rank+1;
-        if (new_rank > skill.max_rank) {
+        const new_rank = this.rank+1;
+        if (new_rank > this.max_rank) {
             showPopup(oTranslations[language].rank_max);
             return;
         }
 
         //get the new cost of the skill based on the new rank
-        const new_cost = this.getRankCost(skill, new_rank);
+        const old_cost = this.cost;
+        const new_cost = this.getRankCost(new_rank);
         // Check if the character has enough experience
-        if (!checkExperienceCost(new_cost)) {
+        if (!checkExperienceCost(old_cost, new_cost)) {
             showPopup(oTranslations[language].not_enough_vp);
             return;
         }
 
-        oCharacter.updateAsset('skill',skill,index,new_rank,new_cost);
+        oCharacter.updateAsset('skill',index,new_rank,new_cost);
+        return true;
     }
 
     getRankCost(new_rank) {
@@ -186,11 +189,10 @@ function chooseSkill(sAction, obj) {
     }
 
     //--Add the current attribute to the object
-    const $subtype = $('input[name="subtype"]');
     obj.current = { 
-        sub_id: $subtype.val() || null,
-        sub_name: $subtype.find('option:selected').text() || null,
-        rank: 1,
+        sub_id: $subtypeSelect.find('option:selected').val() || null,
+        sub_name: $subtypeSelect.find('option:selected').text() || null,
+        rank: $rankSelect.val() || 1,
         cost: parseInt(obj.details.xp_cost),
         container: sAction
     }

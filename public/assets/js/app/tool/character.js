@@ -120,7 +120,7 @@ class Character {
         updateCharacter();
     }
 
-    AddAssetToSheet (attribute,asset) {
+    addAssetToSheet (attribute,asset) {
         const row = $('<div>', {
             class: 'grid-x choice-row animate__animated animate__fadeInLeft',
             [`data-${attribute}_id`]: asset.id, 
@@ -131,7 +131,7 @@ class Character {
             $('<div>', {
                 'data-column': 'name',
                 class: 'cell small-5 text-left',
-                text: `${asset.name} ${asset.rank != null ? ` (${icons.rank.text} ${asset.rank})` : ''}`
+                text: `${asset.name} ${asset.rank != asset.max_rank ? ` (${icons.rank.text} ${asset.rank})` : ''}`
             })
         ];
     

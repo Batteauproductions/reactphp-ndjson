@@ -28,7 +28,7 @@ class Email extends BaseConfig
     /**
      * SMTP Server Hostname
      */
-    public string $SMTPHost = 'smtp.gmail.com';
+    public string $SMTPHost = 'ssl://smtp.gmail.com';
 
     /**
      * SMTP Username
@@ -43,12 +43,12 @@ class Email extends BaseConfig
     /**
      * SMTP Port
      */
-    public int $SMTPPort = 587;
+    public int $SMTPPort = 465;
 
     /**
      * SMTP Timeout (in seconds)
      */
-    public int $SMTPTimeout = 30;
+    public int $SMTPTimeout = 7;
 
     /**
      * Enable persistent SMTP connections

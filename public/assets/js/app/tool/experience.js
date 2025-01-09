@@ -8,9 +8,10 @@ import { oCharacter } from '../generator.js';
  * @param {number|string} cost - The XP cost as a number or string.
  * @returns {boolean} True if there is enough XP, false otherwise.
  */
-function checkExperienceCost(cost) {
-    const deduction = cost;
-    return oCharacter.build.spend_xp + deduction <= oCharacter.build.max_xp;
+function checkExperienceCost(old_cost, new_cost) {
+    console.log('old_cost: ', old_cost)
+    console.log('new_cost: ', new_cost)
+    return (oCharacter.build.spend_xp - old_cost) + new_cost <= oCharacter.build.max_xp
 }
 
 /**

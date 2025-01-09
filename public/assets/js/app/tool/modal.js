@@ -12,6 +12,7 @@ import { chooseItem, chooseBasekit } from './equipment.js';
 // Static DOM Elements
 const $typeSelect = $('select[name="type"]');
 const $subtypeSelect = $('select[name="subtype"]');
+const $rankSelect = $('input[name="rank"]');
 const $modalLoading = $('div[data-id="modal-loading"]');
 const $typeAmount = $('[name="amount"]');
 const $choice_image_container = $('#choice-image-container');
@@ -296,17 +297,6 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = []) {
                 }
             });
         }
-        // Handle ranks
-        if (max_rank > 0) {
-            const $row = $('<div>', { html: `${icons.rank.icon}` });
-            for (let i = 1; i <= max_rank; i++) {
-                $row.append(
-                    $('<input>', { id: `rank-${i}`, value: i, type: 'radio', name: 'rank' }),
-                    $('<label>', { for: `rank-${i}`, text: ` ${i}` })
-                );
-            }
-            contentDetailsElements.push($row);
-        }
         // Append all elements to the DOM in one go
         $choice_details.empty().append(contentDetailsElements).show();
     } else {
@@ -460,6 +450,8 @@ function openStoryModal(sAction) {
 
 export {
     oTmpSelector,
+    $subtypeSelect,
+    $rankSelect,
     openSelectionModal,
     clearModal,
     openTextModal,

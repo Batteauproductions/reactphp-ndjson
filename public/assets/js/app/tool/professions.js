@@ -3,7 +3,7 @@ import { oCharacter } from '../generator.js';
 import { domain, language, oTranslations } from './settings.js';
 import { debugLog, showMessage, showPopup } from './functions.js';
 import { checkExperienceCost } from './experience.js';
-import { openSelectionModal, updateModalDropdown } from './modal.js';
+import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } from './modal.js';
 import { findItemIndex } from './character.js';
 
 // Define the class
@@ -62,7 +62,7 @@ class Profession {
 
     add() {
         // Check if the character has enough experience
-        if (!checkExperienceCost(this.rank_1_cost)) {
+        if (!checkExperienceCost(this.cost, this.rank_1_cost)) {
             showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
             return false;
         }
@@ -74,13 +74,14 @@ class Profession {
         }
 
         oCharacter.addAsset('profession', this);
-        oCharacter.AddAssetToSheet('profession', this);
+        oCharacter.addAssetToSheet('profession', this);
 
         return true;
     }
     
     remove() {
         oCharacter.removeAsset('profession', this);
+        return true;
     }
 
     upgrade() {
@@ -99,14 +100,16 @@ class Profession {
         }
 
         //get the new cost of the profession based on the new rank
+        const old_cost = this.cost;
         const new_cost = this.getRankCost(new_rank);
         // Check if the character has enough experience
-        if (!checkExperienceCost(new_cost)) {
+        if (!checkExperienceCost(old_cost, new_cost)) {
             showPopup(oTranslations[language].not_enough_vp);
             return;
         }
 
         oCharacter.updateAsset('profession',index,new_rank,new_cost);
+        return true;
     }
 
     getRankCost(new_rank) {
@@ -180,11 +183,10 @@ function chooseProfession(sAction, obj) {
     }
 
     // Add the current attribute to the object
-    const $subtype = $('select[name="subtype"]');
     obj.current = { 
-        sub_id: $subtype.val() || null,
-        sub_name: $subtype.find('option:selected').text() || null,
-        rank: 1,
+        sub_id: $subtypeSelect.find('option:selected').val() || null,
+        sub_name: $subtypeSelect.find('option:selected').text() || null,
+        rank: $rankSelect.val() || 1,
         cost: obj.details.rank_1_cost,
         container: sAction,
     };

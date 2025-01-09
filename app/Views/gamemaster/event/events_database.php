@@ -1,6 +1,10 @@
 <div class="grid-container">
     <div class="page-wrapper transparent">
         <section class="grid-x grid-padding-x grid-padding-y">
+            <button class="button solid" type="submit">
+                <i class="fa-solid fa-filter"></i>Filter toepassen
+            </button>
+            <hr>
         </section>
         <section class="grid-x grid-padding-x grid-padding-y">
             <div class="cell">
