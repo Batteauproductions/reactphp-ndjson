@@ -1,10 +1,12 @@
 <div class="grid-container">
     <div class="page-wrapper transparent">
         <section class="grid-x grid-padding-x grid-padding-y">
-            <button class="button solid" type="submit">
-                <i class="fa-solid fa-filter"></i>Filter toepassen
-            </button>
-            <hr>
+            <div class="cell sortable">
+                <a class="button solid" href="<?php echo base_url('gamemaster/event/create');?>">
+                    <i class="fa-regular fa-calendar-plus"></i>Evenement toevoegen
+                </a>
+                <hr>
+            </div>            
         </section>
         <section class="grid-x grid-padding-x grid-padding-y">
             <div class="cell">

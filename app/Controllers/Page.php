@@ -157,7 +157,8 @@ class Page extends BaseController
                         $content = view('gamemaster/event/events_database',$arrData);
                         break;
                     case 'create':
-                        $content = view('gamemaster/event/events_form',$arrData);
+                        $arrJS = ['validation/event_validation.js'];
+                        $content = view('gamemaster/event/events_form');
                         break;
                     case 'edit':
                         $arrData['arrEvents'] = $this->models['event']->getEvent($id);
