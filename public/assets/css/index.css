@@ -109,6 +109,8 @@ a:hover, a:hover:hover, a:active:hover, a:focus:hover {
 form label {
   display: inline-block;
   font: normal 1rem/1.35rem Manuale, serif;
+  font-weight: bold;
+  letter-spacing: 1px;
   color: #fff;
   margin-bottom: 0.625rem;
 }
@@ -253,7 +255,7 @@ ul li {
   max-width: 80rem !important;
 }
 
-.input-error {
+label.input-error {
   display: block;
   color: rgb(196, 118, 118);
   font-weight: bold;

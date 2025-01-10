@@ -14,10 +14,17 @@ $("#event-create").validate({
         ,oc_end_time: {
             required: true,
         }
+        ,description: {
+            maxlength: 500,
+        }
     }
     ,errorClass: 'input-error'
     ,errorPlacement: function (error, element) {
-        error.insertAfter(element);
+        var container = element.closest('.input-wrapper');
+        error.insertAfter(container);
+    }
+    ,invalidHandler: function() {
+        $('button[type="submit"]').attr('disabled',false);
     }
     ,submitHandler: function(form) {
         $('button[type="submit"]').attr('disabled',true);

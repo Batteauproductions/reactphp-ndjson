@@ -27,14 +27,14 @@ class EventModel extends Model
 	
 	public function getEvent($id) 
     {		
-		$query = $this
+		return $this
                     ->db
                     ->table(TBL_EVENT)
                     ->select('id, name, description, story_date, oc_start_time, oc_end_time')	
                     ->orderBy('oc_start_time','desc')
-                    ->where('id',$id);                    
-		
-        return $query->get()->getResultObject();
+                    ->where('id',$id) 
+                    ->get()  
+                    ->getRow();               
 	}
 	
 	public function deleteEvent($id) 

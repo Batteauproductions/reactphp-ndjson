@@ -161,7 +161,8 @@ class Page extends BaseController
                         $content = view('gamemaster/event/events_form');
                         break;
                     case 'edit':
-                        $arrData['arrEvents'] = $this->models['event']->getEvent($id);
+                        $arrJS = ['validation/event_validation.js'];
+                        $arrData['oEvent'] = $this->models['event']->getEvent($id);
                         $content = view('gamemaster/event/events_form',$arrData);
                         break;
                 }
@@ -281,7 +282,7 @@ class Page extends BaseController
             return $this->noPageAccess();
         }
         $arrJS = ['validation/profile_validation.js']; 
-        $arrData['oUser'] = $this->accountModel->getUserDetails($this->session->get('uid'));                                       
+        $arrData['oUser'] = $this->models['account']->getUserDetails($this->session->get('uid'));                                       
         $content = view('account/profile',$arrData); 
 
         return $this->constructView($content,$arrJS);

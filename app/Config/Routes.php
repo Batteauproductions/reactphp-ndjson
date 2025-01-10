@@ -20,6 +20,7 @@ $routes->get('admin/(:any)/(:any)/(:any)', 'Page::viewAdmin/$1/$2/$3');
 //--manual
 $routes->get('manual/(:any)', 'Page::viewManual/$1');
 //--user
+$routes->get('user/profile', 'Page::viewProfile');
 $routes->get('user/(:any)', 'Page::viewGeneric/$1');
 //--account
 $routes->get('account/activate/(:any)/(:any)', 'Account::activateUser/$1/$2');
@@ -27,17 +28,22 @@ $routes->get('account/password_reset/(:any)/(:any)', 'Account::passwordReset/$1/
 $routes->get('account/logout', 'Account::signOutProcess');
 $routes->get('account/(:any)', 'Page::viewGeneric/$1');
 
+//----
 $routes->post('action/character-save', 'Character::Process');
 $routes->post('action/character-submit', 'Character::Process');
 $routes->post('action/get-adventure', 'Character::getAdventure');
 $routes->post('action/get-dropdown', 'Character::getDropdown');
 $routes->post('action/get-details', 'Character::getDetails');
+//----
 $routes->post('account/password-forgot', 'Account::passwordForgotProcess');
 $routes->post('account/password-reset', 'Account::passwordResetProcess');
 $routes->post('account/signin-process', 'Account::signInProcess');
 $routes->post('account/signup-process', 'Account::signUpProcess');
 $routes->post('account/update-profile', 'Account::updateProfile');
 $routes->post('account/update-profile', 'Account::updateProfile');
+//----
+$routes->post('event/submit-form', 'Event::submitForm');
+$routes->post('event/update-form', 'Event::updateForm');
 
 //------
-$routes->get('/', 'Page::viewGeneric/$1');
+$routes->get('/', 'Page::viewGeneric/login');
