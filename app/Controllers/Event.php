@@ -32,7 +32,7 @@ class Event extends Controller
         if (!$this->validation->withRequest($this->request)->run()) {            
             return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
         } else {
-            //collect user
+            //collect event
             $request = service('request');
             $arrEvent = array(
                 'name' => $request->getPost('name'),
@@ -41,7 +41,7 @@ class Event extends Controller
                 'oc_start_time' => $request->getPost('oc_start_time'),
                 'oc_end_time' => $request->getPost('oc_end_time'),
             );
-            // Insert user data into the database using the model
+            // Insert event data into the database using the model
             $this->eventModel->submitEvent($arrEvent);
             //return to profile page
             return redirect()->to('gamemaster/event/database');
@@ -63,7 +63,7 @@ class Event extends Controller
         if (!$this->validation->withRequest($this->request)->run()) {            
             return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
         } else {
-            //collect user
+            //collect event
             $request = service('request');
             $arrEvent = array(
                 'name' => $request->getPost('name'),
@@ -72,7 +72,7 @@ class Event extends Controller
                 'oc_start_time' => $request->getPost('oc_start_time'),
                 'oc_end_time' => $request->getPost('oc_end_time'),
             );
-            // Insert user data into the database using the model
+            // Insert event data into the database using the model
             $this->eventModel->updateEvent($arrEvent,$request->getPost('form_id'));
             //return to profile page
             return redirect()->to('gamemaster/event/database');

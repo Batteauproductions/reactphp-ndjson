@@ -1,10 +1,14 @@
 <div class="grid-container">
     <div class="page-wrapper transparent">
         <section class="grid-x grid-padding-x grid-padding-y">        
-            <form id="event-create" class="cell sortable" method="post" action="<?php echo base_url('event/submit-form') ?>">
+            <form   id="event-create" 
+                    class="cell sortable" 
+                    method="post" 
+                    action="<?php echo isset($oEvent) ? base_url('event/update-form') : base_url('event/submit-form'); ?>"
+                >
                 <input type="hidden" name="form_id" value="<?php echo isset($oEvent) ? $oEvent->id : ''?>"/>
                 <div class="grid-x grid-margin-x grid-margin-y">
-                    <div class="cell small-6">
+                    <div class="cell small-12 medium-6">
                         <div class="input-wrapper">
                             <label for="name">
                                 Naam
@@ -17,7 +21,20 @@
                                 placeholder="Bv. Dalaria I.IV">
                         </div>
                     </div>
-                    <div class="cell small-6">
+                    <div class="cell small-12 medium-6">
+                        <div class="input-wrapper">
+                            <label for="name">
+                                Subtitel
+                            </label>
+                            <input 
+                                required
+                                type="text" 
+                                name="subname" 
+                                value="<?php echo isset($_POST['subname']) ? htmlspecialchars($_POST['subname']) : (isset($oEvent) ? $oEvent->subname : ''); ?>"
+                                placeholder="Bv. Het midzomerfeest">
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-4">
                         <div class="input-wrapper">
                             <label for="story_date">
                                 IC datum
@@ -30,10 +47,10 @@
                                 placeholder="Bv. 15 t/m 17 Ammonat (895:2)">
                         </div>
                     </div>
-                    <div class="cell small-6">
+                    <div class="cell small-12 medium-4">
                         <div class="input-wrapper">
                             <label for="oc_start_time">
-                                IC datum
+                                OC start-datum
                             </label>
                             <input 
                                 required
@@ -42,10 +59,10 @@
                                 value="<?php echo isset($_POST['oc_start_time']) ? htmlspecialchars($_POST['oc_start_time']) : (isset($oEvent) ? $oEvent->oc_start_time : ''); ?>">
                         </div>
                     </div>
-                    <div class="cell small-6">
+                    <div class="cell small-12 medium-4">
                         <div class="input-wrapper">
                             <label for="oc_end_time">
-                                IC datum
+                                OC eind-datum
                             </label>
                             <input 
                                 required
@@ -63,15 +80,13 @@
                         </div>
                     </div>
                     <div class="cell small-12 input-group">
-                        <?php if(!isset($oEvent)): ?>
-                            <button class="button solid" type="submit" formaction="<?php echo base_url('event/submit-form') ?>">
-                                <i class="fa-regular fa-floppy-disk"></i>Evenement opslaan
-                            </button>
-                        <?php else: ?>
-                            <button class="button solid" type="submit" formaction="<?php echo base_url('event/update-form') ?>">
-                                <i class="fa-regular fa-floppy-disk"></i>Evenement updaten
-                            </button>
-                        <?php endif; ?>
+                        <button class="button solid" type="submit">
+                            <?php
+                                echo !isset($oEvent) 
+                                    ? '<i class="fa-regular fa-floppy-disk"></i>Evenement opslaan' 
+                                    : '<i class="fa-regular fa-floppy-disk"></i>Evenement updaten';
+                                ?>
+                        </button>
                         <a class="button clear" href="<?php echo base_url('gamemaster/event/database') ?>">
                             <i class="fa-solid fa-backward-step"></i>Terug
                         </a>

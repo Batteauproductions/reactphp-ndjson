@@ -199,7 +199,16 @@ ul li {
 }
 
 .choice-row {
-  padding-bottom: 1.25rem;
+  margin-bottom: 1.25rem;
+  /* Small only */
+}
+@media screen and (max-width: 39.9375em) {
+  .choice-row {
+    padding: 0.625rem;
+  }
+  .choice-row:not(:last-child) {
+    border-bottom: solid 1px #6b6b6b;
+  }
 }
 
 .disabled {

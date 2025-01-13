@@ -1,5 +1,6 @@
 // JavaScript function to shift letters in the input field, remove spaces, and insert a space after each 5th character
 function shiftLetters() {
+	console.log('hello?')
 	// Get the input element by its ID
 	var inputField = document.getElementById("input-text");
   
@@ -68,3 +69,8 @@ function copyToClipboard() {
 	selection.removeAllRanges();
 
 }
+
+$(document).ready(function () {
+	$('#shift-letters').on('click',shiftLetters);
+	$('#copy-letters').on('click',copyToClipboard);
+});

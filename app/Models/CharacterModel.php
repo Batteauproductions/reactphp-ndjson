@@ -78,24 +78,46 @@ class CharacterModel extends Model
 
     public function getCharacters($uid = null)
     {
-        $query = $this->db->table(TBL_CHAR . ' c')
-                        ->select('c.id, c.user_id, c.name, c.avatar, c.created_dt, c.modified_dt,
-                                cr.main_id as race_id,
-                                cs.id as status_id, cs.name as status_name, cs.description as status_description,
-                                ct.id as type_id, ct.name as type_name, ct.description as type_description,
-                                CONCAT(u.firstname, " ", u.lastname) as user_name', false)                        
-                        ->join(TBL_CHAR_STATUS . ' cs', 'c.status_id = cs.id')
-                        ->join(TBL_CHAR_RACE . ' cr', 'c.id = cr.char_id')
-                        ->join(TBL_CHAR_TYPES . ' ct', 'ct.id = c.type_id', 'left')
-                        ->join(TBL_USER . ' u', 'c.user_id = u.id')
-                        ->orderBy('c.name', 'asc');
+        // Build the query
+        $builder = $this->db->table('hero c');
+        $builder->select([
+            'c.id',
+            'c.user_id',
+            'c.name',
+            'c.avatar',
+            'c.created_dt',
+            'c.modified_dt',
+            'cr.main_id AS race_id',
+            'GROUP_CONCAT(cp.main_id, \',\', cp.sub_id ORDER BY cp.main_id SEPARATOR \'|\') AS profession_info',
+            'cs.id AS status_id',
+            'cs.name AS status_name',
+            'cs.description AS status_description',
+            'ct.id AS type_id',
+            'ct.name AS type_name',
+            'ct.description AS type_description',
+            'CONCAT(u.firstname, " ", u.lastname) AS user_name',
+        ]);
+        $builder->join('hero_status cs', 'c.status_id = cs.id');
+        $builder->join('hero_race cr', 'c.id = cr.char_id');
+        $builder->join('hero_professions cp', 'c.id = cp.char_id');
+        $builder->join('hero_type ct', 'ct.id = c.type_id', 'left');
+        $builder->join('user u', 'c.user_id = u.id');
+
+        // Group By clause
+        $builder->groupBy(['c.id', 'cr.main_id', 'cs.id', 'ct.id', 'u.id']);
+        
+        // Order By clause
+        $builder->orderBy('c.name', 'ASC');
 
         // If $uid is provided, add a where clause to filter by user_id
         if ($uid !== null) {
             $query->where('c.user_id', $uid);
         }
 
-        return $query->get()->getResultObject();
+        // Execute the query and get the result
+        $query = $builder->get();
+        
+        return $query->getResultObject();
     }
 
 

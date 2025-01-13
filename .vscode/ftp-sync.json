@@ -9,7 +9,7 @@
     "concurrency": 4,
     "context": "./",
     "uploadOnSave": true,
-    "passive": false,
+    "passive": true,
     "debug": false,
     "privateKeyPath": null,
     "passphrase": null,

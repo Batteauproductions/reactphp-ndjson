@@ -1,7 +1,7 @@
 // Generic settings and functions
 import { oCharacter } from '../generator.js';
-import { domain, language, oTranslations } from './settings.js';
-import { debugLog, showMessage, showPopup } from './functions.js';
+import { domain, iconset, language, oTranslations } from './settings.js';
+import { debugLog, generateIconSet, showMessage, showPopup } from './functions.js';
 import { checkExperienceCost } from './experience.js';
 import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } from './modal.js';
 import { findItemIndex } from './character.js';
@@ -94,10 +94,18 @@ class Profession {
 
         //get the new rank of the profession
         const new_rank = this.rank+1;
+        let new_icons = null;
         if (new_rank > this.max_rank) {
             showPopup(oTranslations[language].rank_max);
+            new_icons = generateIconSet(iconset["attribute_adjust_down"],this,'profession');
             return;
-        }
+        } else if (new_rank == this.max_rank) {
+            new_icons = generateIconSet(iconset["attribute_adjust_down"],this,'profession');
+        } else if (new_rank == this.min_rank) {
+            new_icons = generateIconSet(iconset["attribute_adjust_up"],this,'profession');
+        } else if (new_rank < this.max_rank) {
+            new_icons = generateIconSet(iconset["attribute_adjust_all"],this,'profession');
+        } 
 
         //get the new cost of the profession based on the new rank
         const old_cost = this.cost;
@@ -108,7 +116,34 @@ class Profession {
             return;
         }
 
-        oCharacter.updateAsset('profession',index,new_rank,new_cost);
+        oCharacter.updateAsset('profession',index,new_rank,new_cost,new_icons);
+        return true;
+    }
+
+    downgrade() {
+        //attempt to find the proffesion within the character object
+        const index = findItemIndex('profession', this.id, this.sub_id)
+        if (index === -1) {
+            console.error('Trying to upgrade profession, non-existent')
+            return;
+        }
+
+        //get the new rank of the profession
+        const new_rank = this.rank-1;
+        let new_icons = null;
+        if (new_rank < 1) {
+            showPopup(oTranslations[language].rank_min);
+            new_icons = generateIconSet(iconset["attribute_adjust_up"],this,'profession');
+            return;
+        } else if (new_rank == 1) {
+            new_icons = generateIconSet(iconset["attribute_adjust_up"],this,'profession');
+        } else if (new_rank > 1) {
+            new_icons = generateIconSet(iconset["attribute_adjust_all"],this,'profession');
+        } 
+
+        //get the new cost of the profession based on the new rank
+        const new_cost = this.getRankCost(new_rank);
+        oCharacter.updateAsset('profession',index,new_rank,new_cost,new_icons);
         return true;
     }
 

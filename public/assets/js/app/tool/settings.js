@@ -44,6 +44,7 @@ const oTranslations = Object.freeze({
         "question_6": "Overige toevoeging? (optioneel)",
         "rank": "niveau",
         "rank_max": "Maximale niveau behaald",
+        "rank_min": "Minimale niveau bereikt",
         "racial": "ras",
         "remove": "verwijderen",
         "required": "verplicht",
@@ -211,9 +212,10 @@ const icons = Object.freeze({
     },
 });
 const iconset = Object.freeze({
-    "new_skill_no_rank": Array("remove"),
-    "new_skill_with_rank": Array("upgrade","remove"),
-    "new_item": Array("remove"),
+    "attribute_adjust_none": Array("remove"),
+    "attribute_adjust_up": Array("upgrade","remove"),
+    "attribute_adjust_all": Array("downgrade","upgrade","remove"),
+    "attribute_adjust_down": Array("downgrade","remove"),
 });
 
 //Character related assignments

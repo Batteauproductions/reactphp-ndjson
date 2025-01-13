@@ -1,7 +1,7 @@
 // Generic settings and functions
 import { oCharacter } from '../generator.js';
 import { domain, icons, jsonBaseChar, currentDateTime, jsonStat, iconset } from './settings.js';
-import { debugLog } from './functions.js';
+import { debugLog, generateIconSet } from './functions.js';
 import { spendCurrency, convertCurrency, refundCurrency } from './currency.js';
 import { spendExperience, refundExperience } from './experience.js';
 
@@ -61,7 +61,7 @@ class Character {
         updateCharacter();
     }
 
-    updateAsset (attribute,index,new_rank,new_cost) {
+    updateAsset (attribute,index,new_rank,new_cost,new_icons) {
         // Update the character object
         const asset = this[attribute][index];
         oCharacter.build.spend_xp -= asset.cost; // Deduct the old cost
@@ -75,6 +75,7 @@ class Character {
         // Update visual elements
         $row.find('[data-column="name"]').text(`${asset.name} (${icons.rank.text} ${new_rank})`);
         $row.find('[data-column="cost"]').text(`${new_cost}pt.`);
+        $row.find('[data-column="action"]').html(new_icons);
 
         // Spend the new cost
         spendExperience(asset.cost);
@@ -130,7 +131,7 @@ class Character {
         const arrColumn = [
             $('<div>', {
                 'data-column': 'name',
-                class: 'cell small-5 text-left',
+                class: 'cell small-5 medium-4 text-left',
                 text: `${asset.name} ${asset.rank != asset.max_rank ? ` (${icons.rank.text} ${asset.rank})` : ''}`
             })
         ];
@@ -141,66 +142,40 @@ class Character {
             case 'profession':
                 arrColumn.push($('<div>', {
                     'data-column': 'sub_name',
-                    class: 'cell small-4 text-center',
+                    class: 'cell small-5 medium-4 text-center',
                     text: asset.sub_name !== null ? asset.sub_name : '-'
                 }));
     
                 arrColumn.push($('<div>', {
                     'data-column': 'cost',
-                    class: 'cell small-1 text-right',
+                    class: 'cell small-2 medium-1 text-right',
                     html: asset.race ? `${oTranslations[language].racial}` : `${asset.cost}pt.`
                 }));
     
-                local_icons = asset.rank !== asset.max_rank ? iconset["new_skill_with_rank"] : iconset["new_skill_no_rank"];
+                local_icons = asset.rank !== asset.max_rank ? iconset["attribute_adjust_up"] : iconset["attribute_adjust_none"];
                 break;
             case 'item':
                 arrColumn.push($('<div>', {
                     'data-column': 'amount',
-                    class: 'cell small-2 text-right',
+                    class: 'cell small-5 medium-4 text-right',
                     text: `${asset.amount}x`
                 }));
     
                 arrColumn.push($('<div>', {
                     'data-column': 'cost',
-                    class: 'cell small-3 text-right',
+                    class: 'cell small-4 medium-3 text-right',
                     html: `${asset.costText()}`
                 }));
     
-                local_icons = iconset["new_item"];
+                local_icons = iconset["attribute_adjust_none"];
                 break;
         }
-    
-        const arrIcons = $.map(local_icons, function(icon) {
-            let clickEventHandler = null;
         
-            // Ensure that asset is an instance of the class
-            // Bind the method to the instance to retain context
-            if (icon.includes('remove')) {
-                clickEventHandler = asset.remove.bind(asset);
-            } else if (icon.includes('upgrade')) {
-                clickEventHandler = asset.upgrade.bind(asset);
-            }
-        
-            const $anchor = $('<a>', {
-                "data-action": `${attribute}-${icon}`,
-                "data-id": asset.id,
-                "data-sub_id": asset.sub_id,
-                html: icons[icon].icon
-            });
-        
-            if (clickEventHandler) {
-                $anchor.on('click', function(event) {
-                    event.preventDefault(); // Prevent default anchor behavior
-                    clickEventHandler(); // Call the bound method without arguments
-                });
-            }
-        
-            return $anchor;
-        });
-    
+        //--fills the column of icons with the correct iconset
+        const arrIcons = generateIconSet(local_icons,asset,attribute);
         arrColumn.push($('<div>', {
             'data-column': 'action',
-            class: 'cell small-2 text-right',
+            class: 'cell small-12 medium-3 text-center medium-text-right',
             html: arrIcons
         }));
     

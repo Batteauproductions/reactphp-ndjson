@@ -1,7 +1,7 @@
 //Generic settings and functions
 import { oCharacter } from '../generator.js';
-import { domain, language, oTranslations } from './settings.js'
-import { debugLog, showMessage, showPopup } from './functions.js'
+import { domain, iconset, language, oTranslations } from './settings.js'
+import { debugLog, generateIconSet, showMessage, showPopup } from './functions.js'
 import { checkExperienceCost } from './experience.js';
 import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } from './modal.js'
 import { findItemIndex } from './character.js';
@@ -87,9 +87,17 @@ class Skill {
 
         //get the new rank of the skill
         const new_rank = this.rank+1;
+        let new_icons = null;
         if (new_rank > this.max_rank) {
             showPopup(oTranslations[language].rank_max);
+            new_icons = generateIconSet(iconset["attribute_adjust_down"],this,'skill');
             return;
+        } else if (new_rank == this.max_rank) {
+            new_icons = generateIconSet(iconset["attribute_adjust_down"],this,'skill');
+        } else if (new_rank == this.min_rank) {
+            new_icons = generateIconSet(iconset["attribute_adjust_up"],this,'skill');
+        } else if (new_rank < this.max_rank) {
+            new_icons = generateIconSet(iconset["attribute_adjust_all"],this,'skill');
         }
 
         //get the new cost of the skill based on the new rank
@@ -101,7 +109,35 @@ class Skill {
             return;
         }
 
-        oCharacter.updateAsset('skill',index,new_rank,new_cost);
+        oCharacter.updateAsset('skill',index,new_rank,new_cost,new_icons);
+        return true;
+    }
+
+    downgrade() {
+        //attempt to find the proffesion within the character object
+        const index = findItemIndex('skill', this.id, this.sub_id)
+        if (index === -1) {
+            console.error('Trying to upgrade skill, non-existent')
+            return;
+        }
+
+        //get the new rank of the profession
+        const new_rank = this.rank-1;
+        let new_icons = null;
+        if (new_rank < 1) {
+            showPopup(oTranslations[language].rank_min);
+            new_icons = generateIconSet(iconset["attribute_adjust_up"],this,'skill');
+            return;
+        } else if (new_rank == 1) {
+            new_icons = generateIconSet(iconset["attribute_adjust_up"],this,'skill');
+        } else if (new_rank > 1) {
+            new_icons = generateIconSet(iconset["attribute_adjust_all"],this,'skill');
+        } 
+
+        //get the new cost of the skill based on the new rank
+        const new_cost = this.getRankCost(new_rank);
+        
+        oCharacter.updateAsset('skill',index,new_rank,new_cost,new_icons);
         return true;
     }
 

@@ -90,6 +90,7 @@
                             data-type="<?php echo $character->type_id ?>"
                             data-status="<?php echo $character->status_id ?>"
                             data-race="<?php echo $character->race_id ?>"
+                            data-profession="<?php echo $character->profession_info ?>"
                             class="cell small-6 medium-4 large-2 tile tile-status--<?php echo $character->status_name ?>">              
                             <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>" style="opacity:0;"/>                            
                             <div class="tile-content" data-equalizer-watch>

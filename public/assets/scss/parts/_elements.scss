@@ -35,7 +35,14 @@
 }
 
 .choice-row {
-    padding-bottom: $padding;
+    margin-bottom: $margin;
+    /* Small only */
+    @media screen and (max-width: 39.9375em) {
+        padding: calc($padding/2);
+        &:not(:last-child) {
+            border-bottom: solid 1px lighten($color-primary, 30%);
+        }
+    }
 }
 
 .disabled {

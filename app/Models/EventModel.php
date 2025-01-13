@@ -49,7 +49,7 @@ class EventModel extends Model
 	
 	public function updateEvent($arrData,$id) 
     {	
-		$this->db->table(TBL_EVENT)->where('id', $id)->update($arrData);		
+		$this->db->table(TBL_EVENT)->where('id', $id)->update($arrData);
 	}
 
 }

@@ -71,7 +71,7 @@ class Page extends BaseController
         ];
     }
     
-    public function viewGeneric ($page) 
+    public function viewGeneric ($page=null) 
     {
         //these page are public and require no login
         
@@ -186,7 +186,7 @@ class Page extends BaseController
                 break;
             case 'tools':
                 $arrJS = ['app/encoder_script.js'];
-                $content = view('gamemaster/tools');
+                $content = view('gamemaster/tools/encoder');
                 break;
             case 'settings':
                 $arrData = array (

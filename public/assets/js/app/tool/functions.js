@@ -1,6 +1,6 @@
 // Generic settings and functions
 import { oCharacter } from '../generator.js';
-import { debug } from './settings.js';
+import { debug, icons } from './settings.js';
 
 // Page functions
 
@@ -69,6 +69,39 @@ function showPopup(message) {
     alert(message);
 }
 
+function generateIconSet(local_icons,asset,attribute) {
+    const action_icons = $.map(local_icons, function(icon) {
+        let clickEventHandler = null;
+    
+        // Ensure that asset is an instance of the class
+        // Bind the method to the instance to retain context
+        if (icon.includes('remove')) {
+            clickEventHandler = asset.remove.bind(asset);
+        } else if (icon.includes('upgrade')) {
+            clickEventHandler = asset.upgrade.bind(asset);
+        } else if (icon.includes('downgrade')) {
+            clickEventHandler = asset.downgrade.bind(asset);
+        }
+    
+        const $anchor = $('<a>', {
+            "data-action": `${attribute}-${icon}`,
+            "data-id": asset.id,
+            "data-sub_id": asset.sub_id,
+            html: icons[icon].icon
+        });
+    
+        if (clickEventHandler) {
+            $anchor.on('click', function(event) {
+                event.preventDefault(); // Prevent default anchor behavior
+                clickEventHandler(); // Call the bound method without arguments
+            });
+        }
+    
+        return $anchor;
+    });
+    return action_icons;
+}
+
 /**
  * Inserts a message into the DOM, replacing any existing messages.
  * @param {string} element - The element selector to insert the message into.
@@ -111,6 +144,7 @@ export {
     allowChoose,
     showPopup,
     debugLog,
+    generateIconSet,
     initiateEditor,
     showMessage,
 }

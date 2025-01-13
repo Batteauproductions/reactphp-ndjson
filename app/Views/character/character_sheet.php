@@ -16,11 +16,11 @@
             <input type="hidden" name="character" value='<?php echo isset($oCharacter) ? $oCharacter: '' ?>'/>
             <!-- /Tool information -->
 
-            <div class="cell small-12 medium-4 large-3 text-center">
+            <div class="cell small-12 text-center">
                 <h1>Basis informatie</h1>
                 <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
                 <div class="grid-x grid-margin-x grid-margin-y">
-                    <div class="cell small-12">                        
+                    <div class="cell small-2">                        
                         <div class="profile"> 
                             <div class="profile-avatar text-left">
                                 <label class="profile-avatar-action">
@@ -35,7 +35,7 @@
                             </div>                        
                         </div>
                     </div>
-                    <div class="cell small-12">
+                    <div class="cell small-5">
                         <div class="grid-x align-middle info-container">
                             <div class="cell small-6 text-left">
                                 Spelernaam
@@ -101,8 +101,12 @@
                                     <?php echo isset($oCharacter->status_id) ? $oCharacter->status_name : 'Nieuw'; ?>
                                 <?php endif; ?>                                
                             </div>                           
+                            
+                        </div>
+                    </div>
+                    <div class="cell small-5">
+                        <div class="grid-x align-middle info-container">
                             <div class="cell small-12 text-center">      
-                                <hr>                    
                                 <h2>Notities</h2>                                
                             </div>
                             <div class="cell small-6 text-left">
@@ -133,24 +137,24 @@
                     </div>
                 </div>
             </div>
-            <div class="cell small-12 medium-8 large-9">
+            <div class="cell small-12">
                 <div class="grid-x grid-padding-x grid-padding-y">
-                    <div class="cell small-12 large-6 text-center">
-                    <?= $this->include('character/parts/stats/Stats_Primary') ?>
+                    <div class="cell small-12 medium-4 text-center">
+                        <?= $this->include('character/parts/stats/Stats_Primary') ?>
                     </div>
-                    <div class="cell small-12 large-6 text-center">
+                    <div class="cell small-12 medium-4 text-center">
                         <?= $this->include('character/parts/stats/Stats_Secundary') ?>
                     </div>
-                    <div class="cell small-12 large-6 text-center">
+                    <div class="cell small-12 medium-4 text-center">
                         <?= $this->include('character/parts/Professions') ?>                      
                     </div>
-                    <div class="cell small-12 large-6 text-center">
+                    <div class="cell small-12 medium-4 text-center">
                         <?= $this->include('character/parts/skills/Skills_Proffesion') ?> 
                     </div>
-                    <div class="cell small-12 large-6 text-center">
+                    <div class="cell small-12 medium-4 text-center">
                         <?= $this->include('character/parts/skills/Skills_Combat') ?>
                     </div>
-                    <div class="cell small-12 large-6 text-center">
+                    <div class="cell small-12 medium-4 text-center">
                         <?= $this->include('character/parts/skills/Skills_Magic') ?>
                     </div>
                 </div>                
