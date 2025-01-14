@@ -19,7 +19,7 @@ class EventModel extends Model
         $query = $this
                     ->db
                     ->table(TBL_EVENT)
-                    ->select('id, name, description, story_date, oc_start_time, oc_end_time')
+                    ->select('id, title, name, description, story_date, oc_start_time, oc_end_time')
                     ->orderBy('oc_start_time','desc');
 
 		return $query->get()->getResultObject();
@@ -30,7 +30,7 @@ class EventModel extends Model
 		return $this
                     ->db
                     ->table(TBL_EVENT)
-                    ->select('id, name, description, story_date, oc_start_time, oc_end_time')	
+                    ->select('id, title, name, description, story_date, oc_start_time, oc_end_time')	
                     ->orderBy('oc_start_time','desc')
                     ->where('id',$id) 
                     ->get()  
