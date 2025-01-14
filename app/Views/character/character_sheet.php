@@ -20,7 +20,7 @@
                 <h1>Basis informatie</h1>
                 <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
                 <div class="grid-x grid-margin-x grid-margin-y">
-                    <div class="cell small-2">                        
+                    <div class="cell small-12 medium-2">                        
                         <div class="profile"> 
                             <div class="profile-avatar text-left">
                                 <label class="profile-avatar-action">
@@ -35,7 +35,7 @@
                             </div>                        
                         </div>
                     </div>
-                    <div class="cell small-5">
+                    <div class="cell small-12 medium-5">
                         <div class="grid-x align-middle info-container">
                             <div class="cell small-6 text-left">
                                 Spelernaam
@@ -104,7 +104,7 @@
                             
                         </div>
                     </div>
-                    <div class="cell small-5">
+                    <div class="cell small-12 medium-5">
                         <div class="grid-x align-middle info-container">
                             <div class="cell small-12 text-center">      
                                 <h2>Notities</h2>                                

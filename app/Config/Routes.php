@@ -32,6 +32,7 @@ $routes->get('account/(:any)', 'Page::viewGeneric/$1');
 $routes->post('action/character-save', 'Character::Process');
 $routes->post('action/character-submit', 'Character::Process');
 $routes->post('action/get-adventure', 'Character::getAdventure');
+$routes->post('action/get-background', 'Character::getBackground');
 $routes->post('action/get-dropdown', 'Character::getDropdown');
 $routes->post('action/get-details', 'Character::getDetails');
 //----

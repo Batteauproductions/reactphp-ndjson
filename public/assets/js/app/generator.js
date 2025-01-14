@@ -3,11 +3,12 @@ import { Character } from './tool/character.js'
 import { currentDateTime } from './tool/settings.js'
 import { debugLog, initiateEditor } from './tool/functions.js'
 import { pickName } from './tool/name.js'
-import { Race, pickRace  } from './tool/race.js'
-import { Profession, pickProfession } from './tool/professions.js'
-import { Skill, pickSkillProfession, pickSkillCombat, pickSkillMagic } from './tool/skills.js'
+import { pickRace  } from './tool/race.js'
+import { pickProfession } from './tool/professions.js'
+import { pickSkillProfession, pickSkillCombat, pickSkillMagic } from './tool/skills.js'
 import { convertCurrency } from './tool/currency.js'
 import { pickBasekit, pickItem } from './tool/equipment.js'
+import { editAdventure, editBackground } from './tool/story.js'
 
 //Page functions
 let oCharacter;
@@ -24,10 +25,11 @@ $(document).ready(function() {
     if (json_string !== null && json_string !== undefined && json_string !== '') { 
         const json_obj = JSON.parse(json_string);
         debugLog('Character information received, treating as excisting', json_obj);
+        //--setup a character based on json input
         oCharacter = new Character (json_obj);
     } else {
-        debugLog('No character information received, treating as new');                
-        $('body').find('[data-open="adventure-modal"]').addClass('disabled');
+        debugLog('No character information received, treating as new');    
+        //--setup a new clean character object
         oCharacter = new Character({
             meta: {
                 type: 1,
@@ -40,6 +42,8 @@ $(document).ready(function() {
                 lastlocked_dt: null,
             },
         });
+        //--new characters cannot edit adventurers, only background            
+        $('body').find('a[data-action="edit-adventure"]').addClass('disabled');
     }
 
     console.log(oCharacter);
@@ -55,6 +59,8 @@ $(document).ready(function() {
     $('a[data-action="pick-skill-magic"]').on('click', pickSkillMagic);
     $('a[data-action="pick-basekit"]').on('click', pickBasekit);
     $('a[data-action="pick-item"]').on('click', pickItem);
+    $('a[data-action="edit-background"]').on('click', editBackground);
+    $('a[data-action="edit-adventure"]').on('click', editAdventure);
 
 });
 

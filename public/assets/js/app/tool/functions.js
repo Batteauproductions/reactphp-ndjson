@@ -1,6 +1,7 @@
 // Generic settings and functions
 import { oCharacter } from '../generator.js';
 import { debug, icons } from './settings.js';
+import { updateCharacter } from './character.js';
 
 // Page functions
 
