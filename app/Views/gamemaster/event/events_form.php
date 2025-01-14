@@ -10,6 +10,19 @@
                 <div class="grid-x grid-margin-x grid-margin-y">
                     <div class="cell small-12 medium-6">
                         <div class="input-wrapper">
+                            <label for="title">
+                                Titel
+                            </label>
+                            <input 
+                                required
+                                type="text" 
+                                name="title" 
+                                value="<?php echo isset($_POST['title']) ? htmlspecialchars($_POST['title']) : (isset($oEvent) ? $oEvent->title : ''); ?>"
+                                placeholder="Bv. Dalaria I.IV">
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-6">
+                        <div class="input-wrapper">
                             <label for="name">
                                 Naam
                             </label>
@@ -18,19 +31,6 @@
                                 type="text" 
                                 name="name" 
                                 value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : (isset($oEvent) ? $oEvent->name : ''); ?>"
-                                placeholder="Bv. Dalaria I.IV">
-                        </div>
-                    </div>
-                    <div class="cell small-12 medium-6">
-                        <div class="input-wrapper">
-                            <label for="name">
-                                Subtitel
-                            </label>
-                            <input 
-                                required
-                                type="text" 
-                                name="subname" 
-                                value="<?php echo isset($_POST['subname']) ? htmlspecialchars($_POST['subname']) : (isset($oEvent) ? $oEvent->subname : ''); ?>"
                                 placeholder="Bv. Het midzomerfeest">
                         </div>
                     </div>

@@ -506,6 +506,7 @@ label.input-error {
   margin-top: 0;
 }
 .wrapper .content-wrapper {
+  margin: 2.5rem 0;
   padding: 2.5rem;
   border-radius: 0.313rem;
   overflow: hidden;

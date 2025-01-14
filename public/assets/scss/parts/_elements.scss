@@ -402,6 +402,7 @@ label.input-error {
     }
 
     .content-wrapper {
+        margin: calc($margin*2) 0;
         padding: calc($padding*2);
         
         &--login, &--signup_start, &--signup_error, &--signup_done {

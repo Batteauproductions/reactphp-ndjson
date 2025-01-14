@@ -1,6 +1,11 @@
 $("#event-create").validate({
     rules: {
-        name: {
+        title: {
+            required: true,
+            minlength: 10,
+            maxlength: 50,
+        }
+        ,name: {
             required: true,
             minlength: 3,
             maxlength: 50,
@@ -15,7 +20,7 @@ $("#event-create").validate({
             required: true,
         }
         ,description: {
-            maxlength: 500,
+            maxlength: 2000,
         }
     }
     ,errorClass: 'input-error'

@@ -8,7 +8,7 @@ class Email extends BaseConfig
 {
     public string $fromEmail  = EMAIL_FROM;
     public string $fromName   = EMAIL_NAME;
-    public string $recipients = '';
+    public string $recipients;
 
     /**
      * The "user agent"
@@ -28,7 +28,7 @@ class Email extends BaseConfig
     /**
      * SMTP Server Hostname
      */
-    public string $SMTPHost = 'ssl://smtp.gmail.com';
+    public $SMTPHost= 'smtp.googlemail.com';
 
     /**
      * SMTP Username
@@ -38,7 +38,7 @@ class Email extends BaseConfig
     /**
      * SMTP Password
      */
-    public string $SMTPPass = 'Beware_The_Smiling_Sl';
+    public string $SMTPPass = 'mkpkpzbwdkovnaow';
 
     /**
      * SMTP Port
@@ -48,7 +48,7 @@ class Email extends BaseConfig
     /**
      * SMTP Timeout (in seconds)
      */
-    public int $SMTPTimeout = 7;
+    public int $SMTPTimeout = 5;
 
     /**
      * Enable persistent SMTP connections
