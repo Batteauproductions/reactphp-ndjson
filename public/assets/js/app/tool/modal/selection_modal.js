@@ -1,44 +1,15 @@
 //Generic settings and functions
-import { oCharacter } from '../generator.js';
-import { domain, icons, language, oTranslations } from './settings.js';
-import { debugLog, allowChoose } from './functions.js'
-import { convertCurrency } from './currency.js'
-import { chooseRace } from './race.js'
-import { changeName } from './name.js';
-import { chooseProfession } from './professions.js';
-import { chooseSkill } from './skills.js';
-import { chooseItem, chooseBasekit } from './equipment.js';
-
-// Static DOM Elements
-const $typeSelect = $('select[name="type"]');
-const $subtypeSelect = $('select[name="subtype"]');
-const $rankSelect = $('input[name="rank"]');
-const $modalLoading = $('div[data-id="modal-loading"]');
-const $typeAmount = $('[name="amount"]');
-const $choice_image_container = $('#choice-image-container');
-const $choice_image = $('#choice-image');
-const $choice_description = $('#choice-description');
-const $choice_details = $('#choice-details');
-const $choice_actions = $('#choice-actions');
+import { domain, icons, language, oTranslations } from '../settings.js';
+import { debugLog, allowChoose } from '../functions.js'
+import { convertCurrency } from '../currency.js';
+import { chooseRace } from '../race.js'
+import { chooseProfession } from '../professions.js';
+import { chooseSkill } from '../skills.js';
+import { chooseItem, chooseBasekit } from '../equipment.js';
+import { clearModal, $typeSelect, $subtypeSelect, $rankSelect, $choice_image_container, $choice_image, $choice_description, $choice_details, $choice_actions, $modalLoading } from "./modal.js";
 
 let oTmpData = {};
 let oTmpSelector = null;
-
-/*clearModal
---bClear, weither the modal should be completely cleared
-*/
-function clearModal(bClear) {
-    oTmpData = {};
-    if(bClear) {
-        $typeSelect.empty().hide();
-        $typeAmount.val('1').hide();
-    }    
-    updateModalImage(); 
-    $subtypeSelect.empty().hide();
-    $choice_description.empty().hide();
-    $choice_details.empty().hide();
-    $choice_actions.empty().hide();
-}
 
 //basic function to open the modal
 //requires a modal DOM element to target
@@ -364,122 +335,11 @@ function updateModelButtons(sAction, oDetails) {
     }
 }
 
-//This function opens the plain text modal
-//This function is used for the following actions
-//--character name
-function openTextModal(sAction) {
-    const $modal = $('#text-modal')
-    const $form = $('#text-form');
-    $modal.foundation('open');
-    //container of elements to be place within the modal
-    let contentElements = [];
-    //switch the content of the modal based on action
-    switch(sAction) {
-        case 'name':
-            contentElements.push($('<label>', { 
-                for: 'character-name', 
-                text: oTranslations[language].character_name 
-            }));
-            contentElements.push($('<input>', { 
-                id: 'character-name', 
-                name: 'character-name', 
-                type: 'text',
-                value: oCharacter.meta.name ? oCharacter.meta.name : ''
-            }));
-            contentElements.push($('<a>', { 
-                class: 'button solid','data-action': `${sAction}-choose`,
-                html: `${icons.choose.icon} ${icons.choose.text}`
-            }).on('click', function(e) {
-                e.preventDefault();
-                changeName();
-            }));
-            $modalLoading.hide();
-            $form.append(contentElements).show();
-            break;
-        default:
-            console.warn(`a[data-open="text-modal"], unknown sAction called with value: ${sAction}`);
-            break;
-    }
-}
-
-/**
- * Opens the modal for the submission of stories.
- * This function supports the following actions:
- * - Writing the background
- * - Writing adventures
- *
- * @param {string} sAction - The action to perform ("adventure" or "background").
- * @param {jQuery} $modal - The jQuery object representing the modal to open.
- */
-function openStoryModal(sAction, $modal) {
-    debugLog('openStoryModal:', sAction, $modal);
-
-    // Initialize modal to default state
-    clearModal(true);
-    $modalLoading.show();
-    $modal.foundation('open');
-
-    // Variables for dynamic modal content
-    let ajaxUrl = null;
-    let storyId = null;
-    let $form = null;
-    const $textareas = $('textarea[id^="question_"]');
-
-    // Configure based on action type
-    switch (sAction) {
-        case 'adventure':
-            storyId = $(this).data('id');
-            $form = $('#adventure-form');
-            ajaxUrl = `${domain}/action/get-adventure`;
-            break;
-        case 'background':
-            $form = $('#background-form');
-            ajaxUrl = `${domain}/action/get-background`;
-            break;
-        default:
-            console.warn(`Unexpected action: ${sAction}`);
-            return; // Exit early for invalid actions
-    }
-
-    // Set default state to loading
-    $modalLoading.show();
-    $form.hide();
-
-    // Fetch data from the server
-    $.ajax({
-        url: ajaxUrl,
-        type: 'POST',
-        data: { id: storyId },
-        dataType: 'json',
-        success: (data) => {
-            if (data) {
-                console.info('Populating modal with existing data.');
-                $textareas.each(function (index) {
-                    $(this).text(data[`question_${index + 1}`] || '');
-                });
-            } else {
-                console.warn('No data available for the selected action.');
-            }
-        },
-        error: (error) => {
-            console.error('Error fetching data:', error);
-        },
-        complete: () => {
-            // Ensure modal state is updated regardless of the result
-            $modalLoading.hide();
-            $form.show();
-        }
-    });
-}
-
-
 export {
     oTmpSelector,
     $subtypeSelect,
     $rankSelect,
     openSelectionModal,
     clearModal,
-    openTextModal,
-    openStoryModal,
     updateModalDropdown
 } 

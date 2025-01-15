@@ -2,12 +2,11 @@ import { oCharacter } from '../generator.js';
 import { openTextModal } from './modal/text_modal.js';
 import { updateCharacter } from './character.js';
 
-class character_name {
+class character_type {
     pick() {
-        console.log('hello world')
-        openTextModal('name',$('#text-modal'));
+        openTextModal('type',$('#text-modal'));
     }
-    
+
     choose() {
         oCharacter.meta.name = $('input[name="character-name"]').val();
         $('[name="char_name"]').val(oCharacter.meta.name)
@@ -15,12 +14,12 @@ class character_name {
         $('#text-modal').foundation('close');
         updateCharacter();
     }
-    
+
     change() {
-        openTextModal('name',$('#text-modal'));
+        openTextModal('type',$('#text-modal'));
     }
 }
 
 export {
-    character_name
+    character_type
 }

@@ -79,24 +79,18 @@
                                 Type
                             </div>
                             <div class="cell small-6">
-                                <select id="type" class="input-group-field" name="char_type" type="text">
-                                    <option value="">Geen voorkeur</option>
-                                    <?php foreach($arrType as $type):?>
-                                        <option value="<?php echo $type->id ?>"><?php echo $type->name ?></option>
-                                    <?php endforeach;?> 
-                                </select>
+                                <a data-action="pick-type">
+                                    <span id="type"><i class="fa-solid fa-rotate-right"></i><?php echo isset($oCharacter->type_name) ? $oCharacter->type_name : 'Speler'; ?></span>
+                                </a>
                             </div>                            
                             <div class="cell small-6 text-left">
                                 Status
                             </div>                            
                             <div class="cell small-6">
                                 <?php if($viewAsAdmin): ?>
-                                    <select id="status" class="input-group-field" name="char_status" type="text">
-                                        <option value="">Geen voorkeur</option>
-                                        <?php foreach($arrStatus as $status):?>
-                                            <option value="<?php echo $status->id ?>"><?php echo $status->name ?></option>
-                                        <?php endforeach;?> 
-                                    </select>
+                                    <a data-action="pick-status">
+                                       <span id="status"><i class="fa-solid fa-rotate-right"></i><?php echo isset($oCharacter->status_id) ? $oCharacter->status_name : 'Nieuw'; ?></span>
+                                    </a>
                                 <?php else: ?>
                                     <?php echo isset($oCharacter->status_id) ? $oCharacter->status_name : 'Nieuw'; ?>
                                 <?php endif; ?>                                

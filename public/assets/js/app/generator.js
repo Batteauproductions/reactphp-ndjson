@@ -2,7 +2,9 @@
 import { Character } from './tool/character.js'
 import { currentDateTime } from './tool/settings.js'
 import { debugLog, initiateEditor } from './tool/functions.js'
-import { pickName } from './tool/name.js'
+import { character_name } from './tool/name.js'
+import { character_type } from './tool/type.js'
+import { character_status } from './tool/status.js'
 import { pickRace  } from './tool/race.js'
 import { pickProfession } from './tool/professions.js'
 import { pickSkillProfession, pickSkillCombat, pickSkillMagic } from './tool/skills.js'
@@ -10,10 +12,15 @@ import { convertCurrency } from './tool/currency.js'
 import { pickBasekit, pickItem } from './tool/equipment.js'
 import { editAdventure, editBackground } from './tool/story.js'
 
+
 //Page functions
 let oCharacter;
+const name = new character_name();
+const type = new character_type();
+const status = new character_status();
 
 $(document).ready(function() {
+
     /*
     This function will construct the sheet of the character based on information parsed.
     The controller sets the content of the page and once iniatiated a the value of a hidden input field
@@ -46,12 +53,13 @@ $(document).ready(function() {
         $('body').find('a[data-action="edit-adventure"]').addClass('disabled');
     }
 
-    console.log(oCharacter);
     initiateEditor();
     $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
-
+    
     //This will bind the page function to their respective static elements
-    $('a[data-action="pick-name"]').on('click', pickName);
+    $('a[data-action="pick-name"]').on('click', name.pick);
+    $('a[data-action="pick-type"]').on('click', type.pick);
+    $('a[data-action="pick-status"]').on('click', status.pick);
     $('a[data-action="pick-race"]').on('click', pickRace);
     $('a[data-action="pick-profession"]').on('click', pickProfession);
     $('a[data-action="pick-skill-profession"]').on('click', pickSkillProfession);

@@ -3,7 +3,7 @@ import { oCharacter } from '../generator.js';
 import { domain, iconset, language, oTranslations } from './settings.js';
 import { debugLog, generateIconSet, showMessage, showPopup } from './functions.js';
 import { checkExperienceCost } from './experience.js';
-import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } from './modal.js';
+import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } from './modal/selection_modal.js';
 import { findItemIndex } from './character.js';
 
 // Define the class

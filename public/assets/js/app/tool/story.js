@@ -1,4 +1,4 @@
-import { openStoryModal } from './modal.js'
+import { openStoryModal } from './modal/story_modal.js'
 
 function editAdventure() {
     openStoryModal('adventure',$('#adventure-modal'));

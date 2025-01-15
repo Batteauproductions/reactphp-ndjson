@@ -3,7 +3,7 @@ import { oCharacter } from '../generator.js';
 import { domain, language, oTranslations } from './settings.js';
 import { debugLog, showMessage } from './functions.js';
 import { checkCurrencyCost, convertCurrency } from './currency.js';
-import { openSelectionModal, updateModalDropdown } from './modal.js';
+import { openSelectionModal, updateModalDropdown } from './modal/selection_modal.js';
 import { findItemIndex } from './character.js';
 
 // Define the class

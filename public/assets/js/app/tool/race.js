@@ -2,7 +2,7 @@
 import { oCharacter } from '../generator.js';
 import { domain, } from './settings.js';
 import { debugLog } from './functions.js';
-import { openSelectionModal, updateModalDropdown } from './modal.js';
+import { openSelectionModal, updateModalDropdown } from './modal/selection_modal.js';
 import { Skill } from './skills.js';
 import { updateCharacter, updateCharacterStats } from './character.js';
 
