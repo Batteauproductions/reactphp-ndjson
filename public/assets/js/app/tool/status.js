@@ -2,24 +2,24 @@ import { oCharacter } from '../generator.js';
 import { openTextModal } from './modal/text_modal.js';
 import { updateCharacter } from './character.js';
 
-class character_status {
-    pick() {
-        openTextModal('type',$('#text-modal'));
-    }
+function changeStatus() {
+    openTextModal('type',$('#text-modal'));
+}
 
-    choose() {
-        oCharacter.meta.name = $('input[name="character-name"]').val();
-        $('[name="char_name"]').val(oCharacter.meta.name)
-        $('#charactername').html(`<i class="fa-solid fa-rotate-right"></i>${oCharacter.meta.name}</span>`).on('click',changeName);   
-        $('#text-modal').foundation('close');
-        updateCharacter();
-    }
+function chooseStatus() {
+    oCharacter.meta.name = $('input[name="character-name"]').val();
+    $('[name="char_name"]').val(oCharacter.meta.name)
+    $('#charactername').html(`<i class="fa-solid fa-rotate-right"></i>${oCharacter.meta.name}</span>`).on('click',changeName);   
+    $('#text-modal').foundation('close');
+    updateCharacter();
+}
 
-    change() {
-        openTextModal('type',$('#text-modal'));
-    }
+function pickStatus() {
+    openTextModal('type',$('#text-modal'));
 }
 
 export {
-    character_status
+    changeStatus,
+    chooseStatus,
+    pickStatus,
 }

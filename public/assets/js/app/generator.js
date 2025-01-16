@@ -2,12 +2,13 @@
 import { Character } from './tool/character.js'
 import { currentDateTime } from './tool/settings.js'
 import { debugLog, initiateEditor } from './tool/functions.js'
-import { character_name } from './tool/name.js'
-import { character_type } from './tool/type.js'
-import { character_status } from './tool/status.js'
+import { pickName } from './tool/name.js'
+import { pickType } from './tool/type.js'
+import { pickStatus } from './tool/status.js'
 import { pickRace  } from './tool/race.js'
 import { pickProfession } from './tool/professions.js'
 import { pickSkillProfession, pickSkillCombat, pickSkillMagic } from './tool/skills.js'
+import { character_note } from './tool/note.js'
 import { convertCurrency } from './tool/currency.js'
 import { pickBasekit, pickItem } from './tool/equipment.js'
 import { editAdventure, editBackground } from './tool/story.js'
@@ -15,9 +16,6 @@ import { editAdventure, editBackground } from './tool/story.js'
 
 //Page functions
 let oCharacter;
-const name = new character_name();
-const type = new character_type();
-const status = new character_status();
 
 $(document).ready(function() {
 
@@ -57,9 +55,13 @@ $(document).ready(function() {
     $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
     
     //This will bind the page function to their respective static elements
-    $('a[data-action="pick-name"]').on('click', name.pick);
-    $('a[data-action="pick-type"]').on('click', type.pick);
-    $('a[data-action="pick-status"]').on('click', status.pick);
+    $('a[data-action="create-note"]').on('click', function() {
+        const note = new character_note($(this).data('type'));
+        note.create();
+    });
+    $('a[data-action="pick-name"]').on('click', pickName);
+    $('a[data-action="pick-type"]').on('click', pickType);
+    $('a[data-action="pick-status"]').on('click', pickStatus);
     $('a[data-action="pick-race"]').on('click', pickRace);
     $('a[data-action="pick-profession"]').on('click', pickProfession);
     $('a[data-action="pick-skill-profession"]').on('click', pickSkillProfession);

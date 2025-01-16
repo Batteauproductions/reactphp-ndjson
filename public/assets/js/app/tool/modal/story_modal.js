@@ -1,6 +1,6 @@
 import { domain } from "../settings.js";
 import { debugLog } from '../functions.js';
-import { clearForm, $modalLoading, } from "./modal.js";
+import { clearModal, $modalLoading, } from "./modal.js";
 
 /**
  * Opens the modal for the submission of stories.

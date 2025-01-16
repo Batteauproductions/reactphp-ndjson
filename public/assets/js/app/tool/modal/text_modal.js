@@ -1,6 +1,7 @@
 import { oCharacter } from '../../generator.js';
+import { chooseName } from '../name.js';
 import { debugLog } from '../functions.js';
-import { oTranslations } from '../settings.js';
+import { oTranslations, language, icons } from '../settings.js';
 import { clearForm, $modalLoading, } from "./modal.js";
 
 /** 
@@ -13,7 +14,7 @@ import { clearForm, $modalLoading, } from "./modal.js";
  * @param {string} sAction - The action to perform ("adventure" or "background").
  * @param {jQuery} $modal - The jQuery object representing the modal to open.
 */
-function openTextModal(sAction, $modal) {
+function openTextModal(sAction, $modal, oClass=null) {
     debugLog('openTextModal:', sAction, $modal);
     // Initialize modal to default state
     const $form = $('#text-form');    
@@ -24,6 +25,19 @@ function openTextModal(sAction, $modal) {
     let contentElements = [];
     //switch the content of the modal based on action
     switch(sAction) {
+        case 'note':
+            console.log('oClass',oClass.type)
+            contentElements.push($('<label>', { 
+                for: 'character-name', 
+                text: oTranslations[language].character_name 
+            }));
+            contentElements.push($('<textarea>', { 
+                id: 'character-name', 
+                name: 'character-name', 
+                rows: 10,
+                value: oCharacter.meta.name ? oCharacter.meta.name : ''
+            }));
+            break;
         case 'type':
             break;
         case 'name':

@@ -107,7 +107,7 @@
                                 Speler
                             </div>
                             <div class="cell small-6">
-                                <a data-open="notes-modal" data-type="player_notes">
+                                <a data-action="create-note" data-type="player_notes">
                                     <i class="fa-solid fa-plus"></i>toevoegen</span>
                                 </a>
                             </div>
@@ -115,7 +115,7 @@
                                 Spelleiding
                             </div>
                             <div class="cell small-6">
-                                <a data-open="notes-modal" data-type="sl_notes">
+                                <a data-action="create-note" data-type="sl_notes">
                                     <i class="fa-solid fa-plus"></i>toevoegen</span>
                                 </a>
                             </div>
@@ -123,7 +123,7 @@
                                 Privé spelleiding
                             </div>
                             <div class="cell small-6">
-                                <a data-open="notes-modal" data-type="sl_private_notes">
+                                <a data-action="create-note" data-type="sl_private_notes">
                                     <i class="fa-solid fa-plus"></i>toevoegen</span>
                                 </a>
                             </div>
