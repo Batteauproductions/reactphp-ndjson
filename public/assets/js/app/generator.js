@@ -8,7 +8,7 @@ import { pickStatus } from './tool/status.js'
 import { pickRace  } from './tool/race.js'
 import { pickProfession } from './tool/professions.js'
 import { pickSkillProfession, pickSkillCombat, pickSkillMagic } from './tool/skills.js'
-import { character_note } from './tool/note.js'
+import { createNote } from './tool/note.js'
 import { convertCurrency } from './tool/currency.js'
 import { pickBasekit, pickItem } from './tool/equipment.js'
 import { editAdventure, editBackground } from './tool/story.js'
@@ -55,10 +55,7 @@ $(document).ready(function() {
     $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
     
     //This will bind the page function to their respective static elements
-    $('a[data-action="create-note"]').on('click', function() {
-        const note = new character_note($(this).data('type'));
-        note.create();
-    });
+    $('a[data-action="create-note"]').on('click', createNote);
     $('a[data-action="pick-name"]').on('click', pickName);
     $('a[data-action="pick-type"]').on('click', pickType);
     $('a[data-action="pick-status"]').on('click', pickStatus);

@@ -23,6 +23,7 @@ class Character {
         profession = [],
         skill = [],
         item = [],
+        notes = [],
         stories = [], // Fix syntax error and provide default
     }) {
         // Assign properties to the instance's meta object
@@ -41,6 +42,7 @@ class Character {
         this.profession = profession;
         this.skill = skill;
         this.item = item;
+        this.notes = notes;
         this.stories = stories;
     }
 

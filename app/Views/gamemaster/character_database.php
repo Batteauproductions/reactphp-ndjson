@@ -1,12 +1,12 @@
 <div class="grid-container">
     <div class="page-wrapper transparent">
-        <section class="grid-x grid-padding-x grid-padding-y">        
-            <form class="cell sortable">
-                <div class="grid-x grid-margin-x grid-margin-y align-bottom">
-                    <div class="cell small-12">
+        <div class="grid-x grid-padding-x grid-padding-y">                    
+            <form class="sortable cell small-12 medium-6 large-3">
+                <div class="grid-x">
+                    <div class="cell">
                         <h1>Filters</h1>
                     </div>
-                    <div class="cell small-6 medium-4 input-group">
+                    <div class="cell input-group">
                         <label for="name" class="input-group-label">
                             Naam
                         </label>
@@ -17,7 +17,7 @@
                             <?php endforeach;?> 
                         </select>
                     </div>
-                    <div class="cell small-6 medium-4 input-group">
+                    <div class="cell input-group">
                         <label for="type" class="input-group-label">
                             Type
                         </label>
@@ -28,7 +28,7 @@
                             <?php endforeach;?> 
                         </select>
                     </div>
-                    <div class="cell small-6 medium-4 input-group">
+                    <div class="cell input-group">
                         <label for="status" class="input-group-label">
                             Status
                         </label>
@@ -39,7 +39,7 @@
                             <?php endforeach;?> 
                         </select>
                     </div>                    
-                    <div class="cell small-6 medium-4 input-group">
+                    <div class="cell input-group">
                         <label for="race" class="input-group-label">
                             Ras
                         </label>
@@ -50,7 +50,7 @@
                             <?php endforeach;?> 
                         </select>
                     </div>
-                    <div class="cell small-6 medium-4 input-group">
+                    <div class="cell input-group">
                         <label for="profession" class="input-group-label">
                             Beroep
                         </label>
@@ -61,7 +61,7 @@
                             <?php endforeach;?> 
                         </select>
                     </div>
-                    <div class="cell small-6 medium-4 input-group">
+                    <div class="cell input-group">
                         <label for="skill" class="input-group-label">
                             Vaardigheid
                         </label>
@@ -72,7 +72,7 @@
                             <?php endforeach;?> 
                         </select>
                     </div>
-                    <div class="cell small-12">
+                    <div class="cell">
                         <button class="button solid" type="submit">
                             <i class="fa-solid fa-filter"></i>Filter toepassen
                         </button>
@@ -80,9 +80,7 @@
                 </div>
                 <hr>
             </form> 
-        </section>   
-        <section class="grid-x grid-padding-x grid-padding-y">               
-            <div class="cell">
+            <section class="cell small-12 medium-6 large-9">
                 <div class="grid-x grid-margin-x grid-margin-y wrapper-character" data-equalizer>
                     <?php foreach($arrCharacters as $character):?>
                         <div 
@@ -111,7 +109,7 @@
                         </div>
                     <?php endforeach;?> 
                 </div>
-            </div>        
-        </section>
+            </section> 
+        </div>
     </div>
 </div>

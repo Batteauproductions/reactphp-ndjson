@@ -50,10 +50,16 @@ const oTranslations = Object.freeze({
         "required": "verplicht",
         "silver": "zilver",
         "speech": "Taal: Spreken",
-        "upgrade": "verhogen"
+        "upgrade": "verhogen",
+        "note_add" : "notitie toevoegen",
     }
 });
 const icons = Object.freeze({
+    "note_add":{
+        icon: '<i class="fa-regular fa-floppy-disk"></i>',
+        class: '',
+        text: oTranslations[language].note_add,
+    },
     "character_saving":{
         icon: '<i class="fa-solid fa-rotate-right"></i>',
         class: '',

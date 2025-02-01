@@ -124,7 +124,7 @@ class Profession {
         //attempt to find the proffesion within the character object
         const index = findItemIndex('profession', this.id, this.sub_id)
         if (index === -1) {
-            console.error('Trying to upgrade profession, non-existent')
+            console.error('Trying to downgrade profession, non-existent')
             return;
         }
 

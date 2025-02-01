@@ -15,7 +15,25 @@ function chooseName() {
 }
 
 function pickName() {
-    openTextModal('name',$('#text-modal'));
+    let contentElements = [];
+    contentElements.push($('<label>', { 
+        for: 'character-name', 
+        text: oTranslations[language].character_name 
+    }));
+    contentElements.push($('<input>', { 
+        id: 'character-name', 
+        name: 'character-name', 
+        type: 'text',
+        value: oCharacter.meta.name ? oCharacter.meta.name : ''
+    }));
+    contentElements.push($('<a>', { 
+        class: 'button solid','data-action': `${sAction}-choose`,
+        html: `${icons.choose.icon} ${icons.choose.text}`
+    }).on('click', function(e) {
+        e.preventDefault();
+        chooseName();
+    }));          
+    openTextModal('name',$('#text-modal'),contentElements);
 }
 
 export {
