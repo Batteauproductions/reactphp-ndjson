@@ -39,7 +39,6 @@ class Race {
             this.skills.forEach(skill => {
                 let cSkill = new Skill(skill);
                 skill.add();
-                //addSkill(new Skill(skill), "skill_base");
             });
         }        
         // Update the character object in the interface

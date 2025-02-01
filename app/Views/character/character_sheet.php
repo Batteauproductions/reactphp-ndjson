@@ -16,147 +16,46 @@
             <input type="hidden" name="character" value='<?php echo isset($oCharacter) ? $oCharacter: '' ?>'/>
             <!-- /Tool information -->
 
-            <div class="cell small-12 text-center">
-                <h1>Basis informatie</h1>
-                <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
+            <div class="cell small-12 medium-3 text-center">                
                 <div class="grid-x grid-margin-x grid-margin-y">
-                    <div class="cell small-12 medium-2">                        
-                        <div class="profile"> 
-                            <div class="profile-avatar text-left">
-                                <label class="profile-avatar-action">
-                                    <input id="avatar" type="file" name="avatar" value="" placeholder="" hidden>
-                                    <ul>
-                                        <li>Enkel bestanden van maximaal 2mb</li>                                    
-                                        <li>De extensies .jpg en .png zijn toegestaan</li>
-                                        <li>Aspect ratio van 1:1 wordt aangeraden</li>
-                                    </ul>
-                                </label>
-                                <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>"/>
-                            </div>                        
-                        </div>
+                    <div class="cell small-12">                        
+                        <?= $this->include('character/parts/Profile') ?>
                     </div>
-                    <div class="cell small-12 medium-5">
-                        <div class="grid-x align-middle info-container">
-                            <div class="cell small-6 text-left">
-                                Spelernaam
-                            </div>
-                            <div class="cell small-6">
-                                <?php print_r($oSession->get('name')) ?>
-                            </div>
-                            <div class="cell small-6 text-left">
-                                Karakternaam
-                            </div>
-                            <div class="cell small-6">
-                                <a data-action="pick-name">
-                                    <span id="charactername"><i class="fa-solid fa-plus"></i>toevoegen</span>
-                                </a>
-                                <!--! hidden field for validation -->
-                                <input type="hidden" name="char_name" value=""/>
-                            </div>
-                            <div class="cell small-6 text-left">
-                                Raskeuze
-                            </div>
-                            <div class="cell small-6">
-                                <a data-action="pick-race">
-                                    <span id="race"><i class="fa-solid fa-plus"></i>toevoegen</span>
-                                </a>
-                                <!--! hidden field for validation -->
-                                <input type="hidden" name="char_race" value=""/>
-                            </div>
-                            <div class="cell small-6 text-left">
-                                Vaardigheid
-                            </div>
-                            <div class="cell small-6">
-                                <span id="stat-spend_xp"><?php echo $jsonBaseChar['spend_xp']?></span>/<span id="stat-max_xp"><?php echo $jsonBaseChar['max_xp'] ?></span>pt.
-                            </div>
-                            <div class="cell small-6 text-left">
-                                Geld
-                            </div>
-                            <div class="cell small-6">
-                                <span id="stat-currency"><?php echo $jsonBaseChar['currency'] ?></span>
-                            </div>   
-                            <div class="cell small-6 text-left">
-                                Type
-                            </div>
-                            <div class="cell small-6">
-                                <a data-action="pick-type">
-                                    <span id="type"><i class="fa-solid fa-rotate-right"></i><?php echo isset($oCharacter->type_name) ? $oCharacter->type_name : 'Speler'; ?></span>
-                                </a>
-                            </div>                            
-                            <div class="cell small-6 text-left">
-                                Status
-                            </div>                            
-                            <div class="cell small-6">
-                                <?php if($viewAsAdmin): ?>
-                                    <a data-action="pick-status">
-                                       <span id="status"><i class="fa-solid fa-rotate-right"></i><?php echo isset($oCharacter->status_id) ? $oCharacter->status_name : 'Nieuw'; ?></span>
-                                    </a>
-                                <?php else: ?>
-                                    <?php echo isset($oCharacter->status_id) ? $oCharacter->status_name : 'Nieuw'; ?>
-                                <?php endif; ?>                                
-                            </div>                           
-                            
-                        </div>
+                    <div class="cell small-12">
+                        <?= $this->include('character/parts/Baseinfo') ?>
                     </div>
-                    <div class="cell small-12 medium-5">
-                        <div class="grid-x align-middle info-container">
-                            <div class="cell small-12 text-center">      
-                                <h2>Notities</h2>                                
-                            </div>
-                            <div class="cell small-6 text-left">
-                                Speler
-                            </div>
-                            <div class="cell small-6">
-                                <a data-action="create-note" data-type="player_notes">
-                                    <i class="fa-solid fa-plus"></i>toevoegen</span>
-                                </a>
-                            </div>
-                            <div class="cell small-6 text-left">
-                                Spelleiding
-                            </div>
-                            <div class="cell small-6">
-                                <a data-action="create-note" data-type="sl_notes">
-                                    <i class="fa-solid fa-plus"></i>toevoegen</span>
-                                </a>
-                            </div>
-                            <div class="cell small-6 text-left">
-                                Privé spelleiding
-                            </div>
-                            <div class="cell small-6">
-                                <a data-action="create-note" data-type="sl_private_notes">
-                                    <i class="fa-solid fa-plus"></i>toevoegen</span>
-                                </a>
-                            </div>
-                        </div>
+                    <div class="cell small-12">
+                        <?= $this->include('character/parts/Notes') ?>
                     </div>
                 </div>
             </div>
-            <div class="cell small-12">
+            <div class="cell small-12 medium-9">
                 <div class="grid-x grid-padding-x grid-padding-y">
-                    <div class="cell small-12 medium-4 text-center">
+                    <div class="cell small-12 medium-6 text-center">
                         <?= $this->include('character/parts/stats/Stats_Primary') ?>
                     </div>
-                    <div class="cell small-12 medium-4 text-center">
+                    <div class="cell small-12 medium-6 text-center">
                         <?= $this->include('character/parts/stats/Stats_Secundary') ?>
                     </div>
-                    <div class="cell small-12 medium-4 text-center">
+                    <div class="cell small-12 medium-6 text-center">
                         <?= $this->include('character/parts/Professions') ?>                      
                     </div>
-                    <div class="cell small-12 medium-4 text-center">
+                    <div class="cell small-12 medium-6 text-center">
                         <?= $this->include('character/parts/skills/Skills_Proffesion') ?> 
                     </div>
-                    <div class="cell small-12 medium-4 text-center">
+                    <div class="cell small-12 medium-6 text-center">
                         <?= $this->include('character/parts/skills/Skills_Combat') ?>
                     </div>
-                    <div class="cell small-12 medium-4 text-center">
+                    <div class="cell small-12 medium-6 text-center">
                         <?= $this->include('character/parts/skills/Skills_Magic') ?>
                     </div>
-                </div>                
-                <div class="grid-x grid-padding-x grid-padding-y">
-                    <div class="cell small-12 text-center">
+                    <div class="cell small-12 medium-6 text-center">
+                        <?= $this->include('character/parts/StarterKit') ?>
+                    </div>
+                    <div class="cell small-12 medium-6 text-center">
                         <?= $this->include('character/parts/Equipment') ?>
                     </div>
-                </div>
+                </div>                
             </div>
             <div class="cell small-12">
                 <div class="grid-x grid-padding-x grid-padding-y">

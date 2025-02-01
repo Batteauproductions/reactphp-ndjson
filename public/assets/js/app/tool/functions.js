@@ -70,37 +70,48 @@ function showPopup(message) {
     alert(message);
 }
 
-function generateIconSet(local_icons,asset,attribute) {
-    const action_icons = $.map(local_icons, function(icon) {
-        let clickEventHandler = null;
-    
-        // Ensure that asset is an instance of the class
-        // Bind the method to the instance to retain context
-        if (icon.includes('remove')) {
-            clickEventHandler = asset.remove.bind(asset);
-        } else if (icon.includes('upgrade')) {
-            clickEventHandler = asset.upgrade.bind(asset);
-        } else if (icon.includes('downgrade')) {
-            clickEventHandler = asset.downgrade.bind(asset);
+/**
+ * Generates a set of action icons with click event handlers for a given asset.
+ *
+ * @param {string[]} localIcons - Array of icon names to generate.
+ * @param {Object} asset - The asset instance, expected to have `remove`, `upgrade`, and `downgrade` methods.
+ * @param {string} attribute - Attribute prefix used for data-action.
+ * @returns {jQuery[]} Array of jQuery anchor elements representing icons.
+ */
+function generateIconSet(localIcons, asset, attribute) {
+    return $.map(localIcons, (icon) => {
+        if (!icons[icon]) {
+            console.warn(`Icon "${icon}" not found.`);
+            return null; // Skip invalid icons
         }
-    
+
+        // Determine appropriate event handler
+        const eventHandlers = {
+            remove: asset.remove?.bind(asset),
+            upgrade: asset.upgrade?.bind(asset),
+            downgrade: asset.downgrade?.bind(asset)
+        };
+        
+        const clickEventHandler = Object.entries(eventHandlers).find(([key]) => icon.includes(key))?.[1];
+
+        // Create anchor element
         const $anchor = $('<a>', {
             "data-action": `${attribute}-${icon}`,
             "data-id": asset.id,
             "data-sub_id": asset.sub_id,
             html: icons[icon].icon
         });
-    
+
+        // Attach event handler if found
         if (clickEventHandler) {
-            $anchor.on('click', function(event) {
-                event.preventDefault(); // Prevent default anchor behavior
-                clickEventHandler(); // Call the bound method without arguments
+            $anchor.on('click', function (event) {
+                event.preventDefault();
+                clickEventHandler();
             });
         }
-    
+
         return $anchor;
-    });
-    return action_icons;
+    }).filter(Boolean); // Remove null values from the array
 }
 
 /**
