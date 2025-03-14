@@ -64,7 +64,7 @@ function openSelectionModal(sAction,$modal) {
 //This function updates the modal image
 //Checks the id and sub_id, uses different path which is available
 function updateModal (sAction,oData) {
-    debugLog('updateModal: ',sAction,oData);
+    debugLog('updateModal: ', sAction, oData);
     //update parts of the Modal
     if(sAction === 'profession' || sAction === 'race') {
         updateModalImage(sAction,oData);
@@ -72,7 +72,7 @@ function updateModal (sAction,oData) {
         updateModalImage();
     }    
     updateModelContent(oData.details);
-    updateModelDetails(sAction,oData.details,oData.modifier);
+    updateModelDetails(sAction,oData.details,oData.modifier,oData.skills);
     updateModelButtons(sAction,oData);
     //items allow amount to be chosen
     if(sAction == 'item') {

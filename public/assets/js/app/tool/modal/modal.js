@@ -159,7 +159,7 @@ function updateModelContent(oDetails) {
     }
 }
 
-function updateModelDetails(sAction, oDetails = {}, arrModifier = []) {
+function updateModelDetails(sAction, oDetails = {}, arrModifier = [], arrSkills = []) {
     // Check if action and details are valid or if there's a modifier
     if ((sAction && oDetails) || arrModifier.length > 0) {
         // Destructure parameters with defaults
@@ -216,6 +216,22 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = []) {
                     const row = $('<div>', { class: 'choice-row' });
                     const input = $('<input>', { id: `modifier-${i}`, value: mod.id, type: 'radio', name: 'stat-modifier' });
                     const label = $('<label>', { for: `modifier-${i}`, html: iconHtml });
+                    row.append(input, label);
+                    contentDetailsElements.push(row);
+                } else {
+                    contentDetailsElements.push($('<p>', { html: iconHtml }));
+                }
+            });
+        }
+        // Handle skills
+        if (arrSkills.length > 0) {
+            arrSkills.forEach((skill, i) => {
+                const name = skill.details.name.toLowerCase();
+                const iconHtml = `${icons[name].icon} ${icons[name].text}`;
+                if (arrSkills.length > 1) {
+                    const row = $('<div>', { class: 'choice-row' });
+                    const input = $('<input>', { id: `skill-${i}`, value: skill.id, type: 'radio', name: 'skill-modifier' });
+                    const label = $('<label>', { for: `skill-${i}`, html: iconHtml });
                     row.append(input, label);
                     contentDetailsElements.push(row);
                 } else {

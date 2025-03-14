@@ -1,9 +1,11 @@
 import { oCharacter } from '../generator.js';
+import { domain, iconset, language, oTranslations } from './settings.js';
 import { openTextModal } from './modal/text_modal.js';
 import { updateCharacter } from './character.js';
 
 class character_note {
-    constructor(type = 'personal') {
+    constructor(id, type = 'personal') {
+        this.id = id;
         this.type = type;
     }
 
@@ -16,19 +18,25 @@ class character_note {
     }
     
     change() {
-        openTextModal('name',$('#text-modal'));
+        //openTextModal('name',$('#text-modal'));
+    }
+
+    remove() {
+        oCharacter.removeAsset('notes', this);
+        return true;
     }
 }
 
 function createNote() {
-    const note = new character_note($(this).data('type'));
+    const nid = oCharacter.notes.length ? oCharacter.notes.length : 1;
+    const note = new character_note(nid, $(this).data('type'));
     let contentElements = [];
     contentElements.push($('<label>', { 
         for: 'character-name', 
         text: `${oTranslations[language].note_add} (${note.type})` 
     }));
     contentElements.push($('<textarea>', { 
-        id: `${note.type}`, 
+        id: `${note.id}`, 
         name: `${note.type}`, 
         rows: 10,
     }));
