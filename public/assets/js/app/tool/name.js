@@ -1,6 +1,7 @@
 import { oCharacter } from '../generator.js';
 import { openTextModal } from './modal/text_modal.js';
 import { updateCharacter } from './character.js';
+import { oTranslations, language, icons } from './settings.js';
 
 function changeName() {
     openTextModal('name',$('#text-modal'));
@@ -27,13 +28,13 @@ function pickName() {
         value: oCharacter.meta.name ? oCharacter.meta.name : ''
     }));
     contentElements.push($('<a>', { 
-        class: 'button solid','data-action': `${sAction}-choose`,
+        class: 'button solid','data-action': `name-choose`,
         html: `${icons.choose.icon} ${icons.choose.text}`
     }).on('click', function(e) {
         e.preventDefault();
         chooseName();
     }));          
-    openTextModal('name',$('#text-modal'),contentElements);
+    openTextModal(contentElements);
 }
 
 export {

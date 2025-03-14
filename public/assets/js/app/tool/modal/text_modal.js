@@ -15,7 +15,7 @@ import { clearForm, $modalLoading, } from "./modal.js";
  * @param {jQuery} $modal - The jQuery object representing the modal to open.
 */
 function openTextModal(contentElements) {
-    debugLog('openTextModal:', sAction, $modal);
+    debugLog('openTextModal');
     $modalLoading.show();
     // Initialize modal to default state
     const $modal = $('#text-modal')

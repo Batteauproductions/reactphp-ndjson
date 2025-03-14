@@ -96,7 +96,7 @@ const icons = Object.freeze({
         text: oTranslations[language].disclaimer,
     },
     "downgrade":{
-        icon: '<i class="fa-solid fa-circle-down"></i>',
+        icon: '<i class="fa-solid fa-chevron-down"></i>',
         class: '',
         text: oTranslations[language].downgrade,
     },    
@@ -146,7 +146,7 @@ const icons = Object.freeze({
         text: oTranslations[language].required,
     },
     "upgrade":{
-        icon: '<i class="fa-solid fa-circle-up"></i>',
+        icon: '<i class="fa-solid fa-chevron-up"></i>',
         class: '',
         text: oTranslations[language].upgrade,
     },
