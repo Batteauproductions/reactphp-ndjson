@@ -1,31 +1,18 @@
 //Generic settings and functions
-import { oCharacter } from '../generator.js';
-import { domain, language, oTranslations } from './settings.js';
-import { debugLog, showMessage } from './functions.js';
-import { checkCurrencyCost, convertCurrency } from './currency.js';
-import { openSelectionModal, updateModalDropdown } from './modal/selection_modal.js';
-import { findItemIndex } from './character.js';
+import { oCharacter } from '../../generator.js';
+import { CharacterAsset } from './character_asset.js';
+import { domain, language, oTranslations } from '../settings.js';
+import { debugLog } from '../functions.js';
+import { convertCurrency } from '../currency.js';
+import { openSelectionModal, updateModalDropdown } from '../modal/selection_modal.js';
+import { findItemIndex } from '../character.js';
 
 // Define the class
-class Item {
-    constructor({
-        details: {
-            id,
-            name,
-            price,
-        },
-        modifier = [], // Default to an empty array for safety
-        current: {
-            amount,
-            cost = 0
-        } = {} // Provide a default empty object for destructuring
-    }) {
-        this.id = parseInt(id);
-        this.name = name;
-        this.price = parseInt(price);
-        this.modifier = modifier.length > 0 && modifier[0]?.id !== undefined ? parseInt(modifier[0].id) : null;
-        this.amount = parseInt(amount);
-        this.cost = this.price * this.amount;
+class Item extends CharacterAsset {
+
+    constructor(params) {
+        super(params);
+        this.amount = amount;
     }
 
     costText() {
@@ -42,28 +29,6 @@ class Item {
         console.log(`Cost: ${this.cost}`);
     }
 
-    add() {
-
-        // Check if the character has enough experience
-        if (!checkCurrencyCost(this.cost)) {
-            showMessage('#choice-actions', 'error', oTranslations[language].not_enough_coin);
-            return;
-        }
-
-        // Check for duplicates
-        if (findItemIndex('item', this.id) !== -1) {
-            showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
-            return;
-        }
-        
-        oCharacter.addAsset('item', this);
-        oCharacter.AddAssetToSheet('item', this);
-        $('#selection-modal').foundation('close');
-    }
-
-    remove() {
-        oCharacter.removeAsset('item', this);
-    }
 }
 
 /*
@@ -163,29 +128,9 @@ function adjustItemAmount(item,adjustment) {
     oCharacter.updateAsset('profession',index,new_rank,new_cost);
 }
 
-
-function pickBasekit () {
-    debugLog('pickBasekit');
-}
-
-function chooseBasekit(obj) {
-    debugLog('chooseBasekit', obj);
-    let $element = $('div[data-id="base_kit-list"]');
-    oCharacter.build.base_kit = parseInt(oTempData.details.id);
-    let container = $('<div>', {
-        html: `<h3 data-title>${oTempData.details.name}</h3><p data-description>${oTempData.details.description}</p>`
-    });
-    let icon = icons["change"];
-    $('a[data-type="base_kit"]').html(`${icon.icon} ${icon.text}`);
-    $element.empty().append(container);
-    updateCharacter();
-    $('#selection-modal').foundation('close');
-}
-
-export {
+export { 
+    Item,
     pickItem,
     chooseItem,
     adjustItemAmount,
-    pickBasekit,
-    chooseBasekit,
 }

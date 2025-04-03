@@ -3,9 +3,10 @@ import { domain, icons, language, oTranslations } from '../settings.js';
 import { allowChoose } from '../functions.js';
 import { convertCurrency } from '../currency.js';
 import { chooseRace } from '../race.js'
-import { chooseProfession } from '../professions.js';
-import { chooseSkill } from '../skills.js';
-import { chooseItem, chooseBasekit } from '../equipment.js';
+import { chooseProfession } from '../asset/professions.js';
+import { chooseSkill } from '../asset/skills.js';
+import { chooseItem } from '../asset/item.js';
+import { chooseBasekit } from '../asset/equipment.js';
 
 // Static DOM Elements
 const $typeSelect = $('select[name="type"]');

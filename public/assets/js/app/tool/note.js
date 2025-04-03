@@ -1,7 +1,5 @@
 import { oCharacter } from '../generator.js';
-import { domain, iconset, language, oTranslations } from './settings.js';
 import { openTextModal } from './modal/text_modal.js';
-import { updateCharacter } from './character.js';
 import { oTranslations, language, icons } from './settings.js';
 
 class character_note {
