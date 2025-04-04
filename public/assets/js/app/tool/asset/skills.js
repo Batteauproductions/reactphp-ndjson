@@ -104,13 +104,17 @@ function chooseSkill(sAction, obj) {
         return;
     }
 
-    //--Add the current attribute to the object
-    obj.current = { 
+    //--Add the current asset to the object
+    obj.details = {
+        ...obj.details,
+        cost: parseInt(obj.details.xp_cost),
+    }
+    obj.current = {
         sub_id: $subtypeSelect.find('option:selected').val() || null,
         sub_name: $subtypeSelect.find('option:selected').text() || null,
-        rank: $rankSelect.val() || 1,
-        cost: parseInt(obj.details.xp_cost),
-        container: sAction
+        rank: $rankSelect.val() || 1,        
+        container: sAction,
+        attribute: 'skill',
     }
 
     const skillClass = new Skill(obj);

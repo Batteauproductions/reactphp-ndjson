@@ -9,9 +9,9 @@ import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } 
 class Profession extends CharacterAsset {
     constructor(params) {
         super(params);
-        this.rank_1_cost = rank_1_cost;
-        this.rank_2_cost = rank_2_cost;
-        this.rank_3_cost = rank_3_cost;
+        this.rank_1_cost = parseInt(params.current.rank_1_cost);
+        this.rank_2_cost = parseInt(params.current.rank_2_cost);
+        this.rank_3_cost = parseInt(params.current.rank_3_cost);
     }
     
     // Method to display all attributes
@@ -89,17 +89,21 @@ function chooseProfession(sAction, obj) {
         return;
     }
 
-    // Add the current attribute to the object
-    obj.rank_1_cost = obj.details.rank_1_cost;
-    obj.rank_2_cost = obj.details.rank_2_cost;
-    obj.rank_3_cost = obj.details.rank_3_cost;
+    //--Add the current asset to the object
+    obj.details = {
+        ...obj.details,
+        max_rank: 3,
+        cost: parseInt(obj.details.rank_1_cost),
+    }
     obj.current = { 
         sub_id: $subtypeSelect.find('option:selected').val() || null,
         sub_name: $subtypeSelect.find('option:selected').text() || null,
         rank: $rankSelect.val() || 1,
-        cost: obj.details.rank_1_cost,
         container: sAction,
         attribute: 'profession',
+        rank_1_cost: obj.details.rank_1_cost,
+        rank_2_cost: obj.details.rank_2_cost,
+        rank_3_cost: obj.details.rank_3_cost,
     };
     
     const profClass = new Profession(obj);

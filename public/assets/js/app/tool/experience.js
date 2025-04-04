@@ -2,58 +2,53 @@
 import { oCharacter } from '../generator.js';
 
 // Functions needed for actual app performance
-
 /**
- * Check if the character has enough XP available to buy the profession or skill.
- * @param {number|string} cost - The XP cost as a number or string.
- * @returns {boolean} True if there is enough XP, false otherwise.
+ * Update the character's experience points (XP) by adding or subtracting a given cost.
+ * @param {number} cost - The XP cost to add or subtract.
+ * @param {"add"|"subtract"} action - The action to perform: "add" to spend XP, "subtract" to refund XP.
+ * @returns {boolean} - Returns true if the operation is successful, false if it fails a validation check.
  */
-function checkExperienceCost(old_cost, new_cost) {
-    return (oCharacter.build.spend_xp - old_cost) + new_cost <= oCharacter.build.max_xp
-}
-
-/**
- * Handle the spending of experience.
- * Checks if there is an attempt to spend more than available.
- * @param {number} cost - The XP cost to spend.
- */
-function spendExperience(cost) {
-    const refund = cost;
-    if (oCharacter.build.spend_xp + refund > oCharacter.build.max_xp) {
-        console.error('Attempt to set XP over maximum');
-        oCharacter.build.spend_xp = oCharacter.build.max_xp;
-    } else {
-        oCharacter.build.spend_xp += refund;
+function updateExperience(cost, action) {
+    if (typeof cost !== 'number' || isNaN(cost)) {
+        console.error('Invalid cost provided to updateExperience.');
+        return false;
     }
-    updateSpendXpDisplay();
-}
 
-/**
- * Handle the refund of experience.
- * Checks if there is an attempt to refund more than zero.
- * @param {number} cost - The XP cost to refund.
- */
-function refundExperience(cost) {
-    const deduction = cost;
-    if (oCharacter.build.spend_xp - deduction < 0) {
-        console.error('Attempt to set XP under minimum');
-        oCharacter.build.spend_xp = 0;
+    let currentXP = oCharacter.build.spend_xp;
+    let maxXP = oCharacter.build.max_xp;
+
+    if (action === 'add') {
+        if (currentXP + cost > maxXP) {
+            console.error('Attempt to spend XP over the maximum allowed.');
+            oCharacter.build.spend_xp = maxXP;
+            updateSpendXpDisplay();
+            return false;
+        } else {
+            oCharacter.build.spend_xp += cost;
+        }
+    } else if (action === 'subtract') {
+        if (currentXP - cost < 0) {
+            console.error('Attempt to refund XP below zero.');
+            oCharacter.build.spend_xp = 0;
+            updateSpendXpDisplay();
+            return false;
+        } else {
+            oCharacter.build.spend_xp -= cost;
+        }
     } else {
-        oCharacter.build.spend_xp -= deduction;
+        console.error(`Invalid action "${action}" passed to updateExperience. Use "add" or "subtract".`);
+        return false;
     }
+
     updateSpendXpDisplay();
+    return true;
 }
 
-/**
- * Update the displayed spent XP.
- */
 function updateSpendXpDisplay() {
     $('#stat-spend_xp').text(oCharacter.build.spend_xp);
 }
 
 // Export functions
 export {
-    checkExperienceCost,
-    spendExperience,
-    refundExperience
+    updateExperience,
 }

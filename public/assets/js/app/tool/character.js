@@ -1,9 +1,8 @@
 // Generic settings and functions
 import { oCharacter } from '../generator.js';
 import { domain, icons, jsonBaseChar, currentDateTime, jsonStat, iconset } from './settings.js';
-import { debugLog, generateIconSet } from './functions.js';
-import { spendCurrency, convertCurrency, refundCurrency } from './currency.js';
-import { spendExperience, refundExperience } from './experience.js';
+import { debugLog } from './functions.js';
+import { convertCurrency } from './currency.js';
 
 // Page functions
 class Character {
@@ -47,34 +46,6 @@ class Character {
         this.stories = stories;
     }
 
-    updateAsset (attribute,index,new_rank,new_cost,new_icons) {
-        // Update the character object
-        const asset = this[attribute][index];
-        oCharacter.build.spend_xp -= asset.cost; // Deduct the old cost
-        asset.rank = new_rank;
-        asset.cost = new_cost;
-
-        // Target the row being updated
-        const subIdSelector = asset.sub_id !== null ? `[data-${attribute}_sub_id="${asset.sub_id}"]` : '';
-        const $row = $(`div[data-${attribute}_id="${asset.id}"]${subIdSelector}`);
-
-        // Update visual elements
-        $row.find('[data-column="name"]').text(`${asset.name} (${icons.rank.text} ${new_rank})`);
-        $row.find('[data-column="cost"]').text(`${new_cost}pt.`);
-        $row.find('[data-column="action"]').html(new_icons);
-
-        // Spend the new cost
-        spendExperience(asset.cost);
-
-        // Update the stats if a modifier is present
-        if (asset.modifier) {
-            updateCharacterStats();
-        }
-
-        // Update the character object in the interface
-        updateCharacter();
-    }
-
 }
 
 function calculateIncrease(id) {
@@ -110,8 +81,15 @@ function calculateIncrease(id) {
  * @returns {number} The index of the item if found, otherwise -1.
  */
 function findItemIndex(attribute, id, sub_id = null) {
+    
     // Access the specified attribute array directly from oCharacter
     const attributeArray = oCharacter[attribute];
+
+    console.log(`attribute ${attribute}`);
+    console.log(`id ${id}`);
+    console.log(`sub_id ${sub_id}`);
+    console.log('attributeArray,', attributeArray);
+    
 
     // Ensure the attributeArray is an array and search for the item by id and sub_id
     return Array.isArray(attributeArray) 
