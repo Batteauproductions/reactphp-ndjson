@@ -2,6 +2,7 @@
 import { oCharacter } from '../../generator.js';
 import { CharacterAsset } from './character_asset.js';
 import { domain } from '../settings.js';
+import { updateExperience } from '../experience.js';
 import { debugLog } from '../functions.js';
 import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } from '../modal/selection_modal.js';
 
@@ -22,6 +23,20 @@ class Skill extends CharacterAsset {
         console.log(`Modifier: ${this.modifier}`);
         console.log(`XP Cost: ${this.xp_cost}`);
         console.log(`Allow Multiple: ${this.allow_multiple}`);
+    }
+
+    costSpend (cost = this.cost) {
+        if(!updateExperience(cost,"spend")) {
+            return oTranslations[language].not_enough_vp;  
+        }
+        return true;
+    }
+
+    costRefund(cost = this.cost) {
+        if(!updateExperience(cost,"refund")) {
+            return false;
+        }
+        return true;      
     }
 
 }

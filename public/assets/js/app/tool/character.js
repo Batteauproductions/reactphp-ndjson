@@ -12,7 +12,7 @@ class Character {
             status = 1,
             name = null,
             background = null,        
-            created_dt = currentDateTime.toISOString(),
+            created_dt = currentDateTime,
             modified_dt = null,
             firstlocked_dt = null,
             lastlocked_dt = null,

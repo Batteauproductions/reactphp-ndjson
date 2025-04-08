@@ -9,14 +9,9 @@ import { findItemIndex } from '../character.js';
 
 // Define the class
 class Item extends CharacterAsset {
-
     constructor(params) {
         super(params);
         this.amount = amount;
-    }
-
-    costText() {
-        return convertCurrency(this.cost);
     }
 
     // Updated method to display all attributes
@@ -27,6 +22,24 @@ class Item extends CharacterAsset {
         console.log(`Modifier: ${this.modifier}`);
         console.log(`Amount: ${this.amount}`);
         console.log(`Cost: ${this.cost}`);
+    }
+
+    costText() {
+        return convertCurrency(this.cost);
+    }
+
+    costSpend (cost = this.cost) {
+        if(!updateCurrency(cost,"spend")) {
+            return oTranslations[language].not_enough_coin;  
+        }
+        return true;
+    }
+
+    costRefund(cost = this.cost) {
+        if(!updateCurrency(cost,"refund")) {
+            return false;
+        }
+        return true;      
     }
 
 }

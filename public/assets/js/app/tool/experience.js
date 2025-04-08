@@ -17,7 +17,7 @@ function updateExperience(cost, action) {
     let currentXP = oCharacter.build.spend_xp;
     let maxXP = oCharacter.build.max_xp;
 
-    if (action === 'add') {
+    if (action === 'spend') {
         if (currentXP + cost > maxXP) {
             console.error('Attempt to spend XP over the maximum allowed.');
             oCharacter.build.spend_xp = maxXP;
@@ -26,7 +26,7 @@ function updateExperience(cost, action) {
         } else {
             oCharacter.build.spend_xp += cost;
         }
-    } else if (action === 'subtract') {
+    } else if (action === 'refund') {
         if (currentXP - cost < 0) {
             console.error('Attempt to refund XP below zero.');
             oCharacter.build.spend_xp = 0;

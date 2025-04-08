@@ -1,6 +1,7 @@
 //oSettings
 const debug = true;
-const currentDateTime = new Date();
+const date = new Date();
+const currentDateTime = date.toISOString();
 const domain = window.location.origin;
 let language = 'nl-NL';
 const oTranslations = Object.freeze({

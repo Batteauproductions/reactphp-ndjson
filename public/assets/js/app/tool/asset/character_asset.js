@@ -1,8 +1,7 @@
 //Generic settings and functions
 import { oCharacter } from '../../generator.js';
-import { icons, iconset, language, oTranslations } from '../settings.js'
+import { icons, iconset, language, oTranslations, currentDateTime } from '../settings.js'
 import { generateIconSet, showMessage, showPopup } from '../functions.js'
-import { updateExperience } from '../experience.js';
 import { findItemIndex, updateCharacter, updateCharacterStats } from '../character.js';
 
 // Define the class
@@ -20,25 +19,31 @@ class CharacterAsset {
             sub_id = null,
             sub_name = null,
             rank = null,
-            racial = false,
-            asset_cost,
+            racial,
+            rank_cost,
             attribute,            
-            container = 'skill_base' //div container within the interface
+            container, //div container within the interface
+            created_dt,
+            modified_dt,
+            locked_dt,
         } = {} // Provide a default empty object for destructuring
     }) {
         this.id = parseInt(id);
         this.name = name;
         this.max_rank = isNaN(parseInt(max_rank)) ? 1 : parseInt(max_rank); //checks that rank is always set to at least 1
-        this.allow_multiple = allow_multiple ? allow_multiple : false; //only certain items can be added multiple times [true/false]
+        this.allow_multiple = parseInt(allow_multiple) === 1 ? true : false; //only certain items can be added multiple times [true/false]
         this.attribute = attribute; //what attribute of the character the assets should be stored [profession/skill/item]
         this.sub_id = sub_id !== null ? parseInt(sub_id) : null; //some assets have an sub id, for instance [2/5]
         this.sub_name = sub_name !== null ? sub_name : null; //some assets have a sub name, for instance [mage/elemental]
         this.rank = isNaN(parseInt(rank)) ? 1 : parseInt(rank); //what level is the asset
         this.modifier = modifier.length > 0 && modifier[0]?.id !== undefined ? parseInt(modifier[0].id) : null; //some assets contain stat modifiers
-        this.racial = racial //some assets are included in the racial choice of the character
+        this.racial = racial ? racial : false //some assets are included in the racial choice of the character
         this.cost = this.racial ? 0 : parseInt(cost); // all racial elements are 0 cost    
-        this.asset_cost = asset_cost !== undefined ? parseInt(asset_cost) : this.cost; // upon initialization the asset cost is the same as the cost          
+        this.rank_cost = rank_cost !== undefined ? parseInt(rank_cost) : this.cost; // upon initialization the asset cost is the same as the cost          
         this.container = container; //this is the container on the character sheet [profession/skill/equipment]
+        this.created_dt = created_dt !== undefined ? created_dt : currentDateTime;
+        this.modified_dt = modified_dt !== undefined ? modified_dt : currentDateTime;
+        this.locked_dt = locked_dt !== undefined ? locked_dt : null;
     }
 
     add () {
@@ -47,21 +52,134 @@ class CharacterAsset {
         if(!this.allow_multiple) {
             if (findItemIndex('skill', this.id, this.sub_id) !== -1) {
                 showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
-                return;
+                return false;
             }
         }
         //-----------------------------//
 
         // Check if the cost can be deducted, if so; deduct and continue
-        if(!this.checkCost(this.asset_cost)) {
-            return;
-        } 
+        if(!this.costSpend()) {
+            showMessage('#choice-actions', 'error', this.costSpend());
+            return false;
+        }
         //-----------------------------//   
 
-        // Add the asset to the character functionally and visionally
-        //-- functionally 
-        oCharacter[this.attribute].push(this);
+        // Add the asset to the character functionally and visionally        
+        oCharacter[this.attribute].push(this); //-- functionally         
+        this.addVisualRow(); //-- visionally
+        //-----------------------------//
+        
+        // Update character stats if the subject has a modifier
+        if (this.modifier) {
+            updateCharacterStats();
+        }
+        //-----------------------------//
+
+        // Update the character object in the interface
+        updateCharacter();
+       
+        return true;
+    }
+    
+    remove () {
+        // Attempt to find the asset within the character object
+        const index = this.getSelfIndex();
+        if (index === -1) {
+            console.error(`Trying to remove ${this.attribute}, instance not found`);
+            return;
+        }
+    
+        // Refund the cost of the element
+        this.costRefund(this.rank_cost);
+
+        // Remove the asset of the character both functionally and visionally 
+        //-- functionally
+        oCharacter[this.attribute].splice(index, 1)[0];
         //-- visionally
+        const $row = this.getVisualRow();
+        $row.remove();
+        
+        // Update the stats if there was a modifier present
+        if (this.modifier) {
+            updateCharacterStats();
+        }
+
+        // Update the character object in the interface
+        updateCharacter();
+
+        return true;
+    }
+
+    downgrade () {
+        this.adjustRank(-1);
+    }
+
+    upgrade () {
+        this.adjustRank(+1);
+    }
+
+    adjustRank(direction) {
+        const index = this.getSelfIndex();
+        if (index === -1) {
+            console.error(`Trying to adjust ${this.attribute}, instance not found`);
+            return;
+        }
+                
+        // Checks if an attempt is made to manipulate outside of rank limit
+        const new_rank = this.rank + direction;
+        if (new_rank > this.max_rank) {
+            showPopup(oTranslations[language].rank_max);
+            return;
+        }
+        if (new_rank < 1) {
+            showPopup(oTranslations[language].rank_min);
+            return;
+        }
+        //-----------------------------//
+
+        // Update the currency / experience accordingly
+        const new_cost = this.getRankCost(new_rank);
+        if(direction===1) {
+            this.costSpend(); 
+            this.rank_cost = new_cost;           
+        } else {
+            this.costRefund();
+            this.rank_cost = new_cost;
+        }
+        //-----------------------------//
+    
+        // Adjust rank
+        this.rank = new_rank;
+    
+        // Icon logic
+        let iconType = "attribute_adjust_all";
+        if (new_rank === this.max_rank) { 
+            iconType = "attribute_adjust_down" 
+        } else if (new_rank === this.min_rank || new_rank === 1) { 
+            iconType = "attribute_adjust_up" 
+        }    
+        const new_icons = generateIconSet(iconset[iconType], this, this.attribute);
+    
+        // Update UI
+        const $row = this.getVisualRow();
+        $row.find('[data-column="name"]').text(`${this.name} (${icons.rank.text} ${this.rank})`);
+        $row.find('[data-column="cost"]').text(`${this.rank_cost}pt.`);
+        $row.find('[data-column="action"]').html(new_icons);
+    
+        if (this.modifier) {
+            updateCharacterStats();
+        }
+
+        updateCharacter();
+    
+        return true;
+    }
+
+    getSelfIndex() {
+        return oCharacter[this.attribute].indexOf(this);
+    }
+
+    addVisualRow() {
         //-- -- setup the master-row to contain the asset
         const row = $('<div>', {
             class: 'grid-x choice-row animate__animated animate__fadeInLeft',
@@ -89,7 +207,7 @@ class CharacterAsset {
                 arrColumns.push($('<div>', {
                     'data-column': 'cost',
                     class: 'cell small-2 medium-1 text-right',
-                    html: this.race ? `${oTranslations[language].racial}` : `${this.asset_cost}pt.`
+                    html: this.race ? `${oTranslations[language].racial}` : `${this.rank_cost}pt.`
                 }));    
                 local_icons = this.rank !== this.max_rank ? iconset["attribute_adjust_up"] : iconset["attribute_adjust_none"];
                 break;
@@ -131,128 +249,17 @@ class CharacterAsset {
         if (!inserted) {
             $container.append(row);
         }
-        //-----------------------------//        
-        
-        // Update character stats if the subject has a modifier
-        if (this.modifier) {
-            updateCharacterStats();
-        }
-        //-----------------------------//
-
-        // Update the character object in the interface
-        updateCharacter();
-       
-        return true;
-    }
-    
-    remove () {
-        // Attempt to find the asset within the character object
-        const index = this.getSelfIndex();
-        if (index === -1) {
-            console.error(`Trying to remove ${this.attribute}, instance not found`);
-            return;
-        }
-    
-        // Refund the cost of the element
-        switch(this.attribute) {
-            case "profession":
-            case "skill":
-                updateExperience(this.asset_cost,'subtract');
-                break;
-            case "item":
-                refundCurrency(this.asset_cost);
-                break;
-        }
-
-        // Remove the asset of the character both functionally and visionally 
-        //-- functionally
-        oCharacter[this.attribute].splice(index, 1)[0];
-        //-- visionally
-        const $row = this.getVisualRow();
-        $row.remove();
-        
-        // Update the stats if there was a modifier present
-        if (this.modifier) {
-            updateCharacterStats();
-        }
-
-        // Update the character object in the interface
-        updateCharacter();
-
-        return true;
+        //-----------------------------// 
     }
 
-    adjustRank(direction) {
-        const index = this.getSelfIndex();
-        if (index === -1) {
-            console.error(`Trying to adjust ${this.attribute}, instance not found`);
-            return;
-        }
-    
-        const new_rank = this.rank + direction;
-        const new_cost = this.getRankCost(new_rank);
-    
-        // Check cost and bounds
-        if (!this.checkCost(new_cost)) return;
-        if (new_rank > this.max_rank) {
-            showPopup(oTranslations[language].rank_max);
-            return;
-        }
-        if (new_rank < 1) {
-            showPopup(oTranslations[language].rank_min);
-            return;
-        }
-    
-        // Adjust rank and cost
-        this.asset_cost += direction === 1 ? new_cost : -new_cost;
-        this.rank = new_rank;
-    
-        // Icon logic
-        let iconType = "attribute_adjust_all";
-        if (new_rank === this.max_rank) iconType = "attribute_adjust_down";
-        else if (new_rank === this.min_rank || new_rank === 1) iconType = "attribute_adjust_up";
-    
-        const new_icons = generateIconSet(iconset[iconType], this, this.attribute);
-    
-        // Update UI
-        const $row = this.getVisualRow();
-        $row.find('[data-column="name"]').text(`${this.name} (${icons.rank.text} ${this.rank})`);
-        $row.find('[data-column="cost"]').text(`${this.asset_cost}pt.`);
-        $row.find('[data-column="action"]').html(new_icons);
-    
-        if (this.modifier) updateCharacterStats();
-        updateCharacter();
-    
-        return true;
+    costSpend() {
+        console.error('Generic cost could not be spend'); //this function is overwritten per child class
+        return false;
     }
 
-    checkCost(iCost) {
-        // Check if the cost can be deducted, if so; deduct and continue
-        switch(this.attribute) {
-            case "profession":
-            case "skill":
-                // Check if the character has enough experience
-                if(!updateExperience(iCost,"add")) {
-                    showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
-                    return false;  
-                }
-                break;
-            case "item":
-                if (checkCurrencyCost(iCost)) {
-                    spendCurrency(iCost);
-                } else {
-                    showMessage('#choice-actions', 'error', oTranslations[language].not_enough_coin);
-                    return false;                    
-                }
-                break;
-            default:
-                return false;
-        }
-        return true;
-    }
-
-    getSelfIndex() {
-        return oCharacter[this.attribute].indexOf(this);
+    costRefund() {
+        console.error('Generic cost could not be refunded'); //this function is overwritten per child class
+        return false; 
     }
 
     getVisualRow() {
@@ -262,14 +269,7 @@ class CharacterAsset {
     }
 
     getRankCost(new_rank) {
-        switch(this.attribute) {
-            case "profession":
-                return this[`rank_${new_rank}_cost`] || 0;;
-            case "skill":
-                return this.cost;
-            case "item":
-                return this.cost * amount;
-        }
+        return this.cost * new_rank;
     }
 }
 
