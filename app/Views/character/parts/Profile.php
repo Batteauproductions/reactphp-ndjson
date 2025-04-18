@@ -1,4 +1,4 @@
-<div class="profile"> 
+<section class="profile"> 
     <div class="profile-avatar text-left">
         <label class="profile-avatar-action">
             <input id="avatar" type="file" name="avatar" value="" placeholder="" hidden>
@@ -10,4 +10,4 @@
         </label>
         <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>"/>
     </div>                        
-</div>
+</section>

@@ -8,6 +8,8 @@ const oTranslations = Object.freeze({
     "nl-NL": {
         "change": "veranderen",
         "character_saving": "Opslaan bezig",
+        "character_status": "Karakter status",
+        "character_type": "Karakter type",
         "character_submit": "Opslaan bezig",
         "character_error": "Fout tijdens opslaan",
         "character_save_done": "Karakter opgeslagen",

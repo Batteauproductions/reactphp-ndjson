@@ -1,6 +1,6 @@
 // Generic settings and functions
 import { oCharacter } from '../generator.js';
-import { domain, icons, jsonBaseChar, currentDateTime, jsonStat, iconset } from './settings.js';
+import { domain, icons, jsonBaseChar, currentDateTime, jsonStat } from './settings.js';
 import { debugLog } from './functions.js';
 import { convertCurrency } from './currency.js';
 
@@ -46,6 +46,21 @@ class Character {
         this.stories = stories;
     }
 
+    setStatus(value) {
+        debugLog(`setStatus: ${value}`);
+        this.meta.status = parseInt(value);
+    }
+
+    setType(value) {
+        debugLog(`setType: ${value}`);
+        this.meta.type = parseInt(value);
+    }
+    
+    setName(value) {
+        debugLog(`setName: ${value}`);
+        this.meta.name = parseInt(value);
+    }
+
 }
 
 function calculateIncrease(id) {
@@ -81,16 +96,8 @@ function calculateIncrease(id) {
  * @returns {number} The index of the item if found, otherwise -1.
  */
 function findItemIndex(attribute, id, sub_id = null) {
-    
     // Access the specified attribute array directly from oCharacter
     const attributeArray = oCharacter[attribute];
-
-    console.log(`attribute ${attribute}`);
-    console.log(`id ${id}`);
-    console.log(`sub_id ${sub_id}`);
-    console.log('attributeArray,', attributeArray);
-    
-
     // Ensure the attributeArray is an array and search for the item by id and sub_id
     return Array.isArray(attributeArray) 
         ? attributeArray.findIndex(item => item?.id === id && (item?.sub_id === sub_id || sub_id === null))

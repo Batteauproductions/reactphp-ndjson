@@ -8,9 +8,10 @@ function changeName() {
 }
 
 function chooseName() {
-    oCharacter.meta.name = $('input[name="character-name"]').val();
-    $('[name="char_name"]').val(oCharacter.meta.name)
-    $('#charactername').html(`<i class="fa-solid fa-rotate-right"></i>${oCharacter.meta.name}</span>`).on('click',changeName);   
+    const $element = $('input[name="character-name"]');
+    oCharacter.setName($element.val());
+    $('[name="char_name"]').val($element.val())
+    $('#charactername').html(`<i class="fa-solid fa-rotate-right"></i>${$element.val()}</span>`).on('click',changeName);   
     $('#text-modal').foundation('close');
     updateCharacter();
 }

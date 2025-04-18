@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use CodeIgniter\Controller;
 use App\Models\CharacterModel;
+use App\Models\SystemModel;
 use App\Models\RaceModel;
 use App\Models\ProfessionModel;
 use App\Models\SkillModel;
@@ -15,37 +16,49 @@ use App\Helpers\AuthHelper;
 class Character extends Controller
 {
     protected $session;
-    protected $arrRights;
+    protected $request;
+    protected $arrRights = [];
+    protected $models = [];
+
     protected $characterModel;
     protected $raceModel;
     protected $professionModel;
     protected $skillModel;
     protected $itemModel;
     protected $storyModel;
-    protected $request;
+    
 
     public function __construct() 
     {
-        //declare variables to be used throughout the controller
+
         $this->session = session();
-        $this->characterModel = new CharacterModel();
-        $this->raceModel = new RaceModel();
-        $this->professionModel = new ProfessionModel();
-        $this->skillModel = new SkillModel();
-        $this->itemModel = new ItemModel();
-        $this->storyModel = new StoryModel();
         $this->request = service('request');
+
+        //declare variables to be used throughout the controller
+        // Initialize models using an associative array for easy referencing
+        $this->models = [
+            'character' => new CharacterModel(),
+            'system'    => new SystemModel(),
+            'race'      => new RaceModel(),
+            'profession'=> new ProfessionModel(),
+            'skill'     => new SkillModel(),
+            'item'      => new ItemModel(),
+            'story'     => new StoryModel(),
+        ];
+
         //collect the rights for the menu
         //1 -- admin | has all the rights needed to perform changes in the system
         //2 -- spelleiding | has rights to perform all but system changes
         //3 -- editor | has rights to perform minor changes
         //4 -- user | this user account has been banned from the system
-        $this->arrRights = array(
-            'isAdmin'       => AuthHelper::isLoggedIn($this->session->get('role'),RIGHTS_ADMIN),
-            'isGameMaster'  => AuthHelper::isLoggedIn($this->session->get('role'),RIGHTS_GAMEMASTER),
-            'isEditor'      => AuthHelper::isLoggedIn($this->session->get('role'),RIGHTS_EDITOR),
-            'isUser'        => AuthHelper::isLoggedIn($this->session->get('role'),RIGHTS_ALL),
-        );
+        // Collect the rights for the menu
+        $role = $this->session->get('role');
+        $this->arrRights = [
+            'isAdmin'      => AuthHelper::isLoggedIn($role, RIGHTS_ADMIN),
+            'isGameMaster' => AuthHelper::isLoggedIn($role, RIGHTS_GAMEMASTER),
+            'isEditor'     => AuthHelper::isLoggedIn($role, RIGHTS_EDITOR),
+            'isUser'       => AuthHelper::isLoggedIn($role, RIGHTS_ALL),
+        ];
     }
 
     public function getAdventure () 
@@ -74,26 +87,32 @@ class Character extends Controller
 
         if (isset($arrData['action'])) {
             switch($arrData['action']) {
+                case 'fill-dropdown-type':
+                    echo json_encode($this->models['system']->getCharacterTypeOptions());
+                    break;
+                case 'fill-dropdown-status':
+                    echo json_encode($this->models['system']->getCharacterStatusOptions());
+                    break;
                 case 'fill-dropdown-race':
-                    echo json_encode($this->raceModel->getRaces($this->arrRights['isGameMaster']));
+                    echo json_encode($this->models['race']->getRaces($this->arrRights['isGameMaster']));
                     break;
                 case 'fill-dropdown-profession':
-                    echo json_encode($this->professionModel->getProfessions($this->arrRights['isGameMaster']));
+                    echo json_encode($this->models['profession']->getProfessions($this->arrRights['isGameMaster']));
                     break;
                 case 'fill-dropdown-skill_base':
-                    echo json_encode($this->skillModel->getSkillsByLink([1,2],$arrProfessions,$this->arrRights['isGameMaster']));
+                    echo json_encode($this->models['skill']->getSkillsByLink([1,2],$arrProfessions,$this->arrRights['isGameMaster']));
                     break;
                 case 'fill-dropdown-skill_combat':
-                    echo json_encode($this->skillModel->getSkillsByLink([6,8],$arrProfessions,$this->arrRights['isGameMaster']));
+                    echo json_encode($this->models['skill']->getSkillsByLink([6,8],$arrProfessions,$this->arrRights['isGameMaster']));
                     break;
                 case 'fill-dropdown-skill_magic':
-                    echo json_encode($this->skillModel->getSkillsByLink([3,4,5,10,11],$arrProfessions,$this->arrRights['isGameMaster']));
+                    echo json_encode($this->models['skill']->getSkillsByLink([3,4,5,10,11],$arrProfessions,$this->arrRights['isGameMaster']));
                     break;
                 case 'fill-dropdown-base_kit':
-                    echo json_encode($this->itemModel->getBasicKit());
+                    echo json_encode($this->models['item']->getBasicKit());
                     break;
                 case 'fill-dropdown-item':
-                    echo json_encode($this->itemModel->getItems());
+                    echo json_encode($this->models['item']->getItems());
                     break;
                 default:
                     echo 'unknown action called';
@@ -116,21 +135,21 @@ class Character extends Controller
         if (isset($arrData['action'])) {
             switch($arrData['action']) {
                 case 'get-details-race':
-                    echo json_encode($this->raceModel->getRaceDetails($arrData['id']));
+                    echo json_encode($this->models['race']->getRaceDetails($arrData['id']));
                     break;
                 case 'get-details-profession':
-                    echo json_encode($this->professionModel->getProfessionDetails($arrData['id'],$arrData['sub_id']));
+                    echo json_encode($this->models['profession']->getProfessionDetails($arrData['id'],$arrData['sub_id']));
                     break;
                 case 'get-details-skill_base':
                 case 'get-details-skill_combat':
                 case 'get-details-skill_magic':
-                    echo json_encode($this->skillModel->getSkillDetails($arrData['id']));
+                    echo json_encode($this->models['skill']->getSkillDetails($arrData['id']));
                     break;
                 case 'get-details-base_kit':
-                    echo json_encode($this->itemModel->getBasicKitDetails($arrData['id']));
+                    echo json_encode($this->models['item']->getBasicKitDetails($arrData['id']));
                     break;
                 case 'get-details-item':
-                    echo json_encode($this->itemModel->getItemDetails($arrData['id']));
+                    echo json_encode($this->models['item']->getItemDetails($arrData['id']));
                     break;
                 default:
                     echo 'unknown action called';

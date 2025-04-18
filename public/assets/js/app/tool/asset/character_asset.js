@@ -21,8 +21,9 @@ class CharacterAsset {
             rank = null,
             racial,
             rank_cost,
-            attribute,            
-            container, //div container within the interface
+            attribute,  
+            attribute_index,          
+            container, //div container within the interface            
             created_dt,
             modified_dt,
             locked_dt,
@@ -41,6 +42,7 @@ class CharacterAsset {
         this.cost = this.racial ? 0 : parseInt(cost); // all racial elements are 0 cost    
         this.rank_cost = rank_cost !== undefined ? parseInt(rank_cost) : this.cost; // upon initialization the asset cost is the same as the cost          
         this.container = container; //this is the container on the character sheet [profession/skill/equipment]
+        this.attribute_index = attribute_index;
         this.created_dt = created_dt !== undefined ? created_dt : currentDateTime;
         this.modified_dt = modified_dt !== undefined ? modified_dt : null;
         this.locked_dt = locked_dt !== undefined ? locked_dt : null;
@@ -55,6 +57,7 @@ class CharacterAsset {
                 showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
                 return;
             }
+            
         }
         //-----------------------------//
 
@@ -67,7 +70,8 @@ class CharacterAsset {
         //-----------------------------//   
 
         // Add the asset to the character functionally and visionally        
-        oCharacter[this.attribute].push(this); //-- functionally         
+        oCharacter[this.attribute].push(this); //-- functionally   
+        this.attribute_index = this.getSelfIndex();      
         this.addVisualRow(); //-- visionally
         //-----------------------------//
         
@@ -85,8 +89,7 @@ class CharacterAsset {
     
     remove () {
         // Attempt to find the asset within the character object
-        const index = this.getSelfIndex();
-        if (index === -1) {
+        if (this.attribute_index === -1) {
             console.error(`Trying to remove ${this.attribute}, instance not found`);
             return;
         }
@@ -96,7 +99,7 @@ class CharacterAsset {
 
         // Remove the asset of the character both functionally and visionally 
         //-- functionally
-        oCharacter[this.attribute].splice(index, 1)[0];
+        oCharacter[this.attribute].splice(this.attribute_index, 1)[0];
         //-- visionally
         const $row = this.getVisualRow();
         $row.remove();
@@ -121,8 +124,7 @@ class CharacterAsset {
     }
 
     adjustRank(direction) {
-        const index = this.getSelfIndex();
-        if (index === -1) {
+        if (this.attribute_index === -1) {
             console.error(`Trying to adjust ${this.attribute}, instance not found`);
             return;
         }
