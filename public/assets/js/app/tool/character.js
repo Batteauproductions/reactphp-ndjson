@@ -58,7 +58,7 @@ class Character {
     
     setName(value) {
         debugLog(`setName: ${value}`);
-        this.meta.name = parseInt(value);
+        this.meta.name = value;
     }
 
 }

@@ -9,6 +9,7 @@ use App\Models\EventModel;
 use App\Models\RaceModel;
 use App\Models\ProfessionModel;
 use App\Models\SkillModel;
+use App\Models\NotesModel;
 use App\Helpers\AuthHelper; 
 
 class Page extends BaseController
@@ -33,6 +34,7 @@ class Page extends BaseController
             'race'      => new RaceModel(),
             'profession'=> new ProfessionModel(),
             'skill'     => new SkillModel(),
+            'notes'     => new NotesModel(),
         ];
 
         // Collect the rights for the menu
@@ -63,11 +65,12 @@ class Page extends BaseController
             'oSession'      => $this->session,
             'jsonBaseChar'  => $this->arrSettings['jsonBaseChar'],
             'jsonStat'      => $this->arrSettings['jsonStat'],
-            'arrXP'         => $this->arrSettings['arrXP'],
+            'arrXP'         => $this->arrSettings['arrXP'],            
             'arrType'       => $this->arrSettings['options_character_types'],
             'arrStatus'     => $this->arrSettings['options_character_status'],
             'arrEvents'     => array_reverse($this->models['event']->getEvents()),
             'viewAsAdmin'   => $this->arrRights['isAdmin'],
+            'viewAsGamemaster'   => $this->arrRights['isGameMaster'],
         ];
     }
     
@@ -119,11 +122,13 @@ class Page extends BaseController
             case 'view':
             case 'edit':
                 $this->characterData['oCharacter'] =  $this->models['character']->getCharacterByID($id,$this->session->get('uid'),$this->arrRights['isGameMaster']);
+                $this->characterData['arrNotes'] = $this->models['notes']->getNotes($id);
                 $content = view('character/character_sheet',$this->characterData);
                 $arrJS = ['app/generator.js','validation/character_validation.js'];
                 break;
             case 'create':  
                 $this->characterData['oCharacter'] = null;
+                $this->characterData['arrNotes'] = null;
                 $content = view('character/character_sheet',$this->characterData);
                 $arrJS = ['app/generator.js','validation/character_validation.js'];
                 break;

@@ -16,12 +16,13 @@ class character_note {
 
     add() {
         oCharacter.notes.push(this);
-        const $container = $(`container-${this.type}`);
         const $note = $('<div>', {
-            html: this.text
-        })        
+            html: `<p>${this.text}</p>`
+        }) 
+        const $container = $(`#container-${this.type}`);               
         $container.append($note);
         $container.show();
+
         const $modal = $('#text-modal');
         $modal.foundation('close');
 
@@ -38,12 +39,13 @@ function createNote() {
     let contentElements = [];
     const type = $(this).data('type');
     contentElements.push($('<label>', { 
-        for: 'character-name', 
+        for: `character-${type}`, 
         text: `${oTranslations[language].note_add} (${type})` 
     }));
     contentElements.push($('<textarea>', { 
-        id: `${type}`, 
-        name: `${type}`, 
+        id: `character-${type}`, 
+        name: `${type}`,
+        html: ``, 
         rows: 10,
     }));
     contentElements.push($('<a>', { 
@@ -52,7 +54,7 @@ function createNote() {
         html: `${icons.note_add.icon} ${icons.note_add.text}`
     }).on('click', function(e) {
         e.preventDefault();        
-        const text = $(`textarea[id="${type}"]`).val();
+        const text = $(`textarea[id="character-${type}"]`).val();
         const note = new character_note(type, text);
         note.add();
     }));
