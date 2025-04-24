@@ -52,7 +52,8 @@ const oTranslations = Object.freeze({
         "remove": "verwijderen",
         "required": "verplicht",
         "silver": "zilver",
-        "speech": "Taal: Spreken",
+        "skill_speech": "Taal: Spreken",
+        "skill_knowledge_x": "Kennis X",
         "upgrade": "verhogen",
         "note_add" : "notitie toevoegen",
     }
@@ -217,7 +218,13 @@ const icons = Object.freeze({
     "14":{
         icon: '<i class="fa-regular fa-comment"></i>',
         class: '',
-        text: oTranslations[language].speech,
+        text: oTranslations[language].skill_speech,
+    },
+    // "Kennis X" 
+    "5":{
+        icon: '<i class="fa-regular fa-comment"></i>',
+        class: '',
+        text: oTranslations[language].skill_knowledge_x,
     },
 });
 const iconset = Object.freeze({

@@ -234,26 +234,20 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = [], arrSkills 
                 if (arrSkills.length > 1) {
                     const row = $('<div>', { class: 'choice-row' });
                     if (sub_id && sub_name) {
-                        const paragraph = $('<p>', { html: `${iconHtml} ${name} ${sub_name}` });
+                        const paragraph = $('<p>', { html: `${iconHtml} ${name} (${sub_name})` });
                         row.append(paragraph);
                     } else {
-                        if(skill.subtype.length > 1) {
-                            const input = $('<select>', { id: `skill-${i}`, value: sub_id, type: 'radio', name: 'skill-modifier' });
-                            skill.subtype.forEach((option, i) => {
-                                const $option = $('<option>', { id: `skill-${i}`, value: `${option.id}`, text: `${option.name}`, name: 'skill-modifier' });
-                                input.append($option);
-                            });                            
-                            const label = $('<label>', { for: `skill-${i}`, html: `${iconHtml} ${name}` });
-                            row.append(input, label);
-                        } else {
-                            const input = $('<input>', { id: `skill-${i}`, value: sub_id, type: 'radio', name: 'skill-modifier' });
-                            const label = $('<label>', { for: `skill-${i}`, html: `${iconHtml} ${name}` });
-                            row.append(input, label);
-                        }
+                        const input = $('<select>', { id: `skill-${i}`, value: sub_id, type: 'radio', name: 'skill-modifier' });
+                        Object.entries(skill.subtype).forEach(([key, subtype]) => {
+                            const $option = $('<option>', { id: `skill-${key}`, value: `${subtype.id}`, text: `${subtype.name}` });
+                            input.append($option);
+                        });                            
+                        const label = $('<label>', { for: `skill-${i}`, html: `${iconHtml} ${name}` });
+                        row.append(label, input);
                     }                    
                     contentDetailsElements.push(row);
                 } else {
-                    contentDetailsElements.push($('<p>', { html: `${iconHtml} ${name} ${sub_name}` }));
+                    contentDetailsElements.push($('<p>', { html: `${iconHtml} ${name} (${sub_name})` }));
                 }
             });
         }
