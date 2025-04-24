@@ -15,21 +15,20 @@
             <input type="hidden" name="arrXP" value='<?php echo $arrXP ?>'/>
             <input type="hidden" name="character" value='<?php echo isset($oCharacter) ? $oCharacter: '' ?>'/>
             <!-- /Tool information -->
-
-            <div class="cell small-12 medium-3 text-center">                
-                <div class="grid-x grid-margin-x grid-margin-y">
-                    <div class="cell small-12">                        
-                        <?= $this->include('character/parts/Profile') ?>
+            <div class="cell small-12 medium-3 large-3">
+                <div class="grid-x grid-padding-x grid-padding-y">
+                    <div class="cell small-12 text-left">
+                        <?= $this->include('character/parts/Profile') ?>   
                     </div>
-                    <div class="cell small-12">
+                    <div class="cell small-12 text-center">
                         <?= $this->include('character/parts/Baseinfo') ?>
                     </div>
-                    <div class="cell small-12">
+                    <div class="cell small-12 text-center">
                         <?= $this->include('character/parts/Notes') ?>
                     </div>
                 </div>
             </div>
-            <div class="cell small-12 medium-9">
+            <div class="cell small-12 medium-9 large-9">
                 <div class="grid-x grid-padding-x grid-padding-y">
                     <div class="cell small-12 medium-6 text-center">
                         <?= $this->include('character/parts/stats/Stats_Primary') ?>
@@ -55,15 +54,13 @@
                     <div class="cell small-12 medium-6 text-center">
                         <?= $this->include('character/parts/Equipment') ?>
                     </div>
-                </div>                
-            </div>
-            <div class="cell small-12">
-                <div class="grid-x grid-padding-x grid-padding-y">
+                </div>
+                <div class="grid-x grid-padding-x grid-padding-y">  
                     <div class="cell small-12 text-center">
                         <?= $this->include('character/parts/Adventures') ?>
-                    </div>
+                    </div>          
                 </div>
-            </div>
+            </div>            
             <div class="cell small-12">
                 <a class="button solid" data-action="character-save"><i class="fa-regular fa-floppy-disk"></i> Opslaan</a>
                 <a class="button clear" data-action="character-submit"><i class="fa-regular fa-share-from-square"></i> Opslaan en indienen</a>

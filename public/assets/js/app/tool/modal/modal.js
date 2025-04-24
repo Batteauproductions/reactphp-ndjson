@@ -211,7 +211,7 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = [], arrSkills 
         // Handle modifiers
         if (arrModifier.length > 0) {
             arrModifier.forEach((mod, i) => {
-                const name = mod.name.toLowerCase();
+                const name = mod.name.toLowerCase();                
                 const iconHtml = `${icons[name].icon} ${icons[name].text}`;
                 if (arrModifier.length > 1) {
                     const row = $('<div>', { class: 'choice-row' });
@@ -227,16 +227,33 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = [], arrSkills 
         // Handle skills
         if (arrSkills.length > 0) {
             arrSkills.forEach((skill, i) => {
-                const name = skill.details.name.toLowerCase();
-                const iconHtml = `${icons[name].icon} ${icons[name].text}`;
+                const { id, name } = skill.details;
+                const { sub_id = null, sub_name = null } = skill.current || {};
+                const iconHtml = `${icons[id].icon}`;
+                //creates a paragraph or selection
                 if (arrSkills.length > 1) {
                     const row = $('<div>', { class: 'choice-row' });
-                    const input = $('<input>', { id: `skill-${i}`, value: skill.id, type: 'radio', name: 'skill-modifier' });
-                    const label = $('<label>', { for: `skill-${i}`, html: iconHtml });
-                    row.append(input, label);
+                    if (sub_id && sub_name) {
+                        const paragraph = $('<p>', { html: `${iconHtml} ${name} ${sub_name}` });
+                        row.append(paragraph);
+                    } else {
+                        if(skill.subtype.length > 1) {
+                            const input = $('<select>', { id: `skill-${i}`, value: sub_id, type: 'radio', name: 'skill-modifier' });
+                            skill.subtype.forEach((option, i) => {
+                                const $option = $('<option>', { id: `skill-${i}`, value: `${option.id}`, text: `${option.name}`, name: 'skill-modifier' });
+                                input.append($option);
+                            });                            
+                            const label = $('<label>', { for: `skill-${i}`, html: `${iconHtml} ${name}` });
+                            row.append(input, label);
+                        } else {
+                            const input = $('<input>', { id: `skill-${i}`, value: sub_id, type: 'radio', name: 'skill-modifier' });
+                            const label = $('<label>', { for: `skill-${i}`, html: `${iconHtml} ${name}` });
+                            row.append(input, label);
+                        }
+                    }                    
                     contentDetailsElements.push(row);
                 } else {
-                    contentDetailsElements.push($('<p>', { html: iconHtml }));
+                    contentDetailsElements.push($('<p>', { html: `${iconHtml} ${name} ${sub_name}` }));
                 }
             });
         }

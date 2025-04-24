@@ -1,8 +1,7 @@
-<section class="grid-x align-middle info-container">
-    <div class="cell small-12 text-center">      
-        <h2>Notities</h2>                                
-    </div>
-    <div class="cell small-12">
+<section>
+    <h1>Notities</h2>
+    <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>      
+    <div class="info-container">
         <div class="grid-x align-middle">
             <div class="cell small-6 text-left">
                 Speler
@@ -47,11 +46,4 @@
             </div>
         <?php endif; ?> 
     </div>
-    
-    
-    
-    
-    
-        
-    
 </section>

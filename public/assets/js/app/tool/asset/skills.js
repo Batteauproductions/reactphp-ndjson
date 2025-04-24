@@ -10,6 +10,7 @@ import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } 
 class Skill extends CharacterAsset {
     constructor(params) {
         super(params);
+        this.max_purchase = params.current.max_purchase ? parseInt(params.current.max_purchase) : 1;
     }
 
     // Updated method to display all attributes

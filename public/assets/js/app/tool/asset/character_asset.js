@@ -32,7 +32,7 @@ class CharacterAsset {
         this.id = parseInt(id);
         this.name = name;
         this.max_rank = isNaN(parseInt(max_rank)) ? 1 : parseInt(max_rank); //checks that rank is always set to at least 1
-        this.allow_multiple = isNaN(parseInt(allow_multiple)) ? true : false; //only certain items can be added multiple times [true/false]
+        this.allow_multiple = allow_multiple ? parseInt(allow_multiple) : false; //only certain items can be added multiple times [true/false]
         this.attribute = attribute; //what attribute of the character the assets should be stored [profession/skill/item]
         this.sub_id = sub_id !== null ? parseInt(sub_id) : null; //some assets have an sub id, for instance [2/5]
         this.sub_name = sub_name !== null ? sub_name : null; //some assets have a sub name, for instance [mage/elemental]
@@ -51,7 +51,7 @@ class CharacterAsset {
     add () {
 
         // Check for duplicates, but only when not allowed
-        if(!this.allow_multiple) {
+        if(!this.allow_multiple || this.max_purchase == 1) {
             const index = this.getSelfIndex();
             if (index !== -1) {
                 showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
