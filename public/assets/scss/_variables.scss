@@ -17,7 +17,7 @@ $color-error: rgb(196, 118, 118);
 
 $color-bg-body: #{$color-primary};
 $color-font-body-dark: #000000;
-$color-font-body-light: #fff;
+$color-font-body-light: #e7e7e7;
 $color-font-body: $color-font-body-light;
 
 $color-bg-header: $color-font-body-light;
@@ -27,7 +27,7 @@ $color-bg-main: #{$color-bg-body};
 $color-font-main: #{$color-font-body-light};
 
 $color-bg-footer: #{$color-primary};
-$color-font-footer: #ffffff;
+$color-font-footer: #e7e7e7;
 
 /*font-sizings for different screens*/
 $font-size-small: 12px;

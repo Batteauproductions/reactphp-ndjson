@@ -1,6 +1,6 @@
-<h1>Beroeps vaardigheden</h1>
-<img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
 <div class="info-container">
+    <h2>Beroeps vaardigheden</h2>
+    <hr>
     <div data-id="skill_base-list">
         <!-- Dynamic filled -->
     </div>

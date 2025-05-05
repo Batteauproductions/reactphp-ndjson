@@ -1,7 +1,7 @@
 <section id="professions">
-    <h1>Beroep(en)</h1>
-    <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
     <div class="info-container">
+        <h2>Beroep(en)</h2>
+        <hr>
         <div data-id="profession-list">
             <!-- Dynamic filled -->
         </div>

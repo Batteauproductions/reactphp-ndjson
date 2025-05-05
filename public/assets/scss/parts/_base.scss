@@ -67,6 +67,7 @@ h1 {
 
 h2 {
     color: $head-color;
+    font: $head-font;
     font-size: calc($head-font-size * 0.85);
     line-height: calc($head-line-height * 0.85);
     text-transform: $head-font-transform;
@@ -74,6 +75,7 @@ h2 {
 
 h3 {
     color: $head-color;
+    font: $head-font;
     font-size: calc($head-font-size * 0.75);
     line-height: calc($head-line-height * 0.75);
     text-transform: $head-font-transform;

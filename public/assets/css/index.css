@@ -23,7 +23,7 @@ body {
 }
 
 body, ul, li, h1, h2, h3, p {
-  color: #fff;
+  color: #e7e7e7;
   font-weight: normal;
   font-size: 12px;
   line-height: 13.2px;
@@ -46,7 +46,7 @@ body, ul, li, h1, h2, h3, p {
 }
 
 header {
-  color: #ffffff;
+  color: #e7e7e7;
   position: fixed;
   width: 100%;
   top: 0px;
@@ -55,13 +55,13 @@ header {
 
 main {
   background: transparent !important;
-  color: #fff;
+  color: #e7e7e7;
   height: 100%;
   min-height: 100vh;
 }
 
 footer {
-  color: #ffffff;
+  color: #e7e7e7;
   position: fixed;
   width: 100%;
   bottom: 0px;
@@ -69,27 +69,29 @@ footer {
 }
 
 h1 {
-  color: #fff;
+  color: #e7e7e7;
   font: bold 1.25rem/1.45rem Manuale, serif;
   text-transform: none;
 }
 
 h2 {
-  color: #fff;
+  color: #e7e7e7;
+  font: bold 1.25rem/1.45rem Manuale, serif;
   font-size: 1.0625rem;
   line-height: 1.2325rem;
   text-transform: none;
 }
 
 h3 {
-  color: #fff;
+  color: #e7e7e7;
+  font: bold 1.25rem/1.45rem Manuale, serif;
   font-size: 0.9375rem;
   line-height: 1.0875rem;
   text-transform: none;
 }
 
 p {
-  color: #fff;
+  color: #e7e7e7;
   font: normal 1rem/1.35rem Manuale, serif;
   text-transform: none;
 }
@@ -111,7 +113,7 @@ form label {
   font: normal 1rem/1.35rem Manuale, serif;
   font-weight: bold;
   letter-spacing: 1px;
-  color: #fff;
+  color: #e7e7e7;
   margin-bottom: 0.625rem;
 }
 form label.input-error {
@@ -185,14 +187,14 @@ ul li {
 .button.solid {
   border-radius: 0.313rem;
   border: solid 0.063rem #7D1717;
-  color: #fff !important;
+  color: #e7e7e7 !important;
   background-color: #7D1717;
 }
 .button.solid:hover {
   background-color: #d32727;
 }
 .button.clear {
-  color: #fff;
+  color: #e7e7e7;
 }
 .button.clear:hover, .button.clear:active, .button.clear:focus {
   color: #E34646;
@@ -225,7 +227,7 @@ ul li {
 }
 .event-container span {
   bottom: 0;
-  color: #fff;
+  color: #e7e7e7;
   font-weight: bold;
   left: 0;
   padding: 0.625rem;
@@ -251,6 +253,12 @@ ul li {
   background: #1E1E1E;
   padding: 1.25rem;
   line-height: 1.8rem !important;
+}
+.form-character .info-container hr {
+  margin: 0.625rem 0;
+  border-color: #8f8f8f;
+  width: 100%;
+  max-width: 100%;
 }
 .form-character .info-container ul li {
   text-align: left;

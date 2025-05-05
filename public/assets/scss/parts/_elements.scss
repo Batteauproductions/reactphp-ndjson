@@ -95,6 +95,12 @@
         padding: $padding;
         line-height: calc(1.8*$paragraph-font-size) !important;
 
+        hr {
+            margin: calc($margin / 2) 0;
+            border-color: #8f8f8f;
+            width: 100%;
+            max-width: 100%;
+        }
         
         ul {
             li {
