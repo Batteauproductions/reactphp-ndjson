@@ -178,14 +178,14 @@ class Page extends BaseController
                         $arrJS = ['app/grid_sorting.js'];
                         //---
                         $arrData = array (
-                        'arrStatus' => $this->arrSettings['options_character_status'],
-                        'arrType' => $this->arrSettings['options_character_types'],
-                        'arrCharacters' => $this->models['character']->getCharacters(), 
-                        'arrRace' => $this->arrSettings['options_race_types'],
-                        'arrProf' => $this->arrSettings['options_profession_types'],
-                        'arrSkill' => $this->arrSettings['options_skill_types'],
+                            'arrStatus' => $this->arrSettings['options_character_status'],
+                            'arrType' => $this->arrSettings['options_character_types'],
+                            'arrCharacters' => $this->models['character']->getCharacters(), 
+                            'arrRace' => $this->arrSettings['options_race_types'],
+                            'arrProf' => $this->arrSettings['options_profession_types'],
+                            'arrSkill' => $this->arrSettings['options_skill_types'],
                         );
-                        $content = view('gamemaster/character_database',$arrData);
+                        $content = view('gamemaster/character/character_database',$arrData);
                         break;
                 }                                    
                 break;
@@ -261,23 +261,29 @@ class Page extends BaseController
             return $this->noPageAccess();
         }
 
+        //define baseline variables
+        $content = '';
+        $arrJS = [];
+
         switch($page) {
             case 'help':
                 //$arrContent['content'] = view('manual/help');
-                $arrContent['content'] = view('_templates/work_in_progress');
+                $content = view('_templates/work_in_progress');
                 break;
             case 'rulebooks':
-                $arrContent['content'] = view('manual/rulebooks');
+                $content = view('manual/rulebooks');
                 break;
             case 'skills':
                 //$arrContent['content'] = view('manual/skills');
-                $arrContent['content'] = view('_templates/work_in_progress');
+                $content = view('_templates/work_in_progress');
                 break;
             case 'faq':
                 //$arrContent['content'] = view('manual/faq');
-                $arrContent['content'] = view('_templates/work_in_progress');
+                $content = view('_templates/work_in_progress');
                 break;
         }
+
+        return $this->constructView($content,$arrJS);
     }
 
     public function viewProfile()

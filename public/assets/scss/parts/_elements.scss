@@ -4,9 +4,19 @@
     display: block;
     border: solid 1px #cc0000;
     background: #FFCCCC;    
-    margin: $margin 0;
+    margin: 0 !important;
     padding: $padding;
-    color: #cc0000;
+    
+    ul,ol {
+        li {
+            color: #cc0000;
+            font-weight: bold;    
+            &:only-child {
+                padding-bottom: 0;
+                margin-bottom: 0;
+            }
+        }
+    }
 }
 
 .button {

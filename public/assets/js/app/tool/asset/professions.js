@@ -1,7 +1,7 @@
 // Generic settings and functions
 import { oCharacter } from '../../generator.js';
 import { CharacterAsset } from './character_asset.js';
-import { domain } from '../settings.js';
+import { domain, oTranslations, language } from '../settings.js';
 import { updateExperience } from '../experience.js';
 import { debugLog } from '../functions.js';
 import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } from '../modal/selection_modal.js';

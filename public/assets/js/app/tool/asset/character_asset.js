@@ -217,7 +217,7 @@ class CharacterAsset {
                 arrColumns.push($('<div>', {
                     'data-column': 'cost',
                     class: 'cell small-2 medium-1 text-right',
-                    html: this.race ? `${oTranslations[language].racial}` : `${this.rank_cost}pt.`
+                    html: this.racial ? `<em>${oTranslations[language].racial}</em>` : `${this.rank_cost}pt.`
                 }));    
                 local_icons = this.rank !== this.max_rank ? iconset["attribute_adjust_up"] : iconset["attribute_adjust_none"];
                 break;
@@ -239,7 +239,7 @@ class CharacterAsset {
         const arrIcons = generateIconSet(local_icons,this,this.attribute);
         arrColumns.push($('<div>', {
             'data-column': 'action',
-            class: 'cell small-12 medium-3 text-center medium-text-right',
+            class: 'cell small-12 medium-3 text-right',
             html: arrIcons
         }));
         //-- -- adds the columns to the master row    

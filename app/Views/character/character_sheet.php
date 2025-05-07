@@ -30,10 +30,10 @@
             </div>
             <div class="cell small-12 medium-9 large-9">
                 <div class="grid-x grid-padding-x grid-padding-y">
-                    <div class="cell small-12 medium-6 text-center">
+                    <div class="cell small-6 text-center">
                         <?= $this->include('character/parts/stats/Stats_Primary') ?>
                     </div>
-                    <div class="cell small-12 medium-6 text-center">
+                    <div class="cell small-6 text-center">
                         <?= $this->include('character/parts/stats/Stats_Secundary') ?>
                     </div>
                     <div class="cell small-12 medium-6 text-center">
@@ -61,9 +61,11 @@
                     </div>          
                 </div>
             </div>            
-            <div class="cell small-12">
+            <div class="cell small-12 text-right">
+                <hr>
                 <a class="button solid" data-action="character-save"><i class="fa-regular fa-floppy-disk"></i> Opslaan</a>
-                <a class="button clear" data-action="character-submit"><i class="fa-regular fa-share-from-square"></i> Opslaan en indienen</a>
+                <a class="button clear" data-action="character-submit"><i class="fa-regular fa-share-from-square"></i> Indienen</a>
+                <a class="button clear" data-action="character-print"><i class="fa-solid fa-print"></i> Printen</a>
             </div>
         </form>
     </div>

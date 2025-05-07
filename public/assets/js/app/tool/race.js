@@ -37,8 +37,15 @@ class Race {
         // Add racial skills
         if (this.skills.length > 0) {
             this.skills.forEach(skill => {
+                Object.assign(skill.current, {
+                    attribute: "skill",
+                    container: "skill_base",
+                    cost: 0,
+                    racial: true
+                });
                 let cSkill = new Skill(skill);
-                skill.add();
+                console.log('cSkill: ',cSkill);
+                cSkill.add();
             });
         }        
         // Update the character object in the interface
@@ -48,7 +55,7 @@ class Race {
             updateCharacterStats();
         }
         // Allow race to be re-chosen
-        $('#race').html(`<i class="fa-solid fa-rotate-right"></i>${obj.name}</span>`);
+        $('#race').html(`<i class="fa-solid fa-rotate-right"></i>${this.name}</span>`);
         return true;
     }
 
@@ -97,7 +104,7 @@ function pickRace() {
  * Choose a race for the character.
  * @param {Object} obj - The race object.
  */
-function chooseRace(obj) {
+function chooseRace(sAction, obj) {
     debugLog('pickRace', obj);
 
     // Validate that the input is a valid object
@@ -106,7 +113,16 @@ function chooseRace(obj) {
         return;
     }
 
+    //--Add the current asset to the object
+    obj.details = {
+        ...obj.details,
+    }
+    obj.current = {
+        
+    }
+
     const raceClass = new Race(obj);
+
     if (raceClass.add()) {
         $('#selection-modal').foundation('close');
     }

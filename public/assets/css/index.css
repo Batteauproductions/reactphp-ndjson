@@ -172,9 +172,16 @@ ul li {
   display: block;
   border: solid 1px #cc0000;
   background: #FFCCCC;
-  margin: 1.25rem 0;
+  margin: 0 !important;
   padding: 1.25rem;
+}
+.alert ul li, .alert ol li {
   color: #cc0000;
+  font-weight: bold;
+}
+.alert ul li:only-child, .alert ol li:only-child {
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .button {
