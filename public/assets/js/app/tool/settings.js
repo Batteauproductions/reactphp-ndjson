@@ -39,6 +39,7 @@ const oTranslations = Object.freeze({
         "more_info": "meer informatie",
         "not_enough_coin": "Je hebt niet genoeg geld om dit aan te schaffen.",
         "not_enough_vp": "Je hebt niet genoeg vaardigheidspunten.",
+        "new": "nieuw",
         "question_1": "Wat heb je dit evenement ondernomen?",
         "question_2": "Wat heeft dit met je personage gedaan?",
         "question_3": "Heb je relaties/contacten opgebouwd met npc’s?",
@@ -128,6 +129,11 @@ const icons = Object.freeze({
         icon: '<i class="fa-solid fa-circle-info"></i>',
         class: '',
         text: oTranslations[language].more_info,
+    },
+    "new": {
+        icon: '<i class="fa-regular fa-star"></i>',
+        class: '',
+        text: oTranslations[language].new,
     },
     "racial": {
         icon: '<i class="fa-solid fa-users"></i>',
@@ -228,7 +234,8 @@ const icons = Object.freeze({
     },
 });
 const iconset = Object.freeze({
-    "attribute_adjust_none": Array("remove"),
+    "attribute_adjust_none": null,
+    "attribute_adjust_basic": Array("remove"),
     "attribute_adjust_up": Array("upgrade","remove"),
     "attribute_adjust_all": Array("downgrade","upgrade","remove"),
     "attribute_adjust_down": Array("downgrade","remove"),

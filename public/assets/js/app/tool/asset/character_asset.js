@@ -12,6 +12,7 @@ class CharacterAsset {
             name,
             cost,
             max_rank,
+            loresheet,
             allow_multiple,            
         },
         modifier = [], // Default to an empty array for safety
@@ -22,8 +23,7 @@ class CharacterAsset {
             racial,
             rank_cost,
             attribute,  
-            attribute_index,          
-            container, //div container within the interface            
+            container, //div container within the interface                        
             created_dt,
             modified_dt,
             locked_dt,
@@ -38,14 +38,14 @@ class CharacterAsset {
         this.sub_name = sub_name !== null ? sub_name : null; //some assets have a sub name, for instance [mage/elemental]
         this.rank = isNaN(parseInt(rank)) ? 1 : parseInt(rank); //what level is the asset
         this.modifier = modifier.length > 0 && modifier[0]?.id !== undefined ? parseInt(modifier[0].id) : null; //some assets contain stat modifiers
-        this.racial = racial ? racial : false //some assets are included in the racial choice of the character
+        this.racial = racial ? Boolean(racial) : false //some assets are included in the racial choice of the character
         this.cost = this.racial ? 0 : parseInt(cost); // all racial elements are 0 cost    
         this.rank_cost = rank_cost !== undefined ? parseInt(rank_cost) : this.cost; // upon initialization the asset cost is the same as the cost          
         this.container = container; //this is the container on the character sheet [profession/skill/equipment]
-        this.attribute_index = attribute_index;
-        this.created_dt = created_dt !== undefined ? created_dt : currentDateTime;
-        this.modified_dt = modified_dt !== undefined ? modified_dt : null;
-        this.locked_dt = locked_dt !== undefined ? locked_dt : null;
+        this.loresheet = loresheet ? Boolean(parseInt(loresheet)) : false;
+        this.created_dt = created_dt ? created_dt : currentDateTime;
+        this.modified_dt = modified_dt ? modified_dt : null;
+        this.locked_dt = locked_dt ? locked_dt : null;
     }
 
     add () {
@@ -56,8 +56,7 @@ class CharacterAsset {
             if (index !== -1) {
                 showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
                 return;
-            }
-            
+            }            
         }
         //-----------------------------//
 
@@ -71,7 +70,6 @@ class CharacterAsset {
 
         // Add the asset to the character functionally and visionally        
         oCharacter[this.attribute].push(this); //-- functionally   
-        this.attribute_index = this.getSelfIndex();      
         this.addVisualRow(); //-- visionally
         //-----------------------------//
         
@@ -89,7 +87,8 @@ class CharacterAsset {
     
     remove () {
         // Attempt to find the asset within the character object
-        if (this.attribute_index === -1) {
+        const index = findItemIndex(this.attribute, this.id, this.sub_id);
+        if (index === -1) {
             console.error(`Trying to remove ${this.attribute}, instance not found`);
             return;
         }
@@ -99,7 +98,8 @@ class CharacterAsset {
 
         // Remove the asset of the character both functionally and visionally 
         //-- functionally
-        oCharacter[this.attribute].splice(this.attribute_index, 1)[0];
+
+        oCharacter[this.attribute].splice(index, 1)[0];
         //-- visionally
         const $row = this.getVisualRow();
         $row.remove();
@@ -124,7 +124,10 @@ class CharacterAsset {
     }
 
     adjustRank(direction) {
-        if (this.attribute_index === -1) {
+
+        //check if item is available
+        const index = findItemIndex(this.attribute, this.id, this.sub_id);
+        if (index === -1) {
             console.error(`Trying to adjust ${this.attribute}, instance not found`);
             return;
         }
@@ -132,11 +135,11 @@ class CharacterAsset {
         // Checks if an attempt is made to manipulate outside of rank limit
         const new_rank = this.rank + direction;
         if (new_rank > this.max_rank) {
-            showPopup(oTranslations[language].rank_max);
+            console.error(`${oTranslations[language].rank_max}`);
             return;
         }
         if (new_rank < 1) {
-            showPopup(oTranslations[language].rank_min);
+            console.error(`${oTranslations[language].rank_min}`);
             return;
         }
         //-----------------------------//
@@ -196,12 +199,18 @@ class CharacterAsset {
             [`data-${this.container}_id`]: this.id, 
             [`data-${this.container}_sub_id`]: this.sub_id,
         });
-        //-- -- array to contain the columns, starting with the basic one
+        //-- -- array to contain the columns, starting with the basic one        
+        let name = '';
+            name += `${!this.modified_dt || !this.locked_dt ? icons.new.icon : ''}`;
+            name += `${this.loresheet ? icons.loresheet.icon : ''}`;
+            name += `${this.name}`;
+            name += `${this.rank != this.max_rank ? ` (${icons.rank.text} ${this.rank})` : ''}`;
+         
         const arrColumns = [
             $('<div>', {
                 'data-column': 'name',
                 class: 'cell small-5 medium-4 text-left',
-                text: `${this.name} ${this.rank != this.max_rank ? ` (${icons.rank.text} ${this.rank})` : ''}`
+                html: name
             })
         ];
         //-- -- create column for subname / cost (if any) and determine the icon set for this asset
@@ -219,7 +228,7 @@ class CharacterAsset {
                     class: 'cell small-2 medium-1 text-right',
                     html: this.racial ? `<em>${oTranslations[language].racial}</em>` : `${this.rank_cost}pt.`
                 }));    
-                local_icons = this.rank !== this.max_rank ? iconset["attribute_adjust_up"] : iconset["attribute_adjust_none"];
+                local_icons = this.rank !== this.max_rank ? iconset["attribute_adjust_up"] : this.racial ? iconset["attribute_adjust_none"] : iconset["attribute_adjust_basic"];
                 break;
             case 'item':
                 arrColumns.push($('<div>', {
@@ -238,8 +247,8 @@ class CharacterAsset {
         //-- -- fills the column of icons with the correct iconset
         const arrIcons = generateIconSet(local_icons,this,this.attribute);
         arrColumns.push($('<div>', {
-            'data-column': 'action',
             class: 'cell small-12 medium-3 text-right',
+            'data-column': 'action',
             html: arrIcons
         }));
         //-- -- adds the columns to the master row    
@@ -278,7 +287,7 @@ class CharacterAsset {
         return $row;
     }
 
-    getRankCost(new_rank = null) {
+    getRankCost() {
         return this.cost;
     }
 }

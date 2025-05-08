@@ -1,7 +1,7 @@
-import { oCharacter } from '../generator.js';
-import { openTextModal } from './modal/text_modal.js';
-import { updateCharacter } from './character.js';
-import { oTranslations, language, icons, currentDateTime } from './settings.js';
+import { oCharacter } from '../../generator.js';
+import { openTextModal } from '../modal/text_modal.js';
+import { updateCharacter } from '../character.js';
+import { oTranslations, language, icons, currentDateTime } from '../settings.js';
 
 /**
  * Represents a character note.

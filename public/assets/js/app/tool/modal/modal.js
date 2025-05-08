@@ -2,7 +2,7 @@
 import { domain, icons, language, oTranslations } from '../settings.js';
 import { allowChoose } from '../functions.js';
 import { convertCurrency } from '../currency.js';
-import { chooseRace } from '../race.js'
+import { chooseRace } from '../asset/race.js'
 import { chooseProfession } from '../asset/professions.js';
 import { chooseSkill } from '../asset/skills.js';
 import { chooseItem } from '../asset/item.js';

@@ -1,10 +1,10 @@
 // Generic settings and functions
-import { oCharacter } from '../generator.js';
-import { domain, } from './settings.js';
-import { debugLog } from './functions.js';
-import { openSelectionModal, updateModalDropdown } from './modal/selection_modal.js';
-import { Skill } from './asset/skills.js';
-import { updateCharacter, updateCharacterStats } from './character.js';
+import { oCharacter } from '../../generator.js';
+import { domain } from '../settings.js';
+import { debugLog } from '../functions.js';
+import { openSelectionModal, updateModalDropdown } from '../modal/selection_modal.js';
+import { Skill } from './skills.js';
+import { updateCharacter, updateCharacterStats } from '../character.js';
 
 // Define the class
 class Race {
@@ -31,12 +31,17 @@ class Race {
     }
 
     //adds the race to the character
-    add() {
-        // Assign race to character
-        oCharacter.race = this;
+    add() {        
         // Add racial skills
         if (this.skills.length > 0) {
             this.skills.forEach(skill => {
+                if(!skill.current) {
+                    skill.current = {}; // Initialize the object
+                    Object.assign(skill.current, {
+                        sub_id: parseInt($('[name="skill-modifier"] option:selected').val()),
+                        sub_name: $('[name="skill-modifier"] option:selected').text()
+                    }); 
+                } 
                 Object.assign(skill.current, {
                     attribute: "skill",
                     container: "skill_base",
@@ -44,10 +49,11 @@ class Race {
                     racial: true
                 });
                 let cSkill = new Skill(skill);
-                console.log('cSkill: ',cSkill);
                 cSkill.add();
             });
-        }        
+        } 
+        // Assign race to character
+        oCharacter.race = this;       
         // Update the character object in the interface
         updateCharacter();
         // Update the stats if a modifier is present
