@@ -237,7 +237,7 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = [], arrSkills 
                         const paragraph = $('<p>', { html: `${iconHtml} ${name} (${sub_name})` });
                         row.append(paragraph);
                     } else {
-                        const input = $('<select>', { id: `skill-${i}`, value: sub_id, type: 'radio', name: 'skill-modifier' });
+                        const input = $('<select>', { id: `skill-${i}`, value: sub_id, name: 'skill-modifier' });
                         Object.entries(skill.subtype).forEach(([key, subtype]) => {
                             const $option = $('<option>', { id: `skill-${key}`, value: `${subtype.id}`, text: `${subtype.name}` });
                             input.append($option);

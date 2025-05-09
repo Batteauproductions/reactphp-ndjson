@@ -1,6 +1,6 @@
 // Generic settings and functions
 import { oCharacter } from '../../generator.js';
-import { domain } from '../settings.js';
+import { domain, oTranslations, language } from '../settings.js';
 import { debugLog } from '../functions.js';
 import { openSelectionModal, updateModalDropdown } from '../modal/selection_modal.js';
 import { Skill } from './skills.js';
@@ -31,28 +31,53 @@ class Race {
     }
 
     //adds the race to the character
-    add() {        
+    add() {            
         // Add racial skills
         if (this.skills.length > 0) {
             this.skills.forEach(skill => {
+                //checks non standard skills
+                let cSkill;
                 if(!skill.current) {
-                    skill.current = {}; // Initialize the object
+                    $('[name="skill-modifier"]').each(function () {
+                        const $select = $(this);
+                        const subid = parseInt($select.find('option:selected').val());
+                        const subname = $select.find('option:selected').text();
+
+                        //an empty choice exists
+                        if(!subid && !subname) {
+                            showMessage('#choice-actions', 'error', oTranslations[language].not_choice_made);
+                            return
+                        }
+                        skill.current = {}; // Initialize the object
+                        Object.assign(skill.current, {
+                            sub_id: subid,
+                            sub_name: subname
+                        });
+                        Object.assign(skill.current, {
+                            attribute: "skill",
+                            container: "skill_base",
+                            cost: 0,
+                            racial: true
+                        });
+                        cSkill = new Skill(skill); 
+                        cSkill.add();  
+                    });                                      
+                } else {
                     Object.assign(skill.current, {
-                        sub_id: parseInt($('[name="skill-modifier"] option:selected').val()),
-                        sub_name: $('[name="skill-modifier"] option:selected').text()
-                    }); 
-                } 
-                Object.assign(skill.current, {
-                    attribute: "skill",
-                    container: "skill_base",
-                    cost: 0,
-                    racial: true
-                });
-                let cSkill = new Skill(skill);
-                cSkill.add();
+                        attribute: "skill",
+                        container: "skill_base",
+                        cost: 0,
+                        racial: true
+                    });
+                    cSkill = new Skill(skill);
+                    cSkill.add();
+                }                
             });
         } 
         // Assign race to character
+        const stat = $('[name="stat-modifier"]:checked').val();
+        this.modifier = stat ? stat : this.modifier;
+
         oCharacter.race = this;       
         // Update the character object in the interface
         updateCharacter();
@@ -67,7 +92,21 @@ class Race {
 
     //removes the race from the character
     remove () {
+        console.log('remove me dude')
+        console.log('typeof',typeof(oCharacter.skill.length))
+        //remove old racial skills
+        for (let i = oCharacter.skill.length - 1; i >= 0; i--) {
+            console.log('oCharacter.skill', oCharacter.skill);
+            console.log('oCharacter.skill.length', oCharacter.skill.length);
+            const skill = oCharacter.skill[i];
+            console.log('skill', skill)
+            if (skill.racial === true) {
+                skill.remove();
+            }
+        }
+
         oCharacter.race = null;
+        return true;
     }
 }
 
@@ -119,12 +158,14 @@ function chooseRace(sAction, obj) {
         return;
     }
 
+    //check if there already is a race
+    if (oCharacter.race && oCharacter.race.id) {
+        oCharacter.race.remove();
+    }
+
     //--Add the current asset to the object
     obj.details = {
         ...obj.details,
-    }
-    obj.current = {
-        
     }
 
     const raceClass = new Race(obj);
