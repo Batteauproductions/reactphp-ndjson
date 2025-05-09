@@ -40,7 +40,7 @@
                         <?= $this->include('character/parts/Professions') ?>                      
                     </div>
                     <div class="cell small-12 medium-6 text-center">
-                        <?= $this->include('character/parts/skills/Skills_Proffesion') ?> 
+                        <?= $this->include('character/parts/skills/Skills_Profession') ?> 
                     </div>
                     <div class="cell small-12 medium-6 text-center">
                         <?= $this->include('character/parts/skills/Skills_Combat') ?>
