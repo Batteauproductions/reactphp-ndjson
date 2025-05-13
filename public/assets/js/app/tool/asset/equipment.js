@@ -16,7 +16,7 @@ function chooseBasekit(obj) {
     let icon = icons["change"];
     $('a[data-type="base_kit"]').html(`${icon.icon} ${icon.text}`);
     $element.empty().append(container);
-    updateCharacter();
+    oCharacter.update();
     $('#selection-modal').foundation('close');
 }
 

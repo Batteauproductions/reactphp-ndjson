@@ -1,6 +1,5 @@
 import { oCharacter } from '../generator.js';
 import { openTextModal } from './modal/text_modal.js';
-import { updateCharacter } from './character.js';
 import { oTranslations, language, icons } from './settings.js';
 
 function changeName() {
@@ -13,7 +12,6 @@ function chooseName() {
     $('[name="char_name"]').val($element.val())
     $('#charactername').html(`<i class="fa-solid fa-rotate-right"></i>${$element.val()}</span>`).on('click',changeName);   
     $('#text-modal').foundation('close');
-    updateCharacter();
 }
 
 function pickName() {

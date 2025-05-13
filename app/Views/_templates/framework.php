@@ -57,5 +57,25 @@
             <?php endforeach;?>
         <?php endif; ?>
 
+        
+        <!-- MODAL FOR POPUPS -->
+        <div class="reveal small" id="popup-modal" data-reveal>
+            
+            <div class="grid-x grid-padding-x grid-padding-y">
+                <div id="popup-message" class="cell">
+                    <!-- DYNAMIC -->
+                </div> 
+                <div id="popup-message" class="cell">
+                    <a data-action="confirm-action" class="button"></a>
+                    <a data-action="cancel-action" class="button clear"></a>
+                </div>               
+            </div>
+
+            <button class="close-button" data-close aria-label="Close modal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            
+        </div>
+
     </body>
 </html>

@@ -1,6 +1,5 @@
 import { oCharacter } from '../generator.js';
 import { openTextModal } from './modal/text_modal.js';
-import { updateCharacter } from './character.js';
 import { debugLog } from './functions.js';
 import { domain, oTranslations, language, icons } from './settings.js';
 
@@ -13,7 +12,6 @@ function chooseType() {
     oCharacter.setType($element.val());
     $('#charactertype').html(`<i class="fa-solid fa-rotate-right"></i>${$element.data('name')}</span>`).on('click',changeType);   
     $('#text-modal').foundation('close');
-    updateCharacter();
 }
 
 function pickType() {

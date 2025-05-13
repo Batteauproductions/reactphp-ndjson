@@ -75,13 +75,9 @@ class CharacterAsset {
         
         // Update character stats if the subject has a modifier
         if (this.modifier) {
-            updateCharacterStats();
+            oCharacter.update();
         }
         //-----------------------------//
-
-        // Update the character object in the interface
-        updateCharacter();
-       
         return true;
     }
     

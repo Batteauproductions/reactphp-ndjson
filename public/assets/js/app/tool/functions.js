@@ -1,7 +1,6 @@
 // Generic settings and functions
 import { oCharacter } from '../generator.js';
 import { debug, icons } from './settings.js';
-import { updateCharacter } from './character.js';
 
 // Page functions
 
@@ -58,7 +57,6 @@ function initiateEditor() {
     .then(editor => {
         editor.model.document.on('change:data', () => {
             oCharacter.meta.background = editor.getData();
-            updateCharacter();
         });
     })
     .catch(error => {
@@ -66,7 +64,21 @@ function initiateEditor() {
     });
 }
 
-function showPopup(message) {
+function showPopup(message, type='inform') {
+    const $modal = $('#popup-modal');
+    const $confirm_btn = $('a[data-action="confirm-action"]');
+    const $cancel_btn = $('a[data-action="cancel-action"]');
+    switch(type) {
+        case 'confirm':
+            break;
+        case 'inform':
+            break;
+        default:
+            console.error(`showPopup, invalid type with value: ${type}, has been called`);
+            break;
+    }
+    $modal.find('#popup-message').html(message);
+    $modal.foundation('open');
     alert(message);
 }
 

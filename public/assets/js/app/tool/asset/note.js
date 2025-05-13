@@ -1,6 +1,5 @@
 import { oCharacter } from '../../generator.js';
 import { openTextModal } from '../modal/text_modal.js';
-import { updateCharacter } from '../character.js';
 import { oTranslations, language, icons, currentDateTime } from '../settings.js';
 
 /**
@@ -41,8 +40,6 @@ class character_note {
             .on('click', this.change.bind(this));
 
         $('#text-modal').foundation('close');
-        updateCharacter();
-
         return true;
     }
 
@@ -54,7 +51,6 @@ class character_note {
             this.text = value;
             $(`#wrapper-${this.type}`).html(value);
             $('#text-modal').foundation('close');
-            updateCharacter();
         });
         openTextModal(contentElements);
     }

@@ -61,6 +61,52 @@ class Character {
         this.meta.name = value;
     }
 
+    // A simple function to stringify the character object
+    update() {
+        // Define calculation rules
+        //This function updates the stats of the character	
+        //---1: INCREASE_BASE_SANITY
+        //---2: INCREASE_BASE_HEALTH
+        //---3: INCREASE_BASE_DEX
+        //---4: INCREASE_BASE_STR
+        //---5: INCREASE_BASE_INTEL
+        //---6: INCREASE_BASE_GODPOINTS
+        //---7: INCREASE_BASE_MANA
+        //---8: INCREASE_BASE_POINTS
+        //---9: INCREASE_BASE_MANA_MINOR
+        //---10: INCREASE_BASE_CURRENCY
+        //---11: INCREASE_BASE_FAVOR
+        const statMappings = {
+            max_xp: { base: jsonBaseChar.max_xp, factor: 8, stat: jsonStat.xp },
+            currency: { base: jsonBaseChar.currency, factor: 10, stat: jsonStat.currency },
+            hp: { base: jsonBaseChar.hp, factor: 2, stat: jsonStat.hp },
+            sanity: { base: jsonBaseChar.sanity, factor: 1, stat: jsonStat.sanity },
+            mana: { base: jsonBaseChar.mana, factor: 7, stat: jsonStat.mana, additionalFactor: 9, additionalStat: jsonStat.mana_minor },
+            gp: { base: jsonBaseChar.gp, factor: 6, stat: jsonStat.gp },
+            str: { base: jsonBaseChar.str, factor: 4, stat: jsonStat.str },
+            dex: { base: jsonBaseChar.dex, factor: 3, stat: jsonStat.dex },
+            intel: { base: jsonBaseChar.intel, factor: 5, stat: jsonStat.intel },
+            clues: { base: jsonBaseChar.intel, factor: 5, stat: jsonStat.intel },
+            favour: { base: jsonBaseChar.favour, factor: 11, stat: jsonStat.favour }
+        };
+
+        // Calculate and update oCharacter.build properties
+        for (const [key, { base, factor, stat, additionalFactor, additionalStat }] of Object.entries(statMappings)) {
+            oCharacter.build[key] = base + (calculateIncrease(factor) * stat);
+            if (additionalFactor && additionalStat) {
+                oCharacter.build[key] += calculateIncrease(additionalFactor) * additionalStat;
+            }
+        }
+
+        // Update the text on the sheet per modifier
+        $.each(oCharacter.build, function(key, value) {
+            const content = (key === "currency") ? convertCurrency(value) : value;
+            $(`#stat-${key}`).html(content);
+        });
+        debugLog('updateCharacter',oCharacter);
+        //$('input[name="character"]').val(JSON.stringify(oCharacter));
+    }
+
 }
 
 function calculateIncrease(id) {
@@ -151,61 +197,9 @@ function transferCharacter(attribute) {
     });
 }
 
-// A simple function to stringify the character object
-function updateCharacter() {
-    debugLog('updateCharacter',oCharacter);
-    $('input[name="character"]').val(JSON.stringify(oCharacter));
-}
-
-//This function updates the stats of the character	
-//---1: INCREASE_BASE_SANITY
-//---2: INCREASE_BASE_HEALTH
-//---3: INCREASE_BASE_DEX
-//---4: INCREASE_BASE_STR
-//---5: INCREASE_BASE_INTEL
-//---6: INCREASE_BASE_GODPOINTS
-//---7: INCREASE_BASE_MANA
-//---8: INCREASE_BASE_POINTS
-//---9: INCREASE_BASE_MANA_MINOR
-//---10: INCREASE_BASE_CURRENCY
-//---11: INCREASE_BASE_FAVOR
-function updateCharacterStats() {
-
-    // Define calculation rules
-    const statMappings = {
-        max_xp: { base: jsonBaseChar.max_xp, factor: 8, stat: jsonStat.xp },
-        currency: { base: jsonBaseChar.currency, factor: 10, stat: jsonStat.currency },
-        hp: { base: jsonBaseChar.hp, factor: 2, stat: jsonStat.hp },
-        sanity: { base: jsonBaseChar.sanity, factor: 1, stat: jsonStat.sanity },
-        mana: { base: jsonBaseChar.mana, factor: 7, stat: jsonStat.mana, additionalFactor: 9, additionalStat: jsonStat.mana_minor },
-        gp: { base: jsonBaseChar.gp, factor: 6, stat: jsonStat.gp },
-        str: { base: jsonBaseChar.str, factor: 4, stat: jsonStat.str },
-        dex: { base: jsonBaseChar.dex, factor: 3, stat: jsonStat.dex },
-        intel: { base: jsonBaseChar.intel, factor: 5, stat: jsonStat.intel },
-        clues: { base: jsonBaseChar.intel, factor: 5, stat: jsonStat.intel },
-        favour: { base: jsonBaseChar.favour, factor: 11, stat: jsonStat.favour }
-    };
-
-    // Calculate and update oCharacter.build properties
-    for (const [key, { base, factor, stat, additionalFactor, additionalStat }] of Object.entries(statMappings)) {
-        oCharacter.build[key] = base + (calculateIncrease(factor) * stat);
-        if (additionalFactor && additionalStat) {
-            oCharacter.build[key] += calculateIncrease(additionalFactor) * additionalStat;
-        }
-    }
-
-    // Update the text on the sheet per modifier
-    $.each(oCharacter.build, function(key, value) {
-        const content = (key === "currency") ? convertCurrency(value) : value;
-        $(`#stat-${key}`).html(content);
-    });
-}
-
 // Export functions
 export {
     Character,
-    updateCharacter,
-    updateCharacterStats,
     saveCharacter,
     submitCharacter,
     findItemIndex

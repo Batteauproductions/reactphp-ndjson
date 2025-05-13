@@ -4,7 +4,6 @@ import { domain, oTranslations, language } from '../settings.js';
 import { debugLog } from '../functions.js';
 import { openSelectionModal, updateModalDropdown } from '../modal/selection_modal.js';
 import { Skill } from './skills.js';
-import { updateCharacter, updateCharacterStats } from '../character.js';
 
 // Define the class
 class Race {
@@ -79,11 +78,9 @@ class Race {
         this.modifier = stat ? stat : this.modifier;
 
         oCharacter.race = this;       
-        // Update the character object in the interface
-        updateCharacter();
         // Update the stats if a modifier is present
         if (this.modifier) {
-            updateCharacterStats();
+            oCharacter.update();
         }
         // Allow race to be re-chosen
         $('#race').html(`<i class="fa-solid fa-rotate-right"></i>${this.name}</span>`);
