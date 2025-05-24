@@ -1,3 +1,5 @@
+import { Icon } from "./icon";
+
 //oSettings
 const debug = true;
 const date = new Date();
@@ -60,180 +62,43 @@ const oTranslations = Object.freeze({
         "note_add" : "notitie toevoegen",
     }
 });
-const icons = Object.freeze({
-    "note_add":{
-        icon: '<i class="fa-regular fa-floppy-disk"></i>',
-        class: '',
-        text: oTranslations[language].note_add,
-    },
-    "character_saving":{
-        icon: '<i class="fa-solid fa-rotate-right"></i>',
-        class: '',
-        text: oTranslations[language].character_saving,
-    },
-    "character_submit":{
-        icon: '<i class="fa-solid fa-rotate-right"></i>',
-        class: '',
-        text: oTranslations[language].character_submit,
-    },
-    "character_error":{
-        icon: '<i class="fa-solid fa-xmark"></i>',
-        class: '',
-        text: oTranslations[language].character_error,
-    },
-    "character_save_done":{
-        icon: '<i class="fa-solid fa-xmark"></i>',
-        class: '',
-        text: oTranslations[language].character_save_done,
-    },
-    "change":{
-        icon: '<i class="fa-solid fa-rotate-right"></i>',
-        class: '',
-        text: oTranslations[language].change,
-    },
-    "choose": {
-        icon: '<i class="fa-regular fa-square-check"></i>',
-        class: '',
-        text: oTranslations[language].choose,
-    },
-    "disclaimer":{
-        icon: '<i class="fa-solid fa-triangle-exclamation"></i>',
-        class: 'warning',
-        text: oTranslations[language].disclaimer,
-    },
-    "downgrade":{
-        icon: '<i class="fa-solid fa-chevron-down"></i>',
-        class: '',
-        text: oTranslations[language].downgrade,
-    },    
-    "edit": {
-        icon: '<i class="fa-solid fa-pen-to-square"></i>',
-        class: '',
-        text: oTranslations[language].edit,
-    },
-    "experience":{
-        icon: '<i class="fa-solid fa-brain"></i>',
-        class: '',
-        text: oTranslations[language].experience,
-    },
-    "gatherable": {
-        icon: '<i class="fa-solid fa-leaf"></i>',
-        class: '',
-        text: oTranslations[language].gatherable,
-    },
-    "loresheet":{
-        icon: '<i class="fa-solid fa-scroll"></i>',
-        class: '',
-        text: oTranslations[language].loresheet,
-    },
-    "more_info":{
-        icon: '<i class="fa-solid fa-circle-info"></i>',
-        class: '',
-        text: oTranslations[language].more_info,
-    },
-    "new": {
-        icon: '<i class="fa-regular fa-star"></i>',
-        class: '',
-        text: oTranslations[language].new,
-    },
-    "racial": {
-        icon: '<i class="fa-solid fa-users"></i>',
-        class: '',
-        text: oTranslations[language].racial,
-    },
-    "rank":{
-        icon: '<i class="fa-solid fa-hashtag"></i>',
-        class: '',
-        text: oTranslations[language].rank,
-    },
-    "remove": {
-        icon: '<i class="fa-solid fa-xmark"></i>',
-        class: '',
-        text: oTranslations[language].remove,
-    },
-    "required": {
-        icon: '<i class="fa-solid fa-asterisk"></i>',
-        class: '',
-        text: oTranslations[language].required,
-    },
-    "upgrade":{
-        icon: '<i class="fa-solid fa-chevron-up"></i>',
-        class: '',
-        text: oTranslations[language].upgrade,
-    },
-   "increase_base_sanity":{
-        icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
-        class: '',
-        text: oTranslations[language].increase_base_sanity,
-    },
-   "increase_base_health":{
-        icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
-        class: '',
-        text: oTranslations[language].increase_base_health,
-    },
-    "increase_base_dex":{
-        icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
-        class: '',
-        text: oTranslations[language].increase_base_dex,
-    },
-    "increase_base_str":{
-        icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
-        class: '',
-        text: oTranslations[language].increase_base_str,
-    },
-    "increase_base_intel":{
-        icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
-        class: '',
-        text: oTranslations[language].increase_base_intel,
-    },
-    "increase_base_godpoints":{
-        icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
-        class: '',
-        text: oTranslations[language].increase_base_godpoints,
-    },
-    "increase_base_mana":{
-        icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
-        class: '',
-        text: oTranslations[language].increase_base_mana,
-    },
-    "increase_base_points":{
-        icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
-        class: '',
-        text: oTranslations[language].increase_base_points,
-    },
-    "increase_base_mana_minor":{
-        icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
-        class: '',
-        text: oTranslations[language].increase_base_mana_minor,
-    },
-    "increase_base_currency":{
-        icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
-        class: '',
-        text: oTranslations[language].increase_base_currency,
-    },
-    "increase_base_str":{
-        icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
-        class: '',
-        text: oTranslations[language].increase_base_str,
-    },
-    "increase_base_favor":{
-        icon: '<i class="fa-solid fa-arrow-up-right-dots"></i>',
-        class: '',
-        text: oTranslations[language].increase_base_favor,
-    },
-    // "Taal: Spreken" 
-    "14":{
-        icon: '<i class="fa-regular fa-comment"></i>',
-        class: '',
-        text: oTranslations[language].skill_speech,
-    },
+const icons = Object.freeze([
+    "note_add" = new Icon ({icon_visual: 'fa-regular fa-floppy-disk', icon_text: 'note_add'}),
+    "character_saving" = new Icon ({icon_visual: 'fa-solid fa-rotate-right', icon_text: 'character_saving'}),
+    "character_submit" = new Icon ({icon_visual: 'fa-solid fa-rotate-right', icon_text: 'character_submit'}),
+    "character_error" = new Icon ({icon_visual: 'fa-solid fa-xmark', icon_text: 'character_error'}),
+    "character_save_done" = new Icon ({icon_visual: 'fa-solid fa-xmark', icon_text: 'character_save_done'}),
+    "change" = new Icon({icon_visual: 'fa-solid fa-rotate-right', icon_text: 'change'}),
+    "choose" = new Icon({icon_visual: 'fa-regular fa-square-check', icon_text: 'choose'}),
+    "disclaimer" = new Icon({icon_visual: 'fa-solid fa-triangle-exclamation', icon_text: 'disclaimer'}),
+    "downgrade" = new Icon({icon_visual: 'fa-solid fa-chevron-down', icon_text: 'downgrade'}),
+    "edit" = new Icon({icon_visual: 'fa-solid fa-pen-to-square', icon_text: 'edit'}),
+    "experience" = new Icon({icon_visual: 'fa-solid fa-brain', icon_text: 'experience'}),
+    "gatherable" = new Icon({icon_visual: 'fa-solid fa-leaf', icon_text: 'gatherable'}),
+    "loresheet" = new Icon({icon_visual: 'fa-solid fa-scroll', icon_text: 'loresheet'}),
+    "more_info" = new Icon({icon_visual: 'fa-solid fa-circle-info', icon_text: 'more_info'}),
+    "new" = new Icon({icon_visual: 'fa-regular fa-star', icon_text: 'new'}),
+    "racial" = new Icon({icon_visual: 'fa-solid fa-users', icon_text: 'racial'}),
+    "rank" = new Icon({icon_visual: 'fa-solid fa-hashtag', icon_text: 'rank'}),
+    "remove" = new Icon({icon_visual: 'fa-solid fa-xmark', icon_text: 'remove'}),
+    "required" = new Icon({icon_visual: 'fa-solid fa-asterisk', icon_text: 'required'}),
+    "upgrade" = new Icon({icon_visual: 'fa-solid fa-chevron-up', icon_text: 'upgrade'}),
+    "increase_base_sanity" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_sanity'}),
+    "increase_base_health" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_health'}),
+    "increase_base_dex" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_dex'}),
+    "increase_base_str" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_str'}),
+    "increase_base_intel" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_intel'}),
+    "increase_base_godpoints" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_godpoints'}),
+    "increase_base_mana" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_mana'}),
+    "increase_base_points" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_points'}),
+    "increase_base_mana_minor" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_mana_minor'}),
+    "increase_base_currency" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_currency'}),
+    "increase_base_favor" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_favor'}),
+    // "Taal: Spreken"
+    "14" = new Icon({icon_visual: 'fa-regular fa-comment', icon_text: 'skill_speech'}),
     // "Kennis X" 
-    "5":{
-        icon: '<i class="fa-regular fa-comment"></i>',
-        class: '',
-        text: oTranslations[language].skill_knowledge_x,
-    },
-});
+    "5" = new Icon({icon_visual: 'fa-regular fa-comment', icon_text: 'skill_knowledge_x'}),
+]);
 const iconset = Object.freeze({
     "attribute_adjust_none": null,
     "attribute_adjust_basic": Array("remove"),
