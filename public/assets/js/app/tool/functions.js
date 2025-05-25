@@ -87,44 +87,28 @@ function showPopup(message, type='inform') {
  *
  * @param {string[]} localIcons - Array of icon names to generate.
  * @param {Object} asset - The asset instance, expected to have `remove`, `upgrade`, and `downgrade` methods.
- * @param {string} attribute - Attribute prefix used for data-action.
  * @returns {jQuery[]} Array of jQuery anchor elements representing icons.
  */
-function generateIconSet(localIcons, asset, attribute) {
-    return $.map(localIcons, (icon) => {
-        if (!icons[icon]) {
-            console.warn(`Icon "${icon}" not found.`);
-            return null; // Skip invalid icons
-        }
+function generateIconSet(iconArray, asset) {
+    const icons = [];
 
-        // Determine appropriate event handler
-        const eventHandlers = {
-            remove: asset.remove?.bind(asset),
-            upgrade: asset.upgrade?.bind(asset),
-            downgrade: asset.downgrade?.bind(asset)
-        };
-        
-        const clickEventHandler = Object.entries(eventHandlers).find(([key]) => icon.includes(key))?.[1];
+    const eventHandlers = {
+        remove: asset.remove?.bind(asset),
+        upgrade: asset.upgrade?.bind(asset),
+        downgrade: asset.downgrade?.bind(asset)
+    };
 
-        // Create anchor element
-        const $anchor = $('<a>', {
-            "data-action": `${attribute}-${icon}`,
-            "data-id": asset.id,
-            "data-sub_id": asset.sub_id,
-            html: icons[icon].icon
-        });
+    if (!Array.isArray(iconArray)) return icons;
 
-        // Attach event handler if found
-        if (clickEventHandler) {
-            $anchor.on('click', function (event) {
-                event.preventDefault();
-                clickEventHandler();
-            });
-        }
+    for (const { name, icon } of iconArray) {
+        const handler = eventHandlers[name] ?? null;
+        const htmlElement = icon.render(handler, false, '');
+        icons.push(htmlElement);
+    }
 
-        return $anchor;
-    }).filter(Boolean); // Remove null values from the array
+    return icons;
 }
+
 
 /**
  * Inserts a message into the DOM, replacing any existing messages.

@@ -35,7 +35,7 @@ class character_note {
         $container.append($note).show();
 
         $(`a[data-type="${this.type}"]`)
-            .html(`${icons.edit.icon} ${icons.edit.text}`)
+            .html(`${icons.edit.icon()} ${icons.edit.text()}`)
             .off('click') // Remove previous handlers if any
             .on('click', this.change.bind(this));
 
@@ -78,7 +78,7 @@ function buildNoteElements(type, text, onSave) {
         $('<a>', {
             class: 'button solid',
             'data-type': type,
-            html: `${icons.note_add.icon} ${icons.note_add.text}`
+            html: `${icons.note_add.icon()} ${icons.note_add.text()}`
         }).on('click', function (e) {
             e.preventDefault();
             const value = $(`#character-${type}`).val();

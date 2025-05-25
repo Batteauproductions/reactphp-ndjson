@@ -181,13 +181,13 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = [], arrSkills 
             case 'skill_base':
             case 'skill_combat':
             case 'skill_magic':
-                contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} <span id="rank_cost">${xp_cost}</span> ${icons.experience.text}` }));
+                contentDetailsElements.push(icons.experience.render(null, true, xp_cost));
                 break;
             case 'profession':
-                contentDetailsElements.push($('<p>', { html: `${icons.experience.icon} ${rank_1_cost} ${icons.experience.text}` }));
+                contentDetailsElements.push(icons.experience.render(null, true, rank_1_cost));
                 break;
             case 'item':
-                contentDetailsElements.push($('<p>', { html: convertCurrency(price) }));
+                contentDetailsElements.push(icons.coin.render(null, true, convertCurrency(price)));
                 break;
             default:
                 console.warn(`Unused action of ${sAction} has been called`);
@@ -197,22 +197,22 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = [], arrSkills 
         if (disclaimer) {
             const arrDisclaimer = disclaimer.split('|');
             arrDisclaimer.forEach(text => {
-                contentDetailsElements.push($('<p>', { class: `${icons.disclaimer.class}`, html: `${icons.disclaimer.icon} ${text}` }));
+                contentDetailsElements.push(icons.disclaimer.render(null, false, text));
             });
         }
         // Add requirement name
         if (requirement_name) {
-            contentDetailsElements.push($('<p>', { html: `${icons.required.icon} ${requirement_name}` }));
+            contentDetailsElements.push(icons.required.render(null, false, requirement_name));
         }
         // Add loresheet
         if (loresheet) {
-            contentDetailsElements.push($('<p>', { html: `${icons.loresheet.icon} ${icons.loresheet.text}` }));
+            contentDetailsElements.push(icons.loresheet.render(null, true, ''));
         }
         // Handle modifiers
         if (arrModifier.length > 0) {
             arrModifier.forEach((mod, i) => {
                 const name = mod.name.toLowerCase();                
-                const iconHtml = `${icons[name].icon} ${icons[name].text}`;
+                const iconHtml = icons[name].render(null, true).outerHTML;
                 if (arrModifier.length > 1) {
                     const row = $('<div>', { class: 'choice-row' });
                     const input = $('<input>', { id: `modifier-${i}`, value: mod.id, type: 'radio', name: 'stat-modifier' });
@@ -229,7 +229,7 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = [], arrSkills 
             arrSkills.forEach((skill, i) => {
                 const { id, name } = skill.details;
                 const { sub_id = null, sub_name = null } = skill.current || {};
-                const iconHtml = `${icons[id].icon}`;
+                const iconHtml = `${icons[id].icon()}`;
                 //creates a paragraph or selection
                 if (arrSkills.length > 1) {
                     const row = $('<div>', { class: 'choice-row' });
@@ -290,7 +290,7 @@ function updateModelButtons(sAction, oData) {
             const $button = $('<button>', {
                 id: 'choose-characterAsset',
                 class: 'button solid',
-                html: `${icons.choose.icon} ${icons.choose.text}`,
+                html: `${icons.choose.icon()} ${icons.choose.text()}`,
                 disabled: !allowChoose() //logic is reversed because of how disable attribute works                
             }).on('click', function(e) {
                 e.preventDefault();
@@ -305,7 +305,7 @@ function updateModelButtons(sAction, oData) {
                 class: 'button clear',
                 target: '_blank',
                 href: `https://larp.dalaria.nl/wp-content/uploads/documents/KvD-Basisregels.pdf#page=${rule_page}`,
-                html: `${icons.more_info.icon} ${icons.more_info.text}`
+                html: `${icons.more_info.icon()} ${icons.more_info.text()}`
             });
             contentActionsElements.push(rulePageLink);
         }

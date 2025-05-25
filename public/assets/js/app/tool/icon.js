@@ -1,16 +1,14 @@
-import { oTranslations, language } from "./settings";
+import { oTranslations, language } from "./settings.js";
 
 class Icon {
     constructor({
         icon_visual = 'fa-solid fa-notdef',
         icon_class = '',
         icon_text = '??',
-        action = () => {}
     }) {
         this.icon_visual = icon_visual;
         this.icon_class = icon_class;
         this.icon_text = icon_text;
-        this.action = action;
     }
 
     icon() {
@@ -21,13 +19,26 @@ class Icon {
         return oTranslations?.[language]?.[this.icon_text] || this.icon_text;
     }
 
-    render(full = false) {
+    render(onclick = {}, full = false, customtxt = '') {
         const translatedText = this.text();
-        return $('<a>', {
+        const isEmptyFunction = typeof onclick !== 'function' || onclick.toString().replace(/\s/g, '') === 'function(){}';
+    
+        const tag = isEmptyFunction ? 'p' : 'a';
+    
+        const $el = $(`<${tag}>`, {
             class: this.icon_class,
-            html: `${this.icon()}${full ? ` ${translatedText}` : ''}`,
-            title: translatedText
-        }).on('click', this.action);
+            html: `${this.icon()} ${customtxt!=='' ? customtxt : ''} ${full ? translatedText : ''}`,
+            title: translatedText,
+        });
+    
+        if (!isEmptyFunction) {
+            $el.on('click', function (event) {
+                event.preventDefault();
+                onclick();
+            });
+        }
+    
+        return $el.get(0);
     }
 }
 

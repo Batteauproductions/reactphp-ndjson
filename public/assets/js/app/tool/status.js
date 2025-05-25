@@ -50,15 +50,7 @@ function pickStatus() {
             }));
             console.log($dropdown);
             contentElements.push($dropdown); 
-            
-            contentElements.push($('<a>', { 
-                class: 'button solid','data-action': `status-choose`,
-                html: `${icons.choose.icon} ${icons.choose.text}`
-            }).on('click', function(e) {
-                e.preventDefault();
-                chooseStatus();
-            })); 
-            
+            contentElements.push(icons.choose.render(chooseStatus,true,''));
             openTextModal(contentElements);
         },
         error: function(error) {
