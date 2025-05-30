@@ -251,6 +251,7 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = [], arrSkills 
                 }
             });
         }
+
         // Append all elements to the DOM in one go
         $choice_details.empty().append(contentDetailsElements).show();
     } else {

@@ -48,7 +48,6 @@ function pickStatus() {
                 name: 'character-status', 
                 html: $options,
             }));
-            console.log($dropdown);
             contentElements.push($dropdown); 
             
             contentElements.push($('<a>', { 

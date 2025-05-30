@@ -1,7 +1,4 @@
-import { oCharacter } from '../../generator.js';
-import { chooseName } from '../name.js';
 import { debugLog } from '../functions.js';
-import { oTranslations, language, icons } from '../settings.js';
 import { clearForm, $modalLoading, } from "./modal.js";
 
 /** 

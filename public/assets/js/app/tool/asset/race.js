@@ -76,12 +76,9 @@ class Race {
         // Assign race to character
         const stat = $('[name="stat-modifier"]:checked').val();
         this.modifier = stat ? stat : this.modifier;
-
         oCharacter.race = this;       
         // Update the stats if a modifier is present
-        if (this.modifier) {
-            oCharacter.update();
-        }
+        oCharacter.update();
         // Allow race to be re-chosen
         $('#race').html(`<i class="fa-solid fa-rotate-right"></i>${this.name}</span>`);
         return true;
@@ -89,14 +86,9 @@ class Race {
 
     //removes the race from the character
     remove () {
-        console.log('remove me dude')
-        console.log('typeof',typeof(oCharacter.skill.length))
         //remove old racial skills
         for (let i = oCharacter.skill.length - 1; i >= 0; i--) {
-            console.log('oCharacter.skill', oCharacter.skill);
-            console.log('oCharacter.skill.length', oCharacter.skill.length);
             const skill = oCharacter.skill[i];
-            console.log('skill', skill)
             if (skill.racial === true) {
                 skill.remove();
             }

@@ -108,7 +108,7 @@ class Character extends Controller
                 case 'fill-dropdown-skill_magic':
                     echo json_encode($this->models['skill']->getSkillsByLink([3,4,5,10,11],$arrProfessions,$this->arrRights['isGameMaster']));
                     break;
-                case 'fill-dropdown-base_kit':
+                case 'fill-dropdown-basekit':
                     echo json_encode($this->models['item']->getBasicKit());
                     break;
                 case 'fill-dropdown-item':
@@ -145,7 +145,7 @@ class Character extends Controller
                 case 'get-details-skill_magic':
                     echo json_encode($this->models['skill']->getSkillDetails($arrData['id']));
                     break;
-                case 'get-details-base_kit':
+                case 'get-details-basekit':
                     echo json_encode($this->models['item']->getBasicKitDetails($arrData['id']));
                     break;
                 case 'get-details-item':

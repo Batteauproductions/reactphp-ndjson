@@ -46,6 +46,11 @@ class Character {
         this.stories = stories;
     }
 
+    setBasekit(value) {
+        debugLog(`setBasekit: ${value}`);
+        this.build.base_kit = parseInt(value);
+    }
+
     setStatus(value) {
         debugLog(`setStatus: ${value}`);
         this.meta.status = parseInt(value);
@@ -113,6 +118,7 @@ function calculateIncrease(id) {
     let increase = 0;
     // Helper function to calculate the increase for each category
     var calculateForCategory = (category) => {
+        console.log(`category: ${category}`)
         if ($.isArray(category)) {
             $.each(category, function(key, value) {
                 if (value.modifier == id) {
@@ -120,7 +126,7 @@ function calculateIncrease(id) {
                 }
             });
         } else {
-            if(category.modifier == id) {
+            if(category && category.modifier && category.modifier == id) {
                 increase ++
             }
         }

@@ -1,4 +1,4 @@
-import { Icon } from "./icon";
+import { Icon } from "./icon.js";
 
 //oSettings
 const debug = true;
@@ -62,43 +62,42 @@ const oTranslations = Object.freeze({
         "note_add" : "notitie toevoegen",
     }
 });
-const icons = Object.freeze([
-    "note_add" = new Icon ({icon_visual: 'fa-regular fa-floppy-disk', icon_text: 'note_add'}),
-    "character_saving" = new Icon ({icon_visual: 'fa-solid fa-rotate-right', icon_text: 'character_saving'}),
-    "character_submit" = new Icon ({icon_visual: 'fa-solid fa-rotate-right', icon_text: 'character_submit'}),
-    "character_error" = new Icon ({icon_visual: 'fa-solid fa-xmark', icon_text: 'character_error'}),
-    "character_save_done" = new Icon ({icon_visual: 'fa-solid fa-xmark', icon_text: 'character_save_done'}),
-    "change" = new Icon({icon_visual: 'fa-solid fa-rotate-right', icon_text: 'change'}),
-    "choose" = new Icon({icon_visual: 'fa-regular fa-square-check', icon_text: 'choose'}),
-    "disclaimer" = new Icon({icon_visual: 'fa-solid fa-triangle-exclamation', icon_text: 'disclaimer'}),
-    "downgrade" = new Icon({icon_visual: 'fa-solid fa-chevron-down', icon_text: 'downgrade'}),
-    "edit" = new Icon({icon_visual: 'fa-solid fa-pen-to-square', icon_text: 'edit'}),
-    "experience" = new Icon({icon_visual: 'fa-solid fa-brain', icon_text: 'experience'}),
-    "gatherable" = new Icon({icon_visual: 'fa-solid fa-leaf', icon_text: 'gatherable'}),
-    "loresheet" = new Icon({icon_visual: 'fa-solid fa-scroll', icon_text: 'loresheet'}),
-    "more_info" = new Icon({icon_visual: 'fa-solid fa-circle-info', icon_text: 'more_info'}),
-    "new" = new Icon({icon_visual: 'fa-regular fa-star', icon_text: 'new'}),
-    "racial" = new Icon({icon_visual: 'fa-solid fa-users', icon_text: 'racial'}),
-    "rank" = new Icon({icon_visual: 'fa-solid fa-hashtag', icon_text: 'rank'}),
-    "remove" = new Icon({icon_visual: 'fa-solid fa-xmark', icon_text: 'remove'}),
-    "required" = new Icon({icon_visual: 'fa-solid fa-asterisk', icon_text: 'required'}),
-    "upgrade" = new Icon({icon_visual: 'fa-solid fa-chevron-up', icon_text: 'upgrade'}),
-    "increase_base_sanity" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_sanity'}),
-    "increase_base_health" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_health'}),
-    "increase_base_dex" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_dex'}),
-    "increase_base_str" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_str'}),
-    "increase_base_intel" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_intel'}),
-    "increase_base_godpoints" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_godpoints'}),
-    "increase_base_mana" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_mana'}),
-    "increase_base_points" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_points'}),
-    "increase_base_mana_minor" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_mana_minor'}),
-    "increase_base_currency" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_currency'}),
-    "increase_base_favor" = new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_favor'}),
-    // "Taal: Spreken"
-    "14" = new Icon({icon_visual: 'fa-regular fa-comment', icon_text: 'skill_speech'}),
-    // "Kennis X" 
-    "5" = new Icon({icon_visual: 'fa-regular fa-comment', icon_text: 'skill_knowledge_x'}),
-]);
+const icons = Object.freeze({
+    "note_add": new Icon({icon_visual: 'fa-regular fa-floppy-disk', icon_text: 'note_add'}),
+    "character_saving": new Icon({icon_visual: 'fa-solid fa-rotate-right', icon_text: 'character_saving'}),
+    "character_submit": new Icon({icon_visual: 'fa-solid fa-rotate-right', icon_text: 'character_submit'}),
+    "character_error": new Icon({icon_visual: 'fa-solid fa-xmark', icon_text: 'character_error'}),
+    "character_save_done": new Icon({icon_visual: 'fa-solid fa-xmark', icon_text: 'character_save_done'}),
+    "change": new Icon({icon_visual: 'fa-solid fa-rotate-right', icon_text: 'change'}),
+    "choose": new Icon({icon_visual: 'fa-regular fa-square-check', icon_text: 'choose'}),
+    "disclaimer": new Icon({icon_visual: 'fa-solid fa-triangle-exclamation', icon_text: 'disclaimer'}),
+    "downgrade": new Icon({icon_visual: 'fa-solid fa-chevron-down', icon_text: 'downgrade'}),
+    "edit": new Icon({icon_visual: 'fa-solid fa-pen-to-square', icon_text: 'edit'}),
+    "experience": new Icon({icon_visual: 'fa-solid fa-brain', icon_text: 'experience'}),
+    "gatherable": new Icon({icon_visual: 'fa-solid fa-leaf', icon_text: 'gatherable'}),
+    "loresheet": new Icon({icon_visual: 'fa-solid fa-scroll', icon_text: 'loresheet'}),
+    "more_info": new Icon({icon_visual: 'fa-solid fa-circle-info', icon_text: 'more_info'}),
+    "new": new Icon({icon_visual: 'fa-regular fa-star', icon_text: 'new'}),
+    "racial": new Icon({icon_visual: 'fa-solid fa-users', icon_text: 'racial'}),
+    "rank": new Icon({icon_visual: 'fa-solid fa-hashtag', icon_text: 'rank'}),
+    "remove": new Icon({icon_visual: 'fa-solid fa-xmark', icon_text: 'remove'}),
+    "required": new Icon({icon_visual: 'fa-solid fa-asterisk', icon_text: 'required'}),
+    "upgrade": new Icon({icon_visual: 'fa-solid fa-chevron-up', icon_text: 'upgrade'}),
+    "increase_base_sanity": new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_sanity'}),
+    "increase_base_health": new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_health'}),
+    "increase_base_dex": new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_dex'}),
+    "increase_base_str": new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_str'}),
+    "increase_base_intel": new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_intel'}),
+    "increase_base_godpoints": new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_godpoints'}),
+    "increase_base_mana": new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_mana'}),
+    "increase_base_points": new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_points'}),
+    "increase_base_mana_minor": new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_mana_minor'}),
+    "increase_base_currency": new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_currency'}),
+    "increase_base_favor": new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_favor'}),
+    "14": new Icon({icon_visual: 'fa-regular fa-comment', icon_text: 'skill_speech'}),
+    "5": new Icon({icon_visual: 'fa-regular fa-comment', icon_text: 'skill_knowledge_x'}),
+});
+
 const iconset = Object.freeze({
     "attribute_adjust_none": null,
     "attribute_adjust_basic": Array("remove"),
