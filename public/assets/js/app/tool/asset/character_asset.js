@@ -2,7 +2,7 @@
 import { oCharacter } from '../../generator.js';
 import { icons, iconset, language, oTranslations, currentDateTime } from '../settings.js'
 import { generateIconSet, showMessage, showPopup } from '../functions.js'
-import { findItemIndex, updateCharacter, updateCharacterStats } from '../character.js';
+import { findItemIndex } from '../character.js';
 
 // Define the class
 class CharacterAsset {
@@ -72,11 +72,7 @@ class CharacterAsset {
         oCharacter[this.attribute].push(this); //-- functionally   
         this.addVisualRow(); //-- visionally
         //-----------------------------//
-        
-        // Update character stats if the subject has a modifier
-        if (this.modifier) {
-            oCharacter.update();
-        }
+        oCharacter.update();
         //-----------------------------//
         return true;
     }
@@ -100,13 +96,8 @@ class CharacterAsset {
         const $row = this.getVisualRow();
         $row.remove();
         
-        // Update the stats if there was a modifier present
-        if (this.modifier) {
-            updateCharacterStats();
-        }
-
         // Update the character object in the interface
-        updateCharacter();
+        oCharacter.update();
 
         return true;
     }
@@ -171,15 +162,11 @@ class CharacterAsset {
     
         // Update UI
         const $row = this.getVisualRow();
-        $row.find('[data-column="name"]').text(`${this.name} (${icons.rank.text} ${this.rank})`);
+        $row.find('[data-column="name"]').text(`${this.name} (${icons.rank.text()} ${this.rank})`);
         $row.find('[data-column="cost"]').text(`${this.rank_cost}pt.`);
         $row.find('[data-column="action"]').html(new_icons);
-    
-        if (this.modifier) {
-            updateCharacterStats();
-        }
 
-        updateCharacter();
+        oCharacter.update();
     
         return true;
     }
@@ -197,10 +184,10 @@ class CharacterAsset {
         });
         //-- -- array to contain the columns, starting with the basic one        
         let name = '';
-            name += `${!this.modified_dt || !this.locked_dt ? icons.new.icon : ''}`;
-            name += `${this.loresheet ? icons.loresheet.icon : ''}`;
+            name += `${!this.modified_dt || !this.locked_dt ? icons.new.icon() : ''}`;
+            name += `${this.loresheet ? icons.loresheet.icon() : ''}`;
             name += `${this.name}`;
-            name += `${this.rank != this.max_rank ? ` (${icons.rank.text} ${this.rank})` : ''}`;
+            name += `${this.rank != this.max_rank ? ` (${icons.rank.text()} ${this.rank})` : ''}`;
          
         const arrColumns = [
             $('<div>', {
@@ -224,7 +211,7 @@ class CharacterAsset {
                     class: 'cell small-2 medium-1 text-right',
                     html: this.racial ? `<em>${oTranslations[language].racial}</em>` : `${this.rank_cost}pt.`
                 }));    
-                local_icons = this.rank !== this.max_rank ? iconset["attribute_adjust_up"] : this.racial ? iconset["attribute_adjust_none"] : iconset["attribute_adjust_basic"];
+                local_icons = this.rank !== this.max_rank ? iconset.attribute_adjust_up : this.racial ? iconset.attribute_adjust_none : iconset.attribute_adjust_basic;
                 break;
             case 'item':
                 arrColumns.push($('<div>', {
@@ -236,12 +223,12 @@ class CharacterAsset {
                     'data-column': 'cost',
                     class: 'cell small-4 medium-3 text-right',
                     html: `${this.costText()}`
-                }));    
+                }));
                 local_icons = iconset["attribute_adjust_none"];
                 break;
         }        
         //-- -- fills the column of icons with the correct iconset
-        const arrIcons = generateIconSet(local_icons,this,this.attribute);
+        const arrIcons = generateIconSet(local_icons,this);
         arrColumns.push($('<div>', {
             class: 'cell small-12 medium-3 text-right',
             'data-column': 'action',

@@ -26,13 +26,7 @@ function pickName() {
         type: 'text',
         value: oCharacter.meta.name ? oCharacter.meta.name : ''
     }));
-    contentElements.push($('<a>', { 
-        class: 'button solid','data-action': `name-choose`,
-        html: `${icons.choose.icon} ${icons.choose.text}`
-    }).on('click', function(e) {
-        e.preventDefault();
-        chooseName();
-    }));          
+    contentElements.push(icons.choose.render(chooseName,true,''));        
     openTextModal(contentElements);
 }
 

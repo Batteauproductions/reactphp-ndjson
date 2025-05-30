@@ -50,15 +50,7 @@ function pickType() {
             }));
             console.log($dropdown);
             contentElements.push($dropdown); 
-            
-            contentElements.push($('<a>', { 
-                class: 'button solid','data-action': `type-choose`,
-                html: `${icons.choose.icon} ${icons.choose.text}`
-            }).on('click', function(e) {
-                e.preventDefault();
-                chooseType();
-            })); 
-
+            contentElements.push(icons.choose.render(chooseType,true,''))
             openTextModal(contentElements);
         },
         error: function(error) {
