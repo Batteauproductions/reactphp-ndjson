@@ -3,25 +3,27 @@ import { oCharacter } from '../../generator.js';
 import { openTextModal } from '../modal/text_modal.js';
 import { debugLog } from '../functions.js';
 import { domain } from '../settings.js';
-import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } from '../modal/selection_modal.js';
+import { openSelectionModal, updateModalDropdown } from '../modal/selection_modal.js';
+
+// Define modal and form
+const $modal = $('#selection-modal');
+const $form = $('#modal-form');
 
 function changeBasekit() {
-    openTextModal('basekit',$('#text-modal'));
+    openTextModal('basekit',$('#selection-modal'));
 }
 
 function chooseBasekit() {
-    const $element = $('select[name="character-status"] option:selected');
-    oCharacter.setStatus($element.val());
-    $('#characterstatus').html(`<i class="fa-solid fa-rotate-right"></i>${$element.data('name')}</span>`).on('click',changeStatus);   
-    $('#text-modal').foundation('close');
+    const $element = $('select[name="type"] option:selected');
+    oCharacter.setBasekit($element.val());
+    const description = $('#choice-description').find('ul');
+    $('div[data-id="base_kit-list"]').html(description);
+    $('a[data-action="pick-basekit"]').html(`<i class="fa-solid fa-rotate-right"></i> aanpassen </span>`).on('click',pickBasekit);   
+    $modal.foundation('close');
 }
 
 function pickBasekit() {
     debugLog('pickBasekit');
-    
-    // Define modal and form
-    const $modal = $('#selection-modal');
-    const $form = $('#modal-form');
 
     // Open the modal
     openSelectionModal('basekit',$modal);

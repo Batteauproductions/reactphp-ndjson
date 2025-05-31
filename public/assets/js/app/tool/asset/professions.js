@@ -15,21 +15,6 @@ class Profession extends CharacterAsset {
         this.rank_3_cost = parseInt(params.current.rank_3_cost);
     }
     
-    // Method to display all attributes
-    displayInfo() {
-        console.log(`ID: ${this.id}`);
-        console.log(`Name: ${this.name}`);
-        console.log(`Sub ID: ${this.sub_id}`);
-        console.log(`Sub Name: ${this.sub_name}`);
-        console.log(`Rank: ${this.rank}`);
-        console.log(`Cost: ${this.cost}`);
-        console.log(`Modifier: ${this.modifier}`);
-        console.log(`Rank 1 Cost: ${this.rank_1_cost}`);
-        console.log(`Rank 2 Cost: ${this.rank_2_cost}`);
-        console.log(`Rank 3 Cost: ${this.rank_3_cost}`);
-        console.log(`Allow Multiple: ${this.allow_multiple}`);
-    }
-
     costSpend (cost = this.cost) {
         if(!updateExperience(cost,"spend")) {
             return oTranslations[language].not_enough_vp;  

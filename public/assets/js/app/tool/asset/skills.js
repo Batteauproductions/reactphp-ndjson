@@ -13,19 +13,6 @@ class Skill extends CharacterAsset {
         this.max_purchase = params.current.max_purchase ? parseInt(params.current.max_purchase) : 1;
     }
 
-    // Updated method to display all attributes
-    displayInfo() {
-        console.log(`ID: ${this.id}`);
-        console.log(`Name: ${this.name}`);
-        console.log(`Sub ID: ${this.sub_id}`);
-        console.log(`Sub Name: ${this.sub_name}`);
-        console.log(`Rank: ${this.rank}`);
-        console.log(`Cost: ${this.cost}`);
-        console.log(`Modifier: ${this.modifier}`);
-        console.log(`XP Cost: ${this.xp_cost}`);
-        console.log(`Allow Multiple: ${this.allow_multiple}`);
-    }
-
     costSpend (cost = this.cost) {
         if(!updateExperience(cost,"spend")) {
             return oTranslations[language].not_enough_vp;  

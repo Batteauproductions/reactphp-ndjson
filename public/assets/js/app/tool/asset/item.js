@@ -3,16 +3,20 @@ import { oCharacter } from '../../generator.js';
 import { CharacterAsset } from './character_asset.js';
 import { domain, oTranslations, language } from '../settings.js';
 import { debugLog } from '../functions.js';
-import { convertCurrency } from '../currency.js';
+import { convertCurrency, updateCurrency} from '../currency.js';
 import { openSelectionModal, updateModalDropdown } from '../modal/selection_modal.js';
-import { findItemIndex } from '../character.js';
 
 // Define the class
 class Item extends CharacterAsset {
     constructor(params) {
         super(params);
-        this.amount = amount;
+        // Ensure `amount` is a number inside `current`
+        this.amount = parseInt(params.current.amount);
+        this.price = parseInt(params.details.price);
+        this.price_high = parseInt(params.details.price_high);
+        this.price_low = parseInt(params.details.price_low);
     }
+
 
     // Updated method to display all attributes
     displayInfo() {
@@ -89,7 +93,7 @@ function pickItem () {
     });
 }
 
-function chooseItem (obj) {
+function chooseItem (sAction, obj) {
     debugLog('chooseItem', obj);
 
     // Validate that the input is a valid object
@@ -98,52 +102,31 @@ function chooseItem (obj) {
         return;
     }
 
-    // Add the current attribute to the object
-    obj.current = { 
-        amount: $('input[name="amount"]').val(),
-    };
     
+    const amount = parseInt($('input[name="amount"]').val()) || 0;
+    const itemcost = parseInt(obj.details?.price) || 0;
+
+    // Update details and current in one go
+    obj.details = {
+        ...obj.details,
+        cost: amount * itemcost,
+    };
+
+    obj.current = {
+        amount,
+        container: sAction,
+        attribute: sAction,
+    };
+
     const itemClass = new Item(obj);
 
     if(itemClass.add()) {
         $('#selection-modal').foundation('close');
     }
-}
-
-/**
- * Upgrade a profession linked to the character.
- * @param {Object} item - The profession object.
- */
-function adjustItemAmount(item,adjustment) {
-    debugLog('adjustItemAmount', item);
-
-    //check if the profession is a valid object
-    if (typeof item !== 'object' || item === null) {
-        console.error("adjustItemAmount: 'obj' is not a valid object: " + $.type(item));
-        return;
-    }
-
-    //attempt to find the proffesion within the character object
-    const index = findItemIndex('item', item.id)
-    if (index === -1) {
-        console.error('Trying to adjust item amount, non-existent')
-        return;
-    }
-
-    //get the new cost of the profession based on the new rank
-    const new_cost = getRankCost(profession, new_rank);
-    // Check if the character has enough experience
-    if (!checkExperienceCost(new_cost)) {
-        showPopup(oTranslations[language].not_enough_vp);
-        return;
-    }
-
-    oCharacter.updateAsset('profession',index,new_rank,new_cost);
-}
+} 
 
 export { 
     Item,
     pickItem,
     chooseItem,
-    adjustItemAmount,
 }

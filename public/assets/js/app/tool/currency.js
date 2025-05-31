@@ -2,19 +2,48 @@
 import { oCharacter } from '../generator.js';
 import { oTranslations, language } from './settings.js';
 
-// Page functions
-
+// Functions needed for actual app performance
 /**
- * Check if the character has enough currency to buy the profession or skill.
- * @param {number} cost - The currency cost.
- * @returns {boolean} True if there is enough currency, false otherwise.
+ * Update the character's experience points (XP) by adding or subtracting a given cost.
+ * @param {number} cost - The XP cost to add or subtract.
+ * @param {"add"|"subtract"} action - The action to perform: "add" to spend XP, "subtract" to refund XP.
+ * @returns {boolean} - Returns true if the operation is successful, false if it fails a validation check.
  */
-function checkCurrencyCost(cost) {
-    if (typeof cost !== 'number') {
-        console.error("checkCurrencyCost: cost is not a number, found type: " + $.type(cost));
+function updateCurrency(cost, action) {
+    if (typeof cost !== 'number' || isNaN(cost)) {
+        console.error(`Invalid cost of ${cost} provided to updateCurrency.`);
         return false;
     }
-    return oCharacter.build.currency >= cost;
+
+    console.log(`updateCurrency(${cost}, ${action})`)
+
+    const current_balance = oCharacter.build.currency;
+
+    if (action === 'spend') {
+        if (current_balance - cost < 0) {
+            console.error('No enough currency available to complete transaction.');
+            updateCurrencyDisplay();
+            return false;
+        } else {
+            oCharacter.build.currency -= cost;
+        }
+    } else if (action === 'refund') {
+        oCharacter.build.spend_xp += cost;
+    } else {
+        console.error(`Invalid action "${action}" passed to updateCurrency.`);
+        return false;
+    }
+
+    updateCurrencyDisplay();
+    return true;
+}
+
+/**
+ * Update the displayed currency.
+ */
+function updateCurrencyDisplay() {
+    console.log('oCharacter.build.currency', oCharacter.build.currency)
+    $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
 }
 
 /**
@@ -36,41 +65,8 @@ function convertCurrency(iAmount) {
     return `${sGold} ${sSilver} ${sCopper}`.trim();
 }
 
-/**
- * Handle the refund of currency.
- * @param {number} cost - The currency cost to refund.
- */
-function refundCurrency(cost) {
-    oCharacter.build.currency += cost;
-    updateCurrencyDisplay();
-}
-
-/**
- * Handle the spending of currency.
- * Checks if there is an attempt to spend more than available.
- * @param {number} cost - The currency cost to spend.
- */
-function spendCurrency(cost) {
-    if (oCharacter.build.currency < cost) {
-        console.error('Attempt to spend more than available currency');
-        oCharacter.build.currency = 0;
-    } else {
-        oCharacter.build.currency -= cost;
-    }
-    updateCurrencyDisplay();
-}
-
-/**
- * Update the displayed currency.
- */
-function updateCurrencyDisplay() {
-    $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
-}
-
 // Export functions
 export {
-    checkCurrencyCost,
-    convertCurrency,
-    refundCurrency,
-    spendCurrency
+    updateCurrency,
+    convertCurrency
 }

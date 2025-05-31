@@ -48,7 +48,7 @@ class Character {
 
     setBasekit(value) {
         debugLog(`setBasekit: ${value}`);
-        this.build.base_kit = parseInt(value);
+        this.build.base_kit = parseInt(value);        
     }
 
     setStatus(value) {
@@ -83,7 +83,9 @@ class Character {
         //---11: INCREASE_BASE_FAVOR
         const statMappings = {
             max_xp: { base: jsonBaseChar.max_xp, factor: 8, stat: jsonStat.xp },
-            currency: { base: jsonBaseChar.currency, factor: 10, stat: jsonStat.currency },
+            //-- !!! currency SHOULD BE FIXED !!! --//
+            // CURRENTLY EITHER THE SKILL WORKS OR BUYING ITEMS DOES //
+            currency: { base: jsonBaseChar.currency, factor: 10, stat: jsonStat.currency }, 
             hp: { base: jsonBaseChar.hp, factor: 2, stat: jsonStat.hp },
             sanity: { base: jsonBaseChar.sanity, factor: 1, stat: jsonStat.sanity },
             mana: { base: jsonBaseChar.mana, factor: 7, stat: jsonStat.mana, additionalFactor: 9, additionalStat: jsonStat.mana_minor },
@@ -109,7 +111,6 @@ class Character {
             $(`#stat-${key}`).html(content);
         });
         debugLog('updateCharacter',oCharacter);
-        //$('input[name="character"]').val(JSON.stringify(oCharacter));
     }
 
 }
@@ -118,7 +119,6 @@ function calculateIncrease(id) {
     let increase = 0;
     // Helper function to calculate the increase for each category
     var calculateForCategory = (category) => {
-        console.log(`category: ${category}`)
         if ($.isArray(category)) {
             $.each(category, function(key, value) {
                 if (value.modifier == id) {

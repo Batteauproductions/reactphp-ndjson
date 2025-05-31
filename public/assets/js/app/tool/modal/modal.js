@@ -251,9 +251,12 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = [], arrSkills 
                 }
             });
         }
-
         // Append all elements to the DOM in one go
-        $choice_details.empty().append(contentDetailsElements).show();
+        if(contentDetailsElements.length > 0) {
+            $choice_details.empty().append(contentDetailsElements).show();
+        } else {
+            $choice_details.hide();
+        }
     } else {
         $choice_details.hide();
     }
@@ -278,6 +281,10 @@ function updateModelButtons(sAction, oData) {
                 break;
             case 'race': 
                 click_function = chooseRace;
+                break;
+            case 'basekit':
+                click_function = chooseBasekit;
+                break;
             default:
                 console.warn(`Unused action of ${sAction} has been called`);
                 break;

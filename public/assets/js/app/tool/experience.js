@@ -10,7 +10,7 @@ import { oCharacter } from '../generator.js';
  */
 function updateExperience(cost, action) {
     if (typeof cost !== 'number' || isNaN(cost)) {
-        console.error('Invalid cost provided to updateExperience.');
+        console.error(`Invalid cost of ${cost} provided to updateExperience.`);
         return false;
     }
 
@@ -36,7 +36,7 @@ function updateExperience(cost, action) {
             oCharacter.build.spend_xp -= cost;
         }
     } else {
-        console.error(`Invalid action "${action}" passed to updateExperience. Use "add" or "subtract".`);
+        console.error(`Invalid action "${action}" passed to updateExperience.`);
         return false;
     }
 

@@ -1,7 +1,7 @@
 //Generic settings and functions
 import { oCharacter } from '../../generator.js';
 import { icons, iconset, language, oTranslations, currentDateTime } from '../settings.js'
-import { generateIconSet, showMessage, showPopup } from '../functions.js'
+import { debugLog, generateIconSet, showMessage, showPopup } from '../functions.js'
 import { findItemIndex } from '../character.js';
 
 // Define the class
@@ -216,21 +216,21 @@ class CharacterAsset {
             case 'item':
                 arrColumns.push($('<div>', {
                     'data-column': 'amount',
-                    class: 'cell small-5 medium-4 text-right',
+                    class: 'cell small-2 medium-1 text-right',
                     text: `${this.amount}x`
                 }));    
                 arrColumns.push($('<div>', {
                     'data-column': 'cost',
-                    class: 'cell small-4 medium-3 text-right',
+                    class: 'cell small-5 medium-4 text-center',
                     html: `${this.costText()}`
                 }));
-                local_icons = iconset["attribute_adjust_none"];
+                local_icons = iconset["attribute_adjust_basic"];
                 break;
         }        
         //-- -- fills the column of icons with the correct iconset
         const arrIcons = generateIconSet(local_icons,this);
         arrColumns.push($('<div>', {
-            class: 'cell small-12 medium-3 text-right',
+            class: 'cell small-12 medium-3 small-text-center medium-text-right',
             'data-column': 'action',
             html: arrIcons
         }));
