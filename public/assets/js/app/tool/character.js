@@ -54,16 +54,31 @@ class Character {
     setStatus(value) {
         debugLog(`setStatus: ${value}`);
         this.meta.status = parseInt(value);
+        $('input[name="char_status"]').val(value);
     }
 
     setType(value) {
         debugLog(`setType: ${value}`);
         this.meta.type = parseInt(value);
+        $('input[name="char_type"]').val(value);
     }
     
     setName(value) {
         debugLog(`setName: ${value}`);
-        this.meta.name = value;
+        this.meta.name = value; 
+        $('input[name="char_name"]').val(value);       
+    }
+
+    save() {
+       transferCharacter('save'); 
+    }
+
+    submit() {
+        transferCharacter('submit');
+    }
+
+    print() {
+        console.log('Action not yet implemented')
     }
 
     // A simple function to stringify the character object
@@ -85,7 +100,7 @@ class Character {
             max_xp: { base: jsonBaseChar.max_xp, factor: 8, stat: jsonStat.xp },
             //-- !!! currency SHOULD BE FIXED !!! --//
             // CURRENTLY EITHER THE SKILL WORKS OR BUYING ITEMS DOES //
-            currency: { base: jsonBaseChar.currency, factor: 10, stat: jsonStat.currency }, 
+            //currency: { base: jsonBaseChar.currency, factor: 10, stat: jsonStat.currency }, 
             hp: { base: jsonBaseChar.hp, factor: 2, stat: jsonStat.hp },
             sanity: { base: jsonBaseChar.sanity, factor: 1, stat: jsonStat.sanity },
             mana: { base: jsonBaseChar.mana, factor: 7, stat: jsonStat.mana, additionalFactor: 9, additionalStat: jsonStat.mana_minor },
@@ -157,24 +172,11 @@ function findItemIndex(attribute, id, sub_id = null) {
 }
 
 /**
- * Save the character.
- */
-function saveCharacter() {
-    transferCharacter('save');
-}
-
-/**
- * Submit the character.
- */
-function submitCharacter() {
-    transferCharacter('submit');
-}
-
-/**
  * Transfer the character data.
  * @param {string} attribute - The action to perform (save or submit).
  */
 function transferCharacter(attribute) {
+    debugLog('transferCharacter', attribute);
     if (!$("#form-character").valid()) {
         console.warn('Form is not valid');
         return;
@@ -206,7 +208,5 @@ function transferCharacter(attribute) {
 // Export functions
 export {
     Character,
-    saveCharacter,
-    submitCharacter,
     findItemIndex
 }

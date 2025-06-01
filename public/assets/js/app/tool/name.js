@@ -9,7 +9,6 @@ function changeName() {
 function chooseName() {
     const $element = $('input[name="character-name"]');
     oCharacter.setName($element.val());
-    $('[name="char_name"]').val($element.val())
     $('#charactername').html(`<i class="fa-solid fa-rotate-right"></i>${$element.val()}</span>`).on('click',changeName);   
     $('#text-modal').foundation('close');
 }

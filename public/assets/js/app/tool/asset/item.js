@@ -110,6 +110,7 @@ function chooseItem (sAction, obj) {
     obj.details = {
         ...obj.details,
         cost: amount * itemcost,
+        allow_multiple: 1,
     };
 
     obj.current = {

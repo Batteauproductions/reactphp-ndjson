@@ -1,9 +1,12 @@
 <div class="grid-container">
-    <div class="page-wrapper transparent">
-        <section class="grid-x grid-padding-x grid-padding-y">        
-            <form class="cell sortable">
-                <div class="grid-x grid-margin-x grid-margin-y align-bottom">
-                    <div class="cell small-6 medium-4 input-group">
+    <section class="page-wrapper transparent">
+        <div class="grid-x grid-padding-x grid-padding-y">                    
+            <form class="sortable cell small-12 medium-6 large-3" action="<?php current_url() ?>" method="post">
+                <div class="grid-x">
+                    <div class="cell">
+                        <h1>Filters</h1>
+                    </div>
+                    <div class="cell input-group">
                         <label for="name" class="input-group-label">
                             Naam
                         </label>
@@ -14,7 +17,7 @@
                             <?php endforeach;?> 
                         </select>
                     </div>
-                    <div class="cell small-6 medium-4 input-group">
+                    <div class="cell input-group">
                         <label for="type" class="input-group-label">
                             Type
                         </label>
@@ -25,7 +28,7 @@
                             <?php endforeach;?> 
                         </select>
                     </div>
-                    <div class="cell small-6 medium-4 input-group">
+                    <div class="cell input-group">
                         <label for="status" class="input-group-label">
                             Status
                         </label>
@@ -42,31 +45,34 @@
                         </button>
                     </div>
                 </div>
+                <hr>
             </form> 
-        </section>
-        <section class="grid-x grid-padding-x grid-padding-y">               
-            <div class="cell">
+            <div class="cell small-12 medium-6 large-9">
                 <div class="grid-x grid-margin-x grid-margin-y wrapper-character" data-equalizer>
                     <?php foreach($arrUsers as $user):?>
-                        <div class="cell small-6 medium-4 large-2 tile tile-status--<?php echo $user->status_name ?>">              
-                            <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>" style="opacity:0;"/>                            
-                            <div class="tile-content" data-equalizer-watch>
-                                <img src="<?php echo empty($user->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/user/'.$user->avatar) ?>"/>                        
-                                <div class="tile-description">
-                                    <h1><?php echo $user->firstname.' '.$user->lastname ?></h1>
-                                    <p><?php echo $user->status_name ?></p>
+                        <div class="cell small-12 medium-6 tile tile-status--<?= esc($user->status_name) ?>">                                
+                            <div class="grid-x">
+                                <div class="cell small-4">
+                                    <div class="tile-avatar-wrapper">
+                                        <img src="<?= empty($user->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/user/'.$user->avatar) ?>" />
+                                    </div>
+                                </div>                                
+                                <div class="cell small-8">
+                                    <div class="tile-content">
+                                        <h1><?php echo $user->firstname.' '.$user->lastname ?></h1>
+                                        <p><?php echo $user->username ?></p>
+                                        <p><?php echo $user->status_name ?></p>
+                                        <ul>
+                                            <li><a href="<?= base_url('gamemaster/character/edit/'.$user->id); ?>"><i class="fa-solid fa-pen-to-square"></i> aanpassen</a></li>
+                                            <li><a href="<?= base_url('gamemaster/character/delete/'.$user->id); ?>"><i class="fa-solid fa-trash"></i> verwijderen</a></li>
+                                        </ul>
+                                    </div>
                                 </div>                                
                             </div>
-                            <div class="tile-overlay">
-                                <ul>
-                                    <li><a href="<?php echo base_url('gamemaster/character/edit/'.$user->id);?>"><i class="fa-solid fa-pen-to-square"></i>aanpassen</a></li>
-                                    <li><a href="<?php echo base_url('gamemaster/character/delete/'.$user->id);?>"><i class="fa-solid fa-trash"></i>verwijderen</a></wli>
-                                </ul>
-                            </div>
-                        </div>
-                    <?php endforeach;?> 
+                        </div>         
+                    <?php endforeach; ?>
                 </div>
-            </div>        
-        </section>
-    </div>
+            </div> 
+        </div>
+    </section>
 </div>

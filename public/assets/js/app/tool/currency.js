@@ -22,13 +22,12 @@ function updateCurrency(cost, action) {
     if (action === 'spend') {
         if (current_balance - cost < 0) {
             console.error('No enough currency available to complete transaction.');
-            updateCurrencyDisplay();
             return false;
         } else {
             oCharacter.build.currency -= cost;
         }
     } else if (action === 'refund') {
-        oCharacter.build.spend_xp += cost;
+        oCharacter.build.currency += cost;
     } else {
         console.error(`Invalid action "${action}" passed to updateCurrency.`);
         return false;

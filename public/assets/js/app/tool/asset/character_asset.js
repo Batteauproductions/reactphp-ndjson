@@ -32,7 +32,7 @@ class CharacterAsset {
         this.id = parseInt(id);
         this.name = name;
         this.max_rank = isNaN(parseInt(max_rank)) ? 1 : parseInt(max_rank); //checks that rank is always set to at least 1
-        this.allow_multiple = allow_multiple ? parseInt(allow_multiple) : false; //only certain items can be added multiple times [true/false]
+        this.allow_multiple = allow_multiple ? parseInt(allow_multiple) : 0; //only certain items can be added multiple times [true/false]
         this.attribute = attribute; //what attribute of the character the assets should be stored [profession/skill/item]
         this.sub_id = sub_id !== null ? parseInt(sub_id) : null; //some assets have an sub id, for instance [2/5]
         this.sub_name = sub_name !== null ? sub_name : null; //some assets have a sub name, for instance [mage/elemental]
@@ -62,7 +62,8 @@ class CharacterAsset {
 
         // Check if the cost can be deducted, if so; deduct and continue
         const spend = this.costSpend();
-        if(!spend) {
+        console.log('spend: ',spend)
+        if(spend !== true) {
             showMessage('#choice-actions', 'error', spend);
             return;
         }
@@ -83,22 +84,16 @@ class CharacterAsset {
         if (index === -1) {
             console.error(`Trying to remove ${this.attribute}, instance not found`);
             return;
-        }
-    
+        }    
         // Refund the cost of the element
         this.costRefund(this.rank_cost);
-
         // Remove the asset of the character both functionally and visionally 
-        //-- functionally
-
-        oCharacter[this.attribute].splice(index, 1)[0];
-        //-- visionally
-        const $row = this.getVisualRow();
-        $row.remove();
-        
+        oCharacter[this.attribute].splice(index, 1)[0]; //-- functionally
+        const $row = this.getVisualRow(); //-- visionally
+        $row.remove();        
         // Update the character object in the interface
         oCharacter.update();
-
+        //-----------------------------//
         return true;
     }
 

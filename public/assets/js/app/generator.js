@@ -68,7 +68,9 @@ $(document).ready(function() {
     $('a[data-action="pick-basekit"]').on('click', pickBasekit);
     $('a[data-action="pick-item"]').on('click', pickItem);
     $('a[data-action="edit-background"]').on('click', editBackground);
-    $('a[data-action="edit-adventure"]').on('click', editAdventure);
+    $('a[data-action="character-save"]').on('click', oCharacter.save);
+    $('a[data-action="character-submit"]').on('click', oCharacter.submit);
+    $('a[data-action="character-print"]').on('click', oCharacter.print);
 
 });
 

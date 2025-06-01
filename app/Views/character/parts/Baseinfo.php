@@ -26,8 +26,6 @@
                 <a data-action="pick-race">
                     <span id="race"><i class="fa-solid fa-plus"></i>toevoegen</span>
                 </a>
-                <!--! hidden field for validation -->
-                <input type="hidden" name="char_race" value=""/>
             </div>
             <div class="cell small-6 text-left">
                 Vaardigheid
@@ -51,7 +49,9 @@
                     </a>
                 <?php else: ?>
                     <?php echo isset($oCharacter->type_name) ? $oCharacter->type_name : 'Speler'; ?>
-                <?php endif; ?>        
+                <?php endif; ?>   
+                <!--! hidden field for validation -->
+                <input type="hidden" name="char_type" value="1"/>     
             </div>                            
             <div class="cell small-6 text-left">
                 Status
@@ -63,7 +63,9 @@
                     </a>
                 <?php else: ?>
                     <?php echo isset($oCharacter->status_id) ? $oCharacter->status_name : 'Nieuw'; ?>
-                <?php endif; ?>                                
+                <?php endif; ?> 
+                <!--! hidden field for validation -->
+                <input type="hidden" name="char_status" value="1"/>                               
             </div>  
         </div>
     </div> 
