@@ -30,10 +30,10 @@
             </div>
             <div class="cell small-12 medium-9 large-9">
                 <div class="grid-x grid-padding-x grid-padding-y">
-                    <div class="cell small-6 text-center">
+                    <div class="cell small-12 medium-6 text-center">
                         <?= $this->include('character/parts/stats/Stats_Primary') ?>
                     </div>
-                    <div class="cell small-6 text-center">
+                    <div class="cell small-12 medium-6 text-center">
                         <?= $this->include('character/parts/stats/Stats_Secundary') ?>
                     </div>
                     <div class="cell small-12 medium-6 text-center">

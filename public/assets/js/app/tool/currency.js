@@ -67,5 +67,5 @@ function convertCurrency(iAmount) {
 // Export functions
 export {
     updateCurrency,
-    convertCurrency
+    convertCurrency,
 }

@@ -173,11 +173,15 @@ class Character extends Controller
 
         if (isset($arrData['action'])) {
             switch($arrData['action']) {
-                case "character-save":
-                    echo json_encode($this->characterModel->saveCharacter($arrData));
+                case "save":
+                case "submit":
+                    echo json_encode($this->models['character']->saveCharacter($arrData));
                     break;
-                case "character-submit":
-                    echo json_encode($this->characterModel->saveCharacter($arrData));
+                case "print":
+                    echo  'character-print';
+                    break;
+                default: 
+                    echo 'unknown action has been parsed';
                     break;
             }
         } else {

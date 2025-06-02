@@ -6,11 +6,13 @@ import { convertCurrency } from './currency.js';
 
 // Page functions
 class Character {
-    constructor({
-        meta: {
+    constructor({        
+        meta: {       
+            id = null,     
             type = 1,
             status = 1,
             name = null,
+            avatar = null,
             background = null,        
             created_dt = currentDateTime,
             modified_dt = null,
@@ -28,8 +30,10 @@ class Character {
     }) {
         // Assign properties to the instance's meta object
         this.meta = {
+            id: parseInt(id),
             type: parseInt(type),
             status: parseInt(status),
+            avatar: avatar,
             name: name,
             background: background,
             created_dt: created_dt,
@@ -173,33 +177,34 @@ function findItemIndex(attribute, id, sub_id = null) {
 
 /**
  * Transfer the character data.
- * @param {string} attribute - The action to perform (save or submit).
+ * @param {string} btn_action - The action to perform (save or submit).
  */
-function transferCharacter(attribute) {
-    debugLog('transferCharacter', attribute);
+function transferCharacter(btn_action) {
+    debugLog('transferCharacter', btn_action);
+
     if (!$("#form-character").valid()) {
         console.warn('Form is not valid');
         return;
     }
 
-    const $button = $('#submit-button');
+    const $button = $(`[data-action="character-${btn_action}"]`);
     $button.attr('disabled', true);
-    $button.html(`${icons.character_saving.icon} ${icons.character_saving.text}`);
+    $button.html(`${icons.character_saving.icon()} ${icons.character_saving.text()}`);
 
     $.ajax({
-        url: `${domain}/action/character-save`,
+        url: `${domain}/action/character-transfer`,
         type: 'POST',
         dataType: 'json',
         data: {
-            action: attribute,
+            action: btn_action,
             character: JSON.stringify(oCharacter)
         },
         success: function() {
-            $button.html(`${icons.character_save_done.icon} ${icons.character_save_done.text}`);
+            $button.html(`${icons.character_save_done.icon()} ${icons.character_save_done.text()}`);
             $button.attr('disabled', false);
         },
         error: function() {
-            $button.html(`${icons.character_error.icon} ${icons.character_error.text}`);
+            $button.html(`${icons.character_error.icon()} ${icons.character_error.text()}`);
             $button.attr('disabled', false);
         }
     });

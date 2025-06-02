@@ -122,107 +122,128 @@ class CharacterModel extends Model
 
 
     public function saveCharacter($arrData) {
-        // Decode the JSON string from the 'character' key
-        $characterData = json_decode($arrData['character'], true);
-
-        if ($characterData === null) {
-            // Handle JSON decode error
+        // Step 1 make sure all the data is correct
+        if ($arrData['uid'] === null || $arrData['uid'] === null || $arrData['character'] === null) {
             return false;
         }
-
-        // Step 1: Insert data into the hero table
-        $heroData = [
-            'user_id' => $arrData['uid'],
-            'type_id' => $characterData['meta']['type'],
-            'status_id' => $characterData['meta']['status'],
-            'avatar' => isset($characterData['meta']['avatar']) ? $characterData['meta']['avatar'] : null,
-            'name' => $characterData['meta']['name'],
-            'background' => $characterData['meta']['background'],
-            'created_dt' => $characterData['meta']['created_dt'],
-            'modified_dt' => null,
-            'firstlocked_dt' => null,
-            'lastlocked_dt' => null
+        // Step 2 setup "global" variables to be used in the statements below
+        $now = date('Y-m-d H:i:s');        
+        $user_id = $arrData['uid'];
+        // -- turn into object
+        $arrCharJSON = json_decode($arrData['character']);
+        // -- cache elements for easier access
+        
+        $meta = $arrCharJSON->meta;
+        $build = $arrCharJSON->build; 
+        $race = $arrCharJSON->race;
+        $profession = $arrCharJSON->profession;
+        $skill = $arrCharJSON->skill;  
+        $item = $arrCharJSON->item; 
+        // -- check if new based on fact if ID is parsed
+        $isNew = $meta->id === null;       
+        // Step 3a: Fill the Char table
+        $charData = [
+            'user_id'     => $user_id,
+            'type_id'     => $meta->type,
+            'status_id'   => $meta->status,
+            'avatar'      => $meta->avatar ?? null,
+            'name'        => $meta->name,
+            'background'  => $meta->background ?? null,
+            $isNew ? 'created_dt' : 'modified_dt' => $now
         ];
-
-        
-        $this->db->table(TBL_CHAR)->insert($heroData);
-        
-        // Optional: Retrieve and log the last executed query for debugging
-        $char_id = $this->db->insertID();
-
-        // Step 2: Insert data into the hero_build table
+        if ($isNew) {
+            $this->db->table(TBL_CHAR)->insert($charData);
+            $char_id = $this->db->insertID();
+        } else {
+            $char_id = $meta->id;
+            $this->db->table(TBL_CHAR)
+                ->where('id', $char_id)
+                ->where('user_id', $user_id)
+                ->update($charData);
+        }
+        // Step 3b: Fill the Char-build table   
         $buildData = [
-            'char_id' => $char_id,
-            'hp' => $characterData['build']['hp'],
-            'mana' => $characterData['build']['mana'],
-            'sanity' => $characterData['build']['sanity'],
-            //'favor' => $characterData['build']['favor'],
-            'gp' => $characterData['build']['gp'],
-            'str' => $characterData['build']['str'],
-            'dex' => $characterData['build']['dex'],
-            'intel' => $characterData['build']['intel'],
-            'spend_xp' => $characterData['build']['spend_xp'],
-            'max_xp' => $characterData['build']['max_xp'],
-            'currency' => $characterData['build']['currency'],
-            'base_kit' => $characterData['build']['base_kit']            
+            'char_id'   => $char_id,
+            'hp'        => $build->hp,
+            'mana'      => $build->mana,
+            'sanity'    => $build->sanity,
+            'favour'    => $build->favour,
+            'gp'        => $build->gp,
+            'str'       => $build->str,
+            'dex'       => $build->dex,
+            'intel'     => $build->intel,
+            'spend_xp'  => $build->spend_xp,
+            'max_xp'    => $build->max_xp,
+            'currency'  => $build->currency,
+            'base_kit'  => $build->base_kit,
+            $isNew ? 'created_dt' : 'modified_dt' => $now,
+        ];
+        if ($isNew) {
+            $this->db->table(TBL_CHAR_BUILD)->insert($buildData);
+        } else {
+            $this->db->table(TBL_CHAR_BUILD)
+                ->where('char_id', $char_id)
+                ->update($buildData);
+        }
+        // Step 3c: Insert data into the hero_race table
+        $chardData = [
+            'char_id'   => $char_id,
+            'main_id'   => $race->id,
+            'modifier'  => $race->modifier,
+            $isNew ? 'created_dt' : 'modified_dt' => $now,
+        ];
+        if ($isNew) {
+            $this->db->table(TBL_CHAR_RACE)->insert($chardData);
+        } else {
+            $this->db->table(TBL_CHAR_RACE)
+                ->where('char_id', $char_id)
+                ->update($chardData);
+        }
+        // Step 3d: Insert data into the TBL_CHAR_PROF table
+        $this->insertItems($profession, TBL_CHAR_PROF, $char_id);
+        // Step 3e: Insert data into the TBL_CHAR_SKILL table
+        $this->insertItems($Skill, TBL_CHAR_SKILL, $char_id);
+        // Step 3f: Insert data into the TBL_CHAR_ITEMS table
+        $this->insertItems($item, TBL_CHAR_ITEMS, $char_id);
+        // Show the last executed SQL query
+        echo $this->db->getLastQuery();        
+        exit;
+
+        /*$returnData = [
+            'id' => $char_id,
+            'done' => true,
         ];
 
-        $this->db->table(TBL_CHAR_BUILD)->insert($buildData);
-
-        // Step 3: Insert data into the hero_race table
-        $this->insertItems($characterData['race'], TBL_CHAR_RACE, $char_id);
-
-        // Step 4: Insert data into the hero_profession table
-        $this->insertItems($characterData['profession'], TBL_CHAR_PROF, $char_id);
-
-        // Step 5: Insert data into the hero_skills table
-        $this->insertItems($characterData['skills'], TBL_CHAR_SKILL, $char_id);
-
-        // Step 6: Insert data into the hero_items table
-        $this->insertItems($characterData['items'], TBL_CHAR_ITEMS, $char_id);
-
-        return true;
+        return $returnData;*/
 
     }
-
+    
     private function insertItems($items, $table, $char_id) {
+        $arrData = [];
+
         foreach ($items as $item) {
+            // Start building single item data array
             $itemData = [
-                'char_id' => $char_id,
-                'main_id' => $item['main_id'],                
-                'created_dt' => date('Y-m-d H:i:s'),          
+                'char_id'    => $char_id,
+                'main_id'    => $item->id,
+                'created_dt' => date('Y-m-d H:i:s'),
             ];
 
-            //races have chosen modifiers
-            if (isset($item['modifier'])) {
-                $itemData['modifier'] = $item['modifier'][0]['id'];
+            // List of optional fields to conditionally include
+            $optionalFields = ['sub_id', 'racial', 'rank', 'modifier', 'bonus', 'amount'];
+
+            foreach ($optionalFields as $field) {
+                if (property_exists($item, $field)) {
+                    $itemData[$field] = $item->$field !== '' ? $item->$field : null;
+                }
             }
 
-            //professions and skills have sub_id's and ranks
-            if (isset($item['sub_id'])) {
-                $itemData['sub_id'] = $item['sub_id'];
-                $itemData['rank'] = isset($item['rank']) ? $item['rank'] : null;
-            }
-
-            //skills might be regarded as bonus or racial
-            if (isset($item['sub_id'])) {
-                $itemData['racial'] = $item['racial'];
-                $itemData['bonus'] = $item['bonus'];
-            }
-             
-            //items may have an amount attached to them           
-            if (isset($item['amount'])) {
-                $itemData['amount'] = $item['amount'];
-            }
-
-            $this->db->table($table)->insert($itemData);
-            
+            // Add this item's data to the batch array
+            $arrData[] = $itemData;
         }
-    }
 
-    public function updateCharacterById($arrData) 
-    {
-
+        // Batch insert all items at once
+        $this->db->table($table)->insertBatch($arrData);
     }
 
 }
