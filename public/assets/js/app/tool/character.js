@@ -1,7 +1,7 @@
 // Generic settings and functions
 import { oCharacter } from '../generator.js';
-import { domain, icons, jsonBaseChar, currentDateTime, jsonStat } from './settings.js';
-import { debugLog } from './functions.js';
+import { domain, icons, jsonBaseChar, currentDateTime, jsonStat, oTranslations, language } from './settings.js';
+import { debugLog, showPopup } from './functions.js';
 import { convertCurrency } from './currency.js';
 
 // Page functions
@@ -130,6 +130,7 @@ class Character {
             $(`#stat-${key}`).html(content);
         });
         debugLog('updateCharacter',oCharacter);
+        //transferCharacter('save'); this should be turned on eventually, but currently auto-save should NOT work.
     }
 
 }
@@ -187,10 +188,14 @@ function transferCharacter(btn_action) {
         return;
     }
 
-    const $button = $(`[data-action="character-${btn_action}"]`);
-    $button.attr('disabled', true);
-    $button.html(`${icons.character_saving.icon()} ${icons.character_saving.text()}`);
+    let message = '';
 
+    const $button = $(`a[data-action="character-${btn_action}"]`);
+    $button.html(`${icons.character_saving.icon()} ${icons.character_saving.text()}`);
+    const $buttons = $('a[data-action^="character-"]');
+    $buttons.attr('disabled', true);
+
+    //send the character object to the back-end
     $.ajax({
         url: `${domain}/action/character-transfer`,
         type: 'POST',
@@ -199,15 +204,30 @@ function transferCharacter(btn_action) {
             action: btn_action,
             character: JSON.stringify(oCharacter)
         },
-        success: function() {
-            $button.html(`${icons.character_save_done.icon()} ${icons.character_save_done.text()}`);
-            $button.attr('disabled', false);
+        success: function(data) {
+            //check if the save is done
+            if(data.done) {
+                $button.html(`${icons.character_save_done.icon()} ${icons.character_save_done.text()}`);
+                message = oTranslations[language]["character_save_done"];
+            } else {
+                $button.html(`${icons.character_error.icon()} ${icons.character_error.text()}`);
+                message = oTranslations[language]["character_error"];
+            }
+            oCharacter.meta.id = data.id ? data.id : null;
+            //show a popup with the result and turn buttons back on
+            showPopup(message,'inform');
+            $buttons.attr('disabled', false);
         },
         error: function() {
-            $button.html(`${icons.character_error.icon()} ${icons.character_error.text()}`);
-            $button.attr('disabled', false);
+            console.error(message);
         }
     });
+
+    // After 2 seconds, revert it back
+    setTimeout(function() {
+        $button.html(`${icons.character_save.icon()} ${icons.character_save.text()}`);
+    }, 2000);
+
 }
 
 // Export functions

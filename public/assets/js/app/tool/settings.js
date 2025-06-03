@@ -9,6 +9,7 @@ let language = 'nl-NL';
 const oTranslations = Object.freeze({
     "nl-NL": {
         "change": "veranderen",
+        "character_save": "Karakter opslaan",
         "character_saving": "Opslaan bezig",
         "character_status": "Karakter status",
         "character_type": "Karakter type",
@@ -16,10 +17,12 @@ const oTranslations = Object.freeze({
         "character_error": "Fout tijdens opslaan",
         "character_save_done": "Karakter opgeslagen",
         "character_name": "Karakternaam",
+        "cancel": "annuleren",
         "coin": "Geldstukken",
         "choose": "kiezen",
         "choose_option": "Maak een keuze",
         "copper": "koper",
+        "confirm": "ok",
         "disclaimer": "disclaimer",
         "downgrade": "verlagen",
         "duplicate_choose": "je personage heeft deze keuze al",
@@ -66,11 +69,14 @@ const oTranslations = Object.freeze({
 });
 const icons = Object.freeze({
     note_add: new Icon({icon_visual: 'fa-regular fa-floppy-disk', icon_text: 'note_add'}),
+    character_save: new Icon({icon_visual: 'fa-solid fa-floppy-disk', icon_class: 'button solid', icon_text: 'character_save'}),
     character_saving: new Icon({icon_visual: 'fa-solid fa-rotate-right', icon_class: 'button solid', icon_text: 'character_saving'}),
     character_submit: new Icon({icon_visual: 'fa-solid fa-rotate-right', icon_class: 'button solid', icon_text: 'character_submit'}),
     character_error: new Icon({icon_visual: 'fa-solid fa-xmark', icon_text: 'character_error'}),
-    character_save_done: new Icon({icon_visual: 'fa-solid fa-xmark', icon_text: 'character_save_done'}),
+    character_save_done: new Icon({icon_visual: 'fa-solid fa-check', icon_text: 'character_save_done'}),
+    cancel: new Icon({icon_visual: 'fa-solid fa-xmark', icon_text: 'cancel'}),
     coin: new Icon({icon_visual: 'fa-solid fa-coins', icon_text: 'coin'}),
+    confirm: new Icon({icon_visual: 'fa-solid fa-check', icon_text: 'confirm'}),
     change: new Icon({icon_visual: 'fa-solid fa-rotate-right', icon_text: 'change'}),
     choose: new Icon({icon_visual: 'fa-regular fa-square-check', icon_class: 'button solid', icon_text: 'choose'}),
     disclaimer: new Icon({icon_visual: 'fa-solid fa-triangle-exclamation', icon_text: 'disclaimer'}),

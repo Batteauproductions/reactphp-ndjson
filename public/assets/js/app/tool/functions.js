@@ -64,22 +64,34 @@ function initiateEditor() {
     });
 }
 
-function showPopup(message, type='inform') {
+function showPopup(message, type='inform', confirm = {}) {
+    debugLog('showPopup', message, type);
     const $modal = $('#popup-modal');
+    //define buttons
+    // -- confirm (ok) button
     const $confirm_btn = $('a[data-action="confirm-action"]');
+    $confirm_btn.html(`${icons.confirm.icon()} ${icons.confirm.text()}`);
+    // -- cancel (x) button
     const $cancel_btn = $('a[data-action="cancel-action"]');
+    $confirm_btn.html(`${icons.confirm.icon()} ${icons.confirm.text()}`);
+    $cancel_btn.hide();
+    //change functions based on type   
     switch(type) {
         case 'confirm':
+            $confirm_btn.on('click',confirm);
+            $cancel_btn.show();
             break;
         case 'inform':
+            $confirm_btn.on('click',function() {
+                $modal.foundation('close');
+            });
             break;
         default:
             console.error(`showPopup, invalid type with value: ${type}, has been called`);
             break;
     }
-    $modal.find('#popup-message').html(message);
+    $modal.find('#popup-message').html(`<p>${message}</p>`);
     $modal.foundation('open');
-    alert(message);
 }
 
 /**

@@ -131,8 +131,7 @@ class CharacterModel extends Model
         $user_id = $arrData['uid'];
         // -- turn into object
         $arrCharJSON = json_decode($arrData['character']);
-        // -- cache elements for easier access
-        
+        // -- cache elements for easier access        
         $meta = $arrCharJSON->meta;
         $build = $arrCharJSON->build; 
         $race = $arrCharJSON->race;
@@ -184,41 +183,40 @@ class CharacterModel extends Model
             $this->db->table(TBL_CHAR_BUILD)
                 ->where('char_id', $char_id)
                 ->update($buildData);
-        }
+        }        
         // Step 3c: Insert data into the hero_race table
-        $chardData = [
-            'char_id'   => $char_id,
-            'main_id'   => $race->id,
-            'modifier'  => $race->modifier,
-            $isNew ? 'created_dt' : 'modified_dt' => $now,
-        ];
-        if ($isNew) {
-            $this->db->table(TBL_CHAR_RACE)->insert($chardData);
-        } else {
-            $this->db->table(TBL_CHAR_RACE)
-                ->where('char_id', $char_id)
-                ->update($chardData);
+        if($race) {
+            $charRace = [
+                'char_id'   => $char_id,
+                'main_id'   => $race->id,
+                'modifier'  => $race->modifier,
+                $isNew ? 'created_dt' : 'modified_dt' => $now,
+            ];
+            if ($isNew) {
+                $this->db->table(TBL_CHAR_RACE)->insert($charRace);
+            } else {
+                $this->db->table(TBL_CHAR_RACE)
+                    ->where('char_id', $char_id)
+                    ->update($chardData);
+            }
         }
         // Step 3d: Insert data into the TBL_CHAR_PROF table
-        $this->insertItems($profession, TBL_CHAR_PROF, $char_id);
+        if($profession) { $this->insertItems($profession, TBL_CHAR_PROF, $char_id, ['rank']); }
         // Step 3e: Insert data into the TBL_CHAR_SKILL table
-        $this->insertItems($Skill, TBL_CHAR_SKILL, $char_id);
+        if($skill) { $this->insertItems($skill, TBL_CHAR_SKILL, $char_id, ['racial','rank','bonus']); }
         // Step 3f: Insert data into the TBL_CHAR_ITEMS table
-        $this->insertItems($item, TBL_CHAR_ITEMS, $char_id);
-        // Show the last executed SQL query
-        echo $this->db->getLastQuery();        
-        exit;
-
-        /*$returnData = [
+        if($item) { $this->insertItems($item, TBL_CHAR_ITEMS, $char_id, ['bonus', 'bonus', 'amount']); }
+        
+        $returnData = [
             'id' => $char_id,
             'done' => true,
         ];
 
-        return $returnData;*/
+        return $returnData;
 
     }
     
-    private function insertItems($items, $table, $char_id) {
+    private function insertItems($items, $table, $char_id, $fields) {
         $arrData = [];
 
         foreach ($items as $item) {
@@ -226,13 +224,11 @@ class CharacterModel extends Model
             $itemData = [
                 'char_id'    => $char_id,
                 'main_id'    => $item->id,
+                'sub_id'     => $item->sub_id ? $item->sub_id : null,
                 'created_dt' => date('Y-m-d H:i:s'),
             ];
 
-            // List of optional fields to conditionally include
-            $optionalFields = ['sub_id', 'racial', 'rank', 'modifier', 'bonus', 'amount'];
-
-            foreach ($optionalFields as $field) {
+            foreach ($fields as $field) {
                 if (property_exists($item, $field)) {
                     $itemData[$field] = $item->$field !== '' ? $item->$field : null;
                 }
@@ -243,7 +239,11 @@ class CharacterModel extends Model
         }
 
         // Batch insert all items at once
-        $this->db->table($table)->insertBatch($arrData);
+        $this->db->table($table)->upsertBatch($arrData);
+        // Show the last executed SQL query
+        //echo $this->db->getLastQuery();        
+        //exit;
+        
     }
 
 }
