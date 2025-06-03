@@ -61,12 +61,15 @@
         <!-- MODAL FOR POPUPS -->
         <div class="reveal small" id="popup-modal" data-reveal>
             
-            <div class="grid-x grid-padding-x grid-padding-y">
-                <div id="popup-message" class="cell">
+            <div class="grid-x grid-padding-x">
+                <div class="cell small-4">
+                    <img id="popup-iamge" src="#" alt=""/>
+                </div> 
+                <div id="popup-message" class="cell small-8">
                     <!-- DYNAMIC -->
                 </div> 
                 <div id="popup-message" class="cell">
-                    <a data-action="confirm-action" class="button"></a>
+                    <a data-action="confirm-action" class="button solid"></a>
                     <a data-action="cancel-action" class="button clear"></a>
                 </div>               
             </div>

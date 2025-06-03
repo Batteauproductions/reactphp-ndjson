@@ -62,7 +62,6 @@ class CharacterAsset {
 
         // Check if the cost can be deducted, if so; deduct and continue
         const spend = this.costSpend();
-        console.log('spend: ',spend)
         if(spend !== true) {
             showMessage('#choice-actions', 'error', spend);
             return;

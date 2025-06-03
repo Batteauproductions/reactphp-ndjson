@@ -197,7 +197,7 @@ class CharacterModel extends Model
             } else {
                 $this->db->table(TBL_CHAR_RACE)
                     ->where('char_id', $char_id)
-                    ->update($chardData);
+                    ->update($charRace);
             }
         }
         // Step 3d: Insert data into the TBL_CHAR_PROF table
@@ -216,34 +216,32 @@ class CharacterModel extends Model
 
     }
     
-    private function insertItems($items, $table, $char_id, $fields) {
+    private function insertItems($items, $table, $char_id, $fields)
+    {
         $arrData = [];
 
         foreach ($items as $item) {
-            // Start building single item data array
             $itemData = [
                 'char_id'    => $char_id,
                 'main_id'    => $item->id,
-                'sub_id'     => $item->sub_id ? $item->sub_id : null,
+                // Ensure sub_id is always present (can be null)
+                'sub_id'     => property_exists($item, 'sub_id') && $item->sub_id !== '' ? $item->sub_id : null,
                 'created_dt' => date('Y-m-d H:i:s'),
             ];
 
+            // Add optional data fields
             foreach ($fields as $field) {
                 if (property_exists($item, $field)) {
                     $itemData[$field] = $item->$field !== '' ? $item->$field : null;
                 }
             }
 
-            // Add this item's data to the batch array
             $arrData[] = $itemData;
         }
 
-        // Batch insert all items at once
+        // Perform upsert using database's unique index for conflict detection
         $this->db->table($table)->upsertBatch($arrData);
-        // Show the last executed SQL query
-        //echo $this->db->getLastQuery();        
-        //exit;
-        
     }
+
 
 }
