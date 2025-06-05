@@ -15,7 +15,7 @@
             <input type="hidden" name="arrXP" value='<?php echo $arrXP ?>'/>
             <input type="hidden" name="character" value='<?php echo isset($oCharacter) ? $oCharacter: '' ?>'/>
             <!-- /Tool information -->
-            <div class="cell small-12 medium-3 large-3">
+            <div class="cell small-12 medium-6 large-3">
                 <div class="grid-x grid-padding-x grid-padding-y">
                     <div class="cell small-12 text-left">
                         <?= $this->include('character/parts/Profile') ?>   
@@ -28,30 +28,30 @@
                     </div>
                 </div>
             </div>
-            <div class="cell small-12 medium-9 large-9">
+            <div class="cell small-12 medium-6 large-9">
                 <div class="grid-x grid-padding-x grid-padding-y">
-                    <div class="cell small-12 medium-6 text-center">
+                    <div class="cell small-12 medium-12 large-6 text-center">
                         <?= $this->include('character/parts/stats/Stats_Primary') ?>
                     </div>
-                    <div class="cell small-12 medium-6 text-center">
+                    <div class="cell small-12 medium-12 large-6 text-center">
                         <?= $this->include('character/parts/stats/Stats_Secundary') ?>
                     </div>
-                    <div class="cell small-12 medium-6 text-center">
+                    <div class="cell small-12 medium-12 large-6 text-center">
                         <?= $this->include('character/parts/Professions') ?>                      
                     </div>
-                    <div class="cell small-12 medium-6 text-center">
+                    <div class="cell small-12 medium-12 large-6 text-center">
                         <?= $this->include('character/parts/skills/Skills_Profession') ?> 
                     </div>
-                    <div class="cell small-12 medium-6 text-center">
+                    <div class="cell small-12 medium-12 large-6 text-center">
                         <?= $this->include('character/parts/skills/Skills_Combat') ?>
                     </div>
-                    <div class="cell small-12 medium-6 text-center">
+                    <div class="cell small-12 medium-12 large-6 text-center">
                         <?= $this->include('character/parts/skills/Skills_Magic') ?>
                     </div>
-                    <div class="cell small-12 medium-6 text-center">
+                    <div class="cell small-12 medium-12 large-6 text-center">
                         <?= $this->include('character/parts/StarterKit') ?>
                     </div>
-                    <div class="cell small-12 medium-6 text-center">
+                    <div class="cell small-12 medium-12 large-6 text-center">
                         <?= $this->include('character/parts/Equipment') ?>
                     </div>
                 </div>

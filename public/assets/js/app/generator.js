@@ -33,6 +33,7 @@ $(document).ready(function() {
         debugLog('Character information received, treating as excisting', json_obj);
         //--setup a character based on json input
         oCharacter = new Character (json_obj);
+        oCharacter.__construct();
     } else {
         debugLog('No character information received, treating as new');    
         //--setup a new clean character object

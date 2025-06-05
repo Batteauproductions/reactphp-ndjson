@@ -3,6 +3,10 @@ import { oCharacter } from '../generator.js';
 import { domain, icons, jsonBaseChar, currentDateTime, jsonStat, oTranslations, language } from './settings.js';
 import { debugLog, showPopup } from './functions.js';
 import { convertCurrency } from './currency.js';
+import { changeStatus } from './status.js';
+import { changeType } from './type.js';
+import { changeName } from './name.js';
+import { pickBasekit } from './asset/equipment.js';
 
 // Page functions
 class Character {
@@ -10,7 +14,9 @@ class Character {
         meta: {       
             id = null,     
             type = 1,
+            type_name = '',
             status = 1,
+            status_name = '',
             name = null,
             avatar = null,
             background = null,        
@@ -32,7 +38,9 @@ class Character {
         this.meta = {
             id: parseInt(id),
             type: parseInt(type),
+            type_name: type_name,
             status: parseInt(status),
+            status_name: status_name,
             avatar: avatar,
             name: name,
             background: background,
@@ -50,29 +58,49 @@ class Character {
         this.stories = stories;
     }
 
-    setBasekit(value) {
+    setBasekit(description,value) {
         debugLog(`setBasekit: ${value}`);
-        this.build.base_kit = parseInt(value);        
+        this.build.base_kit = parseInt(value);  
+        $('div[data-id="base_kit-list"]').html(description);
+        $('a[data-action="pick-basekit"]').html(`<i class="fa-solid fa-rotate-right"></i> aanpassen </span>`).on('click',pickBasekit);         
     }
 
-    setStatus(value) {
+    setName(description) {
+        debugLog(`setName: ${description}`);
+        this.meta.name = description; 
+        $('#charactername').html(`<i class="fa-solid fa-rotate-right"></i>${description}</span>`).on('click',changeName);   
+        $('input[name="char_name"]').val(description);       
+    }
+
+    setRace(description) {
+        debugLog(`setRace: ${description}`);
+        if(this.meta.status !== 1) {
+            const $a = $('a[data-action="pick-race"]');
+            const $div = $('<div>', {
+                id: $a.attr('id'),
+                class: $a.attr('class'),
+                html: description
+            });
+            $a.replaceWith($div);
+        } else {
+            $('#race').html(`<i class="fa-solid fa-rotate-right"></i>${description}</span>`);
+        }
+    }
+
+    setStatus(description,value) {
         debugLog(`setStatus: ${value}`);
         this.meta.status = parseInt(value);
+        $('#characterstatus').html(`<i class="fa-solid fa-rotate-right"></i>${description}</span>`).on('click',changeStatus);
         $('input[name="char_status"]').val(value);
     }
 
-    setType(value) {
+    setType(description,value) {
         debugLog(`setType: ${value}`);
         this.meta.type = parseInt(value);
+        $('#charactertype').html(`<i class="fa-solid fa-rotate-right"></i>${description}</span>`).on('click',changeType);   
         $('input[name="char_type"]').val(value);
     }
     
-    setName(value) {
-        debugLog(`setName: ${value}`);
-        this.meta.name = value; 
-        $('input[name="char_name"]').val(value);       
-    }
-
     save() {
        transferCharacter('save'); 
     }
@@ -132,6 +160,15 @@ class Character {
         });
         debugLog('updateCharacter',oCharacter);
         //transferCharacter('save'); this should be turned on eventually, but currently auto-save should NOT work.
+    }
+
+    __construct() {
+        this.setStatus(this.meta.status_name,this.meta.status);
+        this.setType(this.meta.type_name,this.meta.type);
+        this.setName(this.meta.name);
+        this.setBasekit(this.build.base_kit,'');
+        this.setRace(this.race.name);
+        
     }
 
 }

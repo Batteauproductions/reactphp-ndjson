@@ -9,8 +9,7 @@ function changeStatus() {
 
 function chooseStatus() {
     const $element = $('select[name="character-status"]  option:selected');
-    oCharacter.setStatus($element.val());
-    $('#characterstatus').html(`<i class="fa-solid fa-rotate-right"></i>${$element.data('name')}</span>`).on('click',changeStatus);   
+    oCharacter.setStatus($element.data('name'),$element.val());
     $('#text-modal').foundation('close');
 }
 
@@ -40,6 +39,7 @@ function pickStatus() {
                     value: `${value.id}`, 
                     text: `${value.name} | ${value.description}`,
                     'data-name': `${value.name}`,
+                    selected: value.id == oCharacter.meta.status ? true : undefined
                 }));
                 $options.push($option);
             });

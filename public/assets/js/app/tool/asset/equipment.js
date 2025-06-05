@@ -15,10 +15,8 @@ function changeBasekit() {
 
 function chooseBasekit() {
     const $element = $('select[name="type"] option:selected');
-    oCharacter.setBasekit($element.val());
     const description = $('#choice-description').find('ul');
-    $('div[data-id="base_kit-list"]').html(description);
-    $('a[data-action="pick-basekit"]').html(`<i class="fa-solid fa-rotate-right"></i> aanpassen </span>`).on('click',pickBasekit);   
+    oCharacter.setBasekit(description,$element.val());    
     $modal.foundation('close');
 }
 

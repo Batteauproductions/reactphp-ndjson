@@ -9,8 +9,7 @@ function changeType() {
 
 function chooseType() {
     const $element = $('select[name="character-type"]  option:selected');
-    oCharacter.setType($element.val());
-    $('#charactertype').html(`<i class="fa-solid fa-rotate-right"></i>${$element.data('name')}</span>`).on('click',changeType);   
+    oCharacter.setType($element.data('name'),$element.val());
     $('#text-modal').foundation('close');
 }
 
@@ -40,6 +39,7 @@ function pickType() {
                     value: `${value.id}`, 
                     text: `${value.name} | ${value.description}`,
                     'data-name': `${value.name}`,
+                    selected: value.id == oCharacter.meta.type ? true : undefined
                 }));
                 $options.push($option);
             });

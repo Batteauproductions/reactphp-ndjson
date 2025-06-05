@@ -80,7 +80,8 @@ class Race {
         // Update the stats if a modifier is present
         oCharacter.update();
         // Allow race to be re-chosen
-        $('#race').html(`<i class="fa-solid fa-rotate-right"></i>${this.name}</span>`);
+        oCharacter.setRace(this.name);
+        
         return true;
     }
 

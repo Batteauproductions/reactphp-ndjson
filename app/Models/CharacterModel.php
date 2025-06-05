@@ -28,13 +28,17 @@ class CharacterModel extends Model
         //-----------------------------------
         // This code ensures that if a non-gamemaster tries to access the page,
         // they can't call up a character that isn't theirs.
-        $query = $this->db->table(TBL_CHAR)
-            ->select('id, type_id as type, status_id as status, avatar, name, background, created_dt, modified_dt, firstlocked_dt, lastlocked_dt')
-            ->where('id', $cid);
+        $query = $this->db->table(TBL_CHAR.' c')
+            ->select('c.id, c.type_id as type, c.status_id as status, c.avatar, c.name, c.background, c.created_dt, c.modified_dt, c.firstlocked_dt, c.lastlocked_dt,
+                    ct.name as type_name,
+                    cs.name as status_name')
+            ->join(TBL_CHAR_TYPES . ' ct', 'ct.id = type_id')
+            ->join(TBL_CHAR_STATUS . ' cs', 'cs.id = status_id')
+            ->where('c.id', $cid);
     
         // Check if the user is not a gamemaster, add a where clause to filter by user_id
         if (!$gamemaster) {
-            $query->where('user_id', $uid);
+            $query->where('c.user_id', $uid);
         }
     
         // Execute the query and retrieve the result
@@ -52,7 +56,16 @@ class CharacterModel extends Model
             ->where('cb.char_id', $cid)
             ->get()
             ->getRowObject();
-        
+
+        // Query for character race
+        $oCharacter->race = $this->db->table(TBL_CHAR_RACE . ' r')
+                        ->select('r.main_id, r.modifier, r.created_dt, r.modified_dt,
+                            cr.name', false)
+                        ->join(TBL_RACE . ' cr', 'r.main_id = cr.id')
+                        ->where('r.char_id', $cid)
+                        ->get()
+                        ->getRow();
+
         // Query for character profession(s)
         $oCharacter->profession = $this->db
                         ->table(TBL_CHAR_PROF . ' cp')
@@ -64,8 +77,19 @@ class CharacterModel extends Model
                         ->where('cp.char_id', $cid)
                         ->get()
                         ->getResultObject();
-           /*echo $this->db->getLastQuery();
-            exit;*/
+        
+        // Query for character skill(s)
+        $oCharacter->skill = $this->db
+                        ->table(TBL_CHAR_SKILL . ' cs')
+                        ->select('cs.main_id, cs.sub_id, cs.racial, cs.rank, cs.bonus, cs.created_dt, cs.modified_dt,
+                            s.name as name,
+                            ss.name as sub_name', false)
+                        ->join(TBL_SKILL . ' s', 'cs.main_id = s.id')
+                        ->join(TBL_SKILL_SUB . ' ss', 'cs.sub_id = ss.id','left')
+                        ->where('cs.char_id', $cid)
+                        ->get()
+                        ->getResultObject();
+          
         // Query for character items
         $oCharacter->item = $this->db
             ->table(TBL_CHAR_ITEMS . ' ci')
