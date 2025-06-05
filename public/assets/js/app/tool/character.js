@@ -78,6 +78,7 @@ class Character {
     }
 
     submit() {
+        this.setStatus(2);
         transferCharacter('submit');
     }
 
@@ -188,14 +189,14 @@ function transferCharacter(btn_action) {
         return;
     }
 
-    let message = '';
-
     const $button = $(`a[data-action="character-${btn_action}"]`);
-    $button.html(`${icons.character_saving.icon()} ${icons.character_saving.text()}`);
     const $buttons = $('a[data-action^="character-"]');
-    $buttons.attr('disabled', true);
+    const lang = oTranslations[language];
 
-    //send the character object to the back-end
+    // Disable buttons and show saving icon
+    $button.html(`${icons.character_saving.icon()} ${icons.character_saving.text()}`);
+    $buttons.addClass('disabled').css('pointer-events', 'none');
+
     $.ajax({
         url: `${domain}/action/character-transfer`,
         type: 'POST',
@@ -205,30 +206,41 @@ function transferCharacter(btn_action) {
             character: JSON.stringify(oCharacter)
         },
         success: function(data) {
-            //check if the save is done
-            if(data.done) {
-                $button.html(`${icons.character_save_done.icon()} ${icons.character_save_done.text()}`);
-                message = oTranslations[language]["character_save_done"];
-            } else {
-                $button.html(`${icons.character_error.icon()} ${icons.character_error.text()}`);
-                message = oTranslations[language]["character_error"];
+            const isSuccess = data.done;
+            const icon = isSuccess ? icons.character_save_done : icons.character_error;
+            const popupTitle = isSuccess ? lang["popup_success"] : lang["popup_error"];
+            const popupText = isSuccess ? lang["character_save_done"] : lang["character_error"];
+            const tone = isSuccess ? 'success' : 'error';
+
+            $button.html(`${icon.icon()} ${icon.text()}`);
+            showPopup(`<h2>${popupTitle}</h2><p>${popupText}</p>`, 'inform', tone);
+
+            if (data.id) {
+                oCharacter.meta.id = data.id;
             }
-            oCharacter.meta.id = data.id ? data.id : null;
-            //show a popup with the result and turn buttons back on
-            showPopup(message,'inform');
-            $buttons.attr('disabled', false);
         },
         error: function() {
-            console.error(message);
+            const icon = icons.character_error;
+            const popupTitle = lang["popup_error"];
+            const popupText = lang["character_error"];
+            const tone = 'error';
+
+            $button.html(`${icon.icon()} ${icon.text()}`);
+            showPopup(`<h2>${popupTitle}</h2><p>${popupText}</p>`, 'inform', tone);
+            console.error(popupText);
+        },
+        complete: function() {
+            // Always restore button state after 3 seconds
+            if(oCharacter.meta.status === 1 || oCharacter.meta.status === 3 || oCharacter.meta.status !== 7) {
+                setTimeout(() => {
+                    $button.html(`${icons.character_save.icon()} ${icons.character_save.text()}`);
+                    $buttons.removeClass('disabled').css('pointer-events', '');
+                }, 2000);
+            }
         }
     });
-
-    // After 2 seconds, revert it back
-    setTimeout(function() {
-        $button.html(`${icons.character_save.icon()} ${icons.character_save.text()}`);
-    }, 2000);
-
 }
+
 
 // Export functions
 export {

@@ -22,10 +22,14 @@ class CharacterModel extends Model
 
     public function getCharacterById($cid, $uid, $gamemaster) {
         //-----------------------------------
+        // The following code will start building the character object
+        $oCharacter = new \stdClass();
+
+        //-----------------------------------
         // This code ensures that if a non-gamemaster tries to access the page,
         // they can't call up a character that isn't theirs.
         $query = $this->db->table(TBL_CHAR)
-            ->select('id')
+            ->select('id, type_id as type, status_id as status, avatar, name, background, created_dt, modified_dt, firstlocked_dt, lastlocked_dt')
             ->where('id', $cid);
     
         // Check if the user is not a gamemaster, add a where clause to filter by user_id
@@ -34,17 +38,13 @@ class CharacterModel extends Model
         }
     
         // Execute the query and retrieve the result
-        $result = $query->get()->getRow();
+        $oCharacter->meta = $query->get()->getRow();
     
         // Make sure there is a result, otherwise return with nothing
-        if (empty($result)) {
+        if (empty($oCharacter->meta)) {
             return null;
         }
-    
-        //-----------------------------------
-        // The following code will start building the character object
-        $oCharacter = new \stdClass();
-    
+
         // Query for character build
         $oCharacter->build = $this->db
             ->table(TBL_CHAR_BUILD . ' cb')
@@ -60,19 +60,25 @@ class CharacterModel extends Model
                             p.name, p.modifier, p.rank_1_cost, p.rank_2_cost, p.rank_3_cost, p.allow_multiple,
                             ps.name as sub_name', false)
                         ->join(TBL_PROF . ' p', 'cp.main_id = p.id')
-                        ->join(TBL_PROF_SUB . ' ps', 'cp.sub_id = ps.id')
+                        ->join(TBL_PROF_SUB . ' ps', 'cp.sub_id = ps.id','left')
                         ->where('cp.char_id', $cid)
                         ->get()
                         ->getResultObject();
-                        
+           /*echo $this->db->getLastQuery();
+            exit;*/
         // Query for character items
         $oCharacter->item = $this->db
             ->table(TBL_CHAR_ITEMS . ' ci')
-            ->select('ci.item_id, ci.name, ci.price, ci.amount', false)
+            ->select('ci.main_id, ci.sub_id, ci.bonus, ci.amount,
+                i.name,
+                it.name as sub_name', false)
+            ->join(TBL_ITEM. ' i', 'ci.main_id = i.id')
+            ->join(TBL_ITEM_TYPE . ' it', 'ci.sub_id = it.id')
             ->where('ci.char_id', $cid)
             ->get()
             ->getResultObject();
     
+           
         return json_encode($oCharacter);
     }
 
@@ -97,11 +103,11 @@ class CharacterModel extends Model
             'ct.description AS type_description',
             'CONCAT(u.firstname, " ", u.lastname) AS user_name',
         ]);
-        $builder->join('hero_status cs', 'c.status_id = cs.id');
-        $builder->join('hero_race cr', 'c.id = cr.char_id');
-        $builder->join('hero_professions cp', 'c.id = cp.char_id');
+        $builder->join('hero_status cs', 'c.status_id = cs.id', 'left');
+        $builder->join('hero_race cr', 'c.id = cr.char_id', 'left');
+        $builder->join('hero_professions cp', 'c.id = cp.char_id', 'left');
         $builder->join('hero_type ct', 'ct.id = c.type_id', 'left');
-        $builder->join('user u', 'c.user_id = u.id');
+        $builder->join('user u', 'c.user_id = u.id', 'left');
 
         // Group By clause
         $builder->groupBy(['c.id', 'cr.main_id', 'cs.id', 'ct.id', 'u.id']);
@@ -111,7 +117,7 @@ class CharacterModel extends Model
 
         // If $uid is provided, add a where clause to filter by user_id
         if ($uid !== null) {
-            $query->where('c.user_id', $uid);
+            $builder->where('c.user_id', $uid);
         }
 
         // Execute the query and get the result
@@ -226,7 +232,6 @@ class CharacterModel extends Model
                 'main_id'    => $item->id,
                 // Ensure sub_id is always present (can be null)
                 'sub_id'     => property_exists($item, 'sub_id') && $item->sub_id !== '' ? $item->sub_id : null,
-                'created_dt' => date('Y-m-d H:i:s'),
             ];
 
             // Add optional data fields

@@ -133,7 +133,7 @@ function updateModelContent(oDetails) {
     if (oDetails) {
         // Destructure the parameter with default values
         const {
-            id_name = '',
+            name = '',
             description = '',
             advanced_description = ''
         } = oDetails;
@@ -142,8 +142,8 @@ function updateModelContent(oDetails) {
         const contentElements = [];
 
         // Create and push content elements only if they have content
-        if (id_name) {
-            contentElements.push($('<h1>', { text: id_name }));
+        if (name) {
+            contentElements.push($('<h1>', { text: name }));
         }
         if (description) {
             contentElements.push($('<article>', { html: description }));

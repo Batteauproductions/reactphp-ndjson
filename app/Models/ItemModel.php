@@ -52,7 +52,7 @@ class ItemModel extends Model
     {
 		$query =  $this
                 ->db
-                ->table(TBL_ITEMS.' i')
+                ->table(TBL_ITEM.' i')
                 ->select('i.id, i.type_id, it.name as type_name, i.level, i.name, i.description, i.gatherable, i.price')
                 ->join(TBL_ITEM_TYPE.' it','it.id = i.type_id','left')
                 ->where('i.available', 1)
@@ -76,7 +76,7 @@ class ItemModel extends Model
     {		
         $query = $this
                     ->db
-                    ->table(TBL_ITEMS)
+                    ->table(TBL_ITEM)
                     ->select('id, type_id, level, name, description, gatherable, price_low, price, price_high')
                     ->where('id',$id)
                     ->where('available', 1)

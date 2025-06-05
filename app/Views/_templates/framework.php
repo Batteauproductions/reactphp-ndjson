@@ -51,6 +51,13 @@
 
         <script type="text/javascript" src="<?php echo js_path('app/site.js'); ?>"></script>
 
+        <script>
+            window.AppConfig = window.AppConfig || {};
+            window.AppConfig.userRights = {
+                isGameMaster: <?php echo isset($viewAsGamemaster) ? json_encode($viewAsGamemaster) : 'false'; ?>,
+            };
+        </script>
+
         <?php if(isset($arrJS)): ?>
             <?php foreach($arrJS as $iKey => $sValue) :?>
                 <script type="module" src="<?php echo js_path($sValue)?>"></script>
@@ -61,17 +68,20 @@
         <!-- MODAL FOR POPUPS -->
         <div class="reveal small" id="popup-modal" data-reveal>
             
-            <div class="grid-x grid-padding-x">
+            <div class="grid-x grid-padding-y">
                 <div class="cell small-4">
-                    <img id="popup-iamge" src="#" alt=""/>
+                    <img id="popup-image" src="#" alt=""/>
                 </div> 
-                <div id="popup-message" class="cell small-8">
-                    <!-- DYNAMIC -->
+                <div class="cell small-8">                    
+                    <div id="popup-message">
+                        <!-- DYNAMIC -->
+                    </div>
+                    <div>
+                        <a data-action="confirm-action" class="button solid"></a>
+                        <a data-action="cancel-action" class="button clear"></a>
+                    </div> 
                 </div> 
-                <div id="popup-message" class="cell">
-                    <a data-action="confirm-action" class="button solid"></a>
-                    <a data-action="cancel-action" class="button clear"></a>
-                </div>               
+                              
             </div>
 
             <button class="close-button" data-close aria-label="Close modal" type="button">
@@ -81,4 +91,5 @@
         </div>
 
     </body>
+
 </html>

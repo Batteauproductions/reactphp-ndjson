@@ -22,6 +22,8 @@ $routes->get('manual/(:any)', 'Page::viewManual/$1');
 //--user
 $routes->get('user/profile', 'Page::viewProfile');
 $routes->get('user/(:any)', 'Page::viewGeneric/$1');
+$routes->get('user/(:any)/(:any)', 'Page::viewGameMaster/$1/$2');
+$routes->get('user/(:any)/(:any)/(:any)', 'Page::viewGameMaster/$1/$2/$3');
 //--account
 $routes->get('account/activate/(:any)/(:any)', 'Account::activateUser/$1/$2');
 $routes->get('account/password_reset/(:any)/(:any)', 'Account::passwordReset/$1/$2');

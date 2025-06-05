@@ -56,21 +56,67 @@ $(document).ready(function() {
     $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
     
     //This will bind the page function to their respective static elements
-    $('a[data-action="create-note"]').on('click', createNote);
-    $('a[data-action="pick-name"]').on('click', pickName);
-    $('a[data-action="pick-type"]').on('click', pickType);
-    $('a[data-action="pick-status"]').on('click', pickStatus);
-    $('a[data-action="pick-race"]').on('click', pickRace);
-    $('a[data-action="pick-profession"]').on('click', pickProfession);
-    $('a[data-action="pick-skill-profession"]').on('click', pickSkillProfession);
-    $('a[data-action="pick-skill-combat"]').on('click', pickSkillCombat);
-    $('a[data-action="pick-skill-magic"]').on('click', pickSkillMagic);
-    $('a[data-action="pick-basekit"]').on('click', pickBasekit);
-    $('a[data-action="pick-item"]').on('click', pickItem);
-    $('a[data-action="edit-background"]').on('click', editBackground);
-    $('a[data-action="character-save"]').on('click', oCharacter.save);
-    $('a[data-action="character-submit"]').on('click', oCharacter.submit);
-    $('a[data-action="character-print"]').on('click', oCharacter.print);
+    $('a[data-action="create-note"]').on('click', (e) => {
+        e.preventDefault();
+        createNote();
+    });
+    $('a[data-action="pick-name"]').on('click', (e) => {
+        e.preventDefault();
+        pickName();
+    });
+    $('a[data-action="pick-type"]').on('click', (e) => {
+        e.preventDefault();
+        pickType();
+    });
+    $('a[data-action="pick-status"]').on('click', (e) => {
+        e.preventDefault();
+        pickStatus();
+    });
+    $('a[data-action="pick-race"]').on('click', (e) => {
+        e.preventDefault();
+        pickRace();
+    });
+    $('a[data-action="pick-profession"]').on('click', (e) => {
+        e.preventDefault();
+        pickProfession();
+    });
+    $('a[data-action="pick-skill-profession"]').on('click', (e) => {
+        e.preventDefault();
+        pickSkillProfession();
+    });
+    $('a[data-action="pick-skill-combat"]').on('click', (e) => {
+        e.preventDefault();
+        pickSkillCombat();
+    });
+    $('a[data-action="pick-skill-magic"]').on('click', (e) => {
+        e.preventDefault();
+        pickSkillMagic();
+    });
+    $('a[data-action="pick-basekit"]').on('click', (e) => {
+        e.preventDefault();
+        pickBasekit();
+    });
+    $('a[data-action="pick-item"]').on('click', (e) => {
+        e.preventDefault();
+        pickItem();
+    });
+    $('a[data-action="edit-background"]').on('click', (e) => {
+        e.preventDefault();
+        editBackground();
+    });
+
+    $('a[data-action="character-save"]').on('click', (e) => {
+        e.preventDefault(); 
+        oCharacter.save();
+    });
+    $('a[data-action="character-submit"]').on('click', (e) => {
+        e.preventDefault(); 
+        oCharacter.submit();
+    });
+    $('a[data-action="character-print"]').on('click', (e) => {
+        e.preventDefault(); 
+        oCharacter.print();
+    });
 
 });
 

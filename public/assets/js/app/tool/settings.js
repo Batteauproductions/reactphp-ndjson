@@ -48,6 +48,8 @@ const oTranslations = Object.freeze({
         "not_enough_coin": "Je hebt niet genoeg geld om dit aan te schaffen.",
         "not_enough_vp": "Je hebt niet genoeg vaardigheidspunten.",
         "new": "Nieuw",
+        "popup_success": "Gelukt!",
+        "popup_error": "Oops!",
         "question_1": "Wat heb je dit evenement ondernomen?",
         "question_2": "Wat heeft dit met je personage gedaan?",
         "question_3": "Heb je relaties/contacten opgebouwd met npc’s?",

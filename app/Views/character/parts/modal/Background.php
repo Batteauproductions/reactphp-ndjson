@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="cell small-12">
-            <button class="button solid" data-close><i class="fa-regular fa-floppy-disk"></i> Opslaan</button>
+            <a class="button solid" data-close><i class="fa-regular fa-floppy-disk"></i> Opslaan</a>
         </div>
     </form>
     

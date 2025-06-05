@@ -136,7 +136,7 @@ define('TBL_PROF_RANK','profession_ranks');
 define('TBL_SKILL','skill');
 define('TBL_SKILL_TYPE','skill_types');
 define('TBL_SKILL_SUB','skill_subtype');
-define('TBL_ITEMS','item');
+define('TBL_ITEM','item');
 define('TBL_ITEM_TYPE','item_type');
 define('TBL_STATMOD','stat_modifier');
 define('TBL_USER', 'user');

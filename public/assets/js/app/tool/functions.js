@@ -1,6 +1,6 @@
 // Generic settings and functions
 import { oCharacter } from '../generator.js';
-import { debug, icons } from './settings.js';
+import { debug, icons, domain } from './settings.js';
 
 // Page functions
 
@@ -64,9 +64,10 @@ function initiateEditor() {
     });
 }
 
-function showPopup(message, type='inform', confirm = {}) {
+function showPopup(message, type='inform', tone='', confirm = {}) {
     debugLog('showPopup', message, type);
     const $modal = $('#popup-modal');
+    const image = `system_${tone}`;
     //define buttons
     // -- confirm (ok) button
     const $confirm_btn = $('a[data-action="confirm-action"]');
@@ -90,7 +91,8 @@ function showPopup(message, type='inform', confirm = {}) {
             console.error(`showPopup, invalid type with value: ${type}, has been called`);
             break;
     }
-    $modal.find('#popup-message').html(`<p>${message}</p>`);
+    $modal.find('#popup-image').attr('src',`${domain}/assets/images/elements/${image}.png`);
+    $modal.find('#popup-message').html(`${message}`);
     $modal.foundation('open');
 }
 

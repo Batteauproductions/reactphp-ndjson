@@ -21,10 +21,10 @@
                     <h1><?= esc(substr($character->name, 0, 30)) ?></h1>
                     <p><?= esc($character->status_name) ?></p>
                     <ul>
-                        <li><a href="<?= base_url('gamemaster/character/edit/'.$character->id); ?>"><i class="fa-solid fa-pen-to-square"></i> aanpassen</a></li>
-                        <li><a href="<?= base_url('gamemaster/character/print/'.$character->id); ?>"><i class="fa-solid fa-print"></i> printen</a></li>
-                        <li><a href="<?= base_url('gamemaster/character/view/'.$character->id); ?>"><i class="fa-solid fa-eye"></i> bekijken</a></li>
-                        <li><a href="<?= base_url('gamemaster/character/delete/'.$character->id); ?>"><i class="fa-solid fa-trash"></i> verwijderen</a></li>
+                        <li><a href="<?= base_url($target.'/character/edit/'.$character->id); ?>"><i class="fa-solid fa-pen-to-square"></i> aanpassen</a></li>
+                        <li><a href="<?= base_url($target.'/character/print/'.$character->id); ?>" target="_blank"><i class="fa-solid fa-print"></i> printen</a></li>
+                        <li><a href="<?= base_url($target.'/character/view/'.$character->id); ?>"><i class="fa-solid fa-eye"></i> bekijken</a></li>
+                        <li><a href="<?= base_url($target.'/character/delete/'.$character->id); ?>"><i class="fa-solid fa-trash"></i> verwijderen</a></li>
                     </ul>
                 </div>
             </div>
