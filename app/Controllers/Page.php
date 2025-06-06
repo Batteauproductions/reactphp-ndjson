@@ -174,6 +174,13 @@ class Page extends BaseController
                 break;
             case 'character':
                 switch($child_page) {
+                    case 'view':
+                    case 'edit':
+                        $this->characterData['oCharacter'] =  $this->models['character']->getCharacterByID($id,$this->session->get('uid'),$this->arrRights['isGameMaster']);
+                        $this->characterData['arrNotes'] = $this->models['notes']->getNotes($id);
+                        $content = view('character/character_sheet',$this->characterData);
+                        $arrJS = ['app/generator.js','validation/character_validation.js'];
+                        break;
                     case 'database':
                         $arrJS = ['app/grid_sorting.js'];
                         //---

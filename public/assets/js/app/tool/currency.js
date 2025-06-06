@@ -51,7 +51,12 @@ function updateCurrencyDisplay() {
  * @returns {string} The formatted currency string.
  */
 function convertCurrency(iAmount) {
-    const iCurrency = parseInt(iAmount, 10);
+    // Handle null, undefined, or invalid input
+    let iCurrency = Number(iAmount);
+    if (isNaN(iCurrency) || iCurrency === null) {
+        iCurrency = 0;
+    }
+
     const iGold = Math.floor(iCurrency / 100);
     const iSilver = Math.floor((iCurrency % 100) / 10);
     const iCopper = iCurrency % 10;

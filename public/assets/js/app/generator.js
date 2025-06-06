@@ -27,13 +27,21 @@ $(document).ready(function() {
     -- if new, the standard calls will be made
     -- if existing, data should be shown on the sheet
     */
-    const json_string = $('input[name="character"]').val();
-    if (json_string !== null && json_string !== undefined && json_string !== '') { 
-        const json_obj = JSON.parse(json_string);
-        debugLog('Character information received, treating as excisting', json_obj);
+    
+    if (window.character !== null && window.character !== undefined && window.character !== '') { 
+        debugLog('Character information received, treating as excisting', character);        
         //--setup a character based on json input
-        oCharacter = new Character (json_obj);
+        oCharacter = new Character (character);
         oCharacter.__construct();
+        //check what adventures can be edited
+        const created_dt = oCharacter.meta.created_dt ? new Date(oCharacter.meta.created_dt) : null; 
+        $('a[data-action="edit-adventure"]').each(function() {
+            var dateStr = $(this).data('date'); // gets the value of data-date
+            var elDate = new Date(dateStr);
+            if (elDate < created_dt) {
+                $(this).addClass('disabled');
+            }
+        });
     } else {
         debugLog('No character information received, treating as new');    
         //--setup a new clean character object
@@ -57,9 +65,9 @@ $(document).ready(function() {
     $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
     
     //This will bind the page function to their respective static elements
-    $('a[data-action="create-note"]').on('click', (e) => {
+    $('a[data-action="create-note"]').on('click', function(e) {
         e.preventDefault();
-        createNote();
+        createNote($(this).data('type')); 
     });
     $('a[data-action="pick-name"]').on('click', (e) => {
         e.preventDefault();
@@ -105,7 +113,6 @@ $(document).ready(function() {
         e.preventDefault();
         editBackground();
     });
-
     $('a[data-action="character-save"]').on('click', (e) => {
         e.preventDefault(); 
         oCharacter.save();
@@ -117,6 +124,10 @@ $(document).ready(function() {
     $('a[data-action="character-print"]').on('click', (e) => {
         e.preventDefault(); 
         oCharacter.print();
+    });
+    $('a[data-action="edit-adventure"]').on('click', (e) => {
+        e.preventDefault();
+        editAdventure();
     });
 
 });

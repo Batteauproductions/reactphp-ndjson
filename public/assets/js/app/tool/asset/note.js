@@ -90,8 +90,7 @@ function buildNoteElements(type, text, onSave) {
 /**
  * Creates a new note based on the clicked element's data-type.
  */
-function createNote() {
-    const type = $(this).data('type');
+function createNote(type) {
     const contentElements = buildNoteElements(type, '', (text) => {
         const note = new character_note(type, text);
         note.add();

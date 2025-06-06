@@ -48,6 +48,11 @@ class CharacterAsset {
         this.locked_dt = locked_dt ? locked_dt : null;
     }
 
+    __construct() {
+        oCharacter[this.attribute].push(this); //-- functionally   
+        this.addVisualRow(); //-- visionally 
+    }
+
     add () {
 
         // Check for duplicates, but only when not allowed
@@ -128,7 +133,7 @@ class CharacterAsset {
         // Update the currency / experience accordingly
         let cost;        
         if(direction===1) {
-            cost = this.getRankCost(new_rank);
+            cost = this.getNewRankCost(new_rank);
             const spend = this.costSpend(cost);
             if(!spend) {
                 showMessage('#choice-actions', 'error', spend);
@@ -136,7 +141,7 @@ class CharacterAsset {
             }
             this.rank_cost += cost;           
         } else {
-            cost = this.getRankCost(this.rank);
+            cost = this.getNewRankCost(this.rank);
             this.costRefund(cost);
             this.rank_cost -= cost;
         }
@@ -264,8 +269,12 @@ class CharacterAsset {
         return $row;
     }
 
-    getRankCost() {
+    getNewRankCost() {
         return this.cost;
+    }
+
+    getCurrentRankCost() {
+        return parseInt(this.cost * this.rank);
     }
 }
 

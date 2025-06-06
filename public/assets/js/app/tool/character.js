@@ -2,11 +2,15 @@
 import { oCharacter } from '../generator.js';
 import { domain, icons, jsonBaseChar, currentDateTime, jsonStat, oTranslations, language } from './settings.js';
 import { debugLog, showPopup } from './functions.js';
+import { updateMaxXP } from './experience.js';
 import { convertCurrency } from './currency.js';
 import { changeStatus } from './status.js';
 import { changeType } from './type.js';
 import { changeName } from './name.js';
 import { pickBasekit } from './asset/equipment.js';
+import { Profession } from './asset/professions.js';
+import { Skill } from './asset/skills.js';
+import { Item } from './asset/item.js';
 
 // Page functions
 class Character {
@@ -147,10 +151,18 @@ class Character {
 
         // Calculate and update oCharacter.build properties
         for (const [key, { base, factor, stat, additionalFactor, additionalStat }] of Object.entries(statMappings)) {
-            oCharacter.build[key] = base + (calculateIncrease(factor) * stat);
+            let total = base + (calculateIncrease(factor) * stat);
+
             if (additionalFactor && additionalStat) {
-                oCharacter.build[key] += calculateIncrease(additionalFactor) * additionalStat;
+                total += calculateIncrease(additionalFactor) * additionalStat;
             }
+
+            // Inject dynamic max_xp boost
+            if (key === 'max_xp') {
+                total += updateMaxXP();
+            }
+
+            oCharacter.build[key] = total;
         }
 
         // Update the text on the sheet per modifier
@@ -163,12 +175,121 @@ class Character {
     }
 
     __construct() {
+        const lang = oTranslations[language];
+        //--Set default information
         this.setStatus(this.meta.status_name,this.meta.status);
         this.setType(this.meta.type_name,this.meta.type);
-        this.setName(this.meta.name);
-        this.setBasekit(this.build.base_kit,'');
-        this.setRace(this.race.name);
+        this.setName(this.meta.name);        
+        //--Set the race by name
+        if(this.race) {
+            this.setRace(this.race.name);
+        }
+        //create new profession objects
+        const tmp_prof = this.profession;
+        this.profession = [];
+        tmp_prof.forEach(obj => {     
+            //--Add the current asset to the object
+            const tmp_obj =
+            {
+                details: {
+                    allow_multiple: obj.allow_multiple,
+                    cost: obj.rank_1_cost,
+                    id: obj.main_id,
+                    name: obj.name,
+                    max_rank: 3,
+                },
+                current: {
+                    attribute: "profession",
+                    container: "profession",
+                    rank: obj.rank,
+                    rank_1_cost: obj.rank_1_cost,
+                    rank_2_cost: obj.rank_2_cost,
+                    rank_3_cost: obj.rank_3_cost,
+                    sub_id: obj.sub_id,
+                    sub_name: obj.sub_name,
+                },
+                modifier: [
+                    {
+                        id: obj.modifier,
+                    }
+                ]
+            }
+            const profClass = new Profession(tmp_obj);
+            profClass.rank_cost = profClass.getCurrentRankCost();
+            profClass.__construct();
+        });
+        //create new skill objects
+        const tmp_skill = this.skill;
+        this.skill = [];
+        tmp_skill.forEach(obj => {     
+            //--Add the current asset to the object
+            const tmp_obj =
+            {
+                details: {
+                    allow_multiple: obj.allow_multiple,
+                    cost: obj.cost,
+                    id: obj.main_id,
+                    name: obj.name,
+                    max_rank: obj.name,
+                },
+                current: {
+                    attribute: "skill",
+                    container: 
+                        [1, 2, 12].includes(parseInt(obj.skill_type)) ? 'skill_base' :
+                        [6, 8].includes(parseInt(obj.skill_type)) ? 'skill_combat' :
+                        [3, 4, 5, 10, 11].includes(parseInt(obj.skill_type)) ? 'skill_magic' :
+                        'skill_base',
+                    rank: obj.rank,
+                    sub_id: obj.sub_id,
+                    sub_name: obj.sub_name,
+                    racial: obj.racial,
+                    bonus: obj.bonus,
+                    created_dt: obj.created_dt,
+                    modified_dt: obj.modified_dt,
+                },
+                modifier: [
+                    {
+                        id: obj.modifier,
+                    }
+                ]
+            }
+            const skillClass = new Skill(tmp_obj);
+            skillClass.rank_cost = skillClass.getCurrentRankCost();
+            skillClass.__construct();
+        });
+
+        //create new item objects
+        const tmp_item = this.item;
+        this.item = [];
+        tmp_item.forEach(obj => {     
+            //--Add the current asset to the object
+            const tmp_obj =
+            {
+                details: {
+                    cost: obj.cost,
+                    id: obj.main_id,
+                    name: obj.name,
+                },
+                current: {
+                    attribute: "item",
+                    container: "item",
+                    sub_id: obj.sub_id,
+                    sub_name: obj.sub_name,
+                    created_dt: obj.created_dt,
+                    modified_dt: obj.modified_dt,
+                },
+                modifier: [
+                    {
+                        id: obj.modifier,
+                    }
+                ]
+            }
+            const itemClass = new Item(tmp_obj);
+            itemClass.__construct();
+        });
+        //const tmp_item = this.item;
         
+        this.update();
     }
 
 }
@@ -246,7 +367,7 @@ function transferCharacter(btn_action) {
             const isSuccess = data.done;
             const icon = isSuccess ? icons.character_save_done : icons.character_error;
             const popupTitle = isSuccess ? lang["popup_success"] : lang["popup_error"];
-            const popupText = isSuccess ? lang["character_save_done"] : lang["character_error"];
+            const popupText = isSuccess ? lang["character_save_done"] : lang["character_error_save"];
             const tone = isSuccess ? 'success' : 'error';
 
             $button.html(`${icon.icon()} ${icon.text()}`);
@@ -259,7 +380,7 @@ function transferCharacter(btn_action) {
         error: function() {
             const icon = icons.character_error;
             const popupTitle = lang["popup_error"];
-            const popupText = lang["character_error"];
+            const popupText = lang["character_error_save"];
             const tone = 'error';
 
             $button.html(`${icon.icon()} ${icon.text()}`);

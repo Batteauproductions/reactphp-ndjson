@@ -29,8 +29,17 @@ class Profession extends CharacterAsset {
         return true;      
     }
 
-    getRankCost(new_rank = null) {
+    getNewRankCost(new_rank = null) {
         return this[`rank_${new_rank}_cost`];
+    }
+
+    getCurrentRankCost() {
+        let total = 0;
+        for (let i = 1; i <= this.rank; i++) {
+            const cost = this[`rank_${i}_cost`] ?? 0;
+            total += cost;
+        }
+        return total;
     }
 
 }

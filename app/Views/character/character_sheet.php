@@ -8,12 +8,10 @@
 <div class="grid-container">
     <div class="page-wrapper transparent">
         <form id="form-character" class="grid-x grid-padding-x grid-padding-y form-character" method="POST">
-
             <!-- Tool information -->
             <input type="hidden" name="jsonBaseChar" value='<?php echo json_encode($jsonBaseChar) ?>'/>
             <input type="hidden" name="jsonStat" value='<?php echo json_encode($jsonStat) ?>'/>
             <input type="hidden" name="arrXP" value='<?php echo $arrXP ?>'/>
-            <input type="hidden" name="character" value='<?php echo isset($oCharacter) ? $oCharacter: '' ?>'/>
             <!-- /Tool information -->
             <div class="cell small-12 medium-6 large-3">
                 <div class="grid-x grid-padding-x grid-padding-y">
@@ -70,3 +68,7 @@
         </form>
     </div>
 </div>
+
+<script>
+    window.character = <?php echo isset($oCharacter) ? $oCharacter : 'null' ?>;
+</script>

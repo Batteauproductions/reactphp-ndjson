@@ -40,7 +40,6 @@ class CharacterModel extends Model
         if (!$gamemaster) {
             $query->where('c.user_id', $uid);
         }
-    
         // Execute the query and retrieve the result
         $oCharacter->meta = $query->get()->getRow();
     
@@ -82,7 +81,7 @@ class CharacterModel extends Model
         $oCharacter->skill = $this->db
                         ->table(TBL_CHAR_SKILL . ' cs')
                         ->select('cs.main_id, cs.sub_id, cs.racial, cs.rank, cs.bonus, cs.created_dt, cs.modified_dt,
-                            s.name as name,
+                            s.name as name, s.skill_type, s.xp_cost as cost,
                             ss.name as sub_name', false)
                         ->join(TBL_SKILL . ' s', 'cs.main_id = s.id')
                         ->join(TBL_SKILL_SUB . ' ss', 'cs.sub_id = ss.id','left')
@@ -101,8 +100,15 @@ class CharacterModel extends Model
             ->where('ci.char_id', $cid)
             ->get()
             ->getResultObject();
-    
-           
+
+        // Query for character items
+        $oCharacter->stories = $this->db
+            ->table(TBL_CHAR_STORIES . ' cs')
+            ->select('cs.event_id, cs.question_1, cs.question_2, cs.question_3, cs.question_4, cs.question_5, cs.question_6, cs.created_dt, cs.modified_dt', false)
+            ->where('cs.char_id', $cid)
+            ->get()
+            ->getResultObject();
+
         return json_encode($oCharacter);
     }
 

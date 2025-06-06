@@ -1,5 +1,6 @@
 // Generic settings and functions
 import { oCharacter } from '../generator.js';
+import { arrXP } from './settings.js';
 
 // Functions needed for actual app performance
 /**
@@ -20,7 +21,6 @@ function updateExperience(cost, action) {
     if (action === 'spend') {
         if (currentXP + cost > maxXP) {
             console.error('Attempt to spend XP over the maximum allowed.');
-            oCharacter.build.spend_xp = maxXP;
             updateSpendXpDisplay();
             return false;
         } else {
@@ -29,7 +29,6 @@ function updateExperience(cost, action) {
     } else if (action === 'refund') {
         if (currentXP - cost < 0) {
             console.error('Attempt to refund XP below zero.');
-            oCharacter.build.spend_xp = 0;
             updateSpendXpDisplay();
             return false;
         } else {
@@ -44,11 +43,27 @@ function updateExperience(cost, action) {
     return true;
 }
 
+function updateMaxXP() {
+    let total = 0;
+    if(oCharacter.meta.type == 2 || oCharacter.meta.type == 3) {
+        total = 100;
+    } else {
+        const stories = oCharacter.stories ? oCharacter.stories.length : 0;
+        for (let i = 1; i <= stories; i++) {
+            const xp_bonus = arrXP[i] ?? 0;
+            total += parseInt(xp_bonus);
+        }
+    }
+    
+    return total;
+}
+
 function updateSpendXpDisplay() {
     $('#stat-spend_xp').text(oCharacter.build.spend_xp);
 }
 
 // Export functions
 export {
+    updateMaxXP,
     updateExperience,
 }
