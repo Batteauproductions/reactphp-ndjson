@@ -237,7 +237,8 @@ class Character {
                     container: 
                         [1, 2, 12].includes(parseInt(obj.skill_type)) ? 'skill_base' :
                         [6, 8].includes(parseInt(obj.skill_type)) ? 'skill_combat' :
-                        [3, 4, 5, 10, 11].includes(parseInt(obj.skill_type)) ? 'skill_magic' :
+                        [4, 5, 11].includes(parseInt(obj.skill_type)) ? 'skill_magic' :
+                        [3, 10].includes(parseInt(obj.skill_type)) ? 'skill_divine' :
                         'skill_base',
                     rank: obj.rank,
                     sub_id: obj.sub_id,

@@ -1,5 +1,5 @@
 $(document).ready(function() {
-
+    
     $(document).foundation();
 
     // Check if the class has already been added during this session

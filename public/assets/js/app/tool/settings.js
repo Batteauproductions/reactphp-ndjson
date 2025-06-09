@@ -18,6 +18,7 @@ const oTranslations = Object.freeze({
         "character_error_save": "Fout tijdens opslaan",
         "character_save_done": "Karakter opgeslagen",
         "character_name": "Karakternaam",
+        "character_delete": "Weet je zeker dat je dit personage wilt verwijderen?",
         "cancel": "annuleren",
         "coin": "Geldstukken",
         "choose": "kiezen",

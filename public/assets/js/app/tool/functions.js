@@ -70,7 +70,7 @@ function showPopup(message, type='inform', tone='', confirm = {}) {
     const image = `system_${tone}`;
     //define buttons
     // -- confirm (ok) button
-    const $confirm_btn = $('a[data-action="confirm-action"]');
+    const $confirm_btn = $('a[data-action="confirm-action"]');    
     $confirm_btn.html(`${icons.confirm.icon()} ${icons.confirm.text()}`);
     // -- cancel (x) button
     const $cancel_btn = $('a[data-action="cancel-action"]');
@@ -79,7 +79,7 @@ function showPopup(message, type='inform', tone='', confirm = {}) {
     //change functions based on type   
     switch(type) {
         case 'confirm':
-            $confirm_btn.on('click',confirm);
+            $confirm_btn.off('click').on('click', confirm);
             $cancel_btn.show();
             break;
         case 'inform':

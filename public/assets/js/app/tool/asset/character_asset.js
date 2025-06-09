@@ -1,7 +1,7 @@
 //Generic settings and functions
 import { oCharacter } from '../../generator.js';
 import { icons, iconset, language, oTranslations, currentDateTime } from '../settings.js'
-import { debugLog, generateIconSet, showMessage, showPopup } from '../functions.js'
+import { debugLog, generateIconSet, showMessage } from '../functions.js'
 import { findItemIndex } from '../character.js';
 
 // Define the class

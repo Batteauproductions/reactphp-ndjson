@@ -1,7 +1,7 @@
 //Generic settings and functions
 import { Character } from './tool/character.js'
-import { currentDateTime } from './tool/settings.js'
-import { debugLog, initiateEditor } from './tool/functions.js'
+import { currentDateTime, oTranslations, language } from './tool/settings.js'
+import { debugLog, showPopup, initiateEditor } from './tool/functions.js'
 import { pickName } from './tool/name.js'
 import { pickType } from './tool/type.js'
 import { pickStatus } from './tool/status.js'
