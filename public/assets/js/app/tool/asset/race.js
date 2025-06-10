@@ -1,5 +1,4 @@
 // Generic settings and functions
-import { oCharacter } from '../../generator.js';
 import { domain, oTranslations, language } from '../settings.js';
 import { debugLog } from '../functions.js';
 import { openSelectionModal, updateModalDropdown } from '../modal/selection_modal.js';
@@ -76,11 +75,11 @@ class Race {
         // Assign race to character
         const stat = $('[name="stat-modifier"]:checked').val();
         this.modifier = stat ? stat : this.modifier;
-        oCharacter.race = this;       
+        window.character.race = this;       
         // Update the stats if a modifier is present
-        oCharacter.update();
+        window.character.update();
         // Allow race to be re-chosen
-        oCharacter.setRace(this.name);
+        window.character.setRace(this.name);
         
         return true;
     }
@@ -88,14 +87,14 @@ class Race {
     //removes the race from the character
     remove () {
         //remove old racial skills
-        for (let i = oCharacter.skill.length - 1; i >= 0; i--) {
-            const skill = oCharacter.skill[i];
+        for (let i = window.character.skill.length - 1; i >= 0; i--) {
+            const skill = window.character.skill[i];
             if (skill.racial === true) {
                 skill.remove();
             }
         }
 
-        oCharacter.race = null;
+        window.character.race = null;
         return true;
     }
 }
@@ -149,8 +148,8 @@ function chooseRace(sAction, obj) {
     }
 
     //check if there already is a race
-    if (oCharacter.race && oCharacter.race.id) {
-        oCharacter.race.remove();
+    if (window.character.race && window.character.race.id) {
+        window.character.race.remove();
     }
 
     //--Add the current asset to the object

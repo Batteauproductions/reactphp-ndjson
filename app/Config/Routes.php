@@ -9,6 +9,7 @@ use CodeIgniter\Router\RouteCollection;
 //-----Page View Related Routes------//
 //--character
 $routes->get('user/character/(:any)', 'Page::viewCharacters/$1');
+$routes->get('character/delete/(:num)', 'Character::deleteCharacters/$1');
 //--gamemaster
 $routes->get('gamemaster/(:any)', 'Page::viewGameMaster/$1');
 $routes->get('gamemaster/(:any)/(:any)', 'Page::viewGameMaster/$1/$2');

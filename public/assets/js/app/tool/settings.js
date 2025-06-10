@@ -46,6 +46,7 @@ const oTranslations = Object.freeze({
         "increase_base_str": "Verhoogt de kracht",
         "loresheet": "Je krijgt hievoor een loresheet.",
         "more_info": "meer informatie",
+        "no_skills_available": "Op dit moment heb je geen beroep om vaardigheden van dit type te ondersteunen.",
         "not_choice_made": "Je dient nog een keuze te maken.",
         "not_enough_coin": "Je hebt niet genoeg geld om dit aan te schaffen.",
         "not_enough_vp": "Je hebt niet genoeg vaardigheidspunten.",
@@ -133,21 +134,12 @@ const iconset = Object.freeze({
     ],
 });
 
-
-//Character related assignments
-const arrXP = Object.freeze($('input[name="arrXP"]').val().split(","));
-const jsonBaseChar = Object.freeze(JSON.parse($('input[name="jsonBaseChar"]').val()));
-const jsonStat = Object.freeze(JSON.parse($('input[name="jsonStat"]').val()));
-
 export {
-    arrXP,
     debug,
     currentDateTime,
     domain,
     icons,
     iconset,
-    jsonBaseChar,
-    jsonStat,
     language,
     oTranslations,
 }

@@ -1,5 +1,4 @@
 //Generic settings and functions
-import { oCharacter } from '../../generator.js';
 import { openTextModal } from '../modal/text_modal.js';
 import { debugLog } from '../functions.js';
 import { domain } from '../settings.js';
@@ -16,7 +15,7 @@ function changeBasekit() {
 function chooseBasekit() {
     const $element = $('select[name="type"] option:selected');
     const description = $('#choice-description').find('ul');
-    oCharacter.setBasekit(description,$element.val());    
+    window.character.setBasekit(description,$element.val());    
     $modal.foundation('close');
 }
 

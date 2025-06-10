@@ -181,6 +181,7 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = [], arrSkills 
             case 'skill_base':
             case 'skill_combat':
             case 'skill_magic':
+            case 'skill_divine':
                 contentDetailsElements.push(icons.experience.render(null, true, xp_cost));
                 break;
             case 'profession':
@@ -270,7 +271,8 @@ function updateModelButtons(sAction, oData) {
         switch (sAction) {
             case 'skill_base':
             case 'skill_combat':
-            case 'skill_magic':                
+            case 'skill_magic':
+            case 'skill_divine':                
                 click_function = chooseSkill;                
                 break;
             case 'profession':

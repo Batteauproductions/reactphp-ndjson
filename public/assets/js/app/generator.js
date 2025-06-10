@@ -1,22 +1,18 @@
 //Generic settings and functions
 import { Character } from './tool/character.js'
-import { currentDateTime, oTranslations, language } from './tool/settings.js'
-import { debugLog, showPopup, initiateEditor } from './tool/functions.js'
+import { currentDateTime } from './tool/settings.js'
+import { debugLog, initiateEditor } from './tool/functions.js'
 import { pickName } from './tool/name.js'
 import { pickType } from './tool/type.js'
 import { pickStatus } from './tool/status.js'
 import { pickRace  } from './tool/asset/race.js'
 import { pickProfession } from './tool/asset/professions.js'
-import { pickSkillProfession, pickSkillCombat, pickSkillMagic } from './tool/asset/skills.js'
+import { pickSkillProfession, pickSkillCombat, pickSkillMagic, pickSkillDivine } from './tool/asset/skills.js'
 import { createNote } from './tool/asset/note.js'
 import { convertCurrency } from './tool/currency.js'
 import { pickItem } from './tool/asset/item.js'
 import { pickBasekit } from './tool/asset/equipment.js'
 import { editAdventure, editBackground } from './tool/story.js'
-
-
-//Page functions
-let oCharacter;
 
 $(document).ready(function() {
 
@@ -28,13 +24,13 @@ $(document).ready(function() {
     -- if existing, data should be shown on the sheet
     */
     
-    if (window.character !== null && window.character !== undefined && window.character !== '') { 
+    if (window.character_input !== null && window.character_input !== undefined && window.character_input !== '') { 
         debugLog('Character information received, treating as excisting', character);        
         //--setup a character based on json input
-        oCharacter = new Character (character);
-        oCharacter.__construct();
+        window.character = new Character (character_input);
+        window.character.__construct();
         //check what adventures can be edited
-        const created_dt = oCharacter.meta.created_dt ? new Date(oCharacter.meta.created_dt) : null; 
+        const created_dt = window.character.meta.created_dt ? new Date(window.character.meta.created_dt) : null; 
         $('a[data-action="edit-adventure"]').each(function() {
             var dateStr = $(this).data('date'); // gets the value of data-date
             var elDate = new Date(dateStr);
@@ -45,7 +41,7 @@ $(document).ready(function() {
     } else {
         debugLog('No character information received, treating as new');    
         //--setup a new clean character object
-        oCharacter = new Character({
+        window.character = new Character({
             meta: {
                 type: 1,
                 status: 1,
@@ -62,7 +58,7 @@ $(document).ready(function() {
     }
 
     initiateEditor();
-    $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
+    $('#stat-currency').html(convertCurrency(window.character.build.currency));
     
     //This will bind the page function to their respective static elements
     $('a[data-action="create-note"]').on('click', function(e) {
@@ -101,6 +97,10 @@ $(document).ready(function() {
         e.preventDefault();
         pickSkillMagic();
     });
+    $('a[data-action="pick-skill-divine"]').on('click', (e) => {
+        e.preventDefault();
+        pickSkillDivine();
+    });
     $('a[data-action="pick-basekit"]').on('click', (e) => {
         e.preventDefault();
         pickBasekit();
@@ -115,15 +115,15 @@ $(document).ready(function() {
     });
     $('a[data-action="character-save"]').on('click', (e) => {
         e.preventDefault(); 
-        oCharacter.save();
+        window.character.save();
     });
     $('a[data-action="character-submit"]').on('click', (e) => {
         e.preventDefault(); 
-        oCharacter.submit();
+        window.character.submit();
     });
     $('a[data-action="character-print"]').on('click', (e) => {
         e.preventDefault(); 
-        oCharacter.print();
+        window.character.print();
     });
     $('a[data-action="edit-adventure"]').on('click', (e) => {
         e.preventDefault();
@@ -131,7 +131,3 @@ $(document).ready(function() {
     });
 
 });
-
-export {
-    oCharacter
-}

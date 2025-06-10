@@ -1,5 +1,4 @@
 // Generic settings and functions
-import { oCharacter } from '../generator.js';
 import { debug, icons, domain } from './settings.js';
 
 // Page functions
@@ -56,7 +55,7 @@ function initiateEditor() {
     })
     .then(editor => {
         editor.model.document.on('change:data', () => {
-            oCharacter.meta.background = editor.getData();
+            window.character.meta.background = editor.getData();
         });
     })
     .catch(error => {
@@ -74,13 +73,13 @@ function showPopup(message, type='inform', tone='', confirm = {}) {
     $confirm_btn.html(`${icons.confirm.icon()} ${icons.confirm.text()}`);
     // -- cancel (x) button
     const $cancel_btn = $('a[data-action="cancel-action"]');
-    $confirm_btn.html(`${icons.confirm.icon()} ${icons.confirm.text()}`);
+    $cancel_btn.html(`${icons.cancel.icon()} ${icons.cancel.text()}`);
     $cancel_btn.hide();
     //change functions based on type   
     switch(type) {
         case 'confirm':
             $confirm_btn.off('click').on('click', confirm);
-            $cancel_btn.show();
+            $cancel_btn.off('click').on('click', function(){ $modal.foundation('close') }).show();
             break;
         case 'inform':
             $confirm_btn.on('click',function() {

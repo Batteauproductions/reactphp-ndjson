@@ -1,5 +1,4 @@
 // Generic settings and functions
-import { oCharacter } from '../generator.js';
 import { oTranslations, language } from './settings.js';
 
 // Functions needed for actual app performance
@@ -17,17 +16,17 @@ function updateCurrency(cost, action) {
 
     console.log(`updateCurrency(${cost}, ${action})`)
 
-    const current_balance = oCharacter.build.currency;
+    const current_balance = window.character.build.currency;
 
     if (action === 'spend') {
         if (current_balance - cost < 0) {
             console.error('No enough currency available to complete transaction.');
             return false;
         } else {
-            oCharacter.build.currency -= cost;
+            window.character.build.currency -= cost;
         }
     } else if (action === 'refund') {
-        oCharacter.build.currency += cost;
+        window.character.build.currency += cost;
     } else {
         console.error(`Invalid action "${action}" passed to updateCurrency.`);
         return false;
@@ -41,8 +40,8 @@ function updateCurrency(cost, action) {
  * Update the displayed currency.
  */
 function updateCurrencyDisplay() {
-    console.log('oCharacter.build.currency', oCharacter.build.currency)
-    $('#stat-currency').html(convertCurrency(oCharacter.build.currency));
+    console.log('window.character.build.currency', window.character.build.currency)
+    $('#stat-currency').html(convertCurrency(window.character.build.currency));
 }
 
 /**

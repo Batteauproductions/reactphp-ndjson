@@ -8,10 +8,6 @@
 <div class="grid-container">
     <div class="page-wrapper transparent">
         <form id="form-character" class="grid-x grid-padding-x grid-padding-y form-character" method="POST">
-            <!-- Tool information -->
-            <input type="hidden" name="jsonBaseChar" value='<?php echo json_encode($jsonBaseChar) ?>'/>
-            <input type="hidden" name="jsonStat" value='<?php echo json_encode($jsonStat) ?>'/>
-            <input type="hidden" name="arrXP" value='<?php echo $arrXP ?>'/>
             <!-- /Tool information -->
             <div class="cell small-12 medium-6 large-3">
                 <div class="grid-x grid-padding-x grid-padding-y">
@@ -59,11 +55,17 @@
             </div>                
             <div class="cell small-12 text-center">
                 <?= $this->include('character/parts/Adventures') ?>
-            </div>          
+            </div> 
+                  
             <div class="cell small-12 text-right">
                 <hr>
-                <a class="button solid" data-action="character-save"><i class="fa-regular fa-floppy-disk"></i> Opslaan</a>
-                <a class="button clear" data-action="character-submit"><i class="fa-regular fa-share-from-square"></i> Indienen</a>
+                <?php 
+                    $json_decoded = json_decode($oCharacter);
+                    if (!isset($oCharacter) || (isset($oCharacter) && in_array($json_decoded->meta->status, CHARACTER_EDITABLE))) : 
+                ?>  
+                    <a class="button solid" data-action="character-save"><i class="fa-regular fa-floppy-disk"></i> Opslaan</a>
+                    <a class="button clear" data-action="character-submit"><i class="fa-regular fa-share-from-square"></i> Indienen</a>
+                <?php endif; ?>
                 <a class="button clear" data-action="character-print"><i class="fa-solid fa-print"></i> Printen</a>
             </div>
         </form>
@@ -71,5 +73,10 @@
 </div>
 
 <script>
-    window.character = <?php echo isset($oCharacter) ? $oCharacter : 'null' ?>;
+    //setting window data
+    window.character_input = <?php echo isset($oCharacter) ? json_encode($oCharacter) : 'null' ?>;
+    window.character = window.character || {};
+    window.arrXP = Object.freeze(<?php echo json_encode(explode(',', $arrXP)); ?>);
+    window.jsonBaseChar = Object.freeze(<?php echo json_encode($jsonBaseChar); ?>);
+    window.jsonStat = Object.freeze(<?php echo json_encode($jsonStat); ?>);
 </script>

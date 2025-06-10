@@ -1,4 +1,3 @@
-import { oCharacter } from '../generator.js';
 import { openTextModal } from './modal/text_modal.js';
 import { debugLog } from './functions.js';
 import { domain, oTranslations, language, icons } from './settings.js';
@@ -9,7 +8,7 @@ function changeType() {
 
 function chooseType() {
     const $element = $('select[name="character-type"]  option:selected');
-    oCharacter.setType($element.data('name'),$element.val());
+    window.character.setType($element.data('name'),$element.val());
     $('#text-modal').foundation('close');
 }
 
@@ -39,7 +38,7 @@ function pickType() {
                     value: `${value.id}`, 
                     text: `${value.name} | ${value.description}`,
                     'data-name': `${value.name}`,
-                    selected: value.id == oCharacter.meta.type ? true : undefined
+                    selected: value.id == window.character.meta.type ? true : undefined
                 }));
                 $options.push($option);
             });

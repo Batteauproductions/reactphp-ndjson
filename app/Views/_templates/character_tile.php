@@ -2,11 +2,11 @@
     <p>Character data missing.</p>
 <?php else: ?>
     <div 
-        data-name="<?= esc($character->id) ?>" 
-        data-type="<?= esc($character->type_id) ?>"
-        data-status="<?= esc($character->status_id) ?>"
-        data-race="<?= esc($character->race_id) ?>"
-        data-profession="<?= esc($character->profession_info) ?>"
+        data-character_name="<?= esc($character->name) ?>" 
+        data-character_type="<?= esc($character->type_id) ?>"
+        data-character_status="<?= esc($character->status_id) ?>"
+        data-character_race="<?= esc($character->race_id) ?>"
+        data-character_profession="<?= esc($character->profession_info) ?>"
         class="cell small-12 medium-6 tile tile-status--<?= esc($character->status_name) ?>">
         
         <div class="grid-x">
@@ -24,7 +24,7 @@
                         <li><a href="<?= base_url($target.'/character/edit/'.$character->id); ?>"><i class="fa-solid fa-pen-to-square"></i> aanpassen</a></li>
                         <li><a href="<?= base_url($target.'/character/print/'.$character->id); ?>" target="_blank"><i class="fa-solid fa-print"></i> printen</a></li>
                         <li><a href="<?= base_url($target.'/character/view/'.$character->id); ?>"><i class="fa-solid fa-eye"></i> bekijken</a></li>
-                        <li><a href="<?= base_url($target.'/character/delete/'.$character->id); ?>"><i class="fa-solid fa-trash"></i> verwijderen</a></li>
+                        <li><a data-action="character-delete" href="<?= base_url($target.'/character/delete/'.$character->id); ?>"><i class="fa-solid fa-trash"></i> verwijderen</a></li>
                     </ul>
                 </div>
             </div>

@@ -106,7 +106,10 @@ class Character extends Controller
                     echo json_encode($this->models['skill']->getSkillsByLink([6,8],$arrProfessions,$this->arrRights['isGameMaster']));
                     break;
                 case 'fill-dropdown-skill_magic':
-                    echo json_encode($this->models['skill']->getSkillsByLink([3,4,5,10,11],$arrProfessions,$this->arrRights['isGameMaster']));
+                    echo json_encode($this->models['skill']->getSkillsByLink([4,5,11],$arrProfessions,$this->arrRights['isGameMaster']));
+                    break;
+                case 'fill-dropdown-skill_divine':
+                    echo json_encode($this->models['skill']->getSkillsByLink([3,10],$arrProfessions,$this->arrRights['isGameMaster']));
                     break;
                 case 'fill-dropdown-basekit':
                     echo json_encode($this->models['item']->getBasicKit());
@@ -143,6 +146,7 @@ class Character extends Controller
                 case 'get-details-skill_base':
                 case 'get-details-skill_combat':
                 case 'get-details-skill_magic':
+                case 'get-details-skill_divine':                    
                     echo json_encode($this->models['skill']->getSkillDetails($arrData['id']));
                     break;
                 case 'get-details-basekit':
@@ -154,8 +158,7 @@ class Character extends Controller
                 default:
                     echo 'unknown action called';
                     break;
-            } 
-            
+            }            
         } else {
             echo 'no action parsed';
         }
@@ -179,6 +182,8 @@ class Character extends Controller
                     break;
                 case "print":
                     echo  'character-print';
+                    break;
+                case "delete":
                     break;
                 default: 
                     echo 'unknown action has been parsed';

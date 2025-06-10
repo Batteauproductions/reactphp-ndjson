@@ -112,6 +112,21 @@ class CharacterModel extends Model
         return json_encode($oCharacter);
     }
 
+    public function deleteCharacter($cid, $uid, $gamemaster) {
+        //-----------------------------------
+        // This code ensures that if a non-gamemaster tries to access the page,
+        // they can't delete up a character that isn't theirs.
+        $query = $this->db->table(TBL_CHAR)
+                 ->where('char_id', $cid);
+                 
+        // Check if the user is not a gamemaster, add a where clause to filter by user_id
+        if (!$gamemaster) {
+            $query->where('user_id', $uid);
+        }
+        // Execute the query and retrieve the result
+        $query->delete();
+    }
+
     public function getCharacters($uid = null)
     {
         // Build the query

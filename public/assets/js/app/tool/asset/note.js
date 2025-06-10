@@ -1,4 +1,3 @@
-import { oCharacter } from '../../generator.js';
 import { openTextModal } from '../modal/text_modal.js';
 import { oTranslations, language, icons, currentDateTime } from '../settings.js';
 
@@ -24,7 +23,7 @@ class character_note {
      * @returns {boolean}
      */
     add() {
-        oCharacter.notes.push(this);
+        window.character.notes.push(this);
 
         const $note = $('<div>', {
             id: `wrapper-${this.type}`,

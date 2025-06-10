@@ -49,7 +49,7 @@
         <main><?php echo isset($content) && !empty($content) ? $content : ''; ?></main>
         <?php echo isset($footer) && !empty($footer) ? '<footer>'.$footer.'</footer>' : ''; ?>
 
-        <script type="module" src="<?php echo js_path('app/site.js'); ?>"></script>
+        <script type="module" src="<?php echo js_path('site.js'); ?>"></script>
 
         <script>
             window.AppConfig = window.AppConfig || {};

@@ -1,9 +1,8 @@
 //Generic settings and functions
-import { oCharacter } from '../../generator.js';
 import { CharacterAsset } from './character_asset.js';
 import { domain, oTranslations, language } from '../settings.js';
 import { updateExperience } from '../experience.js';
-import { debugLog } from '../functions.js';
+import { debugLog, showPopup } from '../functions.js';
 import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } from '../modal/selection_modal.js';
 
 // Define the class
@@ -55,6 +54,10 @@ function pickSkillMagic () {
     debugLog('pickSkillMagic');
     pickSkill('skill_magic');
 }
+function pickSkillDivine () {
+    debugLog('pickSkillDivine');
+    pickSkill('skill_divine');
+}
 
 /**
  * Handles the process of selecting a skill by opening a modal, fetching dropdown data via AJAX, 
@@ -76,18 +79,22 @@ function pickSkill(sAction) {
         url: `${domain}/action/get-dropdown`,
         data: {
             action: `fill-dropdown-${sAction}`,
-            character: oCharacter,
+            character: window.character,
         },
         type: 'POST',
         dataType: 'json',
         success: function(data) {
             debugLog('pickSkill[data]', data);
-            const $select = $('select[name="type"]');            
-            // Hide loading and show form and select
-            $('div[data-id="modal-loading"]').hide();
-            updateModalDropdown($select, data);
-            $form.show();
-            $select.show();
+            if(data.length > 0) {
+                const $select = $('select[name="type"]');            
+                // Hide loading and show form and select
+                $('div[data-id="modal-loading"]').hide();
+                updateModalDropdown($select, data);
+                $form.show();
+                $select.show();
+            } else {
+                showPopup(`<p>${oTranslations[language].no_skills_available}</p>`,'inform','question',{});
+            }
         },
         error: function(error) {
             console.error('Error:', error);
@@ -133,5 +140,6 @@ export {
     pickSkillProfession,
     pickSkillCombat,
     pickSkillMagic,
+    pickSkillDivine,
     chooseSkill,    
 }

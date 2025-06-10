@@ -1,5 +1,4 @@
 // Generic settings and functions
-import { oCharacter } from '../../generator.js';
 import { CharacterAsset } from './character_asset.js';
 import { domain, oTranslations, language } from '../settings.js';
 import { updateExperience } from '../experience.js';
@@ -73,7 +72,7 @@ function pickProfession() {
         dataType: 'json',
         data: {
             action: `fill-dropdown-${sAction}`,
-            character: oCharacter,
+            character: window.character,
         },
         success: function(data) {
             debugLog('pickProfession[data]', data);

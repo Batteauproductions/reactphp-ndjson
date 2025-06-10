@@ -115,6 +115,8 @@ define('RIGHTS_GAMEMASTER', array(1,2));
 define('RIGHTS_EDITOR', array(1,2,3));
 define('RIGHTS_ALL', array(1,2,3,4));
 
+//
+define('CHARACTER_EDITABLE', array(1,3));
 
 /*TABLES*/
 define('TBL_EQUIPMENT','equipment');

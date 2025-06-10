@@ -1,7 +1,3 @@
-// Generic settings and functions
-import { oCharacter } from '../generator.js';
-import { arrXP } from './settings.js';
-
 // Functions needed for actual app performance
 /**
  * Update the character's experience points (XP) by adding or subtracting a given cost.
@@ -15,8 +11,8 @@ function updateExperience(cost, action) {
         return false;
     }
 
-    let currentXP = oCharacter.build.spend_xp;
-    let maxXP = oCharacter.build.max_xp;
+    let currentXP = window.character.build.spend_xp;
+    let maxXP = window.character.build.max_xp;
 
     if (action === 'spend') {
         if (currentXP + cost > maxXP) {
@@ -24,7 +20,7 @@ function updateExperience(cost, action) {
             updateSpendXpDisplay();
             return false;
         } else {
-            oCharacter.build.spend_xp += cost;
+            window.character.build.spend_xp += cost;
         }
     } else if (action === 'refund') {
         if (currentXP - cost < 0) {
@@ -32,7 +28,7 @@ function updateExperience(cost, action) {
             updateSpendXpDisplay();
             return false;
         } else {
-            oCharacter.build.spend_xp -= cost;
+            window.character.build.spend_xp -= cost;
         }
     } else {
         console.error(`Invalid action "${action}" passed to updateExperience.`);
@@ -45,12 +41,12 @@ function updateExperience(cost, action) {
 
 function updateMaxXP() {
     let total = 0;
-    if(oCharacter.meta.type == 2 || oCharacter.meta.type == 3) {
+    if(window.character.meta.type == 2 || window.character.meta.type == 3) {
         total = 100;
     } else {
-        const stories = oCharacter.stories ? oCharacter.stories.length : 0;
+        const stories = window.character.stories ? window.character.stories.length : 0;
         for (let i = 1; i <= stories; i++) {
-            const xp_bonus = arrXP[i] ?? 0;
+            const xp_bonus = window.arrXP[i] ?? 0;
             total += parseInt(xp_bonus);
         }
     }
@@ -59,7 +55,7 @@ function updateMaxXP() {
 }
 
 function updateSpendXpDisplay() {
-    $('#stat-spend_xp').text(oCharacter.build.spend_xp);
+    $('#stat-spend_xp').text(window.character.build.spend_xp);
 }
 
 // Export functions

@@ -1,6 +1,5 @@
 // Generic settings and functions
-import { oCharacter } from '../generator.js';
-import { domain, icons, jsonBaseChar, currentDateTime, jsonStat, oTranslations, language } from './settings.js';
+import { domain, icons, currentDateTime, oTranslations, language } from './settings.js';
 import { debugLog, showPopup } from './functions.js';
 import { updateMaxXP } from './experience.js';
 import { convertCurrency } from './currency.js';
@@ -29,7 +28,7 @@ class Character {
             firstlocked_dt = null,
             lastlocked_dt = null,
         },
-        build = Object.assign({}, jsonBaseChar),
+        build = Object.assign({}, window.jsonBaseChar),
         // Default to an empty array for functionality
         race = [], 
         profession = [],
@@ -134,22 +133,22 @@ class Character {
         //---10: INCREASE_BASE_CURRENCY
         //---11: INCREASE_BASE_FAVOR
         const statMappings = {
-            max_xp: { base: jsonBaseChar.max_xp, factor: 8, stat: jsonStat.xp },
+            max_xp: { base: window.jsonBaseChar.max_xp, factor: 8, stat: window.jsonStat.xp },
             //-- !!! currency SHOULD BE FIXED !!! --//
             // CURRENTLY EITHER THE SKILL WORKS OR BUYING ITEMS DOES //
-            //currency: { base: jsonBaseChar.currency, factor: 10, stat: jsonStat.currency }, 
-            hp: { base: jsonBaseChar.hp, factor: 2, stat: jsonStat.hp },
-            sanity: { base: jsonBaseChar.sanity, factor: 1, stat: jsonStat.sanity },
-            mana: { base: jsonBaseChar.mana, factor: 7, stat: jsonStat.mana, additionalFactor: 9, additionalStat: jsonStat.mana_minor },
-            gp: { base: jsonBaseChar.gp, factor: 6, stat: jsonStat.gp },
-            str: { base: jsonBaseChar.str, factor: 4, stat: jsonStat.str },
-            dex: { base: jsonBaseChar.dex, factor: 3, stat: jsonStat.dex },
-            intel: { base: jsonBaseChar.intel, factor: 5, stat: jsonStat.intel },
-            clues: { base: jsonBaseChar.intel, factor: 5, stat: jsonStat.intel },
-            favour: { base: jsonBaseChar.favour, factor: 11, stat: jsonStat.favour }
+            //currency: { base: window.jsonBaseChar.currency, factor: 10, stat: window.jsonStat.currency }, 
+            hp: { base: window.jsonBaseChar.hp, factor: 2, stat: window.jsonStat.hp },
+            sanity: { base: window.jsonBaseChar.sanity, factor: 1, stat: window.jsonStat.sanity },
+            mana: { base: window.jsonBaseChar.mana, factor: 7, stat: window.jsonStat.mana, additionalFactor: 9, additionalStat: window.jsonStat.mana_minor },
+            gp: { base: window.jsonBaseChar.gp, factor: 6, stat: window.jsonStat.gp },
+            str: { base: window.jsonBaseChar.str, factor: 4, stat: window.jsonStat.str },
+            dex: { base: window.jsonBaseChar.dex, factor: 3, stat: window.jsonStat.dex },
+            intel: { base: window.jsonBaseChar.intel, factor: 5, stat: window.jsonStat.intel },
+            clues: { base: window.jsonBaseChar.intel, factor: 5, stat: window.jsonStat.intel },
+            favour: { base: window.jsonBaseChar.favour, factor: 11, stat: window.jsonStat.favour }
         };
 
-        // Calculate and update oCharacter.build properties
+        // Calculate and update window.character.build properties
         for (const [key, { base, factor, stat, additionalFactor, additionalStat }] of Object.entries(statMappings)) {
             let total = base + (calculateIncrease(factor) * stat);
 
@@ -162,15 +161,15 @@ class Character {
                 total += updateMaxXP();
             }
 
-            oCharacter.build[key] = total;
+            window.character.build[key] = total;
         }
 
         // Update the text on the sheet per modifier
-        $.each(oCharacter.build, function(key, value) {
+        $.each(window.character.build, function(key, value) {
             const content = (key === "currency") ? convertCurrency(value) : value;
             $(`#stat-${key}`).html(content);
         });
-        debugLog('updateCharacter',oCharacter);
+        debugLog('updateCharacter',window.character);
         //transferCharacter('save'); this should be turned on eventually, but currently auto-save should NOT work.
     }
 
@@ -313,9 +312,9 @@ function calculateIncrease(id) {
     }
 
     // Calculate increase for race, profession, and skills
-    calculateForCategory(oCharacter.race);
-    calculateForCategory(oCharacter.profession);
-    calculateForCategory(oCharacter.skill);
+    calculateForCategory(window.character.race);
+    calculateForCategory(window.character.profession);
+    calculateForCategory(window.character.skill);
 
     return increase;
 }
@@ -328,8 +327,8 @@ function calculateIncrease(id) {
  * @returns {number} The index of the item if found, otherwise -1.
  */
 function findItemIndex(attribute, id, sub_id = null) {
-    // Access the specified attribute array directly from oCharacter
-    const attributeArray = oCharacter[attribute];
+    // Access the specified attribute array directly from window.character
+    const attributeArray = window.character[attribute];
     // Ensure the attributeArray is an array and search for the item by id and sub_id
     return Array.isArray(attributeArray) 
         ? attributeArray.findIndex(item => item?.id === id && (item?.sub_id === sub_id || sub_id === null))
@@ -362,7 +361,7 @@ function transferCharacter(btn_action) {
         dataType: 'json',
         data: {
             action: btn_action,
-            character: JSON.stringify(oCharacter)
+            character: JSON.stringify(window.character)
         },
         success: function(data) {
             const isSuccess = data.done;
@@ -375,7 +374,7 @@ function transferCharacter(btn_action) {
             showPopup(`<h2>${popupTitle}</h2><p>${popupText}</p>`, 'inform', tone);
 
             if (data.id) {
-                oCharacter.meta.id = data.id;
+                window.character.meta.id = data.id;
             }
         },
         error: function() {
@@ -390,7 +389,7 @@ function transferCharacter(btn_action) {
         },
         complete: function() {
             // Always restore button state after 3 seconds
-            if(oCharacter.meta.status === 1 || oCharacter.meta.status === 3 || oCharacter.meta.status !== 7) {
+            if(window.character.meta.status === 1 || window.character.meta.status === 3 || window.character.meta.status !== 7) {
                 setTimeout(() => {
                     $button.html(`${icons.character_save.icon()} ${icons.character_save.text()}`);
                     $buttons.removeClass('disabled').css('pointer-events', '');

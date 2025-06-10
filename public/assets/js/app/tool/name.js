@@ -1,4 +1,3 @@
-import { oCharacter } from '../generator.js';
 import { openTextModal } from './modal/text_modal.js';
 import { oTranslations, language, icons } from './settings.js';
 
@@ -8,7 +7,7 @@ function changeName() {
 
 function chooseName() {
     const $element = $('input[name="character-name"]');
-    oCharacter.setName($element.val());
+    window.character.setName($element.val());
     $('#text-modal').foundation('close');
 }
 
@@ -22,7 +21,7 @@ function pickName() {
         id: 'character-name', 
         name: 'character-name', 
         type: 'text',
-        value: oCharacter.meta.name ? oCharacter.meta.name : ''
+        value: window.character.meta.name ? window.character.meta.name : ''
     }));
     contentElements.push(icons.choose.render(chooseName,true,''));        
     openTextModal(contentElements);

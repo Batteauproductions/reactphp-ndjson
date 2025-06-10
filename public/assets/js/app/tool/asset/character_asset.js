@@ -1,5 +1,4 @@
 //Generic settings and functions
-import { oCharacter } from '../../generator.js';
 import { icons, iconset, language, oTranslations, currentDateTime } from '../settings.js'
 import { debugLog, generateIconSet, showMessage } from '../functions.js'
 import { findItemIndex } from '../character.js';
@@ -49,7 +48,7 @@ class CharacterAsset {
     }
 
     __construct() {
-        oCharacter[this.attribute].push(this); //-- functionally   
+        window.character[this.attribute].push(this); //-- functionally   
         this.addVisualRow(); //-- visionally 
     }
 
@@ -74,10 +73,10 @@ class CharacterAsset {
         //-----------------------------//   
 
         // Add the asset to the character functionally and visionally        
-        oCharacter[this.attribute].push(this); //-- functionally   
+        window.character[this.attribute].push(this); //-- functionally   
         this.addVisualRow(); //-- visionally
         //-----------------------------//
-        oCharacter.update();
+        window.character.update();
         //-----------------------------//
         return true;
     }
@@ -92,11 +91,11 @@ class CharacterAsset {
         // Refund the cost of the element
         this.costRefund(this.rank_cost);
         // Remove the asset of the character both functionally and visionally 
-        oCharacter[this.attribute].splice(index, 1)[0]; //-- functionally
+        window.character[this.attribute].splice(index, 1)[0]; //-- functionally
         const $row = this.getVisualRow(); //-- visionally
         $row.remove();        
         // Update the character object in the interface
-        oCharacter.update();
+        window.character.update();
         //-----------------------------//
         return true;
     }
@@ -165,7 +164,7 @@ class CharacterAsset {
         $row.find('[data-column="cost"]').text(`${this.rank_cost}pt.`);
         $row.find('[data-column="action"]').html(new_icons);
 
-        oCharacter.update();
+        window.character.update();
     
         return true;
     }

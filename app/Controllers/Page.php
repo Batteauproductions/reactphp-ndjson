@@ -182,7 +182,6 @@ class Page extends BaseController
                         $arrJS = ['app/generator.js','validation/character_validation.js'];
                         break;
                     case 'database':
-                        $arrJS = ['app/grid_sorting.js'];
                         //---
                         $arrData = array (
                             'arrStatus' => $this->arrSettings['options_character_status'],
