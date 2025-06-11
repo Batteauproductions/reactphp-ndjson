@@ -99,6 +99,15 @@
 	}
 }
 
+.grid-container {
+	max-width: 80rem !important;
+	/* Small only */
+	@media screen and (max-width: #{$breakpoint-small}) {
+		padding-left: 0;
+		padding-right: 0;
+	}
+}
+
 /**MENU OVER-RIDES**/
 .menu  {	
 	a {

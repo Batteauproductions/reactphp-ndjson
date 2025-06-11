@@ -184,6 +184,11 @@ class Character extends Controller
                     echo  'character-print';
                     break;
                 case "delete":
+                    echo json_encode($this->models['character']->deleteCharacter(
+                                                                    $this->request->getPost('character'),                                            
+                                                                    $this->session->get('uid'),                                                                    
+                                                                    $this->arrRights['isGameMaster'],
+                                                                ));
                     break;
                 default: 
                     echo 'unknown action has been parsed';

@@ -19,14 +19,31 @@ $(document).ready(function() {
         sessionStorage.removeItem('navigationAnimated');
     });
     $('a[data-action="character-delete"]').on('click', function(e) {
-        e.preventDefault(); 
-        const href = $(this).attr('href');
+        const char_id = $(this).data('id');
+        const $modal = $('#popup-modal');
         showPopup(
             `<p>${oTranslations[language].character_delete}</p>`,
             'confirm',
             'question',
-            function() {
-                window.location.href = href;
+            function() {                
+                $.ajax({
+                    url: `${domain}/action/character-transfer`,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        action: 'delete',
+                        character: char_id
+                    },
+                    success: function(data) {
+                        $(`div[data-character_id="${char_id}"]`).remove();
+                        $modal.foundation('close');
+                    },
+                    error: function() {
+                        const popupText = oTranslations[language].character_error;
+                        showPopup(`<p>${popupText}</p>`, 'inform', 'error',$modal.foundation('close'));
+                        console.error(popupText);
+                    }
+                });
             }
         );
     });
@@ -47,7 +64,7 @@ $(document).ready(function() {
 // Makes items with the class sortable, be able to sorted
 document.addEventListener('DOMContentLoaded', function() {
     if (document.querySelector('.sortable')) {
-        import(`${domain}/assets/js/app/grid_sorting.js`).then(module => {
+        import(`${domain}/assets/js/_lib/grid_sorting.js`).then(module => {
             $('.sortable').initSortable();
         }).catch(error => console.error("Error loading sortable plugin:", error));
     }

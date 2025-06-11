@@ -1,6 +1,23 @@
 <div class="navigation-site">
-    <div class="grid-container">        
-        <nav class="grid-x">
+    <div class="grid-container"> 
+        <nav class="grid-x hide-for-large">
+            <div class="cell shrink dropdown">
+                <a href="#"><i class="fa-solid fa-bars"></i>Menu</a>
+                <div class="dropdown-content">
+                    <a href="#"><i class="fa-solid fa-users"></i>Karakters</a>
+                    <?php if(isset($isGameMaster) && $isGameMaster): ?>
+                        <a href="#"><i class="fa-solid fa-book-atlas"></i>Spelleiding</a>
+                    <?php endif; ?>
+                    <?php if(isset($isAdmin) && $isAdmin): ?>
+                    <a href="#"><i class="fa-solid fa-gears"></i>Admin</a>
+                    <?php endif; ?>
+                    <a href="#"><i class="fa-solid fa-book"></i>Handleiding</a>
+                    <a href="<?php echo base_url('user/profile')?>"><i class="fa-solid fa-user"></i>Profiel</a>
+                    <a data-logout href="<?php echo base_url('account/logout')?>"><i class="fa-solid fa-right-from-bracket"></i>Uitloggen</a>
+                </div>
+            </div>
+        </nav>
+        <nav class="grid-x show-for-large">
             <div class="cell shrink dropdown">
                 <a href="#"><i class="fa-solid fa-users"></i>Karakters</a>
                 <div class="dropdown-content">
@@ -47,3 +64,5 @@
         </nav>
     </div>
 </div>
+
+

@@ -124,10 +124,6 @@
     font-weight: bold;
 }
 
-.grid-container {
-    max-width: 80rem !important;
-}
-
 label.input-error {
     display: block;
     color: $color-error;
@@ -170,7 +166,10 @@ label.input-error {
                     z-index: 1;      
                     a {
                         display: block;
-                    }             
+                    } 
+                    @media screen and (max-width: #{$breakpoint-small}) {
+                        width: 100vw;
+                    }            
                 }
 
                 &:hover {
@@ -339,6 +338,19 @@ label.input-error {
     }
 }
 
+.sortable {
+    position: relative;
+
+    .sortable-wrapper {
+        position: sticky;
+        padding: inherit;
+        /* Large only */
+        @media screen and (min-width: #{$breakpoint-large}) and (max-width: #{$breakpoint-large-only}) {
+            top: 5.625rem;
+        }
+        
+    }
+}
 
 #choice-description {
     display: block;
