@@ -1,5 +1,5 @@
 import { openTextModal } from '../modal/text_modal.js';
-import { oTranslations, language, icons, currentDateTime } from '../settings.js';
+import { oTranslations, language, icons, currentDateTime } from '../../_lib/settings.js';
 
 /**
  * Represents a character note.

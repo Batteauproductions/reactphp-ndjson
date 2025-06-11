@@ -1,6 +1,6 @@
-import { openTextModal } from './modal/text_modal.js';
-import { debugLog } from './functions.js';
-import { domain, oTranslations, language, icons } from './settings.js';
+import { openTextModal } from '../modal/text_modal.js';
+import { debugLog } from '../../_lib/functions.js';
+import { domain, oTranslations, language, icons } from '../../_lib/settings.js';
 
 function changeType() {
     openTextModal('type',$('#text-modal'));

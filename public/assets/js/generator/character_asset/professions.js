@@ -1,8 +1,8 @@
 // Generic settings and functions
 import { CharacterAsset } from './character_asset.js';
-import { domain, oTranslations, language } from '../settings.js';
-import { updateExperience } from '../experience.js';
-import { debugLog } from '../functions.js';
+import { domain, oTranslations, language } from '../../_lib/settings.js';
+import { updateExperience } from '../helper/experience.js';
+import { debugLog } from '../../_lib/functions.js';
 import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } from '../modal/selection_modal.js';
 
 // Define the class

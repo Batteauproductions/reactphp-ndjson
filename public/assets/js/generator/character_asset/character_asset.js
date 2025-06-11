@@ -1,7 +1,7 @@
 //Generic settings and functions
-import { icons, iconset, language, oTranslations, currentDateTime } from '../settings.js'
-import { debugLog, generateIconSet, showMessage } from '../functions.js'
-import { findItemIndex } from '../character.js';
+import { icons, iconset, language, oTranslations, currentDateTime } from '../../_lib/settings.js'
+import { debugLog, generateIconSet, showMessage } from '../../_lib/functions.js'
+import { findItemIndex } from '../character/character.js';
 
 // Define the class
 class CharacterAsset {

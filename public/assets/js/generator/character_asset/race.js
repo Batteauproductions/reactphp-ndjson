@@ -1,6 +1,6 @@
 // Generic settings and functions
-import { domain, oTranslations, language } from '../settings.js';
-import { debugLog } from '../functions.js';
+import { domain, oTranslations, language } from '../../_lib/settings.js';
+import { debugLog } from '../../_lib/functions.js';
 import { openSelectionModal, updateModalDropdown } from '../modal/selection_modal.js';
 import { Skill } from './skills.js';
 

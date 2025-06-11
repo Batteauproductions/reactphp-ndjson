@@ -1,5 +1,5 @@
 // Generic settings and functions
-import { oTranslations, language } from './settings.js';
+import { oTranslations, language } from '../../_lib/settings.js'
 
 // Functions needed for actual app performance
 /**

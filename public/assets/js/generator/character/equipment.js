@@ -1,7 +1,7 @@
 //Generic settings and functions
 import { openTextModal } from '../modal/text_modal.js';
-import { debugLog } from '../functions.js';
-import { domain } from '../settings.js';
+import { debugLog } from '../../_lib/functions.js';
+import { domain } from '../../_lib/settings.js';
 import { openSelectionModal, updateModalDropdown } from '../modal/selection_modal.js';
 
 // Define modal and form

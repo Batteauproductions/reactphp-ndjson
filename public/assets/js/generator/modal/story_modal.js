@@ -1,5 +1,6 @@
-import { domain } from "../settings.js";
-import { debugLog } from '../functions.js';
+//Generic settings and functions
+import { domain } from '../../_lib/settings.js';
+import { debugLog } from '../../_lib/functions.js'
 import { clearModal, $modalLoading, } from "./modal.js";
 
 /**

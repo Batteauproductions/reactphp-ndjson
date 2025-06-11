@@ -1,5 +1,5 @@
-import { showPopup } from "./app/tool/functions.js";
-import { oTranslations, language, domain } from "./app/tool/settings.js";
+import { showPopup } from './_lib/functions.js';
+import { oTranslations, language, domain } from './_lib/settings.js';
 
 $(document).ready(function() {
     

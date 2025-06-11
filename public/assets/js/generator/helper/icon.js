@@ -1,4 +1,4 @@
-import { oTranslations, language } from "./settings.js";
+import { oTranslations, language } from "../../_lib/settings.js";
 
 class Icon {
     constructor({

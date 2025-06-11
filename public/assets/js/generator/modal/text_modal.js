@@ -1,4 +1,5 @@
-import { debugLog } from '../functions.js';
+//Generic settings and functions
+import { debugLog } from '../../_lib/functions.js'
 import { clearForm, $modalLoading, } from "./modal.js";
 
 /** 

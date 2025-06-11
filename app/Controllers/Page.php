@@ -124,13 +124,13 @@ class Page extends BaseController
                 $this->characterData['oCharacter'] =  $this->models['character']->getCharacterByID($id,$this->session->get('uid'),$this->arrRights['isGameMaster']);
                 $this->characterData['arrNotes'] = $this->models['notes']->getNotes($id);
                 $content = view('character/character_sheet',$this->characterData);
-                $arrJS = ['app/generator.js','validation/character_validation.js'];
+                $arrJS = ['generator/generator.js','validation/character_validation.js'];
                 break;
             case 'create':  
                 $this->characterData['oCharacter'] = null;
                 $this->characterData['arrNotes'] = null;
                 $content = view('character/character_sheet',$this->characterData);
-                $arrJS = ['app/generator.js','validation/character_validation.js'];
+                $arrJS = ['generator/generator.js','validation/character_validation.js'];
                 break;
             case 'database':
                 $arrData['arrCharacters'] = $this->models['character']->getCharacters($this->session->get('uid'));
@@ -179,7 +179,7 @@ class Page extends BaseController
                         $this->characterData['oCharacter'] =  $this->models['character']->getCharacterByID($id,$this->session->get('uid'),$this->arrRights['isGameMaster']);
                         $this->characterData['arrNotes'] = $this->models['notes']->getNotes($id);
                         $content = view('character/character_sheet',$this->characterData);
-                        $arrJS = ['app/generator.js','validation/character_validation.js'];
+                        $arrJS = ['generator/generator.js','validation/character_validation.js'];
                         break;
                     case 'database':
                         //---
@@ -196,7 +196,7 @@ class Page extends BaseController
                 }                                    
                 break;
             case 'tools':
-                $arrJS = ['app/encoder_script.js'];
+                $arrJS = ['_lib/encoder_script.js'];
                 $content = view('gamemaster/tools/encoder');
                 break;
             case 'settings':

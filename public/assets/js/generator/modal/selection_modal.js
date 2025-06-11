@@ -1,6 +1,6 @@
 //Generic settings and functions
-import { domain } from '../settings.js';
-import { debugLog, allowChoose } from '../functions.js'
+import { domain } from '../../_lib/settings.js';
+import { debugLog, allowChoose } from '../../_lib/functions.js'
 import { updateModalImage, updateModalDropdown, updateModelContent, updateModelDetails, updateModelButtons, clearModal, $typeSelect, $subtypeSelect, $rankSelect, $choice_actions, $modalLoading } from "./modal.js";
 
 

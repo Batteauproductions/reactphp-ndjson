@@ -1,12 +1,12 @@
 //Generic settings and functions
-import { domain, icons, language, oTranslations } from '../settings.js';
-import { allowChoose } from '../functions.js';
-import { convertCurrency } from '../currency.js';
-import { chooseRace } from '../asset/race.js'
-import { chooseProfession } from '../asset/professions.js';
-import { chooseSkill } from '../asset/skills.js';
-import { chooseItem } from '../asset/item.js';
-import { chooseBasekit } from '../asset/equipment.js';
+import { domain, icons, language, oTranslations } from '../../_lib/settings.js';
+import { allowChoose } from '../../_lib/functions.js';
+import { convertCurrency } from '../helper/currency.js';
+import { chooseRace } from '../character_asset/race.js'
+import { chooseProfession } from '../character_asset/professions.js';
+import { chooseSkill } from '../character_asset/skills.js';
+import { chooseItem } from '../character_asset/item.js';
+import { chooseBasekit } from '../character/equipment.js';
 
 // Static DOM Elements
 const $typeSelect = $('select[name="type"]');

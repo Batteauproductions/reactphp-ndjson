@@ -1,15 +1,15 @@
 // Generic settings and functions
-import { domain, icons, currentDateTime, oTranslations, language } from './settings.js';
-import { debugLog, showPopup } from './functions.js';
-import { updateMaxXP } from './experience.js';
-import { convertCurrency } from './currency.js';
+import { domain, icons, currentDateTime, oTranslations, language } from '../../_lib/settings.js';
+import { debugLog, showPopup } from '../../_lib/functions.js';
+import { updateMaxXP } from '../helper/experience.js';
+import { convertCurrency } from '../helper/currency.js';
 import { changeStatus } from './status.js';
 import { changeType } from './type.js';
 import { changeName } from './name.js';
-import { pickBasekit } from './asset/equipment.js';
-import { Profession } from './asset/professions.js';
-import { Skill } from './asset/skills.js';
-import { Item } from './asset/item.js';
+import { pickBasekit } from './equipment.js';
+import { Profession } from '../character_asset/professions.js';
+import { Skill } from '../character_asset/skills.js';
+import { Item } from '../character_asset/item.js';
 
 // Page functions
 class Character {

@@ -1,5 +1,5 @@
-import { openTextModal } from './modal/text_modal.js';
-import { oTranslations, language, icons } from './settings.js';
+import { openTextModal } from '../modal/text_modal.js';
+import { oTranslations, language, icons } from '../../_lib/settings.js';
 
 function changeName() {
     openTextModal('name',$('#text-modal'));

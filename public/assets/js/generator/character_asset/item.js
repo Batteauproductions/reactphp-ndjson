@@ -1,8 +1,8 @@
 //Generic settings and functions
 import { CharacterAsset } from './character_asset.js';
-import { domain, oTranslations, language } from '../settings.js';
-import { debugLog } from '../functions.js';
-import { convertCurrency, updateCurrency} from '../currency.js';
+import { domain, oTranslations, language } from '../../_lib/settings.js';
+import { debugLog } from '../../_lib/functions.js';
+import { convertCurrency, updateCurrency} from '../helper/currency.js';
 import { openSelectionModal, updateModalDropdown } from '../modal/selection_modal.js';
 
 // Define the class
