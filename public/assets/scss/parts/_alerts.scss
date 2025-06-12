@@ -1,0 +1,20 @@
+@import '../variables';
+
+.alert {
+    display: block;
+    border: solid 1px #cc0000;
+    background: #FFCCCC;    
+    margin: 0 !important;
+    padding: $padding;
+    
+    ul,ol {
+        li {
+            color: #cc0000;
+            font-weight: bold;    
+            &:only-child {
+                padding-bottom: 0;
+                margin-bottom: 0;
+            }
+        }
+    }
+}

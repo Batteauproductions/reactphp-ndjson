@@ -1,0 +1,32 @@
+@import '../variables';
+
+.event-container {
+    
+    background: $color-primary;
+    border-radius: $border-radius;
+    position: relative;
+    overflow: hidden;
+
+    span {
+        bottom: 0;
+        color: $paragraph-color;
+        font-weight: bold;
+        left: 0;
+        padding: calc($padding/2);
+        position: absolute;
+        width: 100%;
+
+        text-shadow: 
+            1px 0 0 #000, /*right */
+            0 1px 0 #000, /*top */
+            -1px 0 0 #000, /*left */
+            0 -1px 0 #000; /*bottom */
+    }
+
+    &.disabled {
+        cursor: default;
+        pointer-events: none !important;
+        opacity: 0.6;
+        filter: grayscale(1);
+    }
+}

@@ -1,0 +1,26 @@
+@import '../variables';
+
+.button {
+    
+    cursor: pointer;
+    display: inline-block;
+    font: $paragraph-font;
+    padding: calc(0.5*$padding) $padding;
+    margin-bottom: 0;
+    
+    &.solid {
+        border-radius: $border-radius;
+        border: solid 0.063rem $color-secundary;
+        color: $paragraph-color !important;
+        background-color: $color-secundary;
+        &:hover {
+            background-color: lighten($color-secundary,20%);
+        }
+    }
+    &.clear {
+        color: $paragraph-color;
+        &:hover, &:active, &:focus {
+            color: $link-color;
+        }
+    }    
+}

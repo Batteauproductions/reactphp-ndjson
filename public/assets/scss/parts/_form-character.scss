@@ -1,0 +1,29 @@
+@import '../variables';
+
+.form-character {    
+    .info-container {
+        position: relative;
+        height: auto;
+        overflow: hidden;
+        width: 100%;
+        font-family: $paragraph-font-family !important;
+        font-size: calc(0.9*$paragraph-font-size) !important;
+        border-radius: $border-radius;
+        background: $color-primary;
+        padding: $padding;
+        line-height: calc(1.8*$paragraph-font-size) !important;
+
+        hr {
+            margin: calc($margin / 2) 0;
+            border-color: #8f8f8f;
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        ul {
+            li {
+                text-align: left;
+            }
+        }
+    }
+}

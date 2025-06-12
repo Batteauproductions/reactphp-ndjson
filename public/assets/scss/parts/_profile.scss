@@ -1,0 +1,49 @@
+@import '../variables';
+
+.profile {
+    text-align: center;
+
+    .profile-avatar {
+        cursor: pointer;
+        position: relative;
+        display: block;
+        height: auto;
+        width: 100%;
+        border-radius: $border-radius;
+        overflow: hidden;
+
+        img {
+            width: 100% !important;
+        }
+
+        .profile-avatar-action {
+            cursor: pointer;
+            position: absolute;
+            display: block;
+            background-color: rgba($color-primary, 0.5);
+            top: 100%;
+            height: 100%;
+            transition: top 500ms;
+            padding: $padding;
+
+            ul {
+                li {
+                    font-size: calc(0.8*$paragraph-font-size) !important;
+                }
+            }
+            
+        }
+
+        &:hover .profile-avatar-action {
+            top: 0;
+        }
+    }
+    .profile-name {
+        display: block;
+        font-size: calc(1.2*$paragraph-font-size);
+    }
+    .profile-role {
+        display: block;
+        font-size: calc(0.8*$paragraph-font-size);
+    }
+}

@@ -1,0 +1,31 @@
+@import '../variables';
+
+.wrapper {
+
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-height: 100vh;
+
+    h1 {
+        margin-top: 0;
+    }
+
+    .content-wrapper {
+        margin: calc($margin*2) 0;
+        padding: calc($padding*2);
+        
+        &--login, &--signup_start, &--signup_error, &--signup_done {
+            max-width: 30rem;
+        }
+    
+        &--profile {
+            max-width: 43.75rem;
+        }
+
+        @include tile(large)
+    }
+    
+}
