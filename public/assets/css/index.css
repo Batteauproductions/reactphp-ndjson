@@ -298,6 +298,21 @@ label.input-error {
   padding: 1.25rem;
   font: normal 1rem/1.35rem Manuale, serif;
 }
+.navigation-site nav ul li, .navigation-footer nav ul li {
+  padding: 0 !important;
+}
+.navigation-site nav .accordion, .navigation-footer nav .accordion {
+  background-color: #515151;
+}
+.navigation-site nav .accordion .accordion-title, .navigation-footer nav .accordion .accordion-title {
+  color: #7D1717;
+}
+.navigation-site nav .accordion .accordion-item, .navigation-footer nav .accordion .accordion-item {
+  color: #7D1717;
+}
+.navigation-site nav .accordion .accordion-content, .navigation-footer nav .accordion .accordion-content {
+  padding: 0;
+}
 .navigation-site nav .dropdown, .navigation-footer nav .dropdown {
   position: relative;
   display: inline-block;
@@ -326,7 +341,7 @@ label.input-error {
   width: 100%;
   height: 100%;
   min-height: 100vh;
-  padding: 5rem 0;
+  padding: 5rem 1.25rem;
 }
 .page-wrapper.solid {
   background-color: #1E1E1E;
@@ -456,13 +471,19 @@ label.input-error {
 }
 .sortable .sortable-wrapper {
   position: sticky;
+  border-radius: 0.313rem;
+  background: #1E1E1E;
   padding: inherit;
-  /* Large only */
+  top: 5.725rem;
 }
-@media screen and (min-width: 64em) and (max-width: 74.9375em) {
-  .sortable .sortable-wrapper {
-    top: 5.625rem;
-  }
+.sortable .sortable-wrapper select {
+  margin: 0.625rem 0 0;
+}
+.sortable .sortable-wrapper hr {
+  margin: 0.625rem 0;
+  border-color: #8f8f8f;
+  width: 100%;
+  max-width: 100%;
 }
 
 #choice-description {
@@ -630,4 +651,56 @@ label.input-error {
 }
 #ck-count-wrapper .update__limit-exceeded .update__chart__characters {
   fill: hsl(0, 100%, 52%);
+}
+
+.grid-container {
+  max-width: 80rem !important;
+  /* Small only */
+}
+@media screen and (max-width: 39.9375em) {
+  .grid-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+nav[aria-label=breadcrumb] {
+  padding: 0 1.25rem;
+  background-color: #515151;
+}
+nav[aria-label=breadcrumb] .breadcrumbs li {
+  padding: 0.3125rem;
+  margin: 0 !important;
+  text-transform: uppercase;
+  font-size: 0.6rem !important;
+}
+
+/* CSS Document */
+.jconfirm-cell {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.jconfirm .jconfirm-box {
+  background: #000;
+  background: linear-gradient(180deg, rgb(30, 30, 30) 0%, rgb(0, 0, 0) 100%);
+  border: double 0.363rem #787878 !important;
+  color: #fff !important;
+  max-width: 600px;
+  width: 100%;
+}
+
+.jconfirm-title {
+  font-size: 1.2rem;
+  font-family: "fty_skorzhen_ncvregular", serif !important;
+}
+
+.jconfirm-content {
+  font-size: 1rem !important;
+}
+.jconfirm-content label {
+  color: #fff !important;
+  font-size: inherit !important;
+}
+.jconfirm-content select {
+  font-size: inherit !important;
 }

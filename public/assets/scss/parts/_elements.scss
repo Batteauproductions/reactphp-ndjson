@@ -152,6 +152,26 @@ label.input-error {
                 padding: $padding;
                 font: $paragraph-font;
             }
+      
+            ul {
+                li {
+                    padding: 0 !important;
+                }
+            }
+            .accordion {
+                background-color: lighten($color-primary,20%);
+
+                .accordion-title {
+                    color: $color-secundary;                    
+                }
+
+                .accordion-item {
+                    color: $color-secundary;
+                }
+                .accordion-content {
+                    padding: 0; 
+                }
+            }           
 
             .dropdown {
                 position: relative;
@@ -188,7 +208,7 @@ label.input-error {
     width: 100%;
     height: 100%;
     min-height: 100vh;
-    padding: calc($padding*4) 0;
+    padding: calc($padding*4) $padding;
 
     &.solid {
         background-color: $color-primary;
@@ -343,12 +363,21 @@ label.input-error {
 
     .sortable-wrapper {
         position: sticky;
+        border-radius: $border-radius;
+        background: $color-primary;
         padding: inherit;
-        /* Large only */
-        @media screen and (min-width: #{$breakpoint-large}) and (max-width: #{$breakpoint-large-only}) {
-            top: 5.625rem;
+        top: 5.725rem;
+
+        select {
+            margin: calc($margin/2) 0 0;
         }
-        
+
+        hr {
+            margin: calc($margin / 2) 0;
+            border-color: #8f8f8f;
+            width: 100%;
+            max-width: 100%;
+        }
     }
 }
 

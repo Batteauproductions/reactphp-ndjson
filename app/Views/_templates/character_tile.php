@@ -8,7 +8,7 @@
         data-character_status="<?= esc($character->status_id) ?>"
         data-character_race="<?= esc($character->race_id) ?>"
         data-character_profession="<?= esc($character->profession_info) ?>"
-        class="cell small-12 medium-6 tile tile-status--<?= esc($character->status_name) ?>">
+        class="cell small-12 large-6 tile tile-status--<?= esc($character->status_name) ?>">
         
         <div class="grid-x">
             <div class="cell small-4">

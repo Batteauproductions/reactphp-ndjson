@@ -133,6 +133,7 @@ class Page extends BaseController
                 $arrJS = ['generator/generator.js','validation/character_validation.js'];
                 break;
             case 'database':
+                $arrJS = ['character_database.js'];
                 $arrData['arrCharacters'] = $this->models['character']->getCharacters($this->session->get('uid'));
                 $content = view('character/character_database',$arrData);
                 break;
@@ -182,7 +183,7 @@ class Page extends BaseController
                         $arrJS = ['generator/generator.js','validation/character_validation.js'];
                         break;
                     case 'database':
-                        //---
+                        $arrJS = ['character_database.js'];
                         $arrData = array (
                             'arrStatus' => $this->arrSettings['options_character_status'],
                             'arrType' => $this->arrSettings['options_character_types'],
@@ -232,6 +233,7 @@ class Page extends BaseController
             case 'user':
                 switch($child_page) {
                     case 'database':
+                        $arrJS = ['user_database.js'];
                         $arrData = array (
                             'arrRoles' => $this->arrSettings['options_user_roles'],
                             'arrStatus' => $this->arrSettings['options_user_status'],

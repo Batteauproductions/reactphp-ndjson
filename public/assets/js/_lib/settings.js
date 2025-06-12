@@ -69,6 +69,7 @@ const oTranslations = Object.freeze({
         "skill_speech": "Taal: Spreken",
         "skill_knowledge_x": "Kennis X",
         "upgrade": "verhogen",
+        "user_delete": "Weet je zeker dat je deze gebruiker wilt verwijderen?",
         "note_add" : "notitie toevoegen",
     }
 });
