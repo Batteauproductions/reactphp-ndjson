@@ -43,6 +43,8 @@ $routes->post('account/signin-process', 'Account::signInProcess');
 $routes->post('account/signup-process', 'Account::signUpProcess');
 $routes->post('account/update-profile', 'Account::updateProfile');
 //----
+$routes->post('admin/user-delete', 'Account::accountDelete');
+//----
 $routes->post('event/submit-form', 'Event::submitForm');
 $routes->post('event/update-form', 'Event::updateForm');
 

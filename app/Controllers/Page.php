@@ -275,19 +275,17 @@ class Page extends BaseController
 
         switch($page) {
             case 'help':
-                //$arrContent['content'] = view('manual/help');
-                $content = view('_templates/work_in_progress');
+                $content = view('manual/help');
                 break;
             case 'rulebooks':
                 $content = view('manual/rulebooks');
                 break;
             case 'skills':
-                //$arrContent['content'] = view('manual/skills');
-                $content = view('_templates/work_in_progress');
+                $arrData['arrSkills'] = $this->models['skill']->getAllSkills($this->arrRights['isGameMaster']);
+                $content = view('manual/skills',$arrData);
                 break;
             case 'faq':
-                //$arrContent['content'] = view('manual/faq');
-                $content = view('_templates/work_in_progress');
+                $content = view('manual/faq');
                 break;
         }
 

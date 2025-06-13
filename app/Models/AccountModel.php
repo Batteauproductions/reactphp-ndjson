@@ -163,4 +163,13 @@ class AccountModel extends Model
             return false;
         }
     }
+
+    public function deleteUser($uid, $isAdmin) {
+        //-----------------------------------
+        // This code ensures that if a non-admin tries to delete the user, they can't proceed
+        if ($isAdmin) {
+            return $this->db->table(TBL_USER)->where('id', $uid)->delete();
+        } 
+        return false;
+    }
 }

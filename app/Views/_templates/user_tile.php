@@ -2,6 +2,7 @@
     <p>User data missing.</p>
 <?php else: ?>
     <div 
+        data-user_id="<?= esc($user->id) ?>"
         data-user_name="<?= esc($user->firstname.' '.$user->lastname) ?>"
         data-user_role="<?= esc($user->role_id) ?>"
         data-user_status="<?= esc($user->status_id) ?>"

@@ -24,7 +24,7 @@ $(document).ready(function() {
                     },
                     error: function() {
                         const popupText = oTranslations[language].character_error;
-                        showPopup(`<p>${popupText}</p>`, 'inform', 'error',$modal.foundation('close'));
+                        showPopup(`<p>${popupText}</p>`, 'inform', 'error',function(){$modal.foundation('close')});
                         console.error(popupText);
                     }
                 });

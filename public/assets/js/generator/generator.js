@@ -25,9 +25,9 @@ $(document).ready(function() {
     */
     
     if (window.character_input !== null && window.character_input !== undefined && window.character_input !== '') { 
-        debugLog('Character information received, treating as excisting', character);        
+        debugLog('Character information received, treating as excisting', window.character_input);        
         //--setup a character based on json input
-        window.character = new Character (character_input);
+        window.character = new Character (JSON.parse(window.character_input));
         window.character.__construct();
         //check what adventures can be edited
         const created_dt = window.character.meta.created_dt ? new Date(window.character.meta.created_dt) : null; 
@@ -125,9 +125,14 @@ $(document).ready(function() {
         e.preventDefault(); 
         window.character.print();
     });
-    $('a[data-action="edit-adventure"]').on('click', (e) => {
+    $('a[data-action="character-lock"]').on('click', (e) => {
+        e.preventDefault(); 
+        window.character.lock();
+    });
+    $('a[data-action="edit-adventure"]').on('click', function (e) {
+        const storyId = $(this).data('id');
         e.preventDefault();
-        editAdventure();
+        editAdventure(storyId);
     });
 
 });

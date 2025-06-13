@@ -11,20 +11,19 @@ $(document).ready(function() {
             'question',
             function() {                
                 $.ajax({
-                    url: `${domain}/admin/character-delete`,
+                    url: `${domain}/admin/user-delete`,
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        action: 'delete',
-                        character: user_id
+                        uid: user_id
                     },
                     success: function(data) {
-                        $(`div[data-character_id="${char_id}"]`).remove();
+                        $(`div[data-user_id="${user_id}"]`).remove();
                         $modal.foundation('close');
                     },
                     error: function() {
-                        const popupText = oTranslations[language].character_error;
-                        showPopup(`<p>${popupText}</p>`, 'inform', 'error',$modal.foundation('close'));
+                        const popupText = oTranslations[language].user_error;
+                        showPopup(`<p>${popupText}</p>`, 'inform', 'error',function(){$modal.foundation('close')});
                         console.error(popupText);
                     }
                 });

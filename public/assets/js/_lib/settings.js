@@ -46,11 +46,12 @@ const oTranslations = Object.freeze({
         "increase_base_str": "Verhoogt de kracht",
         "loresheet": "Je krijgt hievoor een loresheet.",
         "more_info": "meer informatie",
+        "new": "Nieuw",
         "no_skills_available": "Op dit moment heb je geen beroep om vaardigheden van dit type te ondersteunen.",
         "not_choice_made": "Je dient nog een keuze te maken.",
         "not_enough_coin": "Je hebt niet genoeg geld om dit aan te schaffen.",
         "not_enough_vp": "Je hebt niet genoeg vaardigheidspunten.",
-        "new": "Nieuw",
+        "note_add" : "notitie toevoegen",
         "popup_success": "Gelukt!",
         "popup_error": "Oops!",
         "question_1": "Wat heb je dit evenement ondernomen?",
@@ -70,7 +71,7 @@ const oTranslations = Object.freeze({
         "skill_knowledge_x": "Kennis X",
         "upgrade": "verhogen",
         "user_delete": "Weet je zeker dat je deze gebruiker wilt verwijderen?",
-        "note_add" : "notitie toevoegen",
+        "user_error": "Er ging iets mis, neem contact op met een admin.",
     }
 });
 const icons = Object.freeze({
@@ -116,23 +117,39 @@ const icons = Object.freeze({
 });
 
 const iconset = Object.freeze({
-    attribute_adjust_none: null,
-    attribute_adjust_basic: [
+    adjust_none: null,
+    adjust_basic: [
         { name: 'remove', icon: icons.remove }
     ],
-    attribute_adjust_up: [
+    adjust_down: [
+        { name: 'downgrade', icon: icons.downgrade },
+    ],
+    adjust_down_remove: [
+        { name: 'downgrade', icon: icons.downgrade },
+        { name: 'remove', icon: icons.remove }
+    ],
+    adjust_up: [
         { name: 'upgrade', icon: icons.upgrade },
-        { name: 'remove', icon: icons.remove }
     ],
-    attribute_adjust_all: [
+    adjust_up_down: [
+        { name: 'downgrade', icon: icons.downgrade },
+        { name: 'upgrade', icon: icons.upgrade },
+    ],
+    adjust_up_down: [
         { name: 'downgrade', icon: icons.downgrade },
         { name: 'upgrade', icon: icons.upgrade },
         { name: 'remove', icon: icons.remove }
     ],
-    attribute_adjust_down: [
-        { name: 'downgrade', icon: icons.downgrade },
+    adjust_up_remove: [
+        { name: 'upgrade', icon: icons.upgrade },
         { name: 'remove', icon: icons.remove }
     ],
+    adjust_all: [
+        { name: 'downgrade', icon: icons.downgrade },
+        { name: 'upgrade', icon: icons.upgrade },
+        { name: 'remove', icon: icons.remove }
+    ],
+    
 });
 
 export {

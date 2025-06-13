@@ -15,15 +15,16 @@ class SkillModel extends Model
     }
 	
 	/*START: LINKED TO THE SKILLS*/
-	public function getSkills($admin=false) {		
+	public function getSkills($gamemaster=false) {		
 		$query = $this
                 ->db
                 ->table(TBL_SKILL.' s')
-                ->select('s.id, s.name, s.description, s.available, s.profession_link,s.modifier, s.skill_type, s.profession_link, s.profession_sublink, s.profession_rank, s.sl_only,
+                ->select('s.id, s.name, s.description, s.available, s.profession_link, s.modifier, s.skill_type, 
+                                s.profession_link, s.profession_sublink, s.profession_rank, 
+                                s.sl_only,
                             p.id as prof_id, p.name as prof_name,
                             sm.id as stat_id, sm.name as stat_name,
                             st.id as type_id, st.name as type_name')
-                ->where('s.available', 1)
                 ->join(TBL_PROF.' p','p.id = s.profession_link','left')
                 ->join(TBL_STATMOD.' sm','sm.id = s.modifier','left')
                 ->join(TBL_SKILL_TYPE.' st','st.id = s.skill_type','left')
@@ -32,11 +33,36 @@ class SkillModel extends Model
                 ->orderBy('s.profession_sublink','asc')
                 ->orderBy('s.profession_rank','asc');
             
-        if ($admin) {
-            $query->where('s.sl_only', 1);
-        } else {
-            $query->where('s.sl_only', null);
-        }
+        if (!$gamemaster) {
+            $query->where('s.sl_only', null)
+                ->where('s.available', 1);
+        } 
+
+		return $query->get()->getResultObject();
+	}
+
+    public function getAllSkills($gamemaster=false) {		
+		$query = $this
+                ->db
+                ->table(TBL_SKILL.' s')
+                ->select('s.id, s.name, s.description, s.available, s.profession_link, s.modifier, s.skill_type, 
+                                s.profession_link, s.profession_sublink, s.profession_rank, 
+                                s.loresheet, s.xp_cost, s.sl_only,
+                            p.id as prof_id, p.name as prof_name,
+                            sm.id as stat_id, sm.name as stat_name,
+                            st.id as type_id, st.name as type_name')
+                ->join(TBL_PROF.' p','p.id = s.profession_link','left')
+                ->join(TBL_STATMOD.' sm','sm.id = s.modifier','left')
+                ->join(TBL_SKILL_TYPE.' st','st.id = s.skill_type','left')
+                ->orderBy('s.name','asc')
+                ->orderBy('s.profession_link','asc')
+                ->orderBy('s.profession_sublink','asc')
+                ->orderBy('s.profession_rank','asc');
+            
+        if (!$gamemaster) {
+            $query->where('s.sl_only', null)
+                ->where('s.available', 1);
+        } 
 
 		return $query->get()->getResultObject();
 	}

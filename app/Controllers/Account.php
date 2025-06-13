@@ -6,6 +6,8 @@ use App\Models\AccountModel;
 use App\Controllers\EmailController;
 use CodeIgniter\Controller;
 
+use App\Helpers\AuthHelper; 
+
 class Account extends Controller
 {
 
@@ -13,6 +15,7 @@ class Account extends Controller
     protected $session;
     protected $accountModel;
     protected $mailController;  
+    protected $arrRights = [];
 
     public function __construct() 
     {
@@ -21,6 +24,20 @@ class Account extends Controller
         $this->session = session();
         $this->accountModel = new AccountModel();
         $this->mailController = new EmailController(); 
+
+        //collect the rights for the menu
+        //1 -- admin | has all the rights needed to perform changes in the system
+        //2 -- spelleiding | has rights to perform all but system changes
+        //3 -- editor | has rights to perform minor changes
+        //4 -- user | this user account has been banned from the system
+        // Collect the rights for the menu
+        $role = $this->session->get('role');
+        $this->arrRights = [
+            'isAdmin'      => AuthHelper::isLoggedIn($role, RIGHTS_ADMIN),
+            'isGameMaster' => AuthHelper::isLoggedIn($role, RIGHTS_GAMEMASTER),
+            'isEditor'     => AuthHelper::isLoggedIn($role, RIGHTS_EDITOR),
+            'isUser'       => AuthHelper::isLoggedIn($role, RIGHTS_ALL),
+        ];
     }
 
     public function signOutProcess() 
@@ -307,6 +324,18 @@ class Account extends Controller
             }            
             return view('_templates/framework', $arrContent);
         }        
+    }
+
+    public function accountDelete() 
+    {
+        $request = service('request');
+        $uid = $request->getPost('uid');
+        $isAdmin = $this->arrRights['isAdmin']; 
+        //only admins may delete accounts
+        if($isAdmin) {
+            return json_encode($this->accountModel->deleteUser($uid,$isAdmin));
+        } 
+        return false;
     }
 
 }

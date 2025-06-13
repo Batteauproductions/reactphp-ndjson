@@ -150,11 +150,11 @@ class CharacterAsset {
         this.rank = new_rank;
     
         // Icon logic
-        let iconType = "attribute_adjust_all";
+        let iconType = "adjust_all";
         if (new_rank === this.max_rank) { 
-            iconType = "attribute_adjust_down" 
+            iconType = "adjust_down_remove" 
         } else if (new_rank === this.min_rank || new_rank === 1) { 
-            iconType = "attribute_adjust_up" 
+            iconType = "adjust_up_remove" 
         }    
         const new_icons = generateIconSet(iconset[iconType], this, this.attribute);
     
@@ -180,9 +180,18 @@ class CharacterAsset {
             [`data-${this.container}_id`]: this.id, 
             [`data-${this.container}_sub_id`]: this.sub_id,
         });
-        //-- -- array to contain the columns, starting with the basic one        
+        //-- -- array to contain the columns, starting with the basic one   
+        let bNewSkill = true;
+
+        if (
+            new Date(this.created_dt) < new Date(window.character.meta.lastlocked_dt)
+        ) {
+            bNewSkill = false;
+        } 
+
+        this.modified_dt      
         let name = '';
-            name += `${!this.modified_dt || !this.locked_dt ? icons.new.icon() : ''}`;
+            name += `${bNewSkill ? icons.new.icon() : ''}`;
             name += `${this.loresheet ? icons.loresheet.icon() : ''}`;
             name += `${this.name}`;
             name += `${this.rank != this.max_rank ? ` (${icons.rank.text()} ${this.rank})` : ''}`;
@@ -208,8 +217,22 @@ class CharacterAsset {
                     'data-column': 'cost',
                     class: 'cell small-2 medium-1 text-right',
                     html: this.racial ? `<em>${oTranslations[language].racial}</em>` : `${this.rank_cost}pt.`
-                }));    
-                local_icons = this.rank !== this.max_rank ? iconset.attribute_adjust_up : this.racial ? iconset.attribute_adjust_none : iconset.attribute_adjust_basic;
+                })); 
+                //set icons
+                if (this.racial || this.rank == this.max_rank || this.max_rank == null) {
+                    // Racial or maxed out → no adjustments
+                    local_icons = iconset.adjust_none;
+                } else if (this.rank > 1 && this.rank < this.max_rank) {
+                    // Mid-range skill
+                    local_icons = this.locked_dt == null 
+                        ? iconset.adjust_up_down_remove 
+                        : iconset.adjust_up_down;
+                } else if (this.rank < this.max_rank) {
+                    // Low-rank skill
+                    local_icons = this.locked_dt == null 
+                        ? iconset.adjust_up_remove 
+                        : iconset.adjust_up;
+                }
                 break;
             case 'item':
                 arrColumns.push($('<div>', {
@@ -222,7 +245,7 @@ class CharacterAsset {
                     class: 'cell small-5 medium-4 text-center',
                     html: `${this.costText()}`
                 }));
-                local_icons = iconset["attribute_adjust_basic"];
+                local_icons = iconset["adjust_basic"];
                 break;
         }        
         //-- -- fills the column of icons with the correct iconset

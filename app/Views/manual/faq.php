@@ -1,1 +1,1 @@
-<?php echo 'work in progress' ?>
+<?= view('_templates/work_in_progress') ?>   

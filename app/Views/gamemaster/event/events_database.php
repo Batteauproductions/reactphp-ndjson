@@ -1,11 +1,18 @@
 <div class="grid-container">
     <section class="page-wrapper transparent">
         <div class="grid-x grid-padding-x grid-padding-y">
-            <div class="cell small-12 medium-4 large-3">
-                <a class="button solid" href="<?php echo base_url('gamemaster/event/create');?>">
-                    <i class="fa-regular fa-calendar-plus"></i>Evenement toevoegen
-                </a>
-                <hr>
+            <div class="cell sortable small-12 medium-4 large-3">
+                <div class="sortable-wrapper">
+                    <div class="grid-x">
+                        <div class="cell text-center">
+                            <h2>Acties</h2>
+                            <hr>
+                            <a class="button solid" href="<?php echo base_url('gamemaster/event/create');?>">
+                                <i class="fa-regular fa-calendar-plus"></i>Evenement toevoegen
+                            </a>                            
+                        </div> 
+                    </div> 
+                </div> 
             </div>            
             <div class="cell small-12 medium-8 large-9">
                 <div class="grid-x grid-x grid-margin-x grid-margin-y" data-equalizer>
