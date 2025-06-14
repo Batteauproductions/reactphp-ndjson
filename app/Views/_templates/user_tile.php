@@ -19,7 +19,7 @@
                     <p><?php echo $user->username ?></p>
                     <p><?php echo $user->status_name ?></p>
                     <ul>
-                        <li><a href="<?= base_url('gamemaster/character/edit/'.$user->id); ?>"><i class="fa-solid fa-pen-to-square"></i> aanpassen</a></li>
+                        <li><a href="<?= base_url('admin/profile/'.$user->id); ?>"><i class="fa-solid fa-pen-to-square"></i> aanpassen</a></li>
                         <li><a data-action="user-delete" data-id="<?= $user->id ?>"><i class="fa-solid fa-trash"></i> verwijderen</a></li>
                     </ul>
                 </div>

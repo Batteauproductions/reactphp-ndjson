@@ -14,21 +14,20 @@ class NotesModel extends Model
         $this->db = \Config\Database::connect();
     }
 
-    public function getNotes($char_id) 
+    public function getNotes($char_id,$isGamemaster=false) 
     {
 		$query = $this
                     ->db
-                    ->table(TBL_CHAR_COMMENTS.' n')
-                    ->select('n.id, n.personal_note, n.public_note, n.private_note')
-                    ->where('n.char_id',$char_id);
+                    ->table(TBL_CHAR_COMMENTS.' n');
+        if($isGamemaster) {
+            $query->select('n.id, n.mail_note, n.player_notes, n.sl_notes, n.sl_private_notes');
+        } else {
+            $query->select('n.id, n.player_notes, n.sl_notes, n.sl_private_notes');
+        }
+                       
+        $query->where('n.char_id',$char_id);
                 
         return $query->get()->getResultObject();
     }
-
-    public function UpdateNote() 
-    {
-
-    }
-
-    
+   
 }

@@ -27,17 +27,8 @@ $(document).ready(function() {
     if (window.character_input !== null && window.character_input !== undefined && window.character_input !== '') { 
         debugLog('Character information received, treating as excisting', window.character_input);        
         //--setup a character based on json input
-        window.character = new Character (JSON.parse(window.character_input));
+        window.character = new Character (window.character_input);
         window.character.__construct();
-        //check what adventures can be edited
-        const created_dt = window.character.meta.created_dt ? new Date(window.character.meta.created_dt) : null; 
-        $('a[data-action="edit-adventure"]').each(function() {
-            var dateStr = $(this).data('date'); // gets the value of data-date
-            var elDate = new Date(dateStr);
-            if (elDate < created_dt) {
-                $(this).addClass('disabled');
-            }
-        });
     } else {
         debugLog('No character information received, treating as new');    
         //--setup a new clean character object
@@ -113,6 +104,10 @@ $(document).ready(function() {
         e.preventDefault();
         editBackground();
     });
+    $('a[data-action="view-background"]').on('click', (e) => {
+        e.preventDefault();
+        viewBackground();
+    });
     $('a[data-action="character-save"]').on('click', (e) => {
         e.preventDefault(); 
         window.character.save();
@@ -133,6 +128,11 @@ $(document).ready(function() {
         const storyId = $(this).data('id');
         e.preventDefault();
         editAdventure(storyId);
+    });
+    $('a[data-action="view-adventure"]').on('click', function (e) {
+        const storyId = $(this).data('id');
+        e.preventDefault();
+        viewAdventure(storyId);
     });
 
 });

@@ -89,7 +89,7 @@
             <div class="cell small-12 medium-8 large-9">
                 <div class="grid-x grid-margin-x grid-margin-y wrapper-character" data-equalizer>
                     <?php foreach($arrCharacters as $character): ?>
-                        <?= view('_templates/character_tile', ['character' => $character, 'target' => 'gamemaster']) ?>                                               
+                        <?= view('_templates/character_tile', ['character' => $character, 'target' => 'gamemaster', 'isGameMaster' => true]) ?>                                               
                     <?php endforeach; ?>
                 </div>
             </div> 

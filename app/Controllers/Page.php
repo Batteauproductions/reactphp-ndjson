@@ -10,6 +10,7 @@ use App\Models\RaceModel;
 use App\Models\ProfessionModel;
 use App\Models\SkillModel;
 use App\Models\NotesModel;
+use App\Models\FaqModel;
 use App\Helpers\AuthHelper; 
 
 class Page extends BaseController
@@ -35,6 +36,7 @@ class Page extends BaseController
             'profession'=> new ProfessionModel(),
             'skill'     => new SkillModel(),
             'notes'     => new NotesModel(),
+            'faq'       => new FaqModel(),
         ];
 
         // Collect the rights for the menu
@@ -122,19 +124,18 @@ class Page extends BaseController
             case 'view':
             case 'edit':
                 $this->characterData['oCharacter'] =  $this->models['character']->getCharacterByID($id,$this->session->get('uid'),$this->arrRights['isGameMaster']);
-                $this->characterData['arrNotes'] = $this->models['notes']->getNotes($id);
                 $content = view('character/character_sheet',$this->characterData);
                 $arrJS = ['generator/generator.js','validation/character_validation.js'];
                 break;
             case 'create':  
                 $this->characterData['oCharacter'] = null;
-                $this->characterData['arrNotes'] = null;
                 $content = view('character/character_sheet',$this->characterData);
                 $arrJS = ['generator/generator.js','validation/character_validation.js'];
                 break;
             case 'database':
                 $arrJS = ['character_database.js'];
-                $arrData['arrCharacters'] = $this->models['character']->getCharacters($this->session->get('uid'));
+                $arrData['isGameMaster'] = $this->arrRights['isGameMaster'];
+                $arrData['arrCharacters'] = $this->models['character']->getCharacters($this->session->get('uid'));                
                 $content = view('character/character_database',$arrData);
                 break;
         }
@@ -178,7 +179,6 @@ class Page extends BaseController
                     case 'view':
                     case 'edit':
                         $this->characterData['oCharacter'] =  $this->models['character']->getCharacterByID($id,$this->session->get('uid'),$this->arrRights['isGameMaster']);
-                        $this->characterData['arrNotes'] = $this->models['notes']->getNotes($id);
                         $content = view('character/character_sheet',$this->characterData);
                         $arrJS = ['generator/generator.js','validation/character_validation.js'];
                         break;
@@ -285,7 +285,8 @@ class Page extends BaseController
                 $content = view('manual/skills',$arrData);
                 break;
             case 'faq':
-                $content = view('manual/faq');
+                $arrData['arrFaq'] = $this->models['faq']->getAllFaq();
+                $content = view('manual/faq',$arrData);
                 break;
         }
 

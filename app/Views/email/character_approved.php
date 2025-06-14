@@ -14,9 +14,9 @@
         <td style="padding: 0 20px 20px; color: #FFFFFF; font: normal 16px/18px 'Manuale', serif;">
             Beste <?php echo $sFirstname.' '.$sLastname; ?>,<br><br>
             Je personage <?php echo $char_name?> is door ons gecontroleerd en goed gekeurd!<br><br>
-            <?php if(isset($public_note) && !empty($public_note)): ?>
+            <?php if(isset($note) && !empty($note)): ?>
                 <div style="background-color:#B4B4B4; color:#000000; padding:10px; margin-bottom:10px;">
-                    <?php echo $public_note; ?>
+                    <?php echo $note; ?>
                 </div>
             <?php endif; ?>	 
             <br>

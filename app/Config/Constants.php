@@ -116,7 +116,9 @@ define('RIGHTS_EDITOR', array(1,2,3));
 define('RIGHTS_ALL', array(1,2,3,4));
 
 //
-define('CHARACTER_EDITABLE', array(1,3));
+define('CHARACTER_EDITABLE', array(1,7));
+define('CHARACTER_WRITABLE', array(3,7));
+define('CHARACTER_VIEWABLE', array(2,4,5));
 
 /*TABLES*/
 define('TBL_EQUIPMENT','equipment');

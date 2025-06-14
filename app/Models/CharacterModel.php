@@ -5,6 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 use App\Models\ProfessionModel;
 use App\Models\SkillModel;
+use App\Models\NotesModel;
 
 class CharacterModel extends Model
 {
@@ -12,12 +13,14 @@ class CharacterModel extends Model
     protected $db;
     protected $professionModel;
     protected $skillModel;
+    protected $notesModel;
 
     public function __construct()
     {
         $this->db = \Config\Database::connect();
         $this->professionModel = new ProfessionModel();
         $this->skillModel = new SkillModel(); 
+        $this->notesModel = new NotesModel();
     }
 
     public function getCharacterById($cid, $uid, $gamemaster) {
@@ -58,7 +61,7 @@ class CharacterModel extends Model
 
         // Query for character race
         $oCharacter->race = $this->db->table(TBL_CHAR_RACE . ' r')
-                        ->select('r.main_id, r.modifier, r.created_dt, r.modified_dt,
+                        ->select('r.main_id as id, r.modifier, r.created_dt, r.modified_dt,
                             cr.name', false)
                         ->join(TBL_RACE . ' cr', 'r.main_id = cr.id')
                         ->where('r.char_id', $cid)
@@ -109,7 +112,7 @@ class CharacterModel extends Model
             ->get()
             ->getResultObject();
 
-        return json_encode($oCharacter);
+        return $oCharacter;
     }
 
     public function deleteCharacter($cid, $uid, $gamemaster) {
@@ -172,7 +175,7 @@ class CharacterModel extends Model
     }
 
 
-    public function saveCharacter($arrData) {
+    public function saveCharacter($arrData,$status=null,$note=null) {
         // Step 1 make sure all the data is correct
         if ($arrData['uid'] === null || $arrData['uid'] === null || $arrData['character'] === null) {
             return false;
@@ -189,13 +192,14 @@ class CharacterModel extends Model
         $profession = $arrCharJSON->profession;
         $skill = $arrCharJSON->skill;  
         $item = $arrCharJSON->item; 
+        $notes = $arrCharJSON->notes; 
         // -- check if new based on fact if ID is parsed
         $isNew = $meta->id === null;       
         // Step 3a: Fill the Char table
         $charData = [
             'user_id'     => $user_id,
             'type_id'     => $meta->type,
-            'status_id'   => $meta->status,
+            'status_id'   => $status === null ? $meta->status : $status,
             'avatar'      => $meta->avatar ?? null,
             'name'        => $meta->name,
             'background'  => $meta->background ?? null,
@@ -257,7 +261,30 @@ class CharacterModel extends Model
         if($skill) { $this->insertItems($skill, TBL_CHAR_SKILL, $char_id, ['racial','rank','bonus']); }
         // Step 3f: Insert data into the TBL_CHAR_ITEMS table
         if($item) { $this->insertItems($item, TBL_CHAR_ITEMS, $char_id, ['bonus', 'bonus', 'amount']); }
-        
+        // Step 3g: Update the character note for email
+        if($status===5) {
+            $this->db->table(TBL_CHAR_COMMENTS)
+            ->where('char_id', $char_id)
+            ->update($charRace);
+        } else {
+            $charNote = [
+                'char_id' => $char_id,
+                'player_notes' => null,
+                'sl_notes' => null,
+                'sl_private_notes' => null,
+            ];
+            foreach ($notes as $note) {
+                $charNote[$note->type] = $note->text;
+            }
+            if ($isNew) {
+                $this->db->table(TBL_CHAR_COMMENTS)->insert($charNote);
+            } else {
+                $this->db->table(TBL_CHAR_COMMENTS)
+                    ->where('char_id', $char_id)
+                    ->update($charNote);
+            }
+        }
+
         $returnData = [
             'id' => $char_id,
             'done' => true,
