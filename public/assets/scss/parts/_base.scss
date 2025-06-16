@@ -92,6 +92,12 @@ i {
         margin-right: calc(0.5 * $margin);
     }
 }
+
+li {
+    color: $paragraph-color;
+    font: $paragraph-font;
+}
+
 a, a:hover, a:active, a:focus {
     color: $link-color;
     //font: $link-font;

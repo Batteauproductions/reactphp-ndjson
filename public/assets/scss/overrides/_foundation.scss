@@ -12,10 +12,17 @@ nav[aria-label="breadcrumb"] {
 	background-color: lighten($color-primary,20%);
 	.breadcrumbs {				
 		li {
+			&:first-child {
+				padding-left: $padding;
+			}
 			padding: calc($padding/4);	
 			margin: 0 !important;
 			text-transform: uppercase;
 			font-size: calc($paragraph-font-size*0.6) !important;
+
+			a {
+				color: $color-secundary;
+			}
 		}		
 	}
 }

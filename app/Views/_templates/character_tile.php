@@ -10,12 +10,12 @@
         data-character_profession="<?= esc($character->profession_info) ?>"
         class="cell small-12 large-6 tile tile-status--<?= esc($character->status_name) ?>">        
         <div class="grid-x">
-            <div class="cell small-4">
+            <div class="cell small-12 medium-4">
                 <div class="tile-avatar-wrapper">
                     <img src="<?= empty($character->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/hero/'.$character->avatar) ?>" />
                 </div>
             </div>
-            <div class="cell small-8">
+            <div class="cell small-12 medium-8">
                 <div class="tile-content">
                     <h1><?= esc(substr($character->name, 0, 30)) ?></h1>
                     <p><?= esc($character->status_name) ?></p>
