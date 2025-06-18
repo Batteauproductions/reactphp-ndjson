@@ -22,27 +22,27 @@
                 <?php endif ?>
             </div> 
             <div>
-                <label for="username">Gebruikersnaam</label>
+                <label for="username">Gebruikersnaam *</label>
                 <input id="username" type="text" name="username">
             </div>
             <div>
-                <label for="register_code">Register-code</label>
+                <label for="register_code">Register-code <span data-tooltip tabindex="1" title="Bij registratie voor een evenement ontvang je van ons een code om je account aan te maken."><i class="fa-solid fa-circle-info" style="margin:0;"></i></span></label>
                 <input id="register_code" type="text" name="register_code">
             </div>
             <div>
-                <label for="email">Email</label>
+                <label for="email">Email *</label>
                 <input id="email" type="email" name="email">
             </div>
             <div>
-                <label for="firstname">Voornaam</label>
+                <label for="firstname">Voornaam *</label>
                 <input id="firstname" type="text" name="firstname">
             </div>
             <div>
-                <label for="lastname">Achternaam</label>
+                <label for="lastname">Achternaam *</label>
                 <input id="lastname" type="text" name="lastname">
             </div>
             <div>
-                <label for="birthday">Geboortedatum</label>
+                <label for="birthday">Geboortedatum *</label>
                 <input id="birthday" type="date" name="birthday">
             </div>
             <div>
@@ -50,11 +50,11 @@
                 <input id="discord" type="text" name="discord">
             </div>            
             <div>
-                <label for="password">Wachtwoord</label>
+                <label for="password">Wachtwoord *</label>
                 <input id="password" type="password" name="password">
             </div>
             <div>
-                <label for="password_repeat">Wachtwoord herhalen</label>
+                <label for="password_repeat">Wachtwoord herhalen *</label>
                 <input id="password_repeat" type="password" name="password_repeat">
             </div>
             <div>

@@ -4,7 +4,7 @@
             <h1>Wachtwoord vergeten</h1>
             <img class="spacer-image" src="<?php echo image_path('elements/header-img.png') ?>" alt=""/>
             <p>
-                Je ontvangt binnen enkele minuten een e-mail op <span class="form-data"><?php echo $email ?></span> met daarin een link om een nieuw wachtwoord in te stellen.
+                Als het mail adres <span class="form-data"><?php echo $email ?></span> bij ons bekent is, zal je binnen enkele minuten een e-mail ontvangen met daarin een link om een nieuw wachtwoord in te stellen.
             </p>
         </div> 
         <div>
