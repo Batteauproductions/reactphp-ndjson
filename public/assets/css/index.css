@@ -523,14 +523,21 @@ label.input-error {
 .navigation-site nav .accordion, .navigation-footer nav .accordion {
   background-color: #515151;
 }
-.navigation-site nav .accordion .accordion-title, .navigation-footer nav .accordion .accordion-title {
+.navigation-site nav .accordion .accordion-item, .navigation-footer nav .accordion .accordion-item {
+  background-color: #515151;
   color: #7D1717;
 }
-.navigation-site nav .accordion .accordion-item, .navigation-footer nav .accordion .accordion-item {
-  color: #7D1717;
+.navigation-site nav .accordion .accordion-title, .navigation-footer nav .accordion .accordion-title {
+  color: #E34646;
+  border: none;
+}
+.navigation-site nav .accordion .accordion-title:hover, .navigation-footer nav .accordion .accordion-title:hover {
+  background-color: #6b6b6b;
 }
 .navigation-site nav .accordion .accordion-content, .navigation-footer nav .accordion .accordion-content {
+  background-color: #6b6b6b;
   padding: 0;
+  border: 0;
 }
 .navigation-site nav .dropdown, .navigation-footer nav .dropdown {
   position: relative;
@@ -607,6 +614,7 @@ label.input-error {
   top: 100%;
   height: 100%;
   transition: top 500ms;
+  width: 100%;
   padding: 1.25rem;
 }
 .profile .profile-avatar .profile-avatar-action ul li {
@@ -793,6 +801,7 @@ nav[aria-label=breadcrumb] {
   background-color: #515151;
 }
 nav[aria-label=breadcrumb] .breadcrumbs li {
+  color: #e7e7e7;
   padding: 0.3125rem;
   margin: 0 !important;
   text-transform: uppercase;

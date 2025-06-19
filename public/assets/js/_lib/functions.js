@@ -63,7 +63,7 @@ function initiateEditor() {
     });
 }
 
-function showPopup(message, type='inform', tone='', confirm = {}) {
+function showPopup(message, type='inform', tone='', confirm = () => {}) {
     debugLog('showPopup', message, type);
     const $modal = $('#popup-modal');
     const image = `system_${tone}`;
@@ -82,7 +82,8 @@ function showPopup(message, type='inform', tone='', confirm = {}) {
             $cancel_btn.off('click').on('click', function(){ $modal.foundation('close') }).show();
             break;
         case 'inform':
-            $confirm_btn.on('click',function() {
+            $confirm_btn.off('click').on('click',function() {
+                confirm();
                 $modal.foundation('close');
             });
             break;

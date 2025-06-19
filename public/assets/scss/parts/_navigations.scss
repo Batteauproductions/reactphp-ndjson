@@ -29,16 +29,21 @@
             }
             .accordion {
                 background-color: lighten($color-primary,20%);
-
-                .accordion-title {
-                    color: $color-secundary;                    
-                }
-
                 .accordion-item {
+                    background-color: lighten($color-primary,20%);
                     color: $color-secundary;
                 }
+                .accordion-title {
+                    color: $link-color;                    
+                    border: none;
+                    &:hover {
+                        background-color: lighten($color-primary,30%);
+                    }
+                }
                 .accordion-content {
+                    background-color: lighten($color-primary,30%);
                     padding: 0; 
+                    border: 0;
                 }
             }           
 

@@ -119,6 +119,7 @@ define('RIGHTS_ALL', array(1,2,3,4));
 define('CHARACTER_EDITABLE', array(1,7));
 define('CHARACTER_WRITABLE', array(3,7));
 define('CHARACTER_VIEWABLE', array(2,4,5));
+define('CHRONICLE_ID', 2); // this is only changed once every few years
 
 /*TABLES*/
 define('TBL_EQUIPMENT','equipment');

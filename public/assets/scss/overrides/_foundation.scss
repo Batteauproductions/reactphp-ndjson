@@ -12,6 +12,7 @@ nav[aria-label="breadcrumb"] {
 	background-color: lighten($color-primary,20%);
 	.breadcrumbs {				
 		li {
+			color: $color-font-body-light;
 			&:first-child {
 				padding-left: $padding;
 			}

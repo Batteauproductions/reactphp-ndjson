@@ -108,19 +108,20 @@ $(document).ready(function() {
         e.preventDefault();
         viewBackground();
     });
-    $('a[data-action="character-save"]').on('click', (e) => {
+    $('a[data-action="character-save"]').on('click', function (e) {
         e.preventDefault(); 
         window.character.save();
     });
-    $('a[data-action="character-submit"]').on('click', (e) => {
+    $('a[data-action="character-submit"]').on('click', function (e) {
         e.preventDefault(); 
-        window.character.submit();
+        console.log(window.character.meta.status_name, window.character.meta.status)
+        window.character.submit(window.character.meta.status_name,window.character.meta.status);
     });
-    $('a[data-action="character-print"]').on('click', (e) => {
+    $('a[data-action="character-print"]').on('click', function (e) {
         e.preventDefault(); 
         window.character.print();
     });
-    $('a[data-action="character-lock"]').on('click', (e) => {
+    $('a[data-action="character-lock"]').on('click', function (e) {
         e.preventDefault(); 
         window.character.lock();
     });

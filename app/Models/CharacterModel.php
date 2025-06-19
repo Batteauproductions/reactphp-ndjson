@@ -32,7 +32,7 @@ class CharacterModel extends Model
         // This code ensures that if a non-gamemaster tries to access the page,
         // they can't call up a character that isn't theirs.
         $query = $this->db->table(TBL_CHAR.' c')
-            ->select('c.id, c.type_id as type, c.status_id as status, c.avatar, c.name, c.background, c.created_dt, c.modified_dt, c.firstlocked_dt, c.lastlocked_dt,
+            ->select('c.id, c.type_id as type, c.status_id as status, c.chronicle_id as chronicle, c.avatar, c.name, c.background, c.created_dt, c.modified_dt, c.firstlocked_dt, c.lastlocked_dt,
                     ct.name as type_name,
                     cs.name as status_name')
             ->join(TBL_CHAR_TYPES . ' ct', 'ct.id = type_id')
@@ -84,7 +84,7 @@ class CharacterModel extends Model
         $oCharacter->skill = $this->db
                         ->table(TBL_CHAR_SKILL . ' cs')
                         ->select('cs.main_id, cs.sub_id, cs.racial, cs.rank, cs.bonus, cs.created_dt, cs.modified_dt,
-                            s.name as name, s.skill_type, s.xp_cost as cost,
+                            s.name as name, s.skill_type, s.xp_cost as cost, s.modifier, 
                             ss.name as sub_name', false)
                         ->join(TBL_SKILL . ' s', 'cs.main_id = s.id')
                         ->join(TBL_SKILL_SUB . ' ss', 'cs.sub_id = ss.id','left')
@@ -109,6 +109,14 @@ class CharacterModel extends Model
             ->table(TBL_CHAR_STORIES . ' cs')
             ->select('cs.event_id, cs.question_1, cs.question_2, cs.question_3, cs.question_4, cs.question_5, cs.question_6, cs.created_dt, cs.modified_dt', false)
             ->where('cs.char_id', $cid)
+            ->get()
+            ->getResultObject();
+
+        // Query for character notes
+        $oCharacter->notes = $this->db
+            ->table(TBL_CHAR_COMMENTS . ' cc')
+            ->select('cc.char_id, cc.mail_note, cc.player_notes, cc.sl_notes, cc.sl_private_notes', false)
+            ->where('cc.char_id', $cid)
             ->get()
             ->getResultObject();
 
@@ -200,6 +208,7 @@ class CharacterModel extends Model
             'user_id'     => $user_id,
             'type_id'     => $meta->type,
             'status_id'   => $status === null ? $meta->status : $status,
+            'chronicle_id'=> CHRONICLE_ID,
             'avatar'      => $meta->avatar ?? null,
             'name'        => $meta->name,
             'background'  => $meta->background ?? null,

@@ -18,7 +18,7 @@
             <div class="cell small-12 medium-8">
                 <div class="tile-content">
                     <h1><?= esc(substr($character->name, 0, 30)) ?></h1>
-                    <p><?= esc($character->status_name) ?></p>
+                    <p><?= esc($character->status_name) ?> | <?= $character->modified_dt ? $character->modified_dt : $character->created_dt ?></p>
                     <ul>
                         <?php $showBtn = $isGameMaster || !in_array($character->status_id, CHARACTER_VIEWABLE) ?>
                         <?php if($showBtn): ?>

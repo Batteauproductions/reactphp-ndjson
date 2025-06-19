@@ -91,14 +91,14 @@ class Character {
     }
 
     setStatus(description,value) {
-        debugLog(`setStatus: ${value}`);
+        debugLog(`setStatus: ${description}  ${value}`);
         this.meta.status = parseInt(value);
         $('#characterstatus').html(`<i class="fa-solid fa-rotate-right"></i>${description}</span>`).on('click',changeStatus);
         $('input[name="char_status"]').val(value);
     }
 
     setType(description,value) {
-        debugLog(`setType: ${value}`);
+        debugLog(`setType: ${description} ${value}`);
         this.meta.type = parseInt(value);
         $('#charactertype').html(`<i class="fa-solid fa-rotate-right"></i>${description}</span>`).on('click',changeType);   
         $('input[name="char_type"]').val(value);
@@ -108,8 +108,8 @@ class Character {
        transferCharacter('save'); 
     }
 
-    submit() {
-        this.setStatus(2);
+    submit(description,value) {
+        this.setStatus(description,value);
         transferCharacter('submit');
     }
 
@@ -151,16 +151,15 @@ class Character {
         // Calculate and update window.character.build properties
         for (const [key, { base, factor, stat, additionalFactor, additionalStat }] of Object.entries(statMappings)) {
             let total = base + (calculateIncrease(factor) * stat);
-
+            // Check for additional factors or stats
             if (additionalFactor && additionalStat) {
                 total += calculateIncrease(additionalFactor) * additionalStat;
             }
-
             // Inject dynamic max_xp boost
             if (key === 'max_xp') {
                 total += updateMaxXP();
             }
-
+            // Set the total value of the build based on key
             window.character.build[key] = total;
         }
 
@@ -235,7 +234,7 @@ class Character {
                     attribute: "skill",
                     container: 
                         [1, 2, 12].includes(parseInt(obj.skill_type)) ? 'skill_base' :
-                        [6, 8].includes(parseInt(obj.skill_type)) ? 'skill_combat' :
+                        [6, 8, 13].includes(parseInt(obj.skill_type)) ? 'skill_combat' :
                         [4, 5, 11].includes(parseInt(obj.skill_type)) ? 'skill_magic' :
                         [3, 10].includes(parseInt(obj.skill_type)) ? 'skill_divine' :
                         'skill_base',
@@ -369,9 +368,13 @@ function transferCharacter(btn_action) {
             const popupTitle = isSuccess ? lang["popup_success"] : lang["popup_error"];
             const popupText = isSuccess ? lang["character_save_done"] : lang["character_error_save"];
             const tone = isSuccess ? 'success' : 'error';
+            console.log('btn_action', btn_action)
+            const confirm = btn_action == 'save' 
+                        ? function () {} 
+                        : function () { console.log('hello world'); window.location.href = `${domain}/user/character/database`; };
 
             $button.html(`${icon.icon()} ${icon.text()}`);
-            showPopup(`<h2>${popupTitle}</h2><p>${popupText}</p>`, 'inform', tone);
+            showPopup(`<h2>${popupTitle}</h2><p>${popupText}</p>`, 'inform', tone, confirm);
 
             if (data.id) {
                 window.character.meta.id = data.id;
