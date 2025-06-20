@@ -7,7 +7,7 @@
                 Spelernaam
             </div>
             <div class="cell small-6">
-                <?php print_r($oSession->get('name')) ?>
+                <?= isset($oSession) && method_exists($oSession, 'get') ? esc($oSession->get('name')) : '' ?>
             </div>
             <div class="cell small-6 text-left">
                 Karakternaam
@@ -31,13 +31,13 @@
                 Vaardigheid
             </div>
             <div class="cell small-6">
-                <span id="stat-spend_xp"><?php echo $jsonBaseChar['spend_xp']?></span>/<span id="stat-max_xp"><?php echo $jsonBaseChar['max_xp'] ?></span>pt.
+                <span id="stat-spend_xp"><?= isset($jsonBaseChar) ? $jsonBaseChar['spend_xp'] : ''?></span>/<span id="stat-max_xp"><?= isset($jsonBaseChar) ? $jsonBaseChar['max_xp'] : ''?></span>pt.
             </div>
             <div class="cell small-6 text-left">
                 Geld
             </div>
             <div class="cell small-6">
-                <span id="stat-currency"><?php echo $jsonBaseChar['currency'] ?></span>
+                <span id="stat-currency"><?= isset($jsonBaseChar) ? $jsonBaseChar['currency'] : ''?></span>
             </div>   
             <div class="cell small-6 text-left">
                 Type

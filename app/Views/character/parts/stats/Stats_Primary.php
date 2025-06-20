@@ -6,25 +6,25 @@
             Levenspunten
         </div>
         <div class="cell small-6">
-            <span id="stat-hp"><?php echo $jsonBaseChar['hp'] ?></span>
+            <span id="stat-hp"><?= isset($jsonBaseChar) ? $jsonBaseChar['hp'] : ''?></span>
         </div>
         <div class="cell small-6 text-left">
             Sanity
         </div>
         <div class="cell small-6">
-            <span id="stat-sanity"><?php echo $jsonBaseChar['sanity'] ?></span>
+            <span id="stat-sanity"><?= isset($jsonBaseChar) ? $jsonBaseChar['sanity'] : ''?></span>
         </div>
         <div class="cell small-6 text-left">
             Mana
         </div>
         <div class="cell small-6">
-            <span id="stat-mana"><?php echo $jsonBaseChar['mana'] ?></span>
+            <span id="stat-mana"><?= isset($jsonBaseChar) ? $jsonBaseChar['mana'] : ''?></span>
         </div>
         <div class="cell small-6 text-left">
             Godpunten
         </div>
         <div class="cell small-6">
-            <span id="stat-gp"><?php echo $jsonBaseChar['gp'] ?></span>
+            <span id="stat-gp"><?= isset($jsonBaseChar) ? $jsonBaseChar['gp'] : ''?></span>
         </div>
         <div class="cell small-6 text-left">
             Patron gunst

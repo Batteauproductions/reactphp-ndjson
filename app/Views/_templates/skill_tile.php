@@ -1,5 +1,5 @@
 <?php if (!$skill): ?>
-    <p>User data missing.</p>
+    <p>Skill data missing.</p>
 <?php else: ?>
     <div 
         data-skill_id="<?= esc($skill->id) ?>"

@@ -6,19 +6,19 @@
             Kracht
         </div>
         <div class="cell small-6">
-            <span id="stat-str"><?php echo $jsonBaseChar['str'] ?></span>
+            <span id="stat-str"><?= isset($jsonBaseChar) ? $jsonBaseChar['str'] : ''?></span>
         </div>
         <div class="cell small-6 text-left">
             Behendingheid
         </div>
         <div class="cell small-6">
-            <span id="stat-dex"><?php echo $jsonBaseChar['dex'] ?></span>
+            <span id="stat-dex"><?= isset($jsonBaseChar) ? $jsonBaseChar['dex'] : ''?></span>
         </div>
         <div class="cell small-6 text-left">
             Intelligentie
         </div>
         <div class="cell small-6">
-            <span id="stat-intel"><?php echo $jsonBaseChar['intel'] ?></span>
+            <span id="stat-intel"><?= isset($jsonBaseChar) ? $jsonBaseChar['intel'] : ''?></span>
         </div>
         <div class="cell small-6 text-left">
             Clues

@@ -10,6 +10,7 @@ import { pickBasekit } from './equipment.js';
 import { Profession } from '../character_asset/professions.js';
 import { Skill } from '../character_asset/skills.js';
 import { Item } from '../character_asset/item.js';
+import { character_note } from '../character/note.js'
 
 // Page functions
 class Character {
@@ -173,16 +174,20 @@ class Character {
     }
 
     __construct() {
-        const lang = oTranslations[language];
-        //--Set default information
+        // This function is meant to recreate all the character asset classes.
+        // When a existing character is parsed, it is an json object, 
+        // however the objects are not defined as classes within the character class.
+
+        // Set default visual information
+        //-- Since these fields are required upon creation they can be set without checks
         this.setStatus(this.meta.status_name,this.meta.status);
         this.setType(this.meta.type_name,this.meta.type);
         this.setName(this.meta.name);        
-        //--Set the race by name
-        if(this.race) {
-            this.setRace(this.race.name);
-        }
-        //create new profession objects
+        //-- Set the race by name
+        if(this.race) { this.setRace(this.race.name) }
+
+        // Set advannced visual and functional information
+        //-- Convert the profession object(s) to object classes
         const tmp_prof = this.profession;
         this.profession = [];
         tmp_prof.forEach(obj => {     
@@ -286,7 +291,16 @@ class Character {
             const itemClass = new Item(tmp_obj);
             itemClass.__construct();
         });
-        //const tmp_item = this.item;
+        //-- Create new note class objects on the character 
+        const tmp_note = this.notes[0];
+        this.notes = [];
+        const targetKeys = ["player_notes", "sl_notes","sl_private_notes"];
+        Object.entries(tmp_note).forEach(([key, value]) => {
+            if (targetKeys.includes(key) && value !== null ) {
+                const noteClass = new character_note(key,value);
+                noteClass.add();
+            }
+        });
         
         this.update();
     }

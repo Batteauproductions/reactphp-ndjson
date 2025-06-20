@@ -8,6 +8,8 @@ use CodeIgniter\Router\RouteCollection;
 
 //-----Page View Related Routes------//
 //--character
+$routes->get('gamemaster/character/print/(:any)', 'Page::viewPrintable/$1');
+$routes->get('user/character/print/(:any)', 'Page::viewPrintable/$1');
 $routes->get('user/character/(:any)', 'Page::viewCharacters/$1');
 //--gamemaster
 $routes->get('gamemaster/(:any)', 'Page::viewGameMaster/$1');

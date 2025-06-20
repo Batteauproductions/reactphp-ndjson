@@ -306,6 +306,16 @@ class Page extends BaseController
         return $this->constructView($content,$arrJS);
     }
 
+    public function viewPrintable($id)
+    {
+        // You need to be logged in to view this page
+        if (!$this->arrRights['isUser']) {
+            return $this->noPageAccess();
+        }
+        $this->characterData['oCharacter'] =  $this->models['character']->getCharacterByID($id,$this->session->get('uid'),$this->arrRights['isGameMaster']);
+        return view('character/character_print', $this->characterData);
+    }
+
     private function constructView($content = '', $arrJS = [])
     {
         // Check if 'isUser' is true and assign the appropriate view

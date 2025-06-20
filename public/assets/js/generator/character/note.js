@@ -13,7 +13,7 @@ class character_note {
      */
     constructor(type, text, created_dt, modified_dt) {
         this.type = type;
-        this.text = text;
+        this.text = text ? text : '';
         this.created_dt = created_dt || currentDateTime;
         this.modified_dt = modified_dt || null;
     }
