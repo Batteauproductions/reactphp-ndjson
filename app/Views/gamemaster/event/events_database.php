@@ -7,6 +7,8 @@
                         <div class="cell text-center">
                             <h2>Acties</h2>
                             <hr>
+                            <p>Op dit moment spelen wij in <strong>Kroniek <?= CHRONICLE_ID ?></strong></p>
+                            
                             <a class="button solid" href="<?php echo base_url('gamemaster/event/create');?>">
                                 <i class="fa-regular fa-calendar-plus"></i>Evenement toevoegen
                             </a>                            

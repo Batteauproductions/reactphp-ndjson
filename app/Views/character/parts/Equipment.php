@@ -4,5 +4,5 @@
     <div data-id="item-list">
         <!-- Dynamic filled -->
     </div>
-    <a data-action="pick-item"><i class="fa-solid fa-plus"></i>toevoegen</a>
+    <a data-action="pick-item" class="hide-for-print"><i class="fa-solid fa-plus"></i>toevoegen</a>
 </div>

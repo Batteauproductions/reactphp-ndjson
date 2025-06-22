@@ -4,5 +4,5 @@
     <div data-id="skill_magic-list">
         <!-- Dynamic filled -->
     </div>
-    <a data-action="pick-skill-magic"><i class="fa-solid fa-plus"></i>toevoegen</a>
+    <a data-action="pick-skill-magic" class="hide-for-print"><i class="fa-solid fa-plus"></i>toevoegen</a>
 </div>

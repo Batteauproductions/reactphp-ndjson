@@ -36,6 +36,10 @@
             font-size: 1.25rem;
         }
 
+        .hide-for-print {
+            display: none;
+        }
+
         /* Forces new page */
         .page-break {
             page-break-before: always; 

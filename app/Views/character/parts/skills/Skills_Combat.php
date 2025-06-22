@@ -20,6 +20,6 @@
         <?php endif; ?>
     </div>
     <?php if(!isset($arrSkills)): ?>
-        <a data-action="pick-skill-combat"><i class="fa-solid fa-plus"></i>toevoegen</a>
+        <a data-action="pick-skill-combat" class="hide-for-print"><i class="fa-solid fa-plus"></i>toevoegen</a>
     <?php endif; ?>
 </div>

@@ -21,7 +21,7 @@
             <?php endif; ?>
         </div>
         <?php if(!isset($arrProfessions)): ?>
-            <a data-action="pick-profession"><i class="fa-solid fa-plus"></i>toevoegen</a>
+            <a data-action="pick-profession" class="hide-for-print"><i class="fa-solid fa-plus"></i>toevoegen</a>
         <?php endif; ?>
     </div>
 </section>

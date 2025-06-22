@@ -1,6 +1,6 @@
 <section class="profile"> 
     <div class="profile-avatar text-left">
-        <label class="profile-avatar-action">
+        <label class="profile-avatar-action hide-for-print">
             <input id="avatar" type="file" name="avatar" value="" placeholder="" hidden>
             <ul>
                 <li>Enkel bestanden van maximaal 2mb</li>                                    
