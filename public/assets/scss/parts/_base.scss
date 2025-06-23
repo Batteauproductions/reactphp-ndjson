@@ -1,4 +1,5 @@
 @import '../variables';
+@import '../textstyling';
 
 html, body {
     margin: 0;
@@ -60,31 +61,19 @@ footer {
 }
 
 h1 {
-    color: $head-color;
-    font: $head-font;
-    text-transform: $head-font-transform;
+    @include heading_1($head-color);
 }
 
 h2 {
-    color: $head-color;
-    font: $head-font;
-    font-size: calc($head-font-size * 0.85);
-    line-height: calc($head-line-height * 0.85);
-    text-transform: $head-font-transform;
+    @include heading_2($head-color);
 }
 
 h3 {
-    color: $head-color;
-    font: $head-font;
-    font-size: calc($head-font-size * 0.75);
-    line-height: calc($head-line-height * 0.75);
-    text-transform: $head-font-transform;
+    @include heading_3($head-color);
 }
 
 p {
-    color: $paragraph-color;
-    font: $paragraph-font;
-    text-transform: $paragraph-font-transform;    
+    @include paragraph($paragraph-color);
 }
 
 i {

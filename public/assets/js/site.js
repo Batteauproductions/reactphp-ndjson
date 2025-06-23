@@ -17,6 +17,8 @@ $(document).ready(function() {
     $('a[data-logout]').on('click' , function() {
         sessionStorage.removeItem('navigationAnimated');
     });
+
+    $(".chosen-select").chosen(); 
     
 
     /*const background = $('body').css('background');

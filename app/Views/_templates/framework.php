@@ -7,12 +7,12 @@
         <meta name="author" content="Geert Kamps">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <title><?php echo TITLE ?></title>
+        <title><?= TITLE ?></title>
 
         <link rel="shortcut icon" type="image/x-icon" href="https://chargen.dalaria.nl/assets/images/site/favicon.ico">
 
         <!-- jQuery -->
-        <script type="text/javascript" src="<?php echo vendor_path('jquery/jquery-3.7.1.min.js')?>"></script>
+        <script type="text/javascript" src="<?= vendor_path('jquery/jquery-3.7.1.min.js')?>"></script>
 
         <!-- Animate -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"></script>
@@ -23,44 +23,48 @@
         <link href="https://fonts.googleapis.com/css2?family=Manuale:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 
         <!-- Foundation v6 -->
-        <link rel="stylesheet" type="text/css" href="<?php echo vendor_path('foundation/css/foundation.min.css'); ?>">
-	    <link rel="stylesheet" type="text/css" href="<?php echo vendor_path('foundation/css/app.css'); ?>">
-    	<script type="text/javascript" src="<?php echo vendor_path('foundation/js/vendor/foundation.min.js'); ?>"></script>
-	    <script type="text/javascript" src="<?php echo vendor_path('foundation/js/vendor/what-input.js'); ?>"></script>
+        <link rel="stylesheet" type="text/css" href="<?= vendor_path('foundation/css/foundation.min.css'); ?>">
+	    <link rel="stylesheet" type="text/css" href="<?= vendor_path('foundation/css/app.css'); ?>">
+    	<script type="text/javascript" src="<?= vendor_path('foundation/js/vendor/foundation.min.js'); ?>"></script>
+	    <script type="text/javascript" src="<?= vendor_path('foundation/js/vendor/what-input.js'); ?>"></script>
 
         <!-- Font Awesome -->
         <script src="https://kit.fontawesome.com/d3ced6c017.js" crossorigin="anonymous"></script>
 
         <!-- JS Validation -->
-        <script type="text/javascript" src="<?php echo vendor_path('validation/jquery.validate.min.js')?>"></script>
-        <script type="text/javascript" src="<?php echo vendor_path('validation/additional-methods.min.js')?>"></script>
-        <script type="text/javascript" src="<?php echo vendor_path('validation/localization/messages_nl.js')?>"></script>
+        <script type="text/javascript" src="<?= vendor_path('validation/jquery.validate.min.js')?>"></script>
+        <script type="text/javascript" src="<?= vendor_path('validation/additional-methods.min.js')?>"></script>
+        <script type="text/javascript" src="<?= vendor_path('validation/localization/messages_nl.js')?>"></script>
 
         <!-- CKEditor -->
-        <script type="text/javascript" src="<?php echo vendor_path('CKEditor/ckeditor.js')?>"></script>
+        <script type="text/javascript" src="<?= vendor_path('CKEditor/ckeditor.js')?>"></script>
+
+        <!-- Chosen -->
+        <link rel="stylesheet" type="text/css" href="<?= vendor_path('chosen-js/chosen.css'); ?>">
+        <script type="text/javascript" src="<?= vendor_path('chosen-js/chosen.jquery.js')?>"></script>
         
         <!-- Global Styling -->
-        <link rel="stylesheet" href="<?php echo base_url('assets/css/index.css')?>">
+        <link rel="stylesheet" href="<?= base_url('assets/css/index.css')?>">
 
     </head>
     <body>
         
-        <?php echo isset($header) && !empty($header) ? '<header>'.$header.'</header>' : ''; ?>
-        <main><?php echo isset($content) && !empty($content) ? $content : ''; ?></main>
-        <?php echo isset($footer) && !empty($footer) ? '<footer>'.$footer.'</footer>' : ''; ?>
+        <?= isset($header) && !empty($header) ? '<header>'.$header.'</header>' : ''; ?>
+        <main><?= isset($content) && !empty($content) ? $content : ''; ?></main>
+        <?= isset($footer) && !empty($footer) ? '<footer>'.$footer.'</footer>' : ''; ?>
 
-        <script type="module" src="<?php echo js_path('site.js'); ?>"></script>
+        <script type="module" src="<?= js_path('site.js'); ?>"></script>
 
         <script>
             window.AppConfig = window.AppConfig || {};
             window.AppConfig.userRights = {
-                isGameMaster: <?php echo isset($viewAsGamemaster) ? json_encode($viewAsGamemaster) : 'false'; ?>,
+                isGameMaster: <?= isset($viewAsGamemaster) ? json_encode($viewAsGamemaster) : 'false'; ?>,
             };
         </script>
 
         <?php if(isset($arrJS)): ?>
             <?php foreach($arrJS as $iKey => $sValue) :?>
-                <script type="module" src="<?php echo js_path($sValue)?>"></script>
+                <script type="module" src="<?= js_path($sValue)?>"></script>
             <?php endforeach;?>
         <?php endif; ?>
 

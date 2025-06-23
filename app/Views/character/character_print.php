@@ -14,55 +14,9 @@
     <!-- Foundation v6 -->
     <link rel="stylesheet" type="text/css" href="<?php echo vendor_path('foundation/css/foundation.min.css'); ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo vendor_path('foundation/css/app.css'); ?>">
-    <script type="text/javascript" src="<?php echo vendor_path('foundation/js/vendor/foundation.min.js'); ?>"></script>
-    <script type="text/javascript" src="<?php echo vendor_path('foundation/js/vendor/what-input.js'); ?>"></script>
     
-    <style>
-        html {
-            padding: 0;
-            margin: 0;
-            font-size: 12px;
-        }
-        body {
-            font-size: 1rem;
-        }
-        h1 {
-            font-size: 2rem;
-        }
-        h2 {
-            font-size: 1.5rem;
-        }
-        h3 {
-            font-size: 1.25rem;
-        }
-
-        .hide-for-print {
-            display: none;
-        }
-
-        /* Forces new page */
-        .page-break {
-            page-break-before: always; 
-        }
-
-        /* Optional screen styles */
-        @media screen {
-            .page-break {
-                border-top: 2px dashed #ccc;
-                margin: 40px 0;
-            }
-        }
-
-        /* Hide elements during printing */
-        @media print {
-            .no-padding-print {
-                padding: 0;
-            }
-            .no-print {
-                display: none; 
-            }
-        }
-    </style>
+    <!-- Global Styling -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/print.css')?>">
 
 </head>
 <body>

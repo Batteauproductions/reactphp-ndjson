@@ -7,11 +7,11 @@
 
 <script>
     //setting window data
-    window.character_input = <?php echo isset($oCharacter) ? json_encode($oCharacter) : 'null' ?>;
+    window.character_input = <?= isset($oCharacter) ? json_encode($oCharacter) : 'null' ?>;
     window.character = window.character || {};
-    window.arrXP = Object.freeze(<?php echo json_encode(explode(',', $arrXP)); ?>);
-    window.jsonBaseChar = Object.freeze(<?php echo json_encode($jsonBaseChar); ?>);
-    window.jsonStat = Object.freeze(<?php echo json_encode($jsonStat); ?>);
+    window.arrXP = Object.freeze(<?= json_encode(explode(',', $arrXP)); ?>);
+    window.jsonBaseChar = Object.freeze(<?= json_encode($jsonBaseChar); ?>);
+    window.jsonStat = Object.freeze(<?= json_encode($jsonStat); ?>);
 </script>
 
 <div class="grid-container">

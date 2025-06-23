@@ -6,6 +6,13 @@
 /* font settings for the body */
 /* font settings for the links */
 /* misc settings */
+/* breakpoints */
+/* color sets for the application */
+/*font-sizings for different screens*/
+/* font settings for the headers */
+/* font settings for the body */
+/* font settings for the links */
+/* misc settings */
 html, body {
   margin: 0;
   padding: 0;
@@ -479,6 +486,19 @@ label.input-error {
   font-size: 0.9rem;
   line-height: 1rem;
 }
+.tile .tile-content table, .tile .tile-content tbody {
+  font-size: 0.8rem;
+  line-height: 0.9rem;
+  background-color: transparent;
+  padding: 0;
+  margin: 0 0 1.25rem;
+  border: none;
+}
+.tile .tile-content table tr, .tile .tile-content table td, .tile .tile-content tbody tr, .tile .tile-content tbody td {
+  padding: 0 0 0.3125rem;
+  margin: 0;
+  background: none;
+}
 .tile .tile-content ul {
   list-style: none;
   margin-left: 0;
@@ -842,4 +862,15 @@ nav[aria-label=breadcrumb] .breadcrumbs li a {
 }
 .jconfirm-content select {
   font-size: inherit !important;
+}
+
+/* breakpoints */
+/* color sets for the application */
+/*font-sizings for different screens*/
+/* font settings for the headers */
+/* font settings for the body */
+/* font settings for the links */
+/* misc settings */
+.chosen-results {
+  color: #1E1E1E !important;
 }

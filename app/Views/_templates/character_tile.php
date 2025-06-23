@@ -3,11 +3,6 @@
 <?php else: ?>
     <div 
         data-character_id="<?= esc($character->id) ?>"
-        data-character_name="<?= esc($character->name) ?>" 
-        data-character_type="<?= esc($character->type_id) ?>"
-        data-character_status="<?= esc($character->status_id) ?>"
-        data-character_race="<?= esc($character->race_id) ?>"
-        data-character_profession="<?= esc($character->profession_info) ?>"
         class="cell small-12 large-6 tile tile-status--<?= esc($character->status_name) ?>">        
         <div class="grid-x">
             <div class="cell small-12 medium-4">
@@ -18,7 +13,20 @@
             <div class="cell small-12 medium-8">
                 <div class="tile-content">
                     <h1><?= esc(substr($character->name, 0, 30)) ?></h1>
-                    <p><?= esc($character->status_name) ?> | <?= $character->modified_dt ? $character->modified_dt : $character->created_dt ?></p>
+                    <table>
+                        <tr>
+                            <td>Speler:</td>
+                            <td><?= $character->user_name ?></td>
+                        </tr>
+                        <tr>
+                            <td>Status:</td>
+                            <td><?= esc($character->status_name) ?></td>
+                        </tr>
+                        <tr>
+                            <td>Aangepast op:</td>
+                            <td><?= $character->modified_dt ? $character->modified_dt : $character->created_dt ?></td>
+                        </tr>
+                    </table>
                     <ul>
                         <?php $showBtn = $isGameMaster || !in_array($character->status_id, CHARACTER_VIEWABLE) ?>
                         <?php if($showBtn): ?>

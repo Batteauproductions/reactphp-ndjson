@@ -3,9 +3,6 @@
 <?php else: ?>
     <div 
         data-user_id="<?= esc($user->id) ?>"
-        data-user_name="<?= esc($user->firstname.' '.$user->lastname) ?>"
-        data-user_role="<?= esc($user->role_id) ?>"
-        data-user_status="<?= esc($user->status_id) ?>"
         class="cell small-12 large-6 tile tile-status--<?= esc($user->status_name) ?>">                                
         <div class="grid-x">
             <div class="cell small-12 medium-4">

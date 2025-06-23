@@ -89,6 +89,21 @@
             line-height: 1.0rem;
         }
 
+        table, tbody {
+            font-size: 0.8rem;
+            line-height: 0.9rem;
+            background-color: transparent;
+            padding: 0;
+            margin: 0 0 $margin;
+            border: none;
+
+            tr, td {
+                padding: 0 0 calc($padding/4);
+                margin: 0;
+                background: none;
+            }
+        }
+
         ul {
             list-style: none;  
             margin-left: 0;          

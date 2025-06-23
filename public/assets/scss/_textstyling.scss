@@ -1,0 +1,30 @@
+
+@import 'variables';
+
+@mixin heading_1($clr) {
+    color: $clr;
+    font: $head-font;
+    text-transform: $head-font-transform;
+}
+
+@mixin heading_2($clr) {
+    color: $clr;
+    font: $head-font;
+    font-size: calc($head-font-size * 0.85);
+    line-height: calc($head-line-height * 0.85);
+    text-transform: $head-font-transform;
+}
+
+@mixin heading_3($clr) {
+    color: $clr;
+    font: $head-font;
+    font-size: calc($head-font-size * 0.75);
+    line-height: calc($head-line-height * 0.75);
+    text-transform: $head-font-transform;
+}
+
+@mixin paragraph($clr) {
+    color: $clr;
+    font: $paragraph-font;
+    text-transform: $paragraph-font-transform;
+}

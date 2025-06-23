@@ -185,6 +185,7 @@ class Page extends BaseController
                     case 'database':
                         $arrJS = ['character_database.js'];
                         $arrData = array (
+                            'arrUsers' => $this->models['account']->getUsers(),
                             'arrStatus' => $this->arrSettings['options_character_status'],
                             'arrType' => $this->arrSettings['options_character_types'],
                             'arrCharacters' => $this->models['character']->getCharacters(), 

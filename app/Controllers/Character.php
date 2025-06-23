@@ -126,6 +126,21 @@ class Character extends Controller
         }
     }
 
+    public function search() {
+        //collect user
+        $arrData = array(
+            'character_name' => $this->request->getPost('character_name'),
+            'character_player' => $this->request->getPost('character_player'),
+            'character_type' => $this->request->getPost('character_type'),
+            'character_status' => $this->request->getPost('character_status'),
+            'character_race' => $this->request->getPost('character_race'),
+            'character_profession' => $this->request->getPost('character_profession'),
+            'character_skill' => $this->request->getPost('character_skill'),
+        );
+
+        return $this->models['character']->searchCharacter($arrData);
+    }
+
     public function getDetails () 
     {
         //collect user

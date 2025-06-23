@@ -1,0 +1,82 @@
+/* breakpoints */
+/* color sets for the application */
+/*font-sizings for different screens*/
+/* font settings for the headers */
+/* font settings for the body */
+/* font settings for the links */
+/* misc settings */
+/* breakpoints */
+/* color sets for the application */
+/*font-sizings for different screens*/
+/* font settings for the headers */
+/* font settings for the body */
+/* font settings for the links */
+/* misc settings */
+html {
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+}
+
+body {
+  font-size: 1rem;
+  color: #000;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 13.2px;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  color: #000;
+  font: bold 1.25rem/1.45rem Manuale, serif;
+  text-transform: none;
+}
+
+h2 {
+  color: #000;
+  font: bold 1.25rem/1.45rem Manuale, serif;
+  font-size: 1.0625rem;
+  line-height: 1.2325rem;
+  text-transform: none;
+}
+
+h3 {
+  color: #000;
+  font: bold 1.25rem/1.45rem Manuale, serif;
+  font-size: 0.9375rem;
+  line-height: 1.0875rem;
+  text-transform: none;
+}
+
+p {
+  color: #000;
+  font: normal 1rem/1.35rem Manuale, serif;
+  text-transform: none;
+}
+
+.hide-for-print {
+  display: none;
+}
+
+/* Forces new page */
+.page-break {
+  page-break-before: always;
+}
+
+/* Optional screen styles */
+@media screen {
+  .page-break {
+    border-top: 2px dashed #ccc;
+    margin: 40px 0;
+  }
+}
+/* Hide elements during printing */
+@media print {
+  .no-padding-print {
+    padding: 0;
+  }
+  .no-print {
+    display: none;
+  }
+}

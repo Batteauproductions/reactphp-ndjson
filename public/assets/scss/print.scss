@@ -1,0 +1,58 @@
+@import 'variables';
+@import 'textstyling';
+
+html {
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+}
+body {
+    font-size: 1rem;
+    color: #000;
+    font-weight: normal;
+    font-size: $font-size-small;
+    line-height: calc($font-size-small * 1.1);
+    font-family: Arial, sans-serif;
+}
+h1 {
+    @include heading_1(#000);
+}
+
+h2 {
+    @include heading_2(#000);
+}
+
+h3 {
+    @include heading_3(#000);
+}
+
+p {
+     @include paragraph(#000);  
+}
+
+.hide-for-print {
+    display: none;
+}
+
+/* Forces new page */
+.page-break {
+    page-break-before: always; 
+}
+
+/* Optional screen styles */
+@media screen {
+    .page-break {
+        border-top: 2px dashed #ccc;
+        margin: 40px 0;
+    }
+}
+
+/* Hide elements during printing */
+@media print {
+    .no-padding-print {
+        padding: 0;
+    }
+    .no-print {
+        display: none; 
+    }
+}
