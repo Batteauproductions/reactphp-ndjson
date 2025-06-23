@@ -669,6 +669,9 @@ label.input-error {
   padding: inherit;
   top: 7.25rem;
 }
+.sortable .sortable-wrapper .sortable-selection {
+  margin-bottom: 1.25rem;
+}
 .sortable .sortable-wrapper select {
   margin: 0.625rem 0 0;
 }
@@ -871,6 +874,18 @@ nav[aria-label=breadcrumb] .breadcrumbs li a {
 /* font settings for the body */
 /* font settings for the links */
 /* misc settings */
-.chosen-results {
-  color: #1E1E1E !important;
+.chosen-container {
+  width: 100% !important;
+}
+.chosen-container a:hover {
+  color: #7D1717;
+}
+.chosen-container .chosen-results li {
+  color: #000000;
+}
+.chosen-container .chosen-results li.highlighted {
+  background-color: #7D1717;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(20%, #E34646), color-stop(90%, #7D1717));
+  background-image: linear-gradient(#E34646 20%, #7D1717 90%);
+  color: #e7e7e7;
 }

@@ -1,10 +1,12 @@
 <?php 
     // Initialize variables for each filter
     $selectedName = '';
+    $selectedPlayer = '';
     $selectedType = '';
     $selectedStatus = '';
     $selectedRace = '';
     $selectedProfession = '';
+    $selectedSkill = '';
 
     // Check if 'filters' exists in the cookie
     if (isset($_COOKIE['filters'])) {
@@ -30,7 +32,7 @@
         <div class="grid-x grid-padding-x grid-padding-y">                    
             <form class="sortable cell small-12 medium-4 large-3" action="<?= base_url('gamemaster/character/search') ?>" method="post">
                 <div class="sortable-wrapper">
-                    <div class="grid-x">
+                    <div class="grid-x sortable-selection">
                         <div class="cell text-center">
                             <h2>Filters</h2>
                             <hr>
@@ -97,13 +99,15 @@
                                     <option value="<?= $skill->id ?>" <?= $skill->id == $selectedSkill ? 'selected' : ''; ?>><?= $skill->name ?></option>
                                 <?php endforeach;?> 
                             </select>
-                        </label>
+                        </label>                        
+                    </div>   
+                    <div class="grid-x"> 
                         <div class="cell">
                             <button class="button solid" type="submit">
                                 <i class="fa-solid fa-filter"></i>Filter toepassen
                             </button>
-                        </div>
-                    </div>                    
+                        </div>   
+                    </div>             
                 </div>                
             </form> 
             <div class="cell small-12 medium-8 large-9">

@@ -10,6 +10,11 @@
         padding: inherit;
         top: 7.25rem;
 
+        .sortable-selection {
+            margin-bottom: $margin;
+
+        }
+
         select {
             margin: calc($margin/2) 0 0;
         }

@@ -1,5 +1,24 @@
 @import '../variables';
 
-.chosen-results {
-    color: $color-primary !important;
+.chosen-container {
+    width: 100% !important;
+
+    a {
+        &:hover{
+            color: $color-secundary;
+        }
+    }
+
+    .chosen-results {
+        li {
+            color: $color-font-body-dark;
+
+            &.highlighted {
+                background-color: $color-secundary;
+                background-image: -webkit-gradient(linear, left top, left bottom, color-stop(20%, $color-tertiary), color-stop(90%, $color-secundary));
+                background-image: linear-gradient($color-tertiary 20%, $color-secundary 90%);
+                color: $color-font-body-light;
+            }
+        }
+    }
 }
