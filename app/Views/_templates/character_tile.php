@@ -32,7 +32,7 @@
                         <?php if($showBtn): ?>
                             <li><a href="<?= base_url($target.'/character/edit/'.$character->id); ?>"><i class="fa-solid fa-pen-to-square"></i> aanpassen</a></li>
                         <?php endif; ?>
-                        <?php if($isGameMaster): ?>
+                        <?php if($target === 'gamemaster' && $character->status_id == 2): ?>
                             <li><a data-action="character-review" data-id="<?php echo $character->id; ?>"><i class="fa-solid fa-gavel"></i> beoordelen</a></li>
                         <?php endif; ?>
                         <li><a href="<?= base_url($target.'/character/print/'.$character->id); ?>" target="_blank"><i class="fa-solid fa-print"></i> bekijken / printen</a></li>

@@ -120,3 +120,45 @@
         </div>
     </section>
 </div>
+
+<!-- MODAL FOR POPUPS -->
+<div id="character_process-modal" class="reveal small" data-reveal>
+    
+    <form id="form-character-check" class="grid-x grid-margin-y" action="<?= base_url(''); ?>" method="post">
+        <input id="cid" name="cid" type="hidden" value=""/>
+        <div class="cell">    
+            <h2>De status van het personage is</h2>
+            <div class="grid-x align-middle">                
+                <div class="cell shrink">
+                    <input id="char-denied" type="radio" name="status" value="7" style="width:20px; margin-bottom:0px;">
+                </div>
+                <div class="cell auto">
+                    <label for="char-denied" class="text-right middle" style="margin-bottom:0px;">Afgekeurd</label>
+                </div>
+            </div> 
+            <div class="grid-x align-middle">
+                <div class="cell shrink">
+                    <input id="char-approved" type="radio" name="status" value="5" style="width:20px; margin-bottom:0px;">
+                </div>
+                <div class="cell auto">
+                    <label for="char-approved" class="text-right middle" style="margin-bottom:0px;">Goedgekeurd</label>
+                </div>
+            </div>
+            <div class="grid-x"> 
+                <label class="cell" for="mail_note">
+                    Notitie voor de speler 
+                </label>
+                <textarea id="mail_note" class="cell" name="mail_note" rows="8"></textarea>
+            </div>            
+        </div> 
+        <div class="cell">
+            <button type="submit" class="button solid"><i class="fa-solid fa-paper-plane"></i> Verwerken</button>
+            <a data-close aria-label="Close modal" class="button clear"><i class="fa-solid fa-xmark"></i> Annuleren</a>
+        </div>                         
+    </form>
+
+    <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    
+</div>
