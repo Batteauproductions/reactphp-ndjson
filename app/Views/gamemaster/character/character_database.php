@@ -30,7 +30,7 @@
 <div class="grid-container">
     <section class="page-wrapper transparent">
         <div class="grid-x grid-padding-x grid-padding-y">                    
-            <form class="sortable cell small-12 medium-4 large-3" action="<?= base_url('gamemaster/character/search') ?>" method="post">
+            <form id="form-sort_characters" class="sortable cell small-12 medium-4 large-3" action="<?= base_url('gamemaster/character/search') ?>" method="post">
                 <div class="sortable-wrapper">
                     <div class="grid-x sortable-selection">
                         <div class="cell text-center">
@@ -42,7 +42,7 @@
                             <select id="character_name" name="character_name" class="chosen-select">
                                 <option value="">Geen voorkeur</option>
                                 <?php foreach($arrCharacters as $character): ?>
-                                    <option value="<?= $character->name ?>" <?= $character->name == $selectedName ? 'selected' : ''; ?>><?= $character->name ?></option>
+                                    <option value="<?= $character->id ?>" <?= $character->id == $selectedName ? 'selected' : ''; ?>><?= $character->name ?></option>
                                 <?php endforeach; ?> 
                             </select>
                         </label>
@@ -51,7 +51,7 @@
                             <select id="character_player" name="character_player" class="chosen-select">
                                 <option value="">Geen voorkeur</option>
                                 <?php foreach($arrUsers as $user): ?>
-                                    <option value="<?= $user->firstname.' '.$user->lastname ?>" <?= $user->firstname.' '.$user->lastname == $selectedPlayer ? 'selected' : ''; ?>><?= $user->firstname.' '.$user->lastname ?></option>
+                                    <option value="<?= $user->id ?>" <?= $user->id == $selectedPlayer ? 'selected' : ''; ?>><?= $user->firstname.' '.$user->lastname ?></option>
                                 <?php endforeach; ?> 
                             </select>
                         </label>
@@ -111,7 +111,7 @@
                 </div>                
             </form> 
             <div class="cell small-12 medium-8 large-9">
-                <div class="grid-x grid-margin-x grid-margin-y wrapper-character" data-equalizer>
+                <div id="sort_characters-result" class="grid-x grid-margin-x grid-margin-y wrapper-character" data-equalizer>
                     <?php foreach($arrCharacters as $character): ?>
                         <?= view('_templates/character_tile', ['character' => $character, 'target' => 'gamemaster', 'isGameMaster' => true]) ?>                                               
                     <?php endforeach; ?>

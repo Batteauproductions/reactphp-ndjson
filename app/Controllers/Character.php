@@ -126,21 +126,6 @@ class Character extends Controller
         }
     }
 
-    public function search() {
-        //collect user
-        $arrData = array(
-            'character_name' => $this->request->getPost('character_name'),
-            'character_player' => $this->request->getPost('character_player'),
-            'character_type' => $this->request->getPost('character_type'),
-            'character_status' => $this->request->getPost('character_status'),
-            'character_race' => $this->request->getPost('character_race'),
-            'character_profession' => $this->request->getPost('character_profession'),
-            'character_skill' => $this->request->getPost('character_skill'),
-        );
-
-        return $this->models['character']->searchCharacter($arrData);
-    }
-
     public function getDetails () 
     {
         //collect user
@@ -191,6 +176,28 @@ class Character extends Controller
 
         if (isset($arrData['action'])) {
             switch($arrData['action']) {
+                case "search":
+                    //collect user
+                    $arrData = array(
+                        'uid' => $this->request->getPost('character_name'),
+                        'uname' => $this->request->getPost('character_player'),
+                        'type_id' => $this->request->getPost('character_type'),
+                        'status_id' => $this->request->getPost('character_status'),
+                        'race_id' => $this->request->getPost('character_race'),
+                        'prof_id' => $this->request->getPost('character_profession'),
+                        'skill_id' => $this->request->getPost('character_skill'),
+                    );
+                    $results = $this->models['character']->getCharacters($arrData);
+                    $view = '';
+                    foreach ($results as $result) {
+                        $view .= view('_templates/character_tile', [
+                            'character'    => $result,
+                            'target'       => 'gamemaster',
+                            'isGameMaster' => true
+                        ]);
+                    }
+                    echo $view;
+                    break;
                 case "lock":
                     $returnData = $this->models['character']->saveCharacter($arrData,5);                    
                     echo json_encode($returnData);
@@ -202,13 +209,15 @@ class Character extends Controller
                 case "submit":
                     $returnData = $this->models['character']->saveCharacter($arrData,2);
                     if($returnData['done']) {
-                        $this->controllers['mail']->sendCharacterSubmit([
+                        $send = $this->controllers['mail']->sendCharacterSubmit([
                             'player_name'   =>$this->session->get('name'),
                             'char_name'     =>$returnData['cname'],
                             'cid'           =>$returnData['id'],
                         ]);
-                    }
-                    echo json_encode($returnData);
+                        if($send) {
+                            echo json_encode($returnData);
+                        }
+                    }                    
                     break;
                 case "print":
                     echo  'character-print';

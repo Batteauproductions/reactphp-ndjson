@@ -33,12 +33,3 @@ $(document).ready(function() {
     
 
 });
-
-// Makes items with the class sortable, be able to sorted
-document.addEventListener('DOMContentLoaded', function() {
-    if (document.querySelector('.sortable')) {
-        import(`${domain}/assets/js/_lib/grid_sorting.js`).then(module => {
-            $('.sortable').initSortable();
-        }).catch(error => console.error("Error loading sortable plugin:", error));
-    }
-});

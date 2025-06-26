@@ -138,7 +138,7 @@ class CharacterModel extends Model
         return $query->delete();
     }
 
-    public function getCharacters($uid = null)
+    public function getCharacters($params = [])
     {
         // Build the query
         $builder = $this->db->table('hero c');
@@ -149,36 +149,56 @@ class CharacterModel extends Model
             'c.avatar',
             'c.created_dt',
             'c.modified_dt',
-            'cr.main_id AS race_id',
-            'GROUP_CONCAT(cp.main_id, \',\', cp.sub_id ORDER BY cp.main_id SEPARATOR \'|\') AS profession_info',
-            'cs.id AS status_id',
-            'cs.name AS status_name',
-            'cs.description AS status_description',
             'ct.id AS type_id',
             'ct.name AS type_name',
             'ct.description AS type_description',
+            'cs.id AS status_id',
+            'cs.name AS status_name',
+            'cs.description AS status_description',
+            'cr.main_id AS race_id',
             'CONCAT(u.firstname, " ", u.lastname) AS user_name',
         ]);
+        $builder->join('user u', 'c.user_id = u.id', 'left');
+        $builder->join('hero_type ct', 'ct.id = c.type_id', 'left');
         $builder->join('hero_status cs', 'c.status_id = cs.id', 'left');
         $builder->join('hero_race cr', 'c.id = cr.char_id', 'left');
-        $builder->join('hero_professions cp', 'c.id = cp.char_id', 'left');
-        $builder->join('hero_type ct', 'ct.id = c.type_id', 'left');
-        $builder->join('user u', 'c.user_id = u.id', 'left');
 
-        // Group By clause
-        $builder->groupBy(['c.id', 'cr.main_id', 'cs.id', 'ct.id', 'u.id']);
-        
+        // If $uid is provided, add a where clause to filter by user_id
+        if (!empty($params['uid'])) {
+            $builder->where('c.user_id', $params['uid']);
+        }
+
+        if (!empty($params['uname'])) {
+            $builder->where('c.user_id', $params['uname']);
+        }
+
+        if (!empty($params['type_id'])) {
+            $builder->where('ct.id', $params['type_id']);
+        }
+
+        if (!empty($params['status_id'])) {
+            $builder->where('cs.id', $params['status_id']);
+        }
+
+        if (!empty($params['race_id'])) {
+            $builder->where('cr.main_id', $params['race_id']);
+        }
+
+        if (!empty($params['prof_id'])) {
+            $builder->where('cp.id', $params['prof_id']);
+        }
+
+        if (!empty($params['skill_id'])) {
+            $builder->where('cs2.id', $params['skill_id']); // Adjust alias if needed
+        }
+
+
         // Order By clause
         $builder->orderBy('c.name', 'ASC');
 
-        // If $uid is provided, add a where clause to filter by user_id
-        if ($uid !== null) {
-            $builder->where('c.user_id', $uid);
-        }
-
         // Execute the query and get the result
         $query = $builder->get();
-        
+
         return $query->getResultObject();
     }
 

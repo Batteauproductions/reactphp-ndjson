@@ -84,10 +84,9 @@ class EmailController extends Controller
 
         // Send email
         if ($this->email->send()) {
-            echo 'Email sent successfully.';
+            return true;
         } else {
-            $data['error'] = $this->email->printDebugger(['headers']);
-            print_r($data['error']);
+            return $this->email->printDebugger(['headers']);
         }
     }
 
@@ -110,10 +109,9 @@ class EmailController extends Controller
 
         // Send email
         if ($this->email->send()) {
-            echo 'Email sent successfully.';
+            return true;
         } else {
-            $data['error'] = $this->email->printDebugger(['headers']);
-            print_r($data['error']);
+            return $this->email->printDebugger(['headers']);
         }
     }
 
@@ -138,10 +136,9 @@ class EmailController extends Controller
 
         // Send email
         if ($this->email->send()) {
-            echo 'Email sent successfully.';
+            return true;
         } else {
-            $data['error'] = $this->email->printDebugger(['headers']);
-            print_r($data['error']);
+            return $this->email->printDebugger(['headers']);
         }
     }
 }

@@ -12,7 +12,8 @@
             </div>
             <div class="cell small-12 medium-8">
                 <div class="tile-content">
-                    <h1><?= esc(substr($character->name, 0, 30)) ?></h1>
+                    <h1 class="text-center"><?= esc(substr($character->name, 0, 30)) ?></h1>
+                    <hr>
                     <table>
                         <tr>
                             <td>Speler:</td>

@@ -107,6 +107,10 @@ i.fa-solid, i.fa-regular, i.fa-brands {
   margin-right: 0.625rem;
 }
 
+hr {
+  margin: 0.625rem 0;
+}
+
 li {
   color: #e7e7e7;
   font: normal 1rem/1.35rem Manuale, serif;

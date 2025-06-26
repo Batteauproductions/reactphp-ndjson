@@ -135,7 +135,7 @@ class Page extends BaseController
             case 'database':
                 $arrJS = ['character_database.js'];
                 $arrData['isGameMaster'] = $this->arrRights['isGameMaster'];
-                $arrData['arrCharacters'] = $this->models['character']->getCharacters($this->session->get('uid'));                
+                $arrData['arrCharacters'] = $this->models['character']->getCharacters(['uid'=>$this->session->get('uid')]);                
                 $content = view('character/character_database',$arrData);
                 break;
         }

@@ -82,6 +82,10 @@ i {
     }
 }
 
+hr {
+    margin: calc($margin/2) 0;
+}
+
 li {
     color: $paragraph-color;
     font: $paragraph-font;
