@@ -10,6 +10,7 @@ use App\Models\ProfessionModel;
 use App\Models\SkillModel;
 use App\Models\ItemModel;
 use App\Models\StoryModel;
+use App\Controllers\EmailController;
 
 use App\Helpers\AuthHelper; 
 
@@ -18,21 +19,20 @@ class Character extends Controller
     protected $session;
     protected $request;
     protected $arrRights = [];
+    protected $controllers = [];
     protected $models = [];
 
-    protected $characterModel;
-    protected $raceModel;
-    protected $professionModel;
-    protected $skillModel;
-    protected $itemModel;
-    protected $storyModel;
-    
+    protected $mailController;      
 
     public function __construct() 
     {
 
         $this->session = session();
         $this->request = service('request');
+
+        $this->controllers = [
+            'mail' => new EmailController(),
+        ];
 
         //declare variables to be used throughout the controller
         // Initialize models using an associative array for easy referencing
@@ -63,7 +63,7 @@ class Character extends Controller
 
     public function getAdventure () 
     {
-        $response = json_encode($this->storyModel->getStoryById(
+        $response = json_encode($this->model['story']->getStoryById(
             $this->request->getPost('char_id'),
             $this->request->getPost('post_id'))
         );
@@ -192,13 +192,23 @@ class Character extends Controller
         if (isset($arrData['action'])) {
             switch($arrData['action']) {
                 case "lock":
-                    echo json_encode($this->models['character']->saveCharacter($arrData,5));
+                    $returnData = $this->models['character']->saveCharacter($arrData,5);                    
+                    echo json_encode($returnData);
                     break;
                 case "save":
-                    echo json_encode($this->models['character']->saveCharacter($arrData));
+                    $returnData = $this->models['character']->saveCharacter($arrData);                    
+                    echo json_encode($returnData);
                     break;
                 case "submit":
-                    echo json_encode($this->models['character']->saveCharacter($arrData,2));
+                    $returnData = $this->models['character']->saveCharacter($arrData,2);
+                    if($returnData['done']) {
+                        $this->controllers['mail']->sendCharacterSubmit([
+                            'player_name'   =>$this->session->get('name'),
+                            'char_name'     =>$returnData['cname'],
+                            'cid'           =>$returnData['id'],
+                        ]);
+                    }
+                    echo json_encode($returnData);
                     break;
                 case "print":
                     echo  'character-print';

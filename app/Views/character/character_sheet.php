@@ -1,9 +1,9 @@
 <!-- Include modals -->
-<?= $this->include('character/parts/modal/Adventure') ?>
-<?= $this->include('character/parts/modal/Background') ?>
-<?= $this->include('character/parts/modal/Choice') ?>
-<?= $this->include('character/parts/modal/Notes') ?>
-<?= $this->include('character/parts/modal/Text') ?>
+<?= view('character/parts/modal/Adventure') ?>
+<?= view('character/parts/modal/Background') ?>
+<?= view('character/parts/modal/Choice') ?>
+<?= view('character/parts/modal/Notes') ?>
+<?= view('character/parts/modal/Text') ?>
 
 <script>
     //setting window data
@@ -18,10 +18,10 @@
     <div class="page-wrapper transparent">
         <form id="form-character" class="grid-x grid-padding-x grid-padding-y form-character" method="POST">
 
-            <?= $this->include('character/character_grid') ?>    
+            <?= view('character/character_grid') ?>    
                         
             <div class="cell small-12 text-center">
-                <?= $this->include('character/parts/Adventures') ?>
+                <?= view('character/parts/Adventures') ?>
             </div> 
                   
             <div class="cell small-12 text-right">
@@ -39,4 +39,3 @@
         </form>
     </div>
 </div>
-

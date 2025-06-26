@@ -2,13 +2,13 @@
 <div class="cell small-12 medium-6 large-3">
     <div class="grid-x grid-padding-x grid-padding-y">
         <div class="cell small-12 text-left">
-            <?= $this->include('character/parts/Profile') ?>   
+            <?= view('character/parts/Profile') ?>   
         </div>
         <div class="cell small-12 text-center">
-            <?= $this->include('character/parts/Baseinfo') ?>
+            <?= view('character/parts/Baseinfo') ?>
         </div>
         <div class="cell small-12 text-center">
-            <?= $this->include('character/parts/Notes') ?>
+            <?= view('character/parts/Notes') ?>
         </div>
     </div>
 </div>
@@ -16,31 +16,31 @@
 <div class="cell small-12 medium-6 large-9">
     <div class="grid-x grid-padding-x grid-padding-y">
         <div class="cell small-12 medium-12 large-6 text-center">
-            <?= $this->include('character/parts/stats/Stats_Primary') ?>
+            <?= view('character/parts/stats/Stats_Primary') ?>
         </div>
         <div class="cell small-12 medium-12 large-6 text-center">
-            <?= $this->include('character/parts/stats/Stats_Secundary') ?>
+            <?= view('character/parts/stats/Stats_Secundary') ?>
         </div>
         <div class="cell small-12 medium-12 text-center">
-            <?= $this->include('character/parts/Professions') ?>                      
+            <?= view('character/parts/Asset', ['title' => 'Beroep(en)','id' => 'profession']); ?>
         </div>
         <div class="cell small-12 medium-12 large-6 text-center">
-            <?= $this->include('character/parts/skills/Skills_Profession') ?> 
+            <?= view('character/parts/Asset', ['title' => 'Basis vaardigheden', 'id' => 'skill_base']); ?>
         </div>
         <div class="cell small-12 medium-12 large-6 text-center">
-            <?= $this->include('character/parts/skills/Skills_Combat') ?>
+            <?= view('character/parts/Asset', ['title' => 'Gevechts vaardigheden','id' => 'skill_combat']); ?>
         </div>
         <div class="cell small-12 medium-12 large-6 text-center">
-            <?= $this->include('character/parts/skills/Skills_Magic') ?>
+            <?= view('character/parts/Asset', ['title' => 'Magische vaardigheden','id' => 'skill_magic']); ?>
         </div>
         <div class="cell small-12 medium-12 large-6 text-center">
-            <?= $this->include('character/parts/skills/Skills_Divine') ?>
+            <?= view('character/parts/Asset', ['title' => 'Goddelijke vaardigheden','id' => 'skill_divine']); ?>            
         </div>
         <div class="cell small-12 medium-12 large-6 text-center">
-            <?= $this->include('character/parts/StarterKit') ?>
+            <?= view('character/parts/Asset', ['title' => 'Startuitrusting','id' => 'basekit']); ?>
         </div>
         <div class="cell small-12 medium-12 large-6 text-center">
-            <?= $this->include('character/parts/Equipment') ?>
+            <?= view('character/parts/Asset', ['title' => 'Voorwerpen','id' => 'item']); ?>
         </div>
     </div>                
 </div>

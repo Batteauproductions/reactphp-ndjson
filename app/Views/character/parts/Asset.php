@@ -1,25 +1,25 @@
 <div class="info-container">
-    <h2>Gevechts vaardigheden</h2>
+    <h2><?= $title; ?></h2>
     <hr>
-    <div data-id="skill_combat-list">
+    <div data-id="<?= $id.'-list'; ?>">
         <!-- Dynamic filled -->
-        <?php if(isset($arrSkills)): ?>
-            <?php foreach($arrSkills as $skill):?>                
+        <?php if(isset($array)): ?>
+            <?php foreach($array as $item):?>                
                 <div class="grid-x choice-row">
                     <div class="cell small-5 medium-4 text-left">
-                        <?= $skill->name ?>
+                        <?= $item->name ?>
                     </div>
                     <div class="cell small-5 medium-4 text-center">
-                        <?= $skill->sub_name ?>
+                        <?= isset($item->sub_name) ? $item->sub_name : ''; ?>
                     </div>
                     <div class="cell small-2 medium-1 text-right">
-                        <?= $skill->cost ?>
+                        <?= $item->racial ? 'ras' : $item->cost.'vp' ?>
                     </div>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
-    <?php if(!isset($arrSkills)): ?>
-        <a data-action="pick-skill-combat" class="hide-for-print"><i class="fa-solid fa-plus"></i>toevoegen</a>
+    <?php if(!isset($print) || !$print): ?>
+        <a data-action="<?= 'pick-'.$id; ?>" class="hide-for-print"><i class="fa-solid fa-plus"></i>toevoegen</a>
     <?php endif; ?>
 </div>

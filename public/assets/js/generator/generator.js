@@ -76,19 +76,19 @@ $(document).ready(function() {
         e.preventDefault();
         pickProfession();
     });
-    $('a[data-action="pick-skill-profession"]').on('click', (e) => {
+    $('a[data-action="pick-skill_base"]').on('click', (e) => {
         e.preventDefault();
         pickSkillProfession();
     });
-    $('a[data-action="pick-skill-combat"]').on('click', (e) => {
+    $('a[data-action="pick-skill_combat"]').on('click', (e) => {
         e.preventDefault();
         pickSkillCombat();
     });
-    $('a[data-action="pick-skill-magic"]').on('click', (e) => {
+    $('a[data-action="pick-skill_magic"]').on('click', (e) => {
         e.preventDefault();
         pickSkillMagic();
     });
-    $('a[data-action="pick-skill-divine"]').on('click', (e) => {
+    $('a[data-action="pick-skill_divine"]').on('click', (e) => {
         e.preventDefault();
         pickSkillDivine();
     });

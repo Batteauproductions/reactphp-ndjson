@@ -30,7 +30,7 @@
                         <i class="fa-solid fa-right-to-bracket"></i>Inloggen
                     </button>
                     <a class="button clear" href="<?php echo base_url('account/signup') ?>">
-                        <i class="fa-solid fa-user-plus"></i>Inschrijven
+                        <i class="fa-solid fa-user-plus"></i>Registreren
                     </a>
                 </div>
             </div>    

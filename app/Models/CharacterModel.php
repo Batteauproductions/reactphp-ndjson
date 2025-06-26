@@ -297,10 +297,10 @@ class CharacterModel extends Model
         $returnData = [
             'id' => $char_id,
             'done' => true,
+            'cname' => $meta->name,
         ];
 
         return $returnData;
-
     }
     
     private function insertItems($items, $table, $char_id, $fields)
