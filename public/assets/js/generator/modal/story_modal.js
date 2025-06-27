@@ -46,7 +46,7 @@ function openStoryModal(sAction, $modal, storyId=null) {
             break;
         default:
             console.warn(`openStoryModal, unknown sAction called with value: ${sAction}`);
-            return; // Exit early for invalid actions
+            return; 
     }
 
     // Set default state to loading

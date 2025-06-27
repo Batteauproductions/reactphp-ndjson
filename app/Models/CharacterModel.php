@@ -164,12 +164,12 @@ class CharacterModel extends Model
         $builder->join('hero_race cr', 'c.id = cr.char_id', 'left');
 
         // If $uid is provided, add a where clause to filter by user_id
-        if (!empty($params['uid'])) {
-            $builder->where('c.user_id', $params['uid']);
+        if (!empty($params['cid'])) {
+            $builder->where('c.id', $params['cid']);
         }
 
-        if (!empty($params['uname'])) {
-            $builder->where('c.user_id', $params['uname']);
+        if (!empty($params['uid'])) {
+            $builder->where('c.user_id', $params['uid']);
         }
 
         if (!empty($params['type_id'])) {

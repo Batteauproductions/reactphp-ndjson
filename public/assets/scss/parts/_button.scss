@@ -22,5 +22,8 @@
         &:hover, &:active, &:focus {
             color: $link-color;
         }
-    }    
+    }   
+    &.fullwidth {
+        width: 100%;
+    } 
 }

@@ -206,6 +206,9 @@ ul li {
 .button.clear:hover, .button.clear:active, .button.clear:focus {
   color: #E34646;
 }
+.button.fullwidth {
+  width: 100%;
+}
 
 /* breakpoints */
 /* color sets for the application */

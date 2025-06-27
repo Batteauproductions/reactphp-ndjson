@@ -179,8 +179,8 @@ class Character extends Controller
                 case "search":
                     //collect user
                     $arrData = array(
-                        'uid' => $this->request->getPost('character_name'),
-                        'uname' => $this->request->getPost('character_player'),
+                        'cid' => $this->request->getPost('character_name'),
+                        'uid' => $this->request->getPost('character_player'),
                         'type_id' => $this->request->getPost('character_type'),
                         'status_id' => $this->request->getPost('character_status'),
                         'race_id' => $this->request->getPost('character_race'),

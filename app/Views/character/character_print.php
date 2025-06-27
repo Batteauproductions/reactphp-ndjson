@@ -11,6 +11,9 @@
 
     <link rel="shortcut icon" type="image/x-icon" href="https://chargen.dalaria.nl/assets/images/site/favicon.ico">
     
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/d3ced6c017.js" crossorigin="anonymous"></script>
+
     <!-- Foundation v6 -->
     <link rel="stylesheet" type="text/css" href="<?php echo vendor_path('foundation/css/foundation.min.css'); ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo vendor_path('foundation/css/app.css'); ?>">
@@ -22,7 +25,7 @@
 <body>
 
     <!-- first-page -->    
-    <div class="grid-x grid-padding-x no-padding-print">
+    <div id="Charsheet" class="grid-x grid-padding-x no-padding-print">
         <div class="cell text-center"> 
             <h1>Karakterblad | <?= $oCharacter->meta->name; ?></h1>
         </div>  
@@ -110,9 +113,30 @@
     <!-- print btn -->
     <div class="grid-x grid-padding-x no-padding-print">
         <div class="cell"> 
-            <button class="button solid no-print" onclick="window.print()">Print this page</button>
+            <button class="button solid no-print" onclick="printCharSheet()"><i class="fa-solid fa-print"></i>&nbsp;Print enkel karakter</button>
+            <button class="button clear no-print" onclick="window.print()"><i class="fa-solid fa-print"></i>&nbsp;Print volledige pagina</button>
         </div>
     </div>
+
+    <script>
+        function printCharSheet() {
+            // Bewaar originele inhoud
+            const originalContents = document.body.innerHTML;
+            const printContents = document.getElementById('Charsheet').outerHTML;
+
+            // Vervang body met Charsheet-inhoud
+            document.body.innerHTML = printContents;
+
+            // Start printen
+            window.print();
+
+            // Zet oorspronkelijke inhoud terug na een kleine delay
+            setTimeout(() => {
+                document.body.innerHTML = originalContents;
+                location.reload(); // herlaad de pagina voor correcte heropbouw
+            }, 100);
+        }
+    </script>
 
 </body>
 </html>

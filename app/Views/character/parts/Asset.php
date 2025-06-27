@@ -13,7 +13,7 @@
                         <?= isset($item->sub_name) ? $item->sub_name : ''; ?>
                     </div>
                     <div class="cell small-2 medium-1 text-right">
-                        <?= $item->racial ? 'ras' : $item->cost.'vp' ?>
+                        
                     </div>
                 </div>
             <?php endforeach; ?>

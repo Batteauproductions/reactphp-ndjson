@@ -5,18 +5,17 @@
     $selectedStatus = '';
 
     // Check if 'filters' exists in the cookie
-    if (isset($_COOKIE['filters'])) {
-        // Get the filters string
-        $filters = $_COOKIE['filters'];
-        
-        // Parse the filters into an associative array
-        parse_str($filters, $filtersArray);
-        
-        // Extract each filter value
-        $selectedName = isset($filtersArray['user_name']) ? $filtersArray['user_name'] : '';
-        $selectedRole = isset($filtersArray['user_role']) ? $filtersArray['user_role'] : '';
-        $selectedStatus = isset($filtersArray['user_status']) ? $filtersArray['user_status'] : '';
-    } 
+    if (isset($_COOKIE['user_filters'])) {
+        // Decode the JSON string from the cookie
+        $filtersArray = json_decode($_COOKIE['user_filters'], true);
+
+        // Extract each filter value if the array is valid
+        if (is_array($filtersArray)) {
+            $selectedName   = $filtersArray['user_name']   ?? '';
+            $selectedRole   = $filtersArray['user_role']   ?? '';
+            $selectedStatus = $filtersArray['user_status'] ?? '';
+        }
+    }
 ?>
 
 <div class="grid-container">

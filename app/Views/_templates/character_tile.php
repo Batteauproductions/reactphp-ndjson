@@ -29,7 +29,7 @@
                         </tr>
                     </table>
                     <ul>
-                        <?php $showBtn = $isGameMaster || !in_array($character->status_id, CHARACTER_VIEWABLE) ?>
+                        <?php $showBtn = $target === 'gamemaster' || !in_array($character->status_id, CHARACTER_VIEWABLE) ?>
                         <?php if($showBtn): ?>
                             <li><a href="<?= base_url($target.'/character/edit/'.$character->id); ?>"><i class="fa-solid fa-pen-to-square"></i> aanpassen</a></li>
                         <?php endif; ?>

@@ -69,6 +69,7 @@ const oTranslations = Object.freeze({
         "silver": "zilver",
         "skill_speech": "Taal: Spreken",
         "skill_knowledge_x": "Kennis X",
+        "system_error": "Er ging iets mis, neem contact op met een admin.",
         "upgrade": "verhogen",
         "user_delete": "Weet je zeker dat je deze gebruiker wilt verwijderen?",
         "user_error": "Er ging iets mis, neem contact op met een admin.",

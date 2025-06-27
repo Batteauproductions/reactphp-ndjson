@@ -183,12 +183,33 @@ class Page extends BaseController
                         $arrJS = ['generator/generator.js','validation/character_validation.js'];
                         break;
                     case 'database':
+                        $input = $this->request->getGet(); // or ->getPost() if you're using POST
+                        // Map URL/form field names to DB field keys
+                        $fieldMap = [
+                            'character_name'      => 'cid',
+                            'character_player'    => 'uid',
+                            'character_type'      => 'type_id',
+                            'character_status'    => 'status_id',
+                            'character_race'      => 'race_id',
+                            'character_profession'=> 'prof_id',
+                            'character_skill'     => 'skill_id',
+                        ];
+
+                        // Translate input to internal keys
+                        $filters = [];
+                        foreach ($fieldMap as $formField => $dbField) {
+                            $value = $input[$formField] ?? null;
+                            if (!empty($value)) {
+                                $filters[$dbField] = $value;
+                            }
+                        }
                         $arrJS = ['character_database.js'];
                         $arrData = array (
                             'arrUsers' => $this->models['account']->getUsers(),
                             'arrStatus' => $this->arrSettings['options_character_status'],
                             'arrType' => $this->arrSettings['options_character_types'],
-                            'arrCharacters' => $this->models['character']->getCharacters(), 
+                            'arrAllCharacters' => $this->models['character']->getCharacters(),
+                            'arrSelectedCharacters' => $this->models['character']->getCharacters($filters), 
                             'arrRace' => $this->arrSettings['options_race_types'],
                             'arrProf' => $this->arrSettings['options_profession_types'],
                             'arrSkill' => $this->arrSettings['options_skill_types'],

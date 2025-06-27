@@ -9,21 +9,20 @@
     $selectedSkill = '';
 
     // Check if 'filters' exists in the cookie
-    if (isset($_COOKIE['filters'])) {
-        // Get the filters string
-        $filters = $_COOKIE['filters'];
+    if (isset($_COOKIE['character_filters'])) {
+        // Decode the JSON string from the cookie
+        $filtersArray = json_decode($_COOKIE['character_filters'], true);
         
-        // Parse the filters into an associative array
-        parse_str($filters, $filtersArray);
-        
-        // Extract each filter value
-        $selectedName = isset($filtersArray['character_name']) ? $filtersArray['character_name'] : '';
-        $selectedPlayer = isset($filtersArray['character_player']) ? $filtersArray['character_player'] : '';
-        $selectedType = isset($filtersArray['character_type']) ? $filtersArray['character_type'] : '';
-        $selectedStatus = isset($filtersArray['character_status']) ? $filtersArray['character_status'] : '';
-        $selectedRace = isset($filtersArray['character_race']) ? $filtersArray['character_race'] : '';
-        $selectedProfession = isset($filtersArray['character_profession']) ? $filtersArray['character_profession'] : '';
-        $selectedSkill = isset($filtersArray['character_skill']) ? $filtersArray['character_skill'] : '';
+        // If it's a valid array, extract values
+        if (is_array($filtersArray)) {
+            $selectedName = $filtersArray['character_name'] ?? '';
+            $selectedPlayer = $filtersArray['character_player'] ?? '';
+            $selectedType = $filtersArray['character_type'] ?? '';
+            $selectedStatus = $filtersArray['character_status'] ?? '';
+            $selectedRace = $filtersArray['character_race'] ?? '';
+            $selectedProfession = $filtersArray['character_profession'] ?? '';
+            $selectedSkill = $filtersArray['character_skill'] ?? '';
+        }
     } 
 ?>
 
@@ -41,7 +40,7 @@
                             Karakter-naam
                             <select id="character_name" name="character_name" class="chosen-select">
                                 <option value="">Geen voorkeur</option>
-                                <?php foreach($arrCharacters as $character): ?>
+                                <?php foreach($arrAllCharacters as $character): ?>
                                     <option value="<?= $character->id ?>" <?= $character->id == $selectedName ? 'selected' : ''; ?>><?= $character->name ?></option>
                                 <?php endforeach; ?> 
                             </select>
@@ -103,16 +102,19 @@
                     </div>   
                     <div class="grid-x"> 
                         <div class="cell">
-                            <button class="button solid" type="submit">
+                            <button class="button solid fullwidth" type="submit">
                                 <i class="fa-solid fa-filter"></i>Filter toepassen
                             </button>
-                        </div>   
+                            <button id="clear-form" class="button clear fullwidth">
+                                <i class="fa-solid fa-filter-circle-xmark"></i>Filter(s) verwijderen
+                            </button>
+                        </div>  
                     </div>             
                 </div>                
             </form> 
             <div class="cell small-12 medium-8 large-9">
                 <div id="sort_characters-result" class="grid-x grid-margin-x grid-margin-y wrapper-character" data-equalizer>
-                    <?php foreach($arrCharacters as $character): ?>
+                    <?php foreach($arrSelectedCharacters as $character): ?>
                         <?= view('_templates/character_tile', ['character' => $character, 'target' => 'gamemaster', 'isGameMaster' => true]) ?>                                               
                     <?php endforeach; ?>
                 </div>

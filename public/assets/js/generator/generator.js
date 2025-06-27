@@ -12,7 +12,7 @@ import { createNote } from './character/note.js'
 import { convertCurrency } from './helper/currency.js'
 import { pickItem } from './character_asset/item.js'
 import { pickBasekit } from './character/equipment.js'
-import { editAdventure, editBackground } from './helper/story.js'
+import { editBackground, viewBackground, editAdventure, viewAdventure } from './helper/story.js'
 
 $(document).ready(function() {
 
@@ -29,6 +29,9 @@ $(document).ready(function() {
         //--setup a character based on json input
         window.character = new Character (window.character_input);
         window.character.__construct();
+        if(window.character.meta.status === 1 || window.character.meta.status === 7) {
+            initiateEditor();
+        }
     } else {
         debugLog('No character information received, treating as new');    
         //--setup a new clean character object
@@ -44,11 +47,11 @@ $(document).ready(function() {
                 lastlocked_dt: null,
             },
         });
-        //--new characters cannot edit adventurers, only background            
-        $('body').find('a[data-action="edit-adventure"]').addClass('disabled');
+        initiateEditor();
     }
 
-    initiateEditor();
+    
+
     $('#stat-currency').html(convertCurrency(window.character.build.currency));
     
     //This will bind the page function to their respective static elements

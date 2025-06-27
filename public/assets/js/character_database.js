@@ -1,5 +1,6 @@
 import { showPopup } from './_lib/functions.js';
 import { oTranslations, language, domain } from './_lib/settings.js';
+import { setCookieURL } from './_lib/setCookie.js';
 
 $(document).ready(function() {
 
@@ -13,15 +14,48 @@ $(document).ready(function() {
         $modal.foundation('open');
     });
 
+    $('#clear-form').on('click', function() {
+        const $modal = $('#popup-modal');
+        // Clear all input fields (text, select, checkboxes, etc.)
+        $('#form-sort_characters')[0].reset();
+        // Manually reset Chosen dropdowns
+        $('#form-sort_characters select').val('').trigger('chosen:updated');
+        // Remove query parameters from the URL
+        const baseUrl = window.location.pathname;
+        window.history.pushState({}, '', baseUrl);
+
+        // Submit the form with no data (only action: 'search')
+        $.ajax({
+            url: `${domain}/action/character-transfer`,
+            type: 'POST',
+            data: {
+                action: 'search'
+            },
+            success: function(data) {
+                $('#sort_characters-result').html(data);
+            },
+            error: function() {
+                const popupText = oTranslations[language].system_error;
+                showPopup(`<p>${popupText}</p>`, 'inform', 'error', function() {
+                    $modal.foundation('close');
+                });
+                console.error(popupText);
+            }
+        });
+    });
+
     $('#form-sort_characters').on('submit', function(e) {
         e.preventDefault();
+        const $modal = $('#popup-modal');
         const formdata = $(this).serializeArray();
         const data = {
             action: 'search'
         };
-        formdata.forEach(function (item) {
-            data[item.name] = item.value;
-        });
+
+        // Store filters in a cookie for 7 days        
+        setCookieURL(data,formdata,'character_filters');
+
+        // Perform the AJAX request
         $.ajax({
             url: `${domain}/action/character-transfer`,
             type: 'POST',
@@ -30,12 +64,15 @@ $(document).ready(function() {
                 $('#sort_characters-result').html(data);
             },
             error: function() {
-                const popupText = oTranslations[language].character_error;
-                showPopup(`<p>${popupText}</p>`, 'inform', 'error',function(){$modal.foundation('close')});
+                const popupText = oTranslations[language].system_error;
+                showPopup(`<p>${popupText}</p>`, 'inform', 'error', function() {
+                    $modal.foundation('close');
+                });
                 console.error(popupText);
             }
         });
     });
+
 
     $('#form-character-check').on('submit', function(e){
         e.preventDefault();
