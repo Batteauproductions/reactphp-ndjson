@@ -14,51 +14,72 @@ class ProfessionModel extends Model
         $this->db = \Config\Database::connect();
     }
     
-    public function getProfessions($admin=false) {
-        $query = $this
+    public function getProfessions($gamemaster=false) {
+        $builder = $this
                 ->db
                 ->table(TBL_PROF)
-                ->select('id, name, description, available')
+                ->select('id, 
+                        name, 
+                        description, 
+                        available')
                 ->where('available', 1);
-        
-        if(!$admin) {
-            $query->where('sl_only',null);
+
+        if (!$gamemaster) {
+            $builder->where('sl_only', '0');
         }
 
-        return $query->get()->getResultObject();
+        $query = $builder->get();
+
+        return $query->getResultObject();
     }
 
-    public function getProfessionDetails($id,$sub_id) 
+    public function getProfessionDetails($id,$sub_id,$gamemaster=false) 
     {
-        $arrData['details'] = $this->getProfessionById($id);
-        $arrData['subtype'] = $this->getProfessionSubtype($id);
+        $arrData['details'] = $this->getProfessionById($id,$gamemaster);
+        $arrData['subtype'] = $this->getProfessionSubtype($id,$gamemaster);
         $arrData['modifier'] = $this->getProfessionModifer(explode('|',$arrData['details']->modifier));        
         return $arrData;
     }
 
-    public function getProfessionById($id) 
+    public function getProfessionById($id,$gamemaster=false) 
     {		
-        $query = $this
+        $builder = $this
                     ->db
                     ->table(TBL_PROF.' p')
-                    ->select('p.id, p.name, p.description, p.modifier, p.rank_1_cost, p.rank_2_cost, p.rank_3_cost, p.allow_multiple, p.rule_page')
-                    ->where('p.id',$id)
-                    ->get();
+                    ->select('p.id, 
+                            p.name, 
+                            p.description,
+                            p.modifier, 
+                            p.skill_bonus,
+                            p.cost,
+                            p.max_purchase,
+                            p.rule_page,
+                            p.available,
+                            p.sl_only')
+                    ->where('p.id',$id);
+        if (!$gamemaster) {
+            $builder->where('sl_only', '0');
+        }
+        $query = $builder->get();
 
         return $query->getRow();
 	}
 	
-    public function getProfessionSubtype($id) 
+    public function getProfessionSubtype($id,$gamemaster=false) 
     {
-		$query = $this
-			->db
+        $builder = $this
+            ->db
             ->table(TBL_PROF_SUB)
-			->select('id, name, description')
-			->where('parent_id', $id)
-            ->get();
-					
+            ->select('id, name, description')
+            ->where('parent_id', $id);
+
+        if (!$gamemaster) {
+            $builder->where('sl_only', '0');
+        }
+
+        $query = $builder->get();
         return $query->getResultObject();
-	}
+    }
 
 	public function getProfessionModifer($ids) 
     {

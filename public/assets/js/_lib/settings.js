@@ -66,6 +66,7 @@ const oTranslations = Object.freeze({
         "racial": "ras",
         "remove": "verwijderen",
         "required": "verplicht",
+        "requirements_not_met": "je mist (enkele) verplichte vaardigheden",
         "silver": "zilver",
         "skill_speech": "Taal: Spreken",
         "skill_knowledge_x": "Kennis X",
@@ -113,8 +114,8 @@ const icons = Object.freeze({
     increase_base_mana_minor: new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_mana_minor'}),
     increase_base_currency: new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_currency'}),
     increase_base_favor: new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_favor'}),
-    "14": new Icon({icon_visual: 'fa-regular fa-comment', icon_text: 'skill_speech'}),
-    "5": new Icon({icon_visual: 'fa-regular fa-comment', icon_text: 'skill_knowledge_x'}),
+    "20": new Icon({icon_visual: 'fa-regular fa-comment', icon_text: 'skill_speech'}),
+    "9": new Icon({icon_visual: 'fa-regular fa-comment', icon_text: 'skill_knowledge_x'}),
 });
 
 const iconset = Object.freeze({

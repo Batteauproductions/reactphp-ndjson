@@ -9,17 +9,21 @@ import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } 
 class Skill extends CharacterAsset {
     constructor(params) {
         super(params);
+        this.requirements = params.current.requirements,
+        this.disclaimer = params.current.disclaimer,
+        this.multiplier = params.current.multiplier,
+        this.ingame_call = params.current.ingame_call,
         this.max_purchase = params.current.max_purchase ? parseInt(params.current.max_purchase) : 1;
     }
 
-    costSpend (cost = this.cost) {
+    costSpend (cost = this.rank_cost) {
         if(!updateExperience(cost,"spend")) {
             return oTranslations[language].not_enough_vp;  
         }
         return true;
     }
 
-    costRefund(cost = this.cost) {
+    costRefund(cost = this.rank_cost) {
         if(!updateExperience(cost,"refund")) {
             return false;
         }
@@ -117,7 +121,6 @@ function chooseSkill(sAction, obj) {
     //--Add the current asset to the object
     obj.details = {
         ...obj.details,
-        cost: parseInt(obj.details.xp_cost),
     }
     obj.current = {
         sub_id: $subtypeSelect.find('option:selected').val() || null,

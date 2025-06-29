@@ -160,57 +160,59 @@ function updateModelContent(oDetails) {
     }
 }
 
-function updateModelDetails(sAction, oDetails = {}, arrModifier = [], arrSkills = []) {
-    // Check if action and details are valid or if there's a modifier
-    if ((sAction && oDetails) || arrModifier.length > 0) {
-        // Destructure parameters with defaults
-        const {
-            disclaimer = "",
-            requirement_name = "",
-            loresheet = "",
-            max_rank = 0,
-            xp_cost = "",
-            rank_1_cost = "",
-            price = ""
-        } = oDetails;
+function updateModelDetails(sAction, oData) {
+    //shorten oData
+    const oDetails = oData.details;
+    const arrModifier = oData.modifier;
+    const arrSkills = oData.skills;    
+    // Array for batch DOM adding
+    const contentDetailsElements = [];
 
-        // Array for batch DOM adding
-        const contentDetailsElements = [];
-        // Cost-related text to the element
-        switch (sAction) {
-            case 'skill_base':
-            case 'skill_combat':
-            case 'skill_magic':
-            case 'skill_divine':
-                contentDetailsElements.push(icons.experience.render(null, true, xp_cost));
-                break;
-            case 'profession':
-                contentDetailsElements.push(icons.experience.render(null, true, rank_1_cost));
-                break;
-            case 'item':
-                contentDetailsElements.push(icons.coin.render(null, true, convertCurrency(price)));
-                break;
-            default:
-                console.warn(`Unused action of ${sAction} has been called`);
-                break;
+    // Check if action and details are valid or if there's a modifier
+    if ((sAction && oData) || arrModifier.length > 0) {
+        //render the cost
+        if(oDetails.cost) {
+            const rank_cost = oDetails.cost.split('|');            
+            // Cost-related text to the element
+            switch (sAction) {
+                case 'skill_base':
+                case 'skill_combat':
+                case 'skill_magic':
+                case 'skill_divine':
+                case 'profession':
+                    contentDetailsElements.push(icons.experience.render(null, true, rank_cost[0]));
+                    break;
+                case 'item':
+                    contentDetailsElements.push(icons.coin.render(null, true, convertCurrency(oDetails.price)));
+                    break;
+                default:
+                    console.warn(`Unused action of ${sAction} has been called`);
+                    break;
+            }
         }
+        
         // Add disclaimer paragraphs
-        if (disclaimer) {
-            const arrDisclaimer = disclaimer.split('|');
+        if (oDetails.disclaimer) {
+            const arrDisclaimer = oDetails.disclaimer.split('|');
             arrDisclaimer.forEach(text => {
                 contentDetailsElements.push(icons.disclaimer.render(null, false, text));
             });
         }
+        
         // Add requirement name
-        if (requirement_name) {
-            contentDetailsElements.push(icons.required.render(null, false, requirement_name));
+        if (oDetails.requirement_name) {
+            const arrRequirement = oDetails.requirement_name.split('|');
+            arrRequirement.forEach(text => {
+                contentDetailsElements.push(icons.required.render(null, false, text));
+            });
         }
+
         // Add loresheet
-        if (loresheet) {
+        if (oDetails.loresheet) {
             contentDetailsElements.push(icons.loresheet.render(null, true, ''));
         }
-        // Handle modifiers
-        if (arrModifier.length > 0) {
+        // Handle modifiers        
+        if (arrModifier && arrModifier.length > 0) {
             arrModifier.forEach((mod, i) => {
                 const name = mod.name.toLowerCase();                
                 const iconHtml = icons[name].render(null, true).outerHTML;
@@ -226,7 +228,7 @@ function updateModelDetails(sAction, oDetails = {}, arrModifier = [], arrSkills 
             });
         }
         // Handle skills
-        if (arrSkills.length > 0) {
+        if (arrSkills && arrSkills.length > 0) {
             arrSkills.forEach((skill, i) => {
                 const { id, name } = skill.details;
                 const { sub_id = null, sub_name = null } = skill.current || {};

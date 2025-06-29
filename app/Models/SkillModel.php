@@ -19,38 +19,29 @@ class SkillModel extends Model
 		$query = $this
                 ->db
                 ->table(TBL_SKILL.' s')
-                ->select('s.id, s.name, s.description, s.available, s.profession_link, s.modifier, s.skill_type, 
-                                s.profession_link, s.profession_sublink, s.profession_rank, 
-                                s.sl_only,
-                            p.id as prof_id, p.name as prof_name,
-                            sm.id as stat_id, sm.name as stat_name,
-                            st.id as type_id, st.name as type_name')
-                ->join(TBL_PROF.' p','p.id = s.profession_link','left')
-                ->join(TBL_STATMOD.' sm','sm.id = s.modifier','left')
-                ->join(TBL_SKILL_TYPE.' st','st.id = s.skill_type','left')
-                ->orderBy('s.name','asc')
-                ->orderBy('s.profession_link','asc')
-                ->orderBy('s.profession_sublink','asc')
-                ->orderBy('s.profession_rank','asc');
-            
-        if (!$gamemaster) {
-            $query->where('s.sl_only', null)
-                ->where('s.available', 1);
-        } 
-
-		return $query->get()->getResultObject();
-	}
-
-    public function getAllSkills($gamemaster=false) {		
-		$query = $this
-                ->db
-                ->table(TBL_SKILL.' s')
-                ->select('s.id, s.name, s.description, s.available, s.profession_link, s.modifier, s.skill_type, 
-                                s.profession_link, s.profession_sublink, s.profession_rank, 
-                                s.loresheet, s.xp_cost, s.sl_only,
-                            p.id as prof_id, p.name as prof_name,
-                            sm.id as stat_id, sm.name as stat_name,
-                            st.id as type_id, st.name as type_name')
+                ->select('s.id, 
+                        s.name,
+                        s.description,
+                        s.requirements,
+                        s.disclaimer,
+                        s.cost,
+                        s.max_rank,
+                        s.max_purchase,
+                        s.skill_type,
+                        s.profession_link,
+                        s.profession_sublink,
+                        s.profession_rank,
+                        s.sl_only,
+                        s.multiplier,
+                        s.modifier,
+                        s.loresheet,
+                        s.ingame_call,
+                        s.power,
+                        s.time,
+                        s.atk_range,
+                        p.id as prof_id, p.name as prof_name,
+                        sm.id as stat_id, sm.name as stat_name,
+                        st.id as type_id, st.name as type_name')
                 ->join(TBL_PROF.' p','p.id = s.profession_link','left')
                 ->join(TBL_STATMOD.' sm','sm.id = s.modifier','left')
                 ->join(TBL_SKILL_TYPE.' st','st.id = s.skill_type','left')
@@ -73,10 +64,29 @@ class SkillModel extends Model
         $query = $this
                 ->db
                 ->table(TBL_SKILL . ' s')
-                ->select('s.id, s.name, s.description, s.available, s.skill_type, s.profession_link, s.profession_sublink, s.profession_rank, s.sl_only,
-                            p.id as prof_id, p.name as prof_name,
-                            sm.id as stat_id, sm.name as stat_name,
-                            st.id as type_id, st.name as type_name')
+                ->select('s.id, 
+                        s.name,
+                        s.description,
+                        s.requirements,
+                        s.disclaimer,
+                        s.cost,
+                        s.max_rank,
+                        s.max_purchase,
+                        s.skill_type,
+                        s.profession_link,
+                        s.profession_sublink,
+                        s.profession_rank,
+                        s.sl_only,
+                        s.multiplier,
+                        s.modifier,
+                        s.loresheet,
+                        s.ingame_call,
+                        s.power,
+                        s.time,
+                        s.atk_range,
+                        p.id as prof_id, p.name as prof_name,
+                        sm.id as stat_id, sm.name as stat_name,
+                        st.id as type_id, st.name as type_name')
                 ->where('s.available', 1)
                 ->whereIn('s.skill_type', $skill_type)
                 ->join(TBL_PROF . ' p', 'p.id = s.profession_link', 'left')
@@ -139,7 +149,26 @@ class SkillModel extends Model
         $query = $this
                     ->db
                     ->table(TBL_SKILL . ' s')
-                    ->select('s.id, s.name, s.description, s.advanced_description, s.disclaimer, s.requirements, s.loresheet, s.max_rank, s.max_purchase, s.rank_description, s.xp_cost, s.modifier, s.profession_link, s.profession_sublink, s.profession_rank, s.sl_only,
+                    ->select('s.id, 
+                            s.name,
+                            s.description,
+                            s.requirements,
+                            s.disclaimer,
+                            s.cost,
+                            s.max_rank,
+                            s.max_purchase,
+                            s.skill_type,
+                            s.profession_link,
+                            s.profession_sublink,
+                            s.profession_rank,
+                            s.sl_only,
+                            s.multiplier,
+                            s.modifier,
+                            s.loresheet,
+                            s.ingame_call,
+                            s.power,
+                            s.time,
+                            s.atk_range,
                             p.id as prof_id, p.name as prof_name,
                             sm.id as stat_id, sm.name as stat_name,
                             st.id as type_id, st.name as type_name')
@@ -234,35 +263,4 @@ class SkillModel extends Model
 					
         return $query->getResultObject();
 	}
-
-    /*
-    // Function to fetch sub-skill details by sub-ID
-    public function getSubSkillById($id) 
-    {
-        $query = $this
-            ->db
-            ->table(TBL_SKILL_SUB)
-            ->select('id, name')
-            ->where('id', $id)
-            ->where('available', 1)
-            ->get();
-
-        return $query->getRow();
-    }
-
-    // Function to fetch sub-skills by parent ID
-    public function getSubSkillsByParentId($parentId) 
-    {
-        $query = $this
-            ->db
-            ->table(TBL_SKILL_SUB)
-            ->select('id, name')
-            ->where('parent_id', $parentId)
-            ->where('available', 1)
-            ->get();
-
-        return $query->getResultObject();
-    }
-        */
-	
 }

@@ -303,6 +303,17 @@ label.input-error {
 #choice-description {
   display: block;
 }
+#choice-description h1 {
+  text-transform: capitalize;
+}
+#choice-description span {
+  color: #F5B041;
+  font-variant: small-caps;
+  font-weight: 700;
+}
+#choice-description ul {
+  margin-left: 0.313rem;
+}
 
 #choice-details {
   display: block;

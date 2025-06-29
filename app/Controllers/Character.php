@@ -103,7 +103,7 @@ class Character extends Controller
                     echo json_encode($this->models['skill']->getSkillsByLink([1,2],$arrProfessions,$this->arrRights['isGameMaster']));
                     break;
                 case 'fill-dropdown-skill_combat':
-                    echo json_encode($this->models['skill']->getSkillsByLink([6,8],$arrProfessions,$this->arrRights['isGameMaster']));
+                    echo json_encode($this->models['skill']->getSkillsByLink([6,8,13],$arrProfessions,$this->arrRights['isGameMaster']));
                     break;
                 case 'fill-dropdown-skill_magic':
                     echo json_encode($this->models['skill']->getSkillsByLink([4,5,11],$arrProfessions,$this->arrRights['isGameMaster']));
@@ -141,7 +141,7 @@ class Character extends Controller
                     echo json_encode($this->models['race']->getRaceDetails($arrData['id']));
                     break;
                 case 'get-details-profession':
-                    echo json_encode($this->models['profession']->getProfessionDetails($arrData['id'],$arrData['sub_id']));
+                    echo json_encode($this->models['profession']->getProfessionDetails($arrData['id'],$arrData['sub_id'],$this->arrRights['isGameMaster']));
                     break;
                 case 'get-details-skill_base':
                 case 'get-details-skill_combat':

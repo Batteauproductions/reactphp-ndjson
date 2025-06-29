@@ -9,6 +9,8 @@ class CharacterAsset {
         details: {
             id, 
             name,
+            description,
+            requirements,
             cost,
             max_rank,
             loresheet,
@@ -30,6 +32,8 @@ class CharacterAsset {
     }) {
         this.id = parseInt(id);
         this.name = name;
+        this.description = description;
+        this.requirements = requirements;
         this.max_rank = isNaN(parseInt(max_rank)) ? 1 : parseInt(max_rank); //checks that rank is always set to at least 1
         this.allow_multiple = allow_multiple ? parseInt(allow_multiple) : 0; //only certain items can be added multiple times [true/false]
         this.attribute = attribute; //what attribute of the character the assets should be stored [profession/skill/item]
@@ -38,8 +42,8 @@ class CharacterAsset {
         this.rank = isNaN(parseInt(rank)) ? 1 : parseInt(rank); //what level is the asset
         this.modifier = modifier.length > 0 && modifier[0]?.id !== undefined ? parseInt(modifier[0].id) : null; //some assets contain stat modifiers
         this.racial = racial ? Boolean(racial) : false //some assets are included in the racial choice of the character
-        this.cost = this.racial ? 0 : parseInt(cost); // all racial elements are 0 cost    
-        this.rank_cost = rank_cost !== undefined ? parseInt(rank_cost) : this.cost; // upon initialization the asset cost is the same as the cost          
+        this.cost = this.racial ? 0 : cost; // all racial elements are 0 cost    
+        this.rank_cost = rank_cost !== undefined ? parseInt(rank_cost) : parseInt(this.cost); // upon initialization the asset cost is the same as the cost          
         this.container = container; //this is the container on the character sheet [profession/skill/equipment]
         this.loresheet = loresheet ? Boolean(parseInt(loresheet)) : false;
         this.created_dt = created_dt ? created_dt : currentDateTime;
@@ -61,6 +65,32 @@ class CharacterAsset {
                 showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
                 return;
             }            
+        }
+        //-----------------------------//
+
+        // Check if the requirement is met, if so; deduct and continue
+        if(this.requirements) {
+            console.log('requirements', this.requirements)
+            let result = [];
+            const items = this.requirements.split('|');
+            items.forEach(function(item) {
+                let parts = item.split(',');
+                let id = parts[0];
+                let sub_id = parts[1];
+                
+                result.push({
+                    id: parseInt(id),
+                    sub_id: parseInt(sub_id)
+                });
+            });
+
+            result.forEach(function(obj) {
+                const index = findItemIndex('skill', obj.id, obj.sub_id);
+                if (index !== -1) {
+                    showMessage('#choice-actions', 'error', oTranslations[language].requirements_not_met);
+                    return;
+                }
+            });
         }
         //-----------------------------//
 
@@ -219,9 +249,12 @@ class CharacterAsset {
                     html: this.racial ? `<em>${oTranslations[language].racial}</em>` : `${this.rank_cost}pt.`
                 })); 
                 //set icons
-                if (this.racial || this.rank == this.max_rank || this.max_rank == null) {
-                    // Racial or maxed out → no adjustments
+                if (this.racial) {
+                    // Racial no adjustments
                     local_icons = iconset.adjust_none;
+                } else if(this.rank == this.max_rank || this.max_rank == null) {
+                    // maxed out → no adjustments
+                    local_icons = iconset.adjust_basic;
                 } else if (this.rank > 1 && this.rank < this.max_rank) {
                     // Mid-range skill
                     local_icons = this.locked_dt == null 

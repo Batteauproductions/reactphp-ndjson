@@ -9,19 +9,16 @@ import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } 
 class Profession extends CharacterAsset {
     constructor(params) {
         super(params);
-        this.rank_1_cost = parseInt(params.current.rank_1_cost);
-        this.rank_2_cost = parseInt(params.current.rank_2_cost);
-        this.rank_3_cost = parseInt(params.current.rank_3_cost);
     }
     
-    costSpend (cost = this.cost) {
+    costSpend (cost = this.rank_cost) {
         if(!updateExperience(cost,"spend")) {
             return oTranslations[language].not_enough_vp;  
         }
         return true;
     }
 
-    costRefund(cost = this.cost) {
+    costRefund(cost = this.rank_cost) {
         if(!updateExperience(cost,"refund")) {
             return false;
         }
@@ -29,13 +26,15 @@ class Profession extends CharacterAsset {
     }
 
     getNewRankCost(new_rank = null) {
-        return this[`rank_${new_rank}_cost`];
+        const arr_cost = this.cost.split('|');
+        return parseInt(arr_cost[new_rank-1]);
     }
 
     getCurrentRankCost() {
         let total = 0;
-        for (let i = 1; i <= this.rank; i++) {
-            const cost = this[`rank_${i}_cost`] ?? 0;
+        const arr_cost = this.cost.split('|'); 
+        for (let i = 0; i <= (this.rank-1); i++) {
+            const cost = parseInt(arr_cost[i]) ?? 0;
             total += cost;
         }
         return total;
@@ -100,22 +99,24 @@ function chooseProfession(sAction, obj) {
         console.error("chooseProfession: 'obj' is not a valid object: " + $.type(obj));
         return;
     }
-
+    
     //--Add the current asset to the object
     obj.details = {
         ...obj.details,
         max_rank: 3,
-        cost: parseInt(obj.details.rank_1_cost),
     }
+
+    //convert cost to array
+    const str_cost = obj.details.cost;
+    const arr_cost = str_cost.split('|');
+
     obj.current = { 
         sub_id: $subtypeSelect.find('option:selected').val() || null,
         sub_name: $subtypeSelect.find('option:selected').text() || null,
         rank: $rankSelect.val() || 1,
         container: sAction,
         attribute: 'profession',
-        rank_1_cost: obj.details.rank_1_cost,
-        rank_2_cost: obj.details.rank_2_cost,
-        rank_3_cost: obj.details.rank_3_cost,
+        rank_cost: parseInt(arr_cost[0]),
     };
     
     const profClass = new Profession(obj);

@@ -72,7 +72,7 @@ function updateModal (sAction,oData) {
         updateModalImage();
     }    
     updateModelContent(oData.details);
-    updateModelDetails(sAction,oData.details,oData.modifier,oData.skills);
+    updateModelDetails(sAction,oData);
     updateModelButtons(sAction,oData);
     //items allow amount to be chosen
     if(sAction == 'item') {
