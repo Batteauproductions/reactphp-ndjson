@@ -30,10 +30,10 @@ class CharacterAsset {
             locked_dt,
         } = {} // Provide a default empty object for destructuring
     }) {
-        this.id = parseInt(id);
+        this.id = id !== null ? parseInt(id) : null;
         this.name = name;
         this.description = description;
-        this.requirements = requirements;
+        this.requirements = requirements !== null ? requirements : null;
         this.max_rank = isNaN(parseInt(max_rank)) ? 1 : parseInt(max_rank); //checks that rank is always set to at least 1
         this.allow_multiple = allow_multiple ? parseInt(allow_multiple) : 0; //only certain items can be added multiple times [true/false]
         this.attribute = attribute; //what attribute of the character the assets should be stored [profession/skill/item]
@@ -68,30 +68,34 @@ class CharacterAsset {
         }
         //-----------------------------//
 
-        // Check if the requirement is met, if so; deduct and continue
-        if(this.requirements) {
-            console.log('requirements', this.requirements)
+        // Check if the requirement is met, if so; continue
+        if (this.requirements) {
             let result = [];
             const items = this.requirements.split('|');
+            
             items.forEach(function(item) {
                 let parts = item.split(',');
                 let id = parts[0];
-                let sub_id = parts[1];
-                
+                let rank = parts[1];
+
                 result.push({
                     id: parseInt(id),
-                    sub_id: parseInt(sub_id)
+                    sub_id: null,
+                    rank: parseInt(rank)
                 });
             });
 
-            result.forEach(function(obj) {
-                const index = findItemIndex('skill', obj.id, obj.sub_id);
-                if (index !== -1) {
+            for (let i = 0; i < result.length; i++) {
+                const obj = result[i];
+                const index = findItemIndex('skill', obj.id, obj.sub_id, obj.rank);
+                console.log('index: ', index);
+                if (index === -1) {
                     showMessage('#choice-actions', 'error', oTranslations[language].requirements_not_met);
                     return;
                 }
-            });
+            }
         }
+
         //-----------------------------//
 
         // Check if the cost can be deducted, if so; deduct and continue
@@ -222,7 +226,7 @@ class CharacterAsset {
         this.modified_dt      
         let name = '';
             name += `${bNewSkill ? icons.new.icon() : ''}`;
-            name += `${this.loresheet ? icons.loresheet.icon() : ''}`;
+            name += `${this.loresheet===1 ? icons.loresheet.icon() : ''}`;
             name += `${this.name}`;
             name += `${this.rank != this.max_rank ? ` (${icons.rank.text()} ${this.rank})` : ''}`;
          

@@ -176,6 +176,34 @@ class Character extends Controller
 
         if (isset($arrData['action'])) {
             switch($arrData['action']) {
+                case "check":
+                    $returnData = $this->models['character']->saveCharacter($arrData,2);
+                    if($returnData['done']) {
+                        $send = $this->controllers['mail']->sendCharacterSubmit([
+                            'player_name'   =>$this->session->get('name'),
+                            'char_name'     =>$returnData['cname'],
+                            'cid'           =>$returnData['id'],
+                        ]);
+                        if($send) {
+                            echo json_encode($returnData);
+                        }
+                    } 
+                    break;
+                case "delete":
+                    echo json_encode($this->models['character']->deleteCharacter(
+                                                                    $this->request->getPost('character'),                                            
+                                                                    $this->session->get('uid'),                                                                    
+                                                                    $this->arrRights['isGameMaster'],
+                                                                ));
+                    break;
+                case "lock":
+                    $returnData = $this->models['character']->saveCharacter($arrData,5);                    
+                    echo json_encode($returnData);
+                    break;
+                case "save":
+                    $returnData = $this->models['character']->saveCharacter($arrData);                    
+                    echo json_encode($returnData);
+                    break;
                 case "search":
                     //collect user
                     $arrData = array(
@@ -197,15 +225,7 @@ class Character extends Controller
                         ]);
                     }
                     echo $view;
-                    break;
-                case "lock":
-                    $returnData = $this->models['character']->saveCharacter($arrData,5);                    
-                    echo json_encode($returnData);
-                    break;
-                case "save":
-                    $returnData = $this->models['character']->saveCharacter($arrData);                    
-                    echo json_encode($returnData);
-                    break;
+                    break;                
                 case "submit":
                     $returnData = $this->models['character']->saveCharacter($arrData,2);
                     if($returnData['done']) {
@@ -222,13 +242,7 @@ class Character extends Controller
                 case "print":
                     echo  'character-print';
                     break;
-                case "delete":
-                    echo json_encode($this->models['character']->deleteCharacter(
-                                                                    $this->request->getPost('character'),                                            
-                                                                    $this->session->get('uid'),                                                                    
-                                                                    $this->arrRights['isGameMaster'],
-                                                                ));
-                    break;
+                
                 default: 
                     echo 'unknown action has been parsed';
                     break;

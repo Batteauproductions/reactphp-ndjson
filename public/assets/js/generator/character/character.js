@@ -139,7 +139,7 @@ class Character {
             // CURRENTLY EITHER THE SKILL WORKS OR BUYING ITEMS DOES //
             //currency: { base: window.jsonBaseChar.currency, factor: 10, stat: window.jsonStat.currency }, 
             hp: { base: window.jsonBaseChar.hp, factor: 2, stat: window.jsonStat.hp },
-            sanity: { base: window.jsonBaseChar.sanity, factor: 1, stat: window.jsonStat.sanity },
+            sanity: { base: window.jsonBaseChar.sanity, factor: 1, stat: window.jsonStat.sanity, additionalFactor: 12, additionalStat: window.jsonStat.decrease_sanity },
             mana: { base: window.jsonBaseChar.mana, factor: 7, stat: window.jsonStat.mana, additionalFactor: 9, additionalStat: window.jsonStat.mana_minor },
             gp: { base: window.jsonBaseChar.gp, factor: 6, stat: window.jsonStat.gp },
             str: { base: window.jsonBaseChar.str, factor: 4, stat: window.jsonStat.str },
@@ -339,12 +339,12 @@ function calculateIncrease(id) {
  * @param {string|null} sub_id - The sub ID of the item (optional).
  * @returns {number} The index of the item if found, otherwise -1.
  */
-function findItemIndex(attribute, id, sub_id = null) {
+function findItemIndex(attribute, id, sub_id = null, rank = null) {
     // Access the specified attribute array directly from window.character
     const attributeArray = window.character[attribute];
     // Ensure the attributeArray is an array and search for the item by id and sub_id
     return Array.isArray(attributeArray) 
-        ? attributeArray.findIndex(item => item?.id === id && (item?.sub_id === sub_id || sub_id === null))
+        ? attributeArray.findIndex(item => item?.id === id && (item?.sub_id === sub_id || sub_id === null) && (item?.rank >= rank || rank === null))
         : -1;
 }
 

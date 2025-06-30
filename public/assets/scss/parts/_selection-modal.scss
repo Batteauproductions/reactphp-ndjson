@@ -1,0 +1,57 @@
+
+@import '../variables';
+
+#selection-modal {
+
+    #choice-image-container {
+        overflow: hidden;
+        max-height: 25vh;
+        /* Medium and up */
+        @media screen and (min-width: 40em) {
+            height: 100%;
+        }        
+    }
+
+    #choice-description {
+        display: block;
+
+        h1 {
+            text-transform: capitalize;
+        }
+        
+        article {
+            font: $paragraph-font;
+        }
+
+        span {
+            font: $paragraph-font;
+            color: $color-highlight;
+            font-variant: small-caps;
+            font-weight: 700;
+        }
+
+        ul {
+            margin-left: 0.313rem;
+        }
+    }
+
+    #choice-details {
+        display: block;
+        border: solid 1px #fff;
+        padding: $padding;
+        margin: $margin 0;
+        p {
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+        input {
+            display: inline-block;
+            width: auto;
+        }
+    }
+    #choice-actions{
+        display: block;
+    }
+}
+

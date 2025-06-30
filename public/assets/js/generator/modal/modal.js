@@ -208,7 +208,7 @@ function updateModelDetails(sAction, oData) {
         }
 
         // Add loresheet
-        if (oDetails.loresheet) {
+        if (oDetails.loresheet == 1) {
             contentDetailsElements.push(icons.loresheet.render(null, true, ''));
         }
         // Handle modifiers        

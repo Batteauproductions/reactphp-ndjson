@@ -300,39 +300,6 @@ label.input-error {
   margin: 1.25rem 0;
 }
 
-#choice-description {
-  display: block;
-}
-#choice-description h1 {
-  text-transform: capitalize;
-}
-#choice-description span {
-  color: #F5B041;
-  font-variant: small-caps;
-  font-weight: 700;
-}
-#choice-description ul {
-  margin-left: 0.313rem;
-}
-
-#choice-details {
-  display: block;
-  border: solid 1px #fff;
-  padding: 1.25rem;
-  margin: 1.25rem 0;
-}
-#choice-details p:last-child {
-  margin-bottom: 0;
-}
-#choice-details input {
-  display: inline-block;
-  width: auto;
-}
-
-#choice-actions {
-  display: block;
-}
-
 .reveal {
   background: #1E1E1E;
   border-radius: 0.313rem;
@@ -668,6 +635,58 @@ label.input-error {
 .profile .profile-role {
   display: block;
   font-size: 0.8rem;
+}
+
+/* breakpoints */
+/* color sets for the application */
+/*font-sizings for different screens*/
+/* font settings for the headers */
+/* font settings for the body */
+/* font settings for the links */
+/* misc settings */
+#selection-modal #choice-image-container {
+  overflow: hidden;
+  max-height: 25vh;
+  /* Medium and up */
+}
+@media screen and (min-width: 40em) {
+  #selection-modal #choice-image-container {
+    height: 100%;
+  }
+}
+#selection-modal #choice-description {
+  display: block;
+}
+#selection-modal #choice-description h1 {
+  text-transform: capitalize;
+}
+#selection-modal #choice-description article {
+  font: normal 1rem/1.35rem Manuale, serif;
+}
+#selection-modal #choice-description span {
+  font: normal 1rem/1.35rem Manuale, serif;
+  color: #F5B041;
+  font-variant: small-caps;
+  font-weight: 700;
+}
+#selection-modal #choice-description ul {
+  margin-left: 0.313rem;
+}
+#selection-modal #choice-details {
+  display: block;
+  border: solid 1px #fff;
+  padding: 1.25rem;
+  margin: 1.25rem 0;
+}
+#selection-modal #choice-details p:last-child {
+  margin-bottom: 0;
+}
+#selection-modal #choice-details input {
+  display: inline-block;
+  width: auto;
+}
+#selection-modal #choice-actions {
+  display: block;
 }
 
 /* breakpoints */

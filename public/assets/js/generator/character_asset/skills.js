@@ -9,11 +9,6 @@ import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } 
 class Skill extends CharacterAsset {
     constructor(params) {
         super(params);
-        this.requirements = params.current.requirements,
-        this.disclaimer = params.current.disclaimer,
-        this.multiplier = params.current.multiplier,
-        this.ingame_call = params.current.ingame_call,
-        this.max_purchase = params.current.max_purchase ? parseInt(params.current.max_purchase) : 1;
     }
 
     costSpend (cost = this.rank_cost) {

@@ -28,43 +28,6 @@ label.input-error {
     margin: $margin 0;
 }
 
-#choice-description {
-    display: block;
-
-    h1 {
-        text-transform: capitalize;
-    }
-
-    span {
-        color: $color-highlight;
-        font-variant: small-caps;
-        font-weight: 700;
-    }
-
-    ul {
-        margin-left: 0.313rem;
-    }
-}
-
-#choice-details {
-    display: block;
-    border: solid 1px #fff;
-    padding: $padding;
-    margin: $margin 0;
-    p {
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-    input {
-        display: inline-block;
-        width: auto;
-    }
-}
-#choice-actions{
-    display: block;
-}
-
 .reveal {
     background: $color-primary;
     border-radius: $border-radius;
