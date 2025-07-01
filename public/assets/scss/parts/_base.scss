@@ -78,6 +78,8 @@ p {
 
 i {
     &.fa-solid, &.fa-regular, &.fa-brands {
+        display: inline-block;
+        min-width: 1.25rem;
         margin-right: calc(0.5 * $margin);
     }
 }

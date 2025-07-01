@@ -104,6 +104,8 @@ p {
 }
 
 i.fa-solid, i.fa-regular, i.fa-brands {
+  display: inline-block;
+  min-width: 1.25rem;
   margin-right: 0.625rem;
 }
 
@@ -651,7 +653,7 @@ label.input-error {
 }
 @media screen and (min-width: 40em) {
   #selection-modal #choice-image-container {
-    height: 100%;
+    max-height: 100%;
   }
 }
 #selection-modal #choice-description {

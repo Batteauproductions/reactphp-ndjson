@@ -65,7 +65,7 @@ class Character {
     setBasekit(description,value) {
         debugLog(`setBasekit: ${value}`);
         this.build.base_kit = parseInt(value);  
-        $('div[data-id="base_kit-list"]').html(description);
+        $('div[data-id="basekit-list"]').html(description);
         $('a[data-action="pick-basekit"]').html(`<i class="fa-solid fa-rotate-right"></i> aanpassen </span>`).on('click',pickBasekit);         
     }
 

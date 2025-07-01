@@ -16,17 +16,6 @@ class Item extends CharacterAsset {
         this.price_low = parseInt(params.details.price_low);
     }
 
-
-    // Updated method to display all attributes
-    displayInfo() {
-        console.log(`ID: ${this.id}`);
-        console.log(`Name: ${this.name}`);
-        console.log(`Price: ${this.price}`);
-        console.log(`Modifier: ${this.modifier}`);
-        console.log(`Amount: ${this.amount}`);
-        console.log(`Cost: ${this.cost}`);
-    }
-
     costText() {
         return convertCurrency(this.cost);
     }

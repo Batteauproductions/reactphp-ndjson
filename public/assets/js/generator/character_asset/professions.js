@@ -1,7 +1,6 @@
 // Generic settings and functions
 import { CharacterAsset } from './character_asset.js';
-import { domain, oTranslations, language } from '../../_lib/settings.js';
-import { updateExperience } from '../helper/experience.js';
+import { domain } from '../../_lib/settings.js';
 import { debugLog } from '../../_lib/functions.js';
 import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } from '../modal/selection_modal.js';
 
@@ -11,20 +10,6 @@ class Profession extends CharacterAsset {
         super(params);
     }
     
-    costSpend (cost = this.rank_cost) {
-        if(!updateExperience(cost,"spend")) {
-            return oTranslations[language].not_enough_vp;  
-        }
-        return true;
-    }
-
-    costRefund(cost = this.rank_cost) {
-        if(!updateExperience(cost,"refund")) {
-            return false;
-        }
-        return true;      
-    }
-
     getNewRankCost(new_rank = null) {
         const arr_cost = this.cost.split('|');
         return parseInt(arr_cost[new_rank-1]);

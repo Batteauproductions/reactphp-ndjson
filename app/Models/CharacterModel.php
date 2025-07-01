@@ -72,7 +72,7 @@ class CharacterModel extends Model
         $oCharacter->profession = $this->db
                         ->table(TBL_CHAR_PROF . ' cp')
                         ->select('cp.main_id, cp.sub_id, cp.rank, cp.created_dt, cp.modified_dt,
-                            p.name, p.modifier, p.rank_1_cost, p.rank_2_cost, p.rank_3_cost, p.allow_multiple,
+                            p.name, p.modifier, p.cost, p.max_purchase,
                             ps.name as sub_name', false)
                         ->join(TBL_PROF . ' p', 'cp.main_id = p.id')
                         ->join(TBL_PROF_SUB . ' ps', 'cp.sub_id = ps.id','left')
@@ -84,7 +84,7 @@ class CharacterModel extends Model
         $oCharacter->skill = $this->db
                         ->table(TBL_CHAR_SKILL . ' cs')
                         ->select('cs.main_id, cs.sub_id, cs.racial, cs.rank, cs.bonus, cs.created_dt, cs.modified_dt,
-                            s.name as name, s.skill_type, s.xp_cost as cost, s.modifier, 
+                            s.name as name, s.skill_type, s.cost as cost, s.modifier, 
                             ss.name as sub_name', false)
                         ->join(TBL_SKILL . ' s', 'cs.main_id = s.id')
                         ->join(TBL_SKILL_SUB . ' ss', 'cs.sub_id = ss.id','left')

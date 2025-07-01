@@ -2,6 +2,7 @@
 import { icons, iconset, language, oTranslations, currentDateTime } from '../../_lib/settings.js'
 import { debugLog, generateIconSet, showMessage } from '../../_lib/functions.js'
 import { findItemIndex } from '../character/character.js';
+import { updateExperience } from '../helper/experience.js';
 
 // Define the class
 class CharacterAsset {
@@ -59,7 +60,7 @@ class CharacterAsset {
     add () {
 
         // Check for duplicates, but only when not allowed
-        if(!this.allow_multiple || this.max_purchase == 1) {
+        if(this.max_purchase == 1) {
             const index = this.getSelfIndex();
             if (index !== -1) {
                 showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
@@ -312,14 +313,18 @@ class CharacterAsset {
         //-----------------------------// 
     }    
 
-    costRefund() {
-        console.error('Generic cost could not be refunded'); //this function is overwritten per child class
-        return false; 
+    costSpend(cost = this.rank_cost) {
+        if(!updateExperience(cost,"spend")) {
+            return oTranslations[language].not_enough_vp;  
+        }
+        return true;
     }
 
-    costSpend() {
-        console.error('Generic cost could not be spend'); //this function is overwritten per child class
-        return false;
+    costRefund(cost = this.rank_cost) {
+        if(!updateExperience(cost,"refund")) {
+            return false;
+        }
+        return true;      
     }
 
     getVisualRow() {
@@ -329,11 +334,11 @@ class CharacterAsset {
     }
 
     getNewRankCost() {
-        return this.cost;
+        return this.rank_cost;
     }
 
     getCurrentRankCost() {
-        return parseInt(this.cost * this.rank);
+        return parseInt(this.rank_cost * this.rank);
     }
 }
 

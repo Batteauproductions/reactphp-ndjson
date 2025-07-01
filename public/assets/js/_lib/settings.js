@@ -25,6 +25,7 @@ const oTranslations = Object.freeze({
         "choose_option": "Maak een keuze",
         "copper": "koper",
         "confirm": "ok",
+        "decrease_base_sanity": "Verlaagt de maximum sanity",
         "disclaimer": "disclaimer",
         "downgrade": "verlagen",
         "duplicate_choose": "je personage heeft deze keuze al",
@@ -114,6 +115,7 @@ const icons = Object.freeze({
     increase_base_mana_minor: new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_mana_minor'}),
     increase_base_currency: new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_currency'}),
     increase_base_favor: new Icon({icon_visual: 'fa-solid fa-arrow-up-right-dots', icon_text: 'increase_base_favor'}),
+    decrease_base_sanity: new Icon({icon_visual: 'fa-solid fa-arrow-down-wide-short', icon_text: 'decrease_base_sanity'}),
     "20": new Icon({icon_visual: 'fa-regular fa-comment', icon_text: 'skill_speech'}),
     "9": new Icon({icon_visual: 'fa-regular fa-comment', icon_text: 'skill_knowledge_x'}),
 });

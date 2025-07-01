@@ -1,7 +1,6 @@
 //Generic settings and functions
 import { CharacterAsset } from './character_asset.js';
 import { domain, oTranslations, language } from '../../_lib/settings.js';
-import { updateExperience } from '../helper/experience.js';
 import { debugLog, showPopup } from '../../_lib/functions.js';
 import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } from '../modal/selection_modal.js';
 
@@ -10,21 +9,6 @@ class Skill extends CharacterAsset {
     constructor(params) {
         super(params);
     }
-
-    costSpend (cost = this.rank_cost) {
-        if(!updateExperience(cost,"spend")) {
-            return oTranslations[language].not_enough_vp;  
-        }
-        return true;
-    }
-
-    costRefund(cost = this.rank_cost) {
-        if(!updateExperience(cost,"refund")) {
-            return false;
-        }
-        return true;      
-    }
-
 }
 
 /*
@@ -92,7 +76,7 @@ function pickSkill(sAction) {
                 $form.show();
                 $select.show();
             } else {
-                showPopup(`<p>${oTranslations[language].no_skills_available}</p>`,'inform','question',{});
+                showPopup(`<p>${oTranslations[language].no_skills_available}</p>`,'inform','question');
             }
         },
         error: function(error) {
