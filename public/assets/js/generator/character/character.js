@@ -196,7 +196,7 @@ class Character {
             {
                 details: {
                     allow_multiple: obj.allow_multiple,
-                    cost: obj.rank_1_cost,
+                    cost: obj.cost,
                     id: obj.main_id,
                     name: obj.name,
                     max_rank: 3,
@@ -205,9 +205,7 @@ class Character {
                     attribute: "profession",
                     container: "profession",
                     rank: obj.rank,
-                    rank_1_cost: obj.rank_1_cost,
-                    rank_2_cost: obj.rank_2_cost,
-                    rank_3_cost: obj.rank_3_cost,
+                    rank_cost: obj.rank_cost,
                     sub_id: obj.sub_id,
                     sub_name: obj.sub_name,
                 },
