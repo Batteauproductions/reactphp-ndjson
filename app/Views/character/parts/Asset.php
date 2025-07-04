@@ -2,20 +2,15 @@
     <h2><?= $title; ?></h2>
     <hr>
     <div data-id="<?= $id.'-list'; ?>">
-        <!-- Dynamic filled -->
-        <?php if(isset($array)): ?>
-            <?php foreach($array as $item):?>                
-                <div class="grid-x choice-row">
-                    <div class="cell small-5 medium-4 text-left">
-                        <?= $item->name ?>
-                    </div>
-                    <div class="cell small-5 medium-4 text-center">
-                        <?= isset($item->sub_name) ? $item->sub_name : ''; ?>
-                    </div>
-                    <div class="cell small-2 medium-1 text-right">
-                        
-                    </div>
-                </div>
+        <?php if (isset($array)): ?>
+            <?php foreach ($array as $item): ?>  
+                <?php if (isset($skill_set)): ?>
+                    <?php if (in_array($item->skill_type, $skill_set)): ?>
+                        <?= view('character/parts/AssetRow', ['item' => $item]); ?>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <?= view('character/parts/AssetRow', ['item' => $item]); ?>
+                <?php endif; ?>
             <?php endforeach; ?>
         <?php endif; ?>
     </div>

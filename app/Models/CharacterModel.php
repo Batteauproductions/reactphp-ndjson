@@ -83,8 +83,33 @@ class CharacterModel extends Model
         // Query for character skill(s)
         $oCharacter->skill = $this->db
                         ->table(TBL_CHAR_SKILL . ' cs')
-                        ->select('cs.main_id, cs.sub_id, cs.racial, cs.rank, cs.bonus, cs.created_dt, cs.modified_dt,
-                            s.name as name, s.skill_type, s.cost as cost, s.modifier, 
+                        ->select('
+                                cs.main_id, 
+                                cs.sub_id, 
+                                cs.racial, 
+                                cs.rank, 
+                                cs.bonus, 
+                                cs.created_dt, 
+                                cs.modified_dt,
+                                s.name,
+                                s.description,
+                                s.requirements,
+                                s.disclaimer,
+                                s.cost,
+                                s.max_rank,
+                                s.max_purchase,
+                                s.skill_type,
+                                s.profession_link,
+                                s.profession_sublink,
+                                s.profession_rank,
+                                s.sl_only,
+                                s.multiplier,
+                                s.modifier,
+                                s.loresheet,
+                                s.ingame_call,
+                                s.power,
+                                s.time,
+                                s.atk_range, 
                             ss.name as sub_name', false)
                         ->join(TBL_SKILL . ' s', 'cs.main_id = s.id')
                         ->join(TBL_SKILL_SUB . ' ss', 'cs.sub_id = ss.id','left')

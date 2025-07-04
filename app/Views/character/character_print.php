@@ -53,25 +53,25 @@
                     <?= view('character/parts/stats/Stats_Secundary') ?>
                 </div>
                 <div class="cell small-12 medium-12 text-center">
-                    <?= view('character/parts/Asset', ['title' => 'Beroep(en)','id' => 'profession','array' =>$oCharacter->profession,'print' => true]); ?>
+                    <?= view('character/parts/Asset', ['title'=>'Beroep(en)', 'id'=>'profession', 'array'=>$oCharacter->profession, 'print'=>true]); ?>
                 </div>
                 <div class="cell small-12 medium-12 large-6 text-center">
-                    <?= view('character/parts/Asset', ['title' => 'Basis vaardigheden', 'id' => 'skill_base','array' =>$oCharacter->skill,'print' => true]); ?>
+                    <?= view('character/parts/Asset', ['title'=>'Basis vaardigheden', 'id'=>'skill_base', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_BASE, 'print'=> true]); ?>
                 </div>
                 <div class="cell small-12 medium-12 large-6 text-center">
-                    <?= view('character/parts/Asset', ['title' => 'Gevechts vaardigheden','id' => 'skill_combat','array' =>$oCharacter->skill,'print' => true]); ?>
+                    <?= view('character/parts/Asset', ['title'=>'Gevechts vaardigheden','id'=>'skill_combat', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_COMBAT, 'print'=>true]); ?>
                 </div>
                 <div class="cell small-12 medium-12 large-6 text-center">
-                    <?= view('character/parts/Asset', ['title' => 'Magische vaardigheden','id' => 'skill_magic','array' =>$oCharacter->skill,'print' => true]); ?>
+                    <?= view('character/parts/Asset', ['title'=>'Magische vaardigheden','id' => 'skill_magic','array' =>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_MAGIC, 'print' => true]); ?>
                 </div>
                 <div class="cell small-12 medium-12 large-6 text-center">
-                    <?= view('character/parts/Asset', ['title' => 'Goddelijke vaardigheden','id' => 'skill_divine','array' =>$oCharacter->skill,'print' => true]); ?>            
+                    <?= view('character/parts/Asset', ['title'=>'Goddelijke vaardigheden','id'=>'skill_divine', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_DIVINE, 'print'=>true]); ?>            
                 </div>
                 <div class="cell small-12 medium-12 large-6 text-center">
-                    <?= view('character/parts/Asset', ['title' => 'Startuitrusting','id' => 'basekit','array' => [],'print' => true]); ?>
+                    <?= view('character/parts/Asset', ['title'=>'Startuitrusting', 'id'=>'basekit', 'array'=>[], 'print'=>true]); ?>
                 </div>
                 <div class="cell small-12 medium-12 large-6 text-center">
-                    <?= view('character/parts/Asset', ['title' => 'Voorwerpen','id' => 'item','array' =>$oCharacter->item,'print' => true]); ?>
+                    <?= view('character/parts/Asset', ['title'=>'Voorwerpen', 'id'=>'item', 'array'=>$oCharacter->item, 'print'=>true]); ?>
                 </div>
             </div>                
         </div>
@@ -84,11 +84,13 @@
             <h1>Vaardigheden</h1>
         </div>
         <div class="cell">
-            <?php if(isset($arrSkill) && count($arrSkill) >= 1): ?>
-                <?php foreach($arrSkill as $skill): ?>
-                    <?= view('_templates/skill_tile', ['skill' => $skill]) ?>
-                <?php endforeach; ?>
-            <?php endif; ?>
+            <div class="grid-x  grid-padding-x small-up-3 no-padding-print">
+                <?php if(isset($oCharacter->skill) && count($oCharacter->skill) >= 1): ?>
+                    <?php foreach($oCharacter->skill as $skill): ?>
+                        <?= view('_templates/skill_tile', ['skill' => $skill]) ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 

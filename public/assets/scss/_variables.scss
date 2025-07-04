@@ -75,6 +75,13 @@ $list-style: "\203A";
     margin-bottom: 0;
 }
 
+@mixin emphasize {
+    font: $paragraph-font;
+    color: $color-highlight;
+    font-variant: small-caps;
+    font-weight: 700;        
+}
+
 @mixin tile ($size) {
     border-radius: $border-radius;
     overflow: hidden;   

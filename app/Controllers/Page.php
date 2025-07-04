@@ -303,7 +303,7 @@ class Page extends BaseController
                 $content = view('manual/rulebooks');
                 break;
             case 'skills':
-                $arrData['arrSkills'] = $this->models['skill']->getAllSkills($this->arrRights['isGameMaster']);
+                $arrData['arrSkills'] = $this->models['skill']->getSkills($this->arrRights['isGameMaster']);
                 $content = view('manual/skills',$arrData);
                 break;
             case 'faq':

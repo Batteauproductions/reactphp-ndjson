@@ -152,6 +152,12 @@ define('TBL_EVENT', 'event');
 define('TBL_TOOL_SETTINGS', 'tool_settings');
 define('TBL_FAQ', 'faq');
 
+define('TYPE_SKILL_BASE', array(1,2,12));
+define('TYPE_SKILL_COMBAT', array(6,8,13));
+define('TYPE_SKILL_MAGIC', array(4,5,11));
+define('TYPE_SKILL_DIVINE', array(3,10));
+
+
 $base_url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || isset($_ENV['FORCE_HTTPS'])) ? 'https' : 'http';
 $base_url .= '://' . $_SERVER['HTTP_HOST'];
 $base_url .= str_replace(basename($_SERVER['SCRIPT_NAME']), '',   $_SERVER['SCRIPT_NAME']);

@@ -89,19 +89,34 @@
             line-height: 1.0rem;
         }
 
-        table, tbody {
-            font-size: 0.8rem;
-            line-height: 0.9rem;
+        table, thead, tbody {
+
             background-color: transparent;
             padding: 0;
             margin: 0 0 $margin;
             border: none;
+            font: $paragraph-font;
+            font-size: 0.8rem;
+            line-height: 0.9rem;
 
-            tr, td {
+            tr, td {                
                 padding: 0 0 calc($padding/4);
                 margin: 0;
                 background: none;
+
+                h3 {
+                    text-transform: capitalize;
+                }
+
+                p {
+                    text-align: justify;
+                }
+
+                span {
+                    @include emphasize();
+                }
             }
+            
         }
 
         ul {

@@ -25,7 +25,7 @@
             <?= view('character/parts/Asset', ['title' => 'Beroep(en)','id' => 'profession']); ?>
         </div>
         <div class="cell small-12 medium-12 large-6 text-center">
-            <?= view('character/parts/Asset', ['title' => 'Basis vaardigheden', 'id' => 'skill_base']); ?>
+            <?= view('character/parts/Asset', ['title' => 'Basis vaardigheden', 'id' => 'skill_base' ]); ?>
         </div>
         <div class="cell small-12 medium-12 large-6 text-center">
             <?= view('character/parts/Asset', ['title' => 'Gevechts vaardigheden','id' => 'skill_combat']); ?>
