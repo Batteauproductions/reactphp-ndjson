@@ -161,7 +161,7 @@ class Character {
                 total += updateMaxXP();
             }
             // Set the total value of the build based on key
-            window.character.build[key] = total;
+            window.character.build[key] = parseInt(total);
         }
 
         // Update the text on the sheet per modifier
@@ -182,7 +182,10 @@ class Character {
         //-- Since these fields are required upon creation they can be set without checks
         this.setStatus(this.meta.status_name,this.meta.status);
         this.setType(this.meta.type_name,this.meta.type);
-        this.setName(this.meta.name);        
+        this.setName(this.meta.name);    
+        //-- Convert strings to integers
+        this.build.spend_xp = parseInt(this.build.spend_xp);
+        this.build.currency = parseInt(this.build.currency);
         //-- Set the race by name
         if(this.race) { this.setRace(this.race.name) }
 

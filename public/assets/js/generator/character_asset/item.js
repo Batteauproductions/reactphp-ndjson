@@ -73,7 +73,6 @@ function pickItem () {
             $('div[data-id="modal-loading"]').hide();
             updateModalDropdown($select, data);
             $form.show();
-            $select.show();
         },
         error: function(error) {
             console.error('pickItem: Error fetching data:', error);

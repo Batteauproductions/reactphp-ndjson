@@ -124,9 +124,9 @@
             margin-left: 0;          
             margin-bottom: $margin;
 
-            .decorated {
-                list-style: inherit;
-                margin-left: calc($margin/4);
+            &.decorated {
+                list-style: initial;
+                margin-left: $margin;
             }
 
             li {

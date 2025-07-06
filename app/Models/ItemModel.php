@@ -53,7 +53,14 @@ class ItemModel extends Model
 		$query =  $this
                 ->db
                 ->table(TBL_ITEM.' i')
-                ->select('i.id, i.type_id, it.name as type_name, i.level, i.name, i.description, i.gatherable, i.price')
+                ->select('i.id, 
+                        i.type_id,                         
+                        i.level, 
+                        i.name, 
+                        i.description, 
+                        i.gatherable, 
+                        i.cost,
+                        it.name as type_name')
                 ->join(TBL_ITEM_TYPE.' it','it.id = i.type_id','left')
                 ->where('i.available', 1)
                 ->orderBy('i.type_id','asc')
@@ -76,10 +83,19 @@ class ItemModel extends Model
     {		
         $query = $this
                     ->db
-                    ->table(TBL_ITEM)
-                    ->select('id, type_id, level, name, description, gatherable, price_low, price, price_high')
-                    ->where('id',$id)
-                    ->where('available', 1)
+                    ->table(TBL_ITEM.' i')
+                    ->select('i.id, 
+                            i.type_id, 
+                            i.level, 
+                            i.name, 
+                            i.description, 
+                            i.gatherable, 
+                            i.cost_low, 
+                            i.cost, 
+                            i.cost_high,
+                            it.name as type_name')
+                    ->join(TBL_ITEM_TYPE.' it','it.id = i.type_id','left')
+                    ->where('i.id',$id)
                     ->get();
 
         return $query->getRow();

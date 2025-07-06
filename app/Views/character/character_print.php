@@ -33,13 +33,13 @@
         <div class="cell small-3">
             <div class="grid-x grid-padding-x grid-padding-y">
                 <div class="cell small-12 text-left">
-                    <?= view('character/parts/Profile') ?>   
+                    <?= view('character/parts/Profile', ['print'=>true]) ?>   
                 </div>
                 <div class="cell small-12 text-center">
-                    <?= view('character/parts/Baseinfo') ?>
+                    <?= view('character/parts/Baseinfo', ['print'=>true]) ?>
                 </div>
                 <div class="cell small-12 text-center">
-                    <?= view('character/parts/Notes') ?>
+                    <?= view('character/parts/Notes', ['print'=>true]) ?>
                 </div>
             </div>
         </div>
@@ -47,10 +47,10 @@
         <div class="cell small-9">
             <div class="grid-x grid-padding-x grid-padding-y">
                 <div class="cell small-12 medium-12 large-6 text-center">
-                    <?= view('character/parts/stats/Stats_Primary') ?>
+                    <?= view('character/parts/stats/Stats_Primary', ['print'=>true]) ?>
                 </div>
                 <div class="cell small-12 medium-12 large-6 text-center">
-                    <?= view('character/parts/stats/Stats_Secundary') ?>
+                    <?= view('character/parts/stats/Stats_Secundary', ['print'=>true]) ?>
                 </div>
                 <div class="cell small-12 medium-12 text-center">
                     <?= view('character/parts/Asset', ['title'=>'Beroep(en)', 'id'=>'profession', 'array'=>$oCharacter->profession, 'print'=>true]); ?>

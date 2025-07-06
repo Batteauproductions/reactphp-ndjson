@@ -126,6 +126,7 @@ function updateModalDropdown($element, oData) {
             $element.append(option);
         }
     });
+    $element.show();
 }
 
 function updateModelContent(oDetails) {
@@ -218,8 +219,17 @@ function updateModelDetails(sAction, oData) {
                 const iconHtml = icons[name].render(null, true).outerHTML;
                 if (arrModifier.length > 1) {
                     const row = $('<div>', { class: 'choice-row' });
-                    const input = $('<input>', { id: `modifier-${i}`, value: mod.id, type: 'radio', name: 'stat-modifier' });
-                    const label = $('<label>', { for: `modifier-${i}`, html: iconHtml });
+                    const input = $('<input>', {
+                                    id: `modifier-${i}`,
+                                    value: mod.id,
+                                    type: 'radio',
+                                    name: 'stat-modifier',
+                                    checked: i === 0 // sets checked only if i is 0
+                                });
+                    const label = $('<label>', { 
+                                    for: `modifier-${i}`, 
+                                    html: iconHtml 
+                                });
                     row.append(input, label);
                     contentDetailsElements.push(row);
                 } else {
@@ -242,7 +252,7 @@ function updateModelDetails(sAction, oData) {
                     } else {
                         const input = $('<select>', { id: `skill-${i}`, value: sub_id, name: 'skill-modifier' });
                         Object.entries(skill.subtype).forEach(([key, subtype]) => {
-                            const $option = $('<option>', { id: `skill-${key}`, value: `${subtype.id}`, text: `${subtype.name}` });
+                            const $option = $('<option>', { id: `option-skill-${key}`, value: `${subtype.id}`, text: `${subtype.name}` });
                             input.append($option);
                         });                            
                         const label = $('<label>', { for: `skill-${i}`, html: `${iconHtml} ${name}` });

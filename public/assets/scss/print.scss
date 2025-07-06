@@ -30,6 +30,21 @@ p {
      @include paragraph(#000);  
 }
 
+table {
+    
+    thead {
+        h3 {
+            text-transform: capitalize;
+        }
+    }
+    tbody {
+        font-size: 0.7rem !important;
+        span {
+            @include emphasize();
+        }
+    }    
+}
+
 .hide-for-print {
     display: none;
 }

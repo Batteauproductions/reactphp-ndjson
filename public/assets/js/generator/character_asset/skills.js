@@ -74,7 +74,6 @@ function pickSkill(sAction) {
                 $('div[data-id="modal-loading"]').hide();
                 updateModalDropdown($select, data);
                 $form.show();
-                $select.show();
             } else {
                 showPopup(`<p>${oTranslations[language].no_skills_available}</p>`,'inform','question');
             }

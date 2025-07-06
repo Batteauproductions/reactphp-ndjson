@@ -18,7 +18,52 @@
     <div class="page-wrapper transparent">
         <form id="form-character" class="grid-x grid-padding-x grid-padding-y form-character" method="POST">
 
-            <?= view('character/character_grid') ?>    
+            <!-- Notes and base information -->
+            <div class="cell small-12 medium-12 large-3">
+                <div class="grid-x grid-padding-x grid-padding-y">
+                    <div class="cell small-12 medium-4 large-12 text-left">
+                        <?= view('character/parts/Profile', ['print'=>false]) ?>   
+                    </div>
+                    <div class="cell small-12 medium-8 large-12 text-center">
+                        <?= view('character/parts/Baseinfo', ['print'=>false]) ?>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12 text-center">
+                        <?= view('character/parts/Notes', ['print'=>false]) ?>
+                    </div>
+                </div>
+            </div>
+            <!-- Stats and assets -->
+            <div class="cell small-12 medium-12 large-9">
+                <div class="grid-x grid-padding-x grid-padding-y">
+                    <div class="cell small-12 medium-6 large-6 text-center">
+                        <?= view('character/parts/stats/Stats_Primary', ['print'=>false]) ?>
+                    </div>
+                    <div class="cell small-12 medium-6 large-6 text-center">
+                        <?= view('character/parts/stats/Stats_Secundary', ['print'=>false]) ?>
+                    </div>
+                    <div class="cell small-12 medium-12 text-center">
+                        <?= view('character/parts/Asset', ['title'=>'Beroep(en)', 'id'=>'profession', 'print'=>false]); ?>
+                    </div>
+                    <div class="cell small-12 medium-12 large-6 text-center">
+                        <?= view('character/parts/Asset', ['title'=>'Basis vaardigheden', 'id'=>'skill_base', 'print'=>false]); ?>
+                    </div>
+                    <div class="cell small-12 medium-12 large-6 text-center">
+                        <?= view('character/parts/Asset', ['title'=>'Gevechts vaardigheden', 'id'=>'skill_combat', 'print'=>false]); ?>
+                    </div>
+                    <div class="cell small-12 medium-12 large-6 text-center">
+                        <?= view('character/parts/Asset', ['title'=>'Magische vaardigheden', 'id'=>'skill_magic', 'print'=>false]); ?>
+                    </div>
+                    <div class="cell small-12 medium-12 large-6 text-center">
+                        <?= view('character/parts/Asset', ['title'=>'Goddelijke vaardigheden', 'id'=>'skill_divine', 'print'=>false]); ?>            
+                    </div>
+                    <div class="cell small-12 medium-12 large-6 text-center">
+                        <?= view('character/parts/Asset', ['title'=>'Startuitrusting', 'id'=>'basekit', 'print'=>false]); ?>
+                    </div>
+                    <div class="cell small-12 medium-12 large-6 text-center">
+                        <?= view('character/parts/Asset', ['title'=>'Voorwerpen', 'id'=>'item', 'print'=>false]); ?>
+                    </div>
+                </div>                
+            </div>    
                         
             <div class="cell small-12 text-center">
                 <?= view('character/parts/Adventures') ?>

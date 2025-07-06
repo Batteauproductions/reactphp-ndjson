@@ -20,14 +20,6 @@ class Race {
         this.skills = skills.length > 0 ? skills : null;
     }
 
-    // Updated method to display all attributes
-    displayInfo() {
-        console.log(`ID: ${this.id}`);
-        console.log(`Name: ${this.name}`);
-        console.log(`Modifier: ${this.modifier}`);
-        console.log(`Skills: ${this.skills}`);
-    }
-
     //adds the race to the character
     add() {            
         // Add racial skills
@@ -35,31 +27,30 @@ class Race {
             this.skills.forEach(skill => {
                 //checks non standard skills
                 let cSkill;
-                if(!skill.current) {
-                    $('[name="skill-modifier"]').each(function () {
-                        const $select = $(this);
-                        const subid = parseInt($select.find('option:selected').val());
-                        const subname = $select.find('option:selected').text();
+                console.log('skill',skill)
+                if (!skill.current) {
+                    const $select = $('[name="skill-modifier"]'); // Only select once
+                    const $selected = $select.find('option:selected');
 
-                        //an empty choice exists
-                        if(!subid && !subname) {
-                            showMessage('#choice-actions', 'error', oTranslations[language].not_choice_made);
-                            return
-                        }
-                        skill.current = {}; // Initialize the object
-                        Object.assign(skill.current, {
-                            sub_id: subid,
-                            sub_name: subname
-                        });
-                        Object.assign(skill.current, {
-                            attribute: "skill",
-                            container: "skill_base",
-                            cost: 0,
-                            racial: true
-                        });
-                        cSkill = new Skill(skill); 
-                        cSkill.add();  
-                    });                                      
+                    const subid = parseInt($selected.val());
+                    const subname = $selected.text();
+
+                    if (!subid && !subname) {
+                        showMessage('#choice-actions', 'error', oTranslations[language].not_choice_made);
+                        return;
+                    }
+
+                    skill.current = {
+                        sub_id: subid,
+                        sub_name: subname,
+                        attribute: "skill",
+                        container: "skill_base",
+                        cost: 0,
+                        racial: true
+                    };
+
+                    const cSkill = new Skill(skill);
+                    cSkill.add();
                 } else {
                     Object.assign(skill.current, {
                         attribute: "skill",
@@ -67,9 +58,10 @@ class Race {
                         cost: 0,
                         racial: true
                     });
-                    cSkill = new Skill(skill);
+                    const cSkill = new Skill(skill);
                     cSkill.add();
-                }                
+                }
+               
             });
         } 
         // Assign race to character
@@ -126,7 +118,6 @@ function pickRace() {
             $('div[data-id="modal-loading"]').hide();
             updateModalDropdown($select, data);
             $form.show();
-            $select.show();
         },
         error: function(error) {
             console.error('pickProfession: Error fetching data:', error);

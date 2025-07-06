@@ -504,9 +504,9 @@ label.input-error {
   margin-left: 0;
   margin-bottom: 1.25rem;
 }
-.tile .tile-content ul .decorated {
-  list-style: inherit;
-  margin-left: 0.3125rem;
+.tile .tile-content ul.decorated {
+  list-style: initial;
+  margin-left: 1.25rem;
 }
 .tile .tile-content ul li {
   font-size: 0.9rem;
@@ -760,7 +760,7 @@ label.input-error {
   width: 100%;
 }
 .wrapper .content-wrapper--login, .wrapper .content-wrapper--signup_start, .wrapper .content-wrapper--signup_error, .wrapper .content-wrapper--signup_done {
-  max-width: 30rem;
+  max-width: 35rem;
 }
 .wrapper .content-wrapper--profile {
   max-width: 43.75rem;

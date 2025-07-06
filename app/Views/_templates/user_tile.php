@@ -4,7 +4,7 @@
     <div 
         data-user_id="<?= esc($user->id) ?>"
         class="cell small-12 large-6 tile tile-status--<?= esc($user->status_name) ?>">                                
-        <div class="grid-x">
+        <div class="grid-x" style="height: 100%;">
             <div class="cell small-12 medium-4">
                 <div class="tile-avatar-wrapper">
                     <img src="<?= empty($user->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/user/'.$user->avatar) ?>" />

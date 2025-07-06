@@ -133,7 +133,6 @@ class Page extends BaseController
                 $arrJS = ['generator/generator.js','validation/character_validation.js'];
                 break;
             case 'database':
-                $arrJS = ['character_database.js'];
                 $arrData['isGameMaster'] = $this->arrRights['isGameMaster'];
                 $arrData['arrCharacters'] = $this->models['character']->getCharacters(['uid'=>$this->session->get('uid')]);                
                 $content = view('character/character_database',$arrData);
@@ -203,7 +202,7 @@ class Page extends BaseController
                                 $filters[$dbField] = $value;
                             }
                         }
-                        $arrJS = ['character_database.js'];
+                        $arrJS = ['search/character.js'];
                         $arrData = array (
                             'arrUsers' => $this->models['account']->getUsers(),
                             'arrStatus' => $this->arrSettings['options_character_status'],
@@ -255,7 +254,7 @@ class Page extends BaseController
             case 'user':
                 switch($child_page) {
                     case 'database':
-                        $arrJS = ['user_database.js'];
+                        $arrJS = ['search/user.js'];
                         $arrData = array (
                             'arrRoles' => $this->arrSettings['options_user_roles'],
                             'arrStatus' => $this->arrSettings['options_user_status'],
@@ -351,6 +350,8 @@ class Page extends BaseController
 
     private function noPageAccess()
     {
+        $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
+        
         $arrContent['header'] = '';
         $arrContent['content'] = view('_templates/no_access');
         $arrContent['footer'] = '';

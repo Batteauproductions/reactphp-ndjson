@@ -18,7 +18,7 @@
         padding: calc($padding*2);
         
         &--login, &--signup_start, &--signup_error, &--signup_done {
-            max-width: 30rem;
+            max-width: 35rem;
         }
     
         &--profile {

@@ -55,6 +55,19 @@ p {
   text-transform: none;
 }
 
+table thead h3 {
+  text-transform: capitalize;
+}
+table tbody {
+  font-size: 0.7rem !important;
+}
+table tbody span {
+  font: normal 1rem/1.35rem Manuale, serif;
+  color: #F5B041;
+  font-variant: small-caps;
+  font-weight: 700;
+}
+
 .hide-for-print {
   display: none;
 }

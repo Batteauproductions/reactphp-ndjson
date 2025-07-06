@@ -16,7 +16,7 @@
                                     <p>
                                         Dit bestand bevat alle basisinformatie voor de Kronieken van Dalaria. In dit document vind je onder andere (meer) informatie over de volgende onderwerpen:
                                     </p>
-                                    <ul>
+                                    <ul class="decorated">
                                         <li>Gedragsregels</li>
                                         <li>Calls</li>
                                         <li>Rassen</li>
@@ -40,7 +40,7 @@
                                     <p>
                                         Dit bestand bevat extra informatie voor de magiërs en priesters binnen de setting. In dit document vind je onder andere (meer) informatie over de volgende onderwerpen:
                                     </p>                                
-                                    <ul>
+                                    <ul class="decorated">
                                         <li>Magiërsspreuken (primal / elemental / spiritual)</li>
                                         <li>Incantaties voor de priester</li>
                                         <li>Rituelen</li>
@@ -63,7 +63,7 @@
                                     <p>
                                         Dit bestand bevat alle informatie voor de ambachten en de kosten van de extra uitrusting. In dit document vind je onder andere (meer) informatie over de volgende onderwerpen:
                                     </p>  
-                                    <ul>
+                                    <ul class="decorated">
                                         <li>Kosten basisuitrusting</li>
                                         <li>De ambachten</li>
                                         <li>Grondstoffen</li>

@@ -91,7 +91,9 @@ class Account extends Controller
                             'logged_in'   => true
                         ];
                         $this->session->set($sessionData);
-                        return redirect()->to('/home');
+                        $redirect = $_SESSION['redirect_after_login'] ?? '/home';
+                        unset($_SESSION['redirect_after_login']);
+                        return redirect()->to($redirect);
                         break;
                     case 3:
                         return redirect()->back()->withInput()->with('errors', ['Je account is gedeactiveerd. Neem contact op met de webmaster.']);
