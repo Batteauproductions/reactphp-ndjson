@@ -1,7 +1,7 @@
 //Generic settings and functions
 import { domain } from '../../_lib/settings.js';
 import { debugLog, allowChoose } from '../../_lib/functions.js'
-import { updateModalImage, updateModalDropdown, updateModelContent, updateModelDetails, updateModelButtons, clearModal, $typeSelect, $subtypeSelect, $rankSelect, $choice_actions, $modalLoading } from "./modal.js";
+import { updateModalImage, updateModalDropdown, updateModelContent, updateModelDetails, updateModelButtons, clearModal, $typeSelect, $subtypeLabel, $subtypeSelect, $rankSelect, $choice_actions, $modalLoading } from "./modal.js";
 
 
 let oTmpSelector = null;
@@ -35,9 +35,10 @@ function openSelectionModal(sAction,$modal) {
                 allowChoose();
                 if (oTmpData.subtype && oTmpData.subtype.length > 0) {
                     updateModalDropdown($subtypeSelect, oTmpData.subtype);
-                    $subtypeSelect.show();
+                    $subtypeLabel.show();
+                    $subtypeSelect.trigger("chosen:updated");
                 } else {
-                    $subtypeSelect.hide();
+                    $subtypeLabel.hide();
                 }
                 updateModal(sAction,oTmpData);
             },

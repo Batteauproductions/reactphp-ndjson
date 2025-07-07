@@ -659,6 +659,9 @@ label.input-error {
 /* font settings for the body */
 /* font settings for the links */
 /* misc settings */
+#selection-modal {
+  min-height: 50vh;
+}
 #selection-modal #choice-image-container {
   overflow: hidden;
   max-height: 25vh;

@@ -15,7 +15,7 @@ class CharacterAsset {
             cost,
             max_rank,
             loresheet,
-            allow_multiple,            
+            max_purchase,            
         },
         modifier = [], // Default to an empty array for safety
         current: {
@@ -36,7 +36,7 @@ class CharacterAsset {
         this.description = description;
         this.requirements = requirements !== null ? requirements : null;
         this.max_rank = isNaN(parseInt(max_rank)) ? 1 : parseInt(max_rank); //checks that rank is always set to at least 1
-        this.allow_multiple = allow_multiple ? parseInt(allow_multiple) : 0; //only certain items can be added multiple times [true/false]
+        this.max_purchase = max_purchase ? parseInt(max_purchase) : 0; //only certain items can be added multiple times [true/false]
         this.attribute = attribute; //what attribute of the character the assets should be stored [profession/skill/item]
         this.sub_id = sub_id !== null ? parseInt(sub_id) : null; //some assets have an sub id, for instance [2/5]
         this.sub_name = sub_name !== null ? sub_name : null; //some assets have a sub name, for instance [mage/elemental]

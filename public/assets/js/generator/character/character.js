@@ -183,6 +183,7 @@ class Character {
         this.setStatus(this.meta.status_name,this.meta.status);
         this.setType(this.meta.type_name,this.meta.type);
         this.setName(this.meta.name);    
+        this.setBasekit(this.build.base_kit_description, this.build.base_kit);
         //-- Convert strings to integers
         this.build.spend_xp = parseInt(this.build.spend_xp);
         this.build.currency = parseInt(this.build.currency);

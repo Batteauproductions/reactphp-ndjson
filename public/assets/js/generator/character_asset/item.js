@@ -11,9 +11,6 @@ class Item extends CharacterAsset {
         super(params);
         // Ensure `amount` is a number inside `current`
         this.amount = parseInt(params.current.amount);
-        this.price = parseInt(params.details.price);
-        this.price_high = parseInt(params.details.price_high);
-        this.price_low = parseInt(params.details.price_low);
     }
 
     costText() {
@@ -91,7 +88,7 @@ function chooseItem (sAction, obj) {
 
     
     const amount = parseInt($('input[name="amount"]').val()) || 0;
-    const itemcost = parseInt(obj.details?.price) || 0;
+    const itemcost = parseInt(obj.details?.cost) || 0;
 
     // Update details and current in one go
     obj.details = {

@@ -149,16 +149,26 @@ function allowChoose() {
     const $type = $('select[name="type"]');
     const $sub_type = $('select[name="subtype"]');
 
-    if(($type.is(':visible') && $type.val()) && !$sub_type.is(':visible')) {
+    const $typeChosen = $type.next('.chosen-container');
+    const $subtypeChosen = $sub_type.next('.chosen-container');
+
+    const typeVisible = $typeChosen.is(':visible');
+    const subtypeVisible = $subtypeChosen.is(':visible');
+
+    const typeHasValue = $type.val();
+    const subtypeHasValue = $sub_type.val();
+
+    if ((typeVisible && typeHasValue) && !subtypeVisible) {
         return true;
     }
 
-    if($sub_type.is(':visible') && $sub_type.val()) {
+    if (subtypeVisible && subtypeHasValue) {
         return true;
     }
 
     return false;
 }
+
 
 
 // Export functions

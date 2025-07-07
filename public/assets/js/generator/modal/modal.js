@@ -9,8 +9,11 @@ import { chooseItem } from '../character_asset/item.js';
 import { chooseBasekit } from '../character/equipment.js';
 
 // Static DOM Elements
+const $typeLabel = $('#lbl-type');
 const $typeSelect = $('select[name="type"]');
+const $subtypeLabel = $('#lbl-subtype');
 const $subtypeSelect = $('select[name="subtype"]');
+const $rankLabel = $('#lbl-subtype');
 const $rankSelect = $('input[name="rank"]');
 const $typeAmount = $('[name="amount"]');
 const $choice_image_container = $('#choice-image-container');
@@ -32,11 +35,14 @@ function clearForm($form) {
 */
 function clearModal(bClear) {
     if(bClear) {
-        $typeSelect.empty().hide();
+        $typeLabel.hide();
+        $typeSelect.empty().trigger("chosen:updated");
         $typeAmount.val('1').hide();
     }    
-    updateModalImage(); 
-    $subtypeSelect.empty().hide();
+    updateModalImage();   
+    $subtypeLabel.hide();
+    $subtypeSelect.empty().trigger("chosen:updated");  
+    $rankLabel.hide();  
     $choice_description.empty().hide();
     $choice_details.empty().hide();
     $choice_actions.empty().hide();
@@ -126,7 +132,8 @@ function updateModalDropdown($element, oData) {
             $element.append(option);
         }
     });
-    $element.show();
+    $element.trigger("chosen:updated");
+    $typeLabel.show();
 }
 
 function updateModelContent(oDetails) {
@@ -172,8 +179,7 @@ function updateModelDetails(sAction, oData) {
     // Check if action and details are valid or if there's a modifier
     if ((sAction && oData) || arrModifier.length > 0) {
         //render the cost
-        if(oDetails.cost) {
-            const rank_cost = oDetails.cost.split('|');            
+        if(oDetails.cost) {                        
             // Cost-related text to the element
             switch (sAction) {
                 case 'skill_base':
@@ -181,10 +187,11 @@ function updateModelDetails(sAction, oData) {
                 case 'skill_magic':
                 case 'skill_divine':
                 case 'profession':
+                    const rank_cost = oDetails.cost.split('|');
                     contentDetailsElements.push(icons.experience.render(null, true, rank_cost[0]));
                     break;
                 case 'item':
-                    contentDetailsElements.push(icons.coin.render(null, true, convertCurrency(oDetails.price)));
+                    contentDetailsElements.push(icons.coin.render(null, true, convertCurrency(oDetails.cost)));
                     break;
                 default:
                     console.warn(`Unused action of ${sAction} has been called`);
@@ -340,8 +347,11 @@ function updateModelButtons(sAction, oData) {
 }
 
 export {
+    $typeLabel,
     $typeSelect,
+    $subtypeLabel,
     $subtypeSelect,
+    $rankLabel,
     $rankSelect,
     $typeAmount,
     $choice_image_container,

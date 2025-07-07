@@ -32,9 +32,21 @@ class CharacterModel extends Model
         // This code ensures that if a non-gamemaster tries to access the page,
         // they can't call up a character that isn't theirs.
         $query = $this->db->table(TBL_CHAR.' c')
-            ->select('c.id, c.type_id as type, c.status_id as status, c.chronicle_id as chronicle, c.avatar, c.name, c.background, c.created_dt, c.modified_dt, c.firstlocked_dt, c.lastlocked_dt,
+            ->select('c.id, 
+                    c.type_id as type, 
+                    c.status_id as status, 
+                    c.chronicle_id as chronicle, 
+                    c.avatar, 
+                    c.name, 
+                    c.background, 
+                    c.created_dt, 
+                    c.modified_dt, 
+                    c.firstlocked_dt, 
+                    c.lastlocked_dt,
                     ct.name as type_name,
-                    cs.name as status_name')
+                    cs.name as status_name,
+                    CONCAT(u.firstname, " ", u.lastname) AS user_name')
+            ->join(TBL_USER.' u', 'c.user_id = u.id', 'left')
             ->join(TBL_CHAR_TYPES . ' ct', 'ct.id = type_id')
             ->join(TBL_CHAR_STATUS . ' cs', 'cs.id = status_id')
             ->where('c.id', $cid);
@@ -54,7 +66,19 @@ class CharacterModel extends Model
         // Query for character build
         $oCharacter->build = $this->db
             ->table(TBL_CHAR_BUILD . ' cb')
-            ->select('cb.hp, cb.mana, cb.sanity, cb.gp, cb.str, cb.dex, cb.intel, cb.spend_xp, cb.max_xp, cb.currency, cb.base_kit', false)
+            ->select('cb.hp, 
+                    cb.mana, 
+                    cb.sanity, 
+                    cb.gp, 
+                    cb.str, 
+                    cb.dex, 
+                    cb.intel, 
+                    cb.spend_xp, 
+                    cb.max_xp, 
+                    cb.currency, 
+                    cb.base_kit,
+                    e.description as base_kit_description', false)
+            ->join(TBL_EQUIPMENT . ' e', 'e.id = cb.base_kit')
             ->where('cb.char_id', $cid)
             ->get()
             ->getRowObject();
@@ -183,7 +207,7 @@ class CharacterModel extends Model
             'cr.main_id AS race_id',
             'CONCAT(u.firstname, " ", u.lastname) AS user_name',
         ]);
-        $builder->join('user u', 'c.user_id = u.id', 'left');
+        $builder->join(TBL_USER.' u', 'c.user_id = u.id', 'left');
         $builder->join('hero_type ct', 'ct.id = c.type_id', 'left');
         $builder->join('hero_status cs', 'c.status_id = cs.id', 'left');
         $builder->join('hero_race cr', 'c.id = cr.char_id', 'left');

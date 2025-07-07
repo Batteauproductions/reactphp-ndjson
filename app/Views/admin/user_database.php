@@ -21,7 +21,7 @@
 <div class="grid-container">
     <section class="page-wrapper transparent">
         <div class="grid-x grid-padding-x grid-padding-y">                    
-            <form class="sortable cell small-12 medium-4 large-3" action="<?= base_url('admin/user/search') ?>" method="post">
+            <form id="form-sort_user" class="sortable cell small-12 medium-4 large-3" action="<?= base_url('admin/user/search') ?>" method="post">
                 <div class="sortable-wrapper">
                     <div class="grid-x sortable-selection">
                         <div class="cell">
@@ -33,7 +33,7 @@
                             <select id="user_name" name="user_name" class="chosen-select">
                                 <option value="">Geen voorkeur</option>
                                 <?php foreach($arrUsers as $user):?>
-                                    <option value="<?php echo $user->firstname.' '.$user->lastname ?>" <?php echo $user->id == $selectedName ? 'selected' : ''; ?>><?php echo $user->firstname.' '.$user->lastname ?></option>
+                                    <option value="<?php echo $user->id ?>" <?php echo $user->id == $selectedName ? 'selected' : ''; ?>><?php echo $user->firstname.' '.$user->lastname ?></option>
                                 <?php endforeach;?> 
                             </select>
                         </label>
@@ -66,10 +66,7 @@
                 </div>                
             </form> 
             <div class="cell small-12 medium-8 large-9">
-                <div class="grid-x grid-margin-x grid-margin-y wrapper-character" data-equalizer>
-                    <?php foreach($arrUsers as $user):?>
-                                 
-                    <?php endforeach; ?>
+                <div class="grid-x grid-margin-x grid-margin-y wrapper-user" data-equalizer>
                     <?php foreach($arrUsers as $user): ?>
                         <?= view('_templates/user_tile', ['user' => $user, 'target' => 'gamemaster']) ?>                                               
                     <?php endforeach; ?>

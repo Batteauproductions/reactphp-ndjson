@@ -7,7 +7,11 @@
                 Spelernaam
             </div>
             <div class="cell small-6">
-                <?= isset($oSession) && method_exists($oSession, 'get') ? esc($oSession->get('name')) : '' ?>
+                <?php if(isset($oCharacter)): ?>
+                    <?= $oCharacter->meta->user_name ?>
+                <?php else: ?>
+                    <?= isset($oSession) && method_exists($oSession, 'get') ? esc($oSession->get('name')) : '' ?>
+                <?php endif ?>
             </div>
             <div class="cell small-6 text-left">
                 Karakternaam
