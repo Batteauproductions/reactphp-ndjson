@@ -70,7 +70,7 @@
 
         
         <!-- MODAL FOR POPUPS -->
-        <div class="reveal small" id="popup-modal" data-reveal>
+        <div class="reveal tiny" id="popup-modal" data-reveal>
             
             <div class="grid-x grid-padding-y">
                 <div class="cell small-4">

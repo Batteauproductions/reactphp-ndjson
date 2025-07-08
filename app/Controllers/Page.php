@@ -254,11 +254,28 @@ class Page extends BaseController
             case 'user':
                 switch($child_page) {
                     case 'database':
+                        $input = $this->request->getGet(); // or ->getPost() if you're using POST
+                        // Map URL/form field names to DB field keys
+                        $fieldMap = [
+                            'user_name' => 'uid',
+                            'user_role' => 'role_id',
+                            'user_status' => 'status_id'
+                        ];
+                        // Translate input to internal keys
+                        $filters = [];
+                        foreach ($fieldMap as $formField => $dbField) {
+                            $value = $input[$formField] ?? null;
+                            if (!empty($value)) {
+                                $filters[$dbField] = $value;
+                            }
+                        }
+
                         $arrJS = ['search/user.js'];
                         $arrData = array (
                             'arrRoles' => $this->arrSettings['options_user_roles'],
                             'arrStatus' => $this->arrSettings['options_user_status'],
-                            'arrUsers' => $this->models['account']->getUsers(),
+                            'arrAllUsers' => $this->models['account']->getUsers(),
+                            'arrSelectedUsers' => $this->models['account']->getUsers($filters),
                         );
                         $content = view('admin/user_database',$arrData);
                         break;

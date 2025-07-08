@@ -1,6 +1,6 @@
 //Generic settings and functions
 import { icons, iconset, language, oTranslations, currentDateTime } from '../../_lib/settings.js'
-import { debugLog, generateIconSet, showMessage } from '../../_lib/functions.js'
+import { debugLog, generateIconSet, showMessage, showPopup } from '../../_lib/functions.js'
 import { findItemIndex } from '../character/character.js';
 import { updateExperience } from '../helper/experience.js';
 
@@ -54,7 +54,7 @@ class CharacterAsset {
 
     __construct() {
         window.character[this.attribute].push(this); //-- functionally   
-        this.addVisualRow(); //-- visionally 
+        this.addVisualRow(false); //-- visionally 
     }
 
     add () {
@@ -109,7 +109,7 @@ class CharacterAsset {
 
         // Add the asset to the character functionally and visionally        
         window.character[this.attribute].push(this); //-- functionally   
-        this.addVisualRow(); //-- visionally
+        this.addVisualRow(true); //-- visionally
         //-----------------------------//
         window.character.update();
         //-----------------------------//
@@ -169,8 +169,8 @@ class CharacterAsset {
         if(direction===1) {
             cost = this.getNewRankCost(new_rank);
             const spend = this.costSpend(cost);
-            if(!spend) {
-                showMessage('#choice-actions', 'error', spend);
+            if(spend !== true) {
+                showPopup(`<p>${spend}</p>`,'inform','error');
                 return;
             }
             this.rank_cost += cost;           
@@ -208,10 +208,10 @@ class CharacterAsset {
         return findItemIndex(this.attribute, this.id, this.sub_id);
     }
 
-    addVisualRow() {
+    addVisualRow(animated) {
         //-- -- setup the master-row to contain the asset
         const row = $('<div>', {
-            class: 'grid-x choice-row animate__animated animate__fadeInLeft',
+            class: `grid-x choice-row ${animated ? 'animate__animated animate__fadeInLeft' : ''}`,
             [`data-${this.container}_id`]: this.id, 
             [`data-${this.container}_sub_id`]: this.sub_id,
         });
@@ -230,12 +230,12 @@ class CharacterAsset {
             name += `${this.loresheet===1 ? icons.loresheet.icon() : ''}`;
             name += `${this.name}`;
             name += `${this.rank != this.max_rank ? ` (${icons.rank.text()} ${this.rank})` : ''}`;
-         
+        
         const arrColumns = [
             $('<div>', {
                 'data-column': 'name',
                 class: 'cell small-5 medium-4 text-left',
-                html: name
+                html: `<span data-tooltip class="top" tabindex="2" title="${this.description}">${name}</span>` 
             })
         ];
         //-- -- create column for subname / cost (if any) and determine the icon set for this asset

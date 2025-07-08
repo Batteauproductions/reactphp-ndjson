@@ -13,6 +13,7 @@ class Account extends Controller
 
     private $validation;
     protected $session;
+    protected $request;
     protected $accountModel;
     protected $mailController;  
     protected $arrRights = [];
@@ -22,6 +23,7 @@ class Account extends Controller
         //declare variables to be used throughout the controller
         $this->validation = \Config\Services::validation();
         $this->session = session();
+        $this->request = service('request');
         $this->accountModel = new AccountModel();
         $this->mailController = new EmailController(); 
 
@@ -58,9 +60,8 @@ class Account extends Controller
             return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
         } else {
             //collect user
-            $request = service('request');
-            $arrUser['username'] 	= $request->getPost('username');
-            $arrUser['password'] 	= $request->getPost('password');
+            $arrUser['username'] 	= $this->request->getPost('username');
+            $arrUser['password'] 	= $this->request->getPost('password');
 
             //get from the database
             $oUser = $this->accountModel->getUser($arrUser);
@@ -159,16 +160,15 @@ class Account extends Controller
             return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());        
         } else {
             // Access form data
-            $request = service('request');
             $arrUser = array(
-                'username' 	=> $request->getPost('username'),
-                'email'		=> $request->getPost('email'),
-                'firstname' => $request->getPost('firstname'),
-                'lastname' 	=> $request->getPost('lastname'),
-                'birthday' 	=> $request->getPost('birthday'),
-                'discord' 	=> $request->getPost('discord'),
-                'hash'		=> md5($request->getPost('username')),
-                'password'  => password_hash($request->getPost('password'), PASSWORD_DEFAULT),
+                'username' 	=> $this->request->getPost('username'),
+                'email'		=> $this->request->getPost('email'),
+                'firstname' => $this->request->getPost('firstname'),
+                'lastname' 	=> $this->request->getPost('lastname'),
+                'birthday' 	=> $this->request->getPost('birthday'),
+                'discord' 	=> $this->request->getPost('discord'),
+                'hash'		=> md5($this->request->getPost('username')),
+                'password'  => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             );
 
             // Insert user data into the database using the model
@@ -193,18 +193,17 @@ class Account extends Controller
             return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());        
         } else {
             // Access form data
-            $request = service('request');
             $arrUserBase = array(
-                'firstname' 	=> $request->getPost('firstname'),
-                'lastname' 		=> $request->getPost('lastname'),
-                'birthday' 		=> $request->getPost('birthday'),
-                'discord' 		=> $request->getPost('discord'),
+                'firstname' 	=> $this->request->getPost('firstname'),
+                'lastname' 		=> $this->request->getPost('lastname'),
+                'birthday' 		=> $this->request->getPost('birthday'),
+                'discord' 		=> $this->request->getPost('discord'),
                 'modified_dt' 	=> date('Y-m-d H:i:s')
             );  
             
             $arrUserDetails = [];
             // Get the uploaded file
-            $file = $request->getFile('avatar');
+            $file = $this->request->getFile('avatar');
             if(!empty($file->getName())) {
                 //setup rules for upload
                 $uploadConfig = array(
@@ -253,9 +252,7 @@ class Account extends Controller
         if (!$this->validation->withRequest($this->request)->run()) {            
             return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());        
         } else {
-
-            $request = service('request');
-            $arrUser['email'] = $request->getPost('email');
+            $arrUser['email'] = $this->request->getPost('email');
 
             $oUser = $this->accountModel->getUserByMail($arrUser['email']);
 
@@ -310,11 +307,10 @@ class Account extends Controller
         if (!$this->validation->withRequest($this->request)->run()) {            
             return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());        
         } else {
-            $request = service('request');
             $arrUser = array(
-                'username' 	=> $request->getPost('username'),
-                'hash' 		=> $request->getPost('hash'),
-                'password'  => password_hash($request->getPost('password'), PASSWORD_DEFAULT),
+                'username' 	=> $this->request->getPost('username'),
+                'hash' 		=> $this->request->getPost('hash'),
+                'password'  => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             );  
             $arrContent['content'] = '';
 
@@ -328,10 +324,27 @@ class Account extends Controller
         }        
     }
 
+    public function searchProfile() {        
+        //collect user
+        $arrData = array(
+            'uid' => $this->request->getPost('user_name'),
+            'role_id' => $this->request->getPost('user_role'),
+            'status_id' => $this->request->getPost('user_status'),
+        );
+        $results = $this->accountModel->getUsers($arrData);
+        $view = '';
+        foreach ($results as $result) {
+            $view .= view('_templates/user_tile', [
+                'user'    => $result,
+                'target'       => 'admin',
+            ]);
+        }
+        echo $view;
+    }
+
     public function accountDelete() 
     {
-        $request = service('request');
-        $uid = $request->getPost('uid');
+        $uid = $this->request->getPost('uid');
         $isAdmin = $this->arrRights['isAdmin']; 
         //only admins may delete accounts
         if($isAdmin) {

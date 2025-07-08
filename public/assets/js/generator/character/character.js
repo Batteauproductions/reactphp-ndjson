@@ -63,7 +63,7 @@ class Character {
     }
 
     setBasekit(description,value) {
-        debugLog(`setBasekit: ${value}`);
+        debugLog(`setBasekit: ${description} ${value}`);
         this.build.base_kit = parseInt(value);  
         $('div[data-id="basekit-list"]').html(description);
         $('a[data-action="pick-basekit"]').html(`<i class="fa-solid fa-rotate-right"></i> aanpassen </span>`).on('click',pickBasekit);         
@@ -92,7 +92,7 @@ class Character {
     }
 
     setStatus(description,value) {
-        debugLog(`setStatus: ${description}  ${value}`);
+        debugLog(`setStatus: ${description} ${value}`);
         this.meta.status = parseInt(value);
         $('#characterstatus').html(`<i class="fa-solid fa-rotate-right"></i>${description}</span>`).on('click',changeStatus);
         $('input[name="char_status"]').val(value);
@@ -112,10 +112,6 @@ class Character {
     submit(description,value) {
         this.setStatus(description,value);
         transferCharacter('submit');
-    }
-
-    print() {
-        console.log('Action not yet implemented')
     }
 
     // A simple function to stringify the character object
@@ -203,6 +199,7 @@ class Character {
                     cost: obj.cost,
                     id: obj.main_id,
                     name: obj.name,
+                    description: obj.description,
                     max_rank: 3,
                 },
                 current: {
@@ -235,6 +232,7 @@ class Character {
                     cost: obj.cost,
                     id: obj.main_id,
                     name: obj.name,
+                    description: obj.description,
                     max_rank: obj.name,
                 },
                 current: {
@@ -275,6 +273,7 @@ class Character {
                     cost: obj.cost,
                     id: obj.main_id,
                     name: obj.name,
+                    description: obj.description,
                 },
                 current: {
                     attribute: "item",

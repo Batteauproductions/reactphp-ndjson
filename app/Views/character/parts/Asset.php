@@ -4,7 +4,7 @@
     <div data-id="<?= $id.'-list'; ?>">
         <?php if (isset($array)): ?>
             <?php foreach ($array as $item): ?>  
-                <?php if (isset($skill_set)): ?>
+                <?php if (isset($skill_set) && isset($item->skill_type)): ?>
                     <?php if (in_array($item->skill_type, $skill_set)): ?>
                         <?= view('character/parts/AssetRow', ['item' => $item]); ?>
                     <?php endif; ?>

@@ -143,15 +143,18 @@ class CharacterModel extends Model
           
         // Query for character items
         $oCharacter->item = $this->db
-            ->table(TBL_CHAR_ITEMS . ' ci')
-            ->select('ci.main_id, ci.sub_id, ci.bonus, ci.amount,
-                i.name,
-                it.name as sub_name', false)
-            ->join(TBL_ITEM. ' i', 'ci.main_id = i.id')
-            ->join(TBL_ITEM_TYPE . ' it', 'ci.sub_id = it.id')
-            ->where('ci.char_id', $cid)
-            ->get()
-            ->getResultObject();
+                        ->table(TBL_CHAR_ITEMS.' ci')
+                        ->select('ci.main_id, 
+                                ci.sub_id, 
+                                ci.bonus, 
+                                ci.amount,
+                                i.name,
+                                it.name as sub_name', false)
+                        ->join(TBL_ITEM. ' i', 'ci.main_id = i.id','left')
+                        ->join(TBL_ITEM_TYPE . ' it', 'ci.sub_id = it.id','left')
+                        ->where('ci.char_id', $cid)
+                        ->get()
+                        ->getResultObject();
 
         // Query for character items
         $oCharacter->stories = $this->db
@@ -190,7 +193,7 @@ class CharacterModel extends Model
     public function getCharacters($params = [])
     {
         // Build the query
-        $builder = $this->db->table('hero c');
+        $builder = $this->db->table(TBL_CHAR.' c');
         $builder->select([
             'c.id',
             'c.user_id',
@@ -240,7 +243,6 @@ class CharacterModel extends Model
         if (!empty($params['skill_id'])) {
             $builder->where('cs2.id', $params['skill_id']); // Adjust alias if needed
         }
-
 
         // Order By clause
         $builder->orderBy('c.name', 'ASC');
@@ -338,7 +340,7 @@ class CharacterModel extends Model
         // Step 3e: Insert data into the TBL_CHAR_SKILL table
         if($skill) { $this->insertItems($skill, TBL_CHAR_SKILL, $char_id, ['racial','rank','bonus']); }
         // Step 3f: Insert data into the TBL_CHAR_ITEMS table
-        if($item) { $this->insertItems($item, TBL_CHAR_ITEMS, $char_id, ['bonus', 'bonus', 'amount']); }
+        if($item) { $this->insertItems($item, TBL_CHAR_ITEMS, $char_id, ['bonus','amount']); }
         // Step 3g: Update the character note for email
         if($status===5) {
             $this->db->table(TBL_CHAR_COMMENTS)

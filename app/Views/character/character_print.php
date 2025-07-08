@@ -68,7 +68,13 @@
                     <?= view('character/parts/Asset', ['title'=>'Goddelijke vaardigheden','id'=>'skill_divine', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_DIVINE, 'print'=>true]); ?>            
                 </div>
                 <div class="cell small-12 medium-12 large-6 text-center">
-                    <?= view('character/parts/Asset', ['title'=>'Startuitrusting', 'id'=>'basekit', 'array'=>[], 'print'=>true]); ?>
+                    <div class="info-container">
+                        <h2>Startuitrusting</h2>
+                        <hr>
+                        <div data-id="basekit-list">
+                            <?php print_r($oCharacter->build->base_kit_description) ?>
+                        </div>
+                    </div>
                 </div>
                 <div class="cell small-12 medium-12 large-6 text-center">
                     <?= view('character/parts/Asset', ['title'=>'Voorwerpen', 'id'=>'item', 'array'=>$oCharacter->item, 'print'=>true]); ?>

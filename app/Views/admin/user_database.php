@@ -32,7 +32,7 @@
                             Naam
                             <select id="user_name" name="user_name" class="chosen-select">
                                 <option value="">Geen voorkeur</option>
-                                <?php foreach($arrUsers as $user):?>
+                                <?php foreach($arrAllUsers as $user):?>
                                     <option value="<?php echo $user->id ?>" <?php echo $user->id == $selectedName ? 'selected' : ''; ?>><?php echo $user->firstname.' '.$user->lastname ?></option>
                                 <?php endforeach;?> 
                             </select>
@@ -56,19 +56,22 @@
                             </select>
                         </label>                        
                     </div>
-                    <div class="grid-x">
+                    <div class="grid-x"> 
                         <div class="cell">
-                            <button class="button solid" type="submit">
+                            <button class="button solid fullwidth" type="submit">
                                 <i class="fa-solid fa-filter"></i>Filter toepassen
                             </button>
-                        </div>
+                            <button id="clear-form" class="button clear fullwidth">
+                                <i class="fa-solid fa-filter-circle-xmark"></i>Filter(s) verwijderen
+                            </button>
+                        </div>  
                     </div>
                 </div>                
             </form> 
             <div class="cell small-12 medium-8 large-9">
-                <div class="grid-x grid-margin-x grid-margin-y wrapper-user" data-equalizer>
-                    <?php foreach($arrUsers as $user): ?>
-                        <?= view('_templates/user_tile', ['user' => $user, 'target' => 'gamemaster']) ?>                                               
+                <div id="sort_user-result" class="grid-x grid-margin-x grid-margin-y wrapper-user" data-equalizer>
+                    <?php foreach($arrSelectedUsers as $user): ?>
+                        <?= view('_templates/user_tile', ['user' => $user, 'target' => 'admin']) ?>                                               
                     <?php endforeach; ?>
                 </div>
             </div> 
