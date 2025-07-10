@@ -31,52 +31,52 @@
         </div>  
         <!-- Notes and base information -->
         <div class="cell small-3">
-            <div class="grid-x grid-padding-x grid-padding-y">
+            <div class="grid-x grid-padding-x grid-padding-y grid-margin-x grid-margin-y">
                 <div class="cell small-12 text-left">
                     <?= view('character/parts/Profile', ['print'=>true]) ?>   
                 </div>
-                <div class="cell small-12 text-center">
+                <div class="cell small-12 text-center tile">
                     <?= view('character/parts/Baseinfo', ['print'=>true]) ?>
                 </div>
-                <div class="cell small-12 text-center">
+                <div class="cell small-12 text-center tile">
                     <?= view('character/parts/Notes', ['print'=>true]) ?>
                 </div>
             </div>
         </div>
         <!-- Stats and assets -->
         <div class="cell small-9">
-            <div class="grid-x grid-padding-x grid-padding-y">
-                <div class="cell small-12 medium-12 large-6 text-center">
+            <div class="grid-x grid-padding-x grid-padding-y grid-margin-x grid-margin-y">
+                <div class="cell small-12 medium-12 large-6 text-center tile">
                     <?= view('character/parts/stats/Stats_Primary', ['print'=>true]) ?>
                 </div>
-                <div class="cell small-12 medium-12 large-6 text-center">
+                <div class="cell small-12 medium-12 large-6 text-center tile">
                     <?= view('character/parts/stats/Stats_Secundary', ['print'=>true]) ?>
                 </div>
-                <div class="cell small-12 medium-12 text-center">
+                <div class="cell small-12 medium-12 text-center tile">
                     <?= view('character/parts/Asset', ['title'=>'Beroep(en)', 'id'=>'profession', 'array'=>$oCharacter->profession, 'print'=>true]); ?>
                 </div>
-                <div class="cell small-12 medium-12 large-6 text-center">
+                <div class="cell small-12 medium-12 large-6 text-center tile">
                     <?= view('character/parts/Asset', ['title'=>'Basis vaardigheden', 'id'=>'skill_base', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_BASE, 'print'=> true]); ?>
                 </div>
-                <div class="cell small-12 medium-12 large-6 text-center">
+                <div class="cell small-12 medium-12 large-6 text-center tile">
                     <?= view('character/parts/Asset', ['title'=>'Gevechts vaardigheden','id'=>'skill_combat', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_COMBAT, 'print'=>true]); ?>
                 </div>
-                <div class="cell small-12 medium-12 large-6 text-center">
+                <div class="cell small-12 medium-12 large-6 text-center tile">
                     <?= view('character/parts/Asset', ['title'=>'Magische vaardigheden','id' => 'skill_magic','array' =>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_MAGIC, 'print' => true]); ?>
                 </div>
-                <div class="cell small-12 medium-12 large-6 text-center">
+                <div class="cell small-12 medium-12 large-6 text-center tile">
                     <?= view('character/parts/Asset', ['title'=>'Goddelijke vaardigheden','id'=>'skill_divine', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_DIVINE, 'print'=>true]); ?>            
                 </div>
-                <div class="cell small-12 medium-12 large-6 text-center">
+                <div class="cell small-12 medium-12 large-6 text-center tile">
                     <div class="info-container">
-                        <h2>Startuitrusting</h2>
+                        <h3>Startuitrusting</h3>
                         <hr>
                         <div data-id="basekit-list">
                             <?php print_r($oCharacter->build->base_kit_description) ?>
                         </div>
                     </div>
                 </div>
-                <div class="cell small-12 medium-12 large-6 text-center">
+                <div class="cell small-12 medium-12 large-6 text-center tile">
                     <?= view('character/parts/Asset', ['title'=>'Voorwerpen', 'id'=>'item', 'array'=>$oCharacter->item, 'print'=>true]); ?>
                 </div>
             </div>                
@@ -90,7 +90,7 @@
             <h1>Vaardigheden</h1>
         </div>
         <div class="cell">
-            <div class="grid-x  grid-padding-x small-up-3 no-padding-print">
+            <div class="grid-x grid-margin-x grid-margin-y small-up-3 ">
                 <?php if(isset($oCharacter->skill) && count($oCharacter->skill) >= 1): ?>
                     <?php foreach($oCharacter->skill as $skill): ?>
                         <?= view('_templates/skill_tile', ['skill' => $skill]) ?>

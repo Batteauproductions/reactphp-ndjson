@@ -4,45 +4,70 @@
 html {
     padding: 0;
     margin: 0;
-    font-size: 16px;
 }
 body {
-    font-size: 1rem;
     color: #000;
-    font-weight: normal;
-    font-size: $font-size-small;
-    line-height: calc($font-size-small * 1.1);
-    font-family: Arial, sans-serif;
 }
 h1 {
-    @include heading_1(#000);
+    font: bold 16pt/18pt $paragraph-font-family;
 }
 
 h2 {
-    @include heading_2(#000);
+    font: bold 14pt/16pt $paragraph-font-family;
 }
 
 h3 {
-    @include heading_3(#000);
+    font: bold 12pt/14pt $paragraph-font-family;
+}
+
+h4 {
+    font: bold 11pt/13pt $paragraph-font-family;
 }
 
 p {
-     @include paragraph(#000);  
+     font: normal 10pt/12pt $paragraph-font-family;
+}
+
+hr {
+    margin: calc($margin/2) 0;
 }
 
 table {
-    
+
+    border: none;
+
     thead {
-        h3 {
+        h1, h2, h3, h4 {
+            margin: 0;
             text-transform: capitalize;
+            font-weight: bold;
+            font-size: 11pt;
+            line-height: 12pt;
         }
     }
+
     tbody {
-        font-size: 0.7rem !important;
-        span {
-            @include emphasize();
-        }
+        tr{
+            td {
+                p {
+                    font: normal 8pt/10pt $paragraph-font-family;
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+
+                span {
+                    @include emphasize();
+                    line-height: 10pt;
+                }
+            }  
+        }      
     }    
+}
+
+.tile {
+    border: 0.5pt solid $color-primary;
+    font-size: 8pt;
 }
 
 .hide-for-print {

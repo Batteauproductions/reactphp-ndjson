@@ -1,5 +1,5 @@
 <div class="info-container">
-    <h2>Secundaire stats</h2>
+    <h3>Secundaire stats</h3>
     <hr>
     <div class="grid-x align-middle">
         <div class="cell small-6 text-left">

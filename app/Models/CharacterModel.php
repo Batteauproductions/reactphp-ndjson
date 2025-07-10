@@ -76,6 +76,7 @@ class CharacterModel extends Model
                     cb.spend_xp, 
                     cb.max_xp, 
                     cb.currency, 
+                    cb.favour,
                     cb.base_kit,
                     e.description as base_kit_description', false)
             ->join(TBL_EQUIPMENT . ' e', 'e.id = cb.base_kit')

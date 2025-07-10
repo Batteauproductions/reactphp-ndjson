@@ -126,6 +126,14 @@ a:hover, a:hover:hover, a:active:hover, a:focus:hover {
   color: #f09f9f;
 }
 
+table thead h1, table thead h2, table thead h3 {
+  text-transform: capitalize;
+  margin: 0;
+}
+table tbody {
+  font-size: 8pt;
+}
+
 form label {
   display: inline-block;
   font: normal 1rem/1.35rem Manuale, serif;

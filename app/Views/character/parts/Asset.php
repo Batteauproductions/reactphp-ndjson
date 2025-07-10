@@ -1,5 +1,5 @@
 <div class="info-container">
-    <h2><?= $title; ?></h2>
+    <h3><?= $title; ?></h3>
     <hr>
     <div data-id="<?= $id.'-list'; ?>">
         <?php if (isset($array)): ?>

@@ -1,9 +1,9 @@
 <div class="info-container">
-    <h2>Notities</h2>
+    <h3>Notities</h3>
     <hr>
     <div class="grid-x grid-margin-y">
         <div class="cell small-12">
-            <h3>Speler</h3>
+            <h4>Speler</h4>
             <div class="grid-x align-middle">
                 <div id="container-player_notes" class="cell text-left" style="display:none;">
                     <?php if(isset($oCharacter) && is_array($oCharacter->notes)): ?>
@@ -22,7 +22,7 @@
             </div>            
         </div>
         <div class="cell small-12">
-            <h3>Spelleiding</h3>
+            <h4>Spelleiding</h4>
             <div class="grid-x align-middle">
                 <div id="container-sl_notes" class="cell text-left" style="display:none;">
                     <?php if(isset($oCharacter) && is_array($oCharacter->notes)): ?>
@@ -42,7 +42,7 @@
         </div>
         <?php if($viewAsAdmin): ?>
             <div class="cell small-12 no-print">
-                <h3>Spelleiding (privé)</h3>
+                <h4>Spelleiding (privé)</h4>
                 <div class="grid-x align-middle">
                     <div id="container-sl_private_notes" class="cell text-left" style="display:none;">
                         <?php if(isset($oCharacter) && is_array($oCharacter->notes)): ?>

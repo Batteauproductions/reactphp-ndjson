@@ -15,57 +15,63 @@
 html {
   padding: 0;
   margin: 0;
-  font-size: 16px;
 }
 
 body {
-  font-size: 1rem;
   color: #000;
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 13.2px;
-  font-family: Arial, sans-serif;
 }
 
 h1 {
-  color: #000;
-  font: bold 1.25rem/1.45rem Manuale, serif;
-  text-transform: none;
+  font: bold 16pt/18pt "Manuale", serif;
 }
 
 h2 {
-  color: #000;
-  font: bold 1.25rem/1.45rem Manuale, serif;
-  font-size: 1.0625rem;
-  line-height: 1.2325rem;
-  text-transform: none;
+  font: bold 14pt/16pt "Manuale", serif;
 }
 
 h3 {
-  color: #000;
-  font: bold 1.25rem/1.45rem Manuale, serif;
-  font-size: 0.9375rem;
-  line-height: 1.0875rem;
-  text-transform: none;
+  font: bold 12pt/14pt "Manuale", serif;
+}
+
+h4 {
+  font: bold 11pt/13pt "Manuale", serif;
 }
 
 p {
-  color: #000;
-  font: normal 1rem/1.35rem Manuale, serif;
-  text-transform: none;
+  font: normal 10pt/12pt "Manuale", serif;
 }
 
-table thead h3 {
+hr {
+  margin: 0.625rem 0;
+}
+
+table {
+  border: none;
+}
+table thead h1, table thead h2, table thead h3, table thead h4 {
+  margin: 0;
   text-transform: capitalize;
+  font-weight: bold;
+  font-size: 11pt;
+  line-height: 12pt;
 }
-table tbody {
-  font-size: 0.7rem !important;
+table tbody tr td p {
+  font: normal 8pt/10pt "Manuale", serif;
 }
-table tbody span {
+table tbody tr td p:last-child {
+  margin-bottom: 0;
+}
+table tbody tr td span {
   font: normal 1rem/1.35rem Manuale, serif;
   color: #F5B041;
   font-variant: small-caps;
   font-weight: 700;
+  line-height: 10pt;
+}
+
+.tile {
+  border: 0.5pt solid #1E1E1E;
+  font-size: 8pt;
 }
 
 .hide-for-print {

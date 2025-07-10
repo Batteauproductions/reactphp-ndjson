@@ -1,6 +1,6 @@
 <section class="grid-x align-middle info-container">
     <div class="cell small-12 text-center">
-        <h2>Basis informatie</h2>
+        <h3>Basis informatie</h3>
         <hr>
         <div class="grid-x align-middle">
             <div class="cell small-6 text-left">
@@ -43,7 +43,7 @@
                 Vaardigheid
             </div>                
             <div class="cell small-6">
-                <span id="stat-spend_xp"><?= isset($oCharacter) ? $oCharacter->build->spend_xp : (isset($jsonBaseChar) ? $jsonBaseChar['spend_xp'] : ''); ?></span>/<span id="stat-max_xp"><?= isset($oCharacter) ? $oCharacter->build->max_xp : (isset($jsonBaseChar) ? $jsonBaseChar['max_xp'] : '')?></span>pt.
+                <span id="stat-spend_xp"><?= isset($oCharacter) ? $oCharacter->build->spend_xp : '0'; ?></span>/<span id="stat-max_xp"><?= isset($oCharacter) ? $oCharacter->build->max_xp : (isset($jsonBaseChar) ? $jsonBaseChar['max_xp'] : '')?></span>pt.
             </div>
             <div class="cell small-6 text-left">
                 Geld
