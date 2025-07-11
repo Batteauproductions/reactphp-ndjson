@@ -11,12 +11,13 @@
                 <input id="email" type="email" name="email">
             </div>
             <div>
-                <button class="button solid" type="submit">
-                    <i class="fa-solid fa-share-from-square"></i>Wachtwoord resetten
+                <button class="button solid fullwidth" type="submit">
+                    <i class="fa-solid fa-share-from-square"></i>Wachtwoord-link aanvragen
                 </button>
-                <a class="button clear" href="<?php echo base_url() ?>">
-                    <i class="fa-solid fa-backward-step"></i>Terug
-                </a>
+                <div class="text-center">
+                    <hr>
+                    <span class="small-paragraph">Ben je per ongeluk op deze pagina terecht gekomen? Dan kan je dan kan je via <a href="<?php echo base_url('/user/login') ?>">deze pagina</a> inloggen.</span>
+                </div>
             </div>
         </form>
     </div>

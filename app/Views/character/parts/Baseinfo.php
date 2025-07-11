@@ -1,3 +1,4 @@
+
 <section class="grid-x align-middle info-container">
     <div class="cell small-12 text-center">
         <h3>Basis informatie</h3>

@@ -175,20 +175,7 @@ class Character extends Controller
         );
 
         if (isset($arrData['action'])) {
-            switch($arrData['action']) {
-                case "check":
-                    $returnData = $this->models['character']->saveCharacter($arrData,2);
-                    if($returnData['done']) {
-                        $send = $this->controllers['mail']->sendCharacterSubmit([
-                            'player_name'   =>$this->session->get('name'),
-                            'char_name'     =>$returnData['cname'],
-                            'cid'           =>$returnData['id'],
-                        ]);
-                        if($send) {
-                            echo json_encode($returnData);
-                        }
-                    } 
-                    break;
+            switch($arrData['action']) {                
                 case "delete":
                     echo json_encode($this->models['character']->deleteCharacter(
                                                                     $this->request->getPost('character'),                                            
@@ -203,6 +190,29 @@ class Character extends Controller
                 case "save":
                     $returnData = $this->models['character']->saveCharacter($arrData);                    
                     echo json_encode($returnData);
+                    break;
+                case "review":
+                    $queryString = $_SERVER['QUERY_STRING'];
+                    $arrData = array(
+                        'cid' => $this->request->getPost('cid'),
+                        'status_id' => $this->request->getPost('status_id'),
+                        'mail_note' => $this->request->getPost('mail_note')
+                    );
+                    print_r($arrData);
+                    exit;
+        
+                    $returnData = $this->models['character']->saveCharacter($arrData);
+                    if($returnData['done']) {
+                        $send = $this->controllers['mail']->sendCharacterReview([
+                            'player_name'   =>$this->session->get('name'),
+                            'char_name'     =>$returnData['cname'],
+                            'cid'           =>$returnData['id'],
+                        ]);
+                        if($send) {
+                            // Redirect back to the same URL with query parameters
+                            return redirect()->to(current_url() . '?' . $queryString);
+                        }
+                    } 
                     break;
                 case "search":
                     //collect user
@@ -238,9 +248,6 @@ class Character extends Controller
                             echo json_encode($returnData);
                         }
                     }                    
-                    break;
-                case "print":
-                    echo  'character-print';
                     break;
                 
                 default: 

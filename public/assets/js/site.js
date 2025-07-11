@@ -1,4 +1,5 @@
 import { domain } from './_lib/settings.js';
+import { deleteDatabaseElement } from './_lib/functions.js'
 
 $(document).ready(function() {
     
@@ -20,6 +21,17 @@ $(document).ready(function() {
 
     $(".chosen-select").chosen(); 
     
+    //shows a pop-up before performin the delete action, making sure this isn't done on accident
+    $('#sort_character-result').on('click', 'a[data-action="character-delete"]', function(e) {
+        e.preventDefault();
+        deleteDatabaseElement('character', this);
+    });
+    
+    //shows a pop-up before performin the delete action, making sure this isn't done on accident
+    $('#sort_character-result').on('click', 'a[data-action="user-delete"]', function(e) {
+        e.preventDefault();
+        deleteDatabaseElement('user', this);
+    });
 
     /*const background = $('body').css('background');
     const arrBackgrounds = ['bg_fishingvillage','bg_forestpatrol','bg_hauntedruines','bg_moutaincity','bg_mysticlibrary'];

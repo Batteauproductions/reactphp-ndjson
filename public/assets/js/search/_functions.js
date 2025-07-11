@@ -69,50 +69,7 @@ function resetDatabasesort(sType, $el) {
     });
 }
 
-/**
- * Displays a confirmation modal before deleting a database item, then removes it via AJAX.
- *
- * @param {Event} e - The click event.
- * @param {string} sType - The type of item to delete (e.g., 'character').
- * @param {HTMLElement|jQuery} el - The clicked DOM element (can be a raw element or jQuery object).
- */
-function deleteDatabaseElement(sType, el) {
-
-    const $el = $(el);
-    const char_id = $el.data('id');
-    const $modal = $('#popup-modal');
-
-    showPopup(
-        `<p>${oTranslations[language].character_delete}</p>`,
-        'confirm',
-        'question',
-        () => {
-            $.ajax({
-                url: `${domain}/action/${sType}-transfer`,
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    action: 'delete',
-                    character: char_id
-                },
-                success: () => {
-                    $(`div[data-character_id="${char_id}"]`).remove();
-                    $modal.foundation('close');
-                },
-                error: () => {
-                    const popupText = oTranslations[language].character_error;
-                    showPopup(`<p>${popupText}</p>`, 'inform', 'error', () => {
-                        $modal.foundation('close');
-                    });
-                    console.error(popupText);
-                }
-            });
-        }
-    );
-}
-
 export {
     sortDatabase,
     resetDatabasesort,
-    deleteDatabaseElement
 };

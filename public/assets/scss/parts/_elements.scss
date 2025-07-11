@@ -1,4 +1,5 @@
 @import '../variables';
+@import '../textstyling';
 
 .choice-row {
     margin-bottom: $margin;
@@ -33,7 +34,16 @@ label.input-error {
     border-radius: $border-radius;
 }
 
+.small-paragraph {
+    @include small-paragraph($paragraph-color);
+}
+
 .spacer-image {
+    margin-bottom: $margin;
+}
+
+.spacing-bottom {
+    display: block;
     margin-bottom: $margin;
 }
 

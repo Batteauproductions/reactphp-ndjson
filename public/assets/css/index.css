@@ -97,6 +97,14 @@ h3 {
   text-transform: none;
 }
 
+h4 {
+  color: #e7e7e7;
+  font: bold 1.25rem/1.45rem Manuale, serif;
+  font-size: 0.9375rem;
+  line-height: 1.0875rem;
+  text-transform: none;
+}
+
 p {
   color: #e7e7e7;
   font: normal 1rem/1.35rem Manuale, serif;
@@ -198,8 +206,8 @@ ul li {
   cursor: pointer;
   display: inline-block;
   font: normal 1rem/1.35rem Manuale, serif;
-  padding: 0.625rem 1.25rem;
-  margin-bottom: 0;
+  padding: 0.625rem 1.875rem;
+  margin-bottom: 1.25rem;
 }
 .button.solid {
   border-radius: 0.313rem;
@@ -280,6 +288,13 @@ ul li {
 /* font settings for the body */
 /* font settings for the links */
 /* misc settings */
+/* breakpoints */
+/* color sets for the application */
+/*font-sizings for different screens*/
+/* font settings for the headers */
+/* font settings for the body */
+/* font settings for the links */
+/* misc settings */
 .choice-row {
   margin-bottom: 1.25rem;
   /* Small only */
@@ -315,7 +330,18 @@ label.input-error {
   border-radius: 0.313rem;
 }
 
+.small-paragraph {
+  color: #e7e7e7;
+  font: normal calc(1rem * 0.85)/calc(1.35rem * 0.85) Manuale, serif;
+  text-transform: none;
+}
+
 .spacer-image {
+  margin-bottom: 1.25rem;
+}
+
+.spacing-bottom {
+  display: block;
   margin-bottom: 1.25rem;
 }
 

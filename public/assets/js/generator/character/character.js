@@ -385,8 +385,8 @@ function transferCharacter(btn_action) {
             const tone = isSuccess ? 'success' : 'error';
             console.log('btn_action', btn_action)
             const confirm = btn_action == 'save' 
-                        ? function () {} 
-                        : function () { console.log('hello world'); window.location.href = `${domain}/user/character/database`; };
+                        ? function () { window.location.href = `${domain}/user/character/edit/${data.id}`; } 
+                        : function () { window.location.href = `${domain}/user/character/database`; };
 
             $button.html(`${icon.icon()} ${icon.text()}`);
             showPopup(`<h2>${popupTitle}</h2><p>${popupText}</p>`, 'inform', tone, confirm);

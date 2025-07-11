@@ -66,7 +66,9 @@ class CharacterModel extends Model
         // Query for character build
         $oCharacter->build = $this->db
             ->table(TBL_CHAR_BUILD . ' cb')
-            ->select('cb.hp, 
+            ->select('
+                    cb.char_id,        
+                    cb.hp, 
                     cb.mana, 
                     cb.sanity, 
                     cb.gp, 
@@ -79,12 +81,12 @@ class CharacterModel extends Model
                     cb.favour,
                     cb.base_kit,
                     e.description as base_kit_description', false)
-            ->join(TBL_EQUIPMENT . ' e', 'e.id = cb.base_kit')
+            ->join(TBL_EQUIPMENT . ' e', 'e.id = cb.base_kit', 'left')
             ->where('cb.char_id', $cid)
             ->get()
             ->getRowObject();
 
-        // Query for character race
+         // Query for character race
         $oCharacter->race = $this->db->table(TBL_CHAR_RACE . ' r')
                         ->select('r.main_id as id, r.modifier, r.created_dt, r.modified_dt,
                             cr.name', false)
@@ -208,13 +210,11 @@ class CharacterModel extends Model
             'cs.id AS status_id',
             'cs.name AS status_name',
             'cs.description AS status_description',
-            'cr.main_id AS race_id',
             'CONCAT(u.firstname, " ", u.lastname) AS user_name',
-        ]);
-        $builder->join(TBL_USER.' u', 'c.user_id = u.id', 'left');
-        $builder->join('hero_type ct', 'ct.id = c.type_id', 'left');
-        $builder->join('hero_status cs', 'c.status_id = cs.id', 'left');
-        $builder->join('hero_race cr', 'c.id = cr.char_id', 'left');
+        ])
+        ->join(TBL_USER.' u', 'c.user_id = u.id', 'left')
+        ->join(TBL_CHAR_TYPES.' ct', 'ct.id = c.type_id', 'left')
+        ->join(TBL_CHAR_STATUS.' cs', 'c.status_id = cs.id', 'left');
 
         // If $uid is provided, add a where clause to filter by user_id
         if (!empty($params['cid'])) {
@@ -234,16 +234,21 @@ class CharacterModel extends Model
         }
 
         if (!empty($params['race_id'])) {
-            $builder->where('cr.main_id', $params['race_id']);
+            $builder->join(TBL_CHAR_RACE.' cr', 'c.id = cr.char_id', 'left')
+                    ->where('cr.main_id', $params['race_id']);
         }
 
         if (!empty($params['prof_id'])) {
-            $builder->where('cp.id', $params['prof_id']);
+            $builder->join(TBL_CHAR_PROF.' cp', 'c.id = cp.char_id', 'left')
+                    ->where('cp.main_id', $params['prof_id']);
         }
 
         if (!empty($params['skill_id'])) {
-            $builder->where('cs2.id', $params['skill_id']); // Adjust alias if needed
+            $builder->join(TBL_CHAR_SKILL.' csk', 'c.id = csk.char_id', 'left')
+                    ->where('csk.main_id', $params['skill_id']);
         }
+
+       
 
         // Order By clause
         $builder->orderBy('c.name', 'ASC');
@@ -251,13 +256,15 @@ class CharacterModel extends Model
         // Execute the query and get the result
         $query = $builder->get();
 
+         //echo $this->db->getLastQuery();
+
         return $query->getResultObject();
     }
 
 
     public function saveCharacter($arrData,$status=null,$note=null) {
         // Step 1 make sure all the data is correct
-        if ($arrData['uid'] === null || $arrData['uid'] === null || $arrData['character'] === null) {
+        if ($arrData['uid'] === null || $arrData['character'] === null) {
             return false;
         }
         // Step 2 setup "global" variables to be used in the statements below

@@ -23,8 +23,22 @@
     text-transform: $head-font-transform;
 }
 
+@mixin heading_4($clr) {
+    color: $clr;
+    font: $head-font;
+    font-size: calc($head-font-size * 0.75);
+    line-height: calc($head-line-height * 0.75);
+    text-transform: $head-font-transform;
+}
+
 @mixin paragraph($clr) {
     color: $clr;
     font: $paragraph-font;
+    text-transform: $paragraph-font-transform;
+}
+
+@mixin small-paragraph($clr) {
+    color: $clr;
+    font: #{$paragraph-font-weight} calc(#{$paragraph-font-size}*0.85)/calc(#{$paragraph-line-height}*0.85) #{$paragraph-font-family};
     text-transform: $paragraph-font-transform;
 }

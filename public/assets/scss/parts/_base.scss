@@ -72,6 +72,10 @@ h3 {
     @include heading_3($head-color);
 }
 
+h4 {
+    @include heading_4($head-color);
+}
+
 p {
     @include paragraph($paragraph-color);
 }

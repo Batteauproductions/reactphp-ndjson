@@ -6,25 +6,25 @@
             Kracht
         </div>
         <div class="cell small-6">
-            <span id="stat-str"><?= isset($jsonBaseChar) ? $jsonBaseChar['str'] : ''?></span>
+            <span id="stat-str"><?= isset($oCharacter) ? $oCharacter->build->str : (isset($jsonBaseChar) ? $jsonBaseChar['str'] : '')?></span>
         </div>
         <div class="cell small-6 text-left">
             Behendingheid
         </div>
         <div class="cell small-6">
-            <span id="stat-dex"><?= isset($jsonBaseChar) ? $jsonBaseChar['dex'] : ''?></span>
+            <span id="stat-dex"><?= isset($oCharacter) ? $oCharacter->build->dex : (isset($jsonBaseChar) ? $jsonBaseChar['dex'] : '')?></span>
         </div>
         <div class="cell small-6 text-left">
             Intelligentie
         </div>
         <div class="cell small-6">
-            <span id="stat-intel"><?= isset($jsonBaseChar) ? $jsonBaseChar['intel'] : ''?></span>
+            <span id="stat-intel"><?= isset($oCharacter) ? $oCharacter->build->intel : (isset($jsonBaseChar) ? $jsonBaseChar['intel'] : '')?></span>
         </div>
         <div class="cell small-6 text-left">
             Clues
         </div>
         <div class="cell small-6">
-            <span id="stat-clues">0</span>
+            <span id="stat-clues"><?= isset($oCharacter) ? $oCharacter->build->intel : (isset($jsonBaseChar) ? $jsonBaseChar['intel'] : '')?></span>
         </div>
     </div>
 </div>

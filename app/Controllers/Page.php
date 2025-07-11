@@ -56,7 +56,7 @@ class Page extends BaseController
             'options_character_types'  => $this->models['system']->getCharacterTypeOptions(),
             'options_race_types'       => $this->models['race']->getRaces(),
             'options_profession_types' => $this->models['profession']->getProfessions($this->arrRights['isGameMaster']),
-            'options_skill_types'      => $this->models['skill']->getSkills(),
+            'options_skill_types'      => $this->models['skill']->getSkills($this->arrRights['isGameMaster']),
             'jsonBaseChar'             => $this->models['system']->getBaseCharSetting(),
             'arrXP'                    => $this->models['system']->getXPModSetting(),
             'jsonStat'                 => $this->models['system']->getStatModSetting(),

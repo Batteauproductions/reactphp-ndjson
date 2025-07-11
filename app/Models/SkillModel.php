@@ -48,11 +48,11 @@ class SkillModel extends Model
                 ->orderBy('s.name','asc')
                 ->orderBy('s.profession_link','asc')
                 ->orderBy('s.profession_sublink','asc')
-                ->orderBy('s.profession_rank','asc');
+                ->orderBy('s.profession_rank','asc')
+                ->where('s.available', 1);
             
         if (!$gamemaster) {
-            $query->where('s.sl_only', null)
-                ->where('s.available', 1);
+            $query->where('s.sl_only', 0);
         } 
 
 		return $query->get()->getResultObject();

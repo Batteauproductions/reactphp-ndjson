@@ -5,8 +5,8 @@
     cursor: pointer;
     display: inline-block;
     font: $paragraph-font;
-    padding: calc(0.5*$padding) $padding;
-    margin-bottom: 0;
+    padding: calc(0.5*$padding) calc($padding*1.5);
+    margin-bottom: $margin;
     
     &.solid {
         border-radius: $border-radius;

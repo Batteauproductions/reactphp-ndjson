@@ -1,4 +1,4 @@
-import { sortDatabase, resetDatabasesort, deleteDatabaseElement } from "./_functions.js";
+import { sortDatabase, resetDatabasesort } from "./_functions.js";
 
 $(document).ready(function() {
 
@@ -12,12 +12,6 @@ $(document).ready(function() {
         resetDatabasesort('character', this);
     });
 
-    //shows a pop-up before performin the delete action, making sure this isn't done on accident
-    $('#sort_character-result').on('click', 'a[data-action="character-delete"]', function(e) {
-        e.preventDefault();
-        deleteDatabaseElement('character', this);
-    });
-
     //shows the character information in the form of a pop-up
     $('#sort_character-result').on('click', 'a[data-action="character-review"]', function(e) {
         e.preventDefault();
@@ -27,11 +21,5 @@ $(document).ready(function() {
         $form.find('input[name="cid"]').val(char_id);
         $modal.foundation('open');
     });
-
-    $('#form-character-check').on('submit', function(e){
-        
-    });
-
-    
 
 });

@@ -103,7 +103,7 @@
                     <div class="grid-x"> 
                         <div class="cell">
                             <button class="button solid fullwidth" type="submit">
-                                <i class="fa-solid fa-filter"></i>Filter toepassen
+                                <i class="fa-solid fa-filter"></i>Filter(s) toepassen
                             </button>
                             <button id="clear-form" class="button clear fullwidth">
                                 <i class="fa-solid fa-filter-circle-xmark"></i>Filter(s) verwijderen
@@ -126,13 +126,14 @@
 <!-- MODAL FOR POPUPS -->
 <div id="character_process-modal" class="reveal small" data-reveal>
     
-    <form id="form-character-check" class="grid-x grid-margin-y" action="<?= base_url(''); ?>" method="post">
+    <form id="form-character-check" class="grid-x grid-margin-y" action="<?= base_url('action/character-transfer'); ?>" method="post">
+        <input id="action" name="action" type="hidden" value="review"/>
         <input id="cid" name="cid" type="hidden" value=""/>
         <div class="cell">    
             <h2>De status van het personage is</h2>
             <div class="grid-x align-middle">                
                 <div class="cell shrink">
-                    <input id="char-denied" type="radio" name="status" value="7" style="width:20px; margin-bottom:0px;">
+                    <input id="char-denied" type="radio" name="status_id" value="7" style="width:20px; margin-bottom:0px;">
                 </div>
                 <div class="cell auto">
                     <label for="char-denied" class="text-right middle" style="margin-bottom:0px;">Afgekeurd</label>
@@ -140,7 +141,7 @@
             </div> 
             <div class="grid-x align-middle">
                 <div class="cell shrink">
-                    <input id="char-approved" type="radio" name="status" value="5" style="width:20px; margin-bottom:0px;">
+                    <input id="char-approved" type="radio" name="status_id" value="5" style="width:20px; margin-bottom:0px;">
                 </div>
                 <div class="cell auto">
                     <label for="char-approved" class="text-right middle" style="margin-bottom:0px;">Goedgekeurd</label>
