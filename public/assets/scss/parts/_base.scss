@@ -127,16 +127,11 @@ form {
         letter-spacing: 1px;
         color: $paragraph-color;
         margin-bottom: calc(0.5 * $margin);
-
-        &.input-error {
-            color: $color-error;
-            font-weight: bold;
-            margin-top: calc($margin * 0.50);
-            margin-bottom: calc(1.2 * $margin);
-        }
     }
 
-    input, select {        
+    input, select {    
+        border: solid 1px #fff;    
+        border-radius: $border-radius !important;
         font: $paragraph-font;
         display: block;        
         font-size: inherit;

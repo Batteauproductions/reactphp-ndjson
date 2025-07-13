@@ -98,9 +98,17 @@ class CharacterModel extends Model
         // Query for character profession(s)
         $oCharacter->profession = $this->db
                         ->table(TBL_CHAR_PROF . ' cp')
-                        ->select('cp.main_id, cp.sub_id, cp.rank, cp.created_dt, cp.modified_dt,
-                            p.name, p.modifier, p.cost, p.max_purchase,
-                            ps.name as sub_name', false)
+                        ->select('cp.main_id, 
+                                cp.sub_id, 
+                                cp.rank, 
+                                cp.rank_locked,
+                                cp.created_dt, 
+                                cp.modified_dt,
+                                p.name, 
+                                p.modifier, 
+                                p.cost, 
+                                p.allow_multiple,
+                                ps.name as sub_name', false)
                         ->join(TBL_PROF . ' p', 'cp.main_id = p.id')
                         ->join(TBL_PROF_SUB . ' ps', 'cp.sub_id = ps.id','left')
                         ->where('cp.char_id', $cid)
@@ -115,6 +123,7 @@ class CharacterModel extends Model
                                 cs.sub_id, 
                                 cs.racial, 
                                 cs.rank, 
+                                cs.rank_locked,
                                 cs.bonus, 
                                 cs.created_dt, 
                                 cs.modified_dt,
@@ -124,7 +133,7 @@ class CharacterModel extends Model
                                 s.disclaimer,
                                 s.cost,
                                 s.max_rank,
-                                s.max_purchase,
+                                s.allow_multiple,
                                 s.skill_type,
                                 s.profession_link,
                                 s.profession_sublink,
@@ -261,8 +270,32 @@ class CharacterModel extends Model
         return $query->getResultObject();
     }
 
+    public function reviewCharacter($arrData)
+    {
+        // Step 1: Update basic character info in the main character table
+        $charData = [
+            'status_id'      => $arrData['status_id'],
+        ];
 
-    public function saveCharacter($arrData,$status=null,$note=null) {
+        // Step 2: Only lock the ranks if status is 5 (locked)
+        if($arrData['status_id'] == 5) {
+            $charData['firstlocked_dt'] = empty($arrData['firstlocked_dt']) ? date('Y-m-d H:i:s') : $arrData['firstlocked_dt'];
+            $charData['lastlocked_dt']  = date('Y-m-d H:i:s');
+            // Step A: For all related data profession records, set lock_rank equal to rank
+            $sql = "UPDATE " . TBL_CHAR_PROF . " SET lock_rank = rank WHERE char_id = ?";
+            $this->db->query($sql, [$arrData['uid']]);
+            // Step B: For all related data skill records, set lock_rank equal to rank
+            $sql = "UPDATE " . TBL_CHAR_SKILL . " SET lock_rank = rank WHERE char_id = ?";
+            $this->db->query($sql, [$arrData['uid']]);
+        }
+
+        // Step 3: Set the status for the character
+        $this->db->table(TBL_CHAR)
+                ->where('id', $arrData['uid'])
+                ->update($charData);
+    }
+
+    public function saveCharacter($arrData,$status=null) {
         // Step 1 make sure all the data is correct
         if ($arrData['uid'] === null || $arrData['character'] === null) {
             return false;
@@ -344,33 +377,27 @@ class CharacterModel extends Model
             }
         }
         // Step 3d: Insert data into the TBL_CHAR_PROF table
-        if($profession) { $this->insertItems($profession, TBL_CHAR_PROF, $char_id, ['rank']); }
+        if($profession) { $this->insertItems($profession, TBL_CHAR_PROF, $char_id, ['rank','rank_locked']); }
         // Step 3e: Insert data into the TBL_CHAR_SKILL table
-        if($skill) { $this->insertItems($skill, TBL_CHAR_SKILL, $char_id, ['racial','rank','bonus']); }
+        if($skill) { $this->insertItems($skill, TBL_CHAR_SKILL, $char_id, ['racial','rank','rank_locked','bonus']); }
         // Step 3f: Insert data into the TBL_CHAR_ITEMS table
         if($item) { $this->insertItems($item, TBL_CHAR_ITEMS, $char_id, ['bonus','amount']); }
-        // Step 3g: Update the character note for email
-        if($status===5) {
-            $this->db->table(TBL_CHAR_COMMENTS)
-            ->where('char_id', $char_id)
-            ->update($charRace);
+        // Step 3g: Insert (or Update) the notes in TBL_CHAR_COMMENTS
+        $charNote = [
+            'char_id' => $char_id,
+            'player_notes' => null,
+            'sl_notes' => null,
+            'sl_private_notes' => null,
+        ];
+        foreach ($notes as $note) {
+            $charNote[$note->type] = $note->text;
+        }
+        if ($isNew) {
+            $this->db->table(TBL_CHAR_COMMENTS)->insert($charNote);
         } else {
-            $charNote = [
-                'char_id' => $char_id,
-                'player_notes' => null,
-                'sl_notes' => null,
-                'sl_private_notes' => null,
-            ];
-            foreach ($notes as $note) {
-                $charNote[$note->type] = $note->text;
-            }
-            if ($isNew) {
-                $this->db->table(TBL_CHAR_COMMENTS)->insert($charNote);
-            } else {
-                $this->db->table(TBL_CHAR_COMMENTS)
-                    ->where('char_id', $char_id)
-                    ->update($charNote);
-            }
+            $this->db->table(TBL_CHAR_COMMENTS)
+                ->where('char_id', $char_id)
+                ->update($charNote);
         }
 
         $returnData = [

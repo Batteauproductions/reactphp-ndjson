@@ -106,6 +106,8 @@ function initiateEditor() {
     });
 }
 
+
+
 function showPopup(message, type='inform', tone='', confirm = () => {}) {
     debugLog('showPopup', message, type);
     const $modal = $('#popup-modal');
@@ -140,14 +142,48 @@ function showPopup(message, type='inform', tone='', confirm = () => {}) {
 }
 
 /**
- * Generates a set of action icons with click event handlers for a given asset.
+ * Generates interactive action icons for an asset based on its state.
  *
- * @param {string[]} localIcons - Array of icon names to generate.
- * @param {Object} asset - The asset instance, expected to have `remove`, `upgrade`, and `downgrade` methods.
- * @returns {jQuery[]} Array of jQuery anchor elements representing icons.
+ * Determines which actions are allowed (upgrade, downgrade, remove),
+ * and returns jQuery anchor elements with appropriate click handlers.
+ *
+ * @param {Object} asset - The asset object.
+ * @param {number} asset.rank - The current rank of the asset (0 to 3).
+ * @param {number} asset.rank_locked - The minimum locked rank.
+ * @param {number} asset.max_rank - The maximum possible rank (default 3).
+ * @param {Date|string} asset.created_dt - When the asset was added.
+ * @param {Function} asset.remove - Method to remove the asset.
+ * @param {Function} asset.upgrade - Method to upgrade the asset.
+ * @param {Function} asset.downgrade - Method to downgrade the asset.
+ * @returns {jQuery[]} Array of jQuery elements with appropriate handlers.
  */
-function generateIconSet(iconArray, asset) {
-    const icons = [];
+function generateAssetIcons(asset) {
+    const result = [];
+    const lockedDt = window.character?.meta?.lastlocked_dt ?? null;
+
+    const validActions = [];
+
+    // Downgrade is allowed if rank > 0 and above locked, or was added after lock
+    const canDowngrade =
+        asset.rank > 1 && (
+            lockedDt === null ||
+            asset.created_dt > lockedDt ||
+            asset.rank_locked === null ||
+            asset.rank > asset.rank_locked
+        );
+    if (canDowngrade) {
+        validActions.push('downgrade');
+    }
+
+    // Upgrade allowed if below max
+    if (asset.rank < (asset.max_rank ?? 3)) {
+        validActions.push('upgrade');
+    }
+
+    // Remove allowed if asset added after lock or no lock at all
+    if (asset.racial == 0 && (lockedDt === null || asset.created_dt > lockedDt)) {
+        validActions.push('remove');
+    }
 
     const eventHandlers = {
         remove: asset.remove?.bind(asset),
@@ -155,16 +191,19 @@ function generateIconSet(iconArray, asset) {
         downgrade: asset.downgrade?.bind(asset)
     };
 
-    if (!Array.isArray(iconArray)) return icons;
+    for (const action of validActions) {
+        const icon = icons[action];
+        const handler = eventHandlers[action] ?? null;
 
-    for (const { name, icon } of iconArray) {
-        const handler = eventHandlers[name] ?? null;
-        const htmlElement = icon.render(handler, false, '');
-        icons.push(htmlElement);
+        if (icon?.render) {
+            const htmlElement = icon.render(handler, false, '');
+            result.push(htmlElement);
+        }
     }
 
-    return icons;
+    return result;
 }
+
 
 
 /**
@@ -219,8 +258,8 @@ export {
     allowChoose,
     deleteDatabaseElement,
     showPopup,
+    generateAssetIcons,
     debugLog,
-    generateIconSet,
     initiateEditor,
     showMessage,
 }

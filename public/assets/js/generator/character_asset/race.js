@@ -27,36 +27,37 @@ class Race {
             this.skills.forEach(skill => {
                 //checks non standard skills
                 let cSkill;
-                console.log('skill',skill)
-                if (!skill.current) {
-                    const $select = $('[name="skill-modifier"]'); // Only select once
-                    const $selected = $select.find('option:selected');
+                if(!skill.current) {
+                    $('[name="skill-modifier"]').each(function () {
+                        const $select = $(this);
+                        const subid = parseInt($select.find('option:selected').val());
+                        const subname = $select.find('option:selected').text();
 
-                    const subid = parseInt($selected.val());
-                    const subname = $selected.text();
-
-                    if (!subid && !subname) {
-                        showMessage('#choice-actions', 'error', oTranslations[language].not_choice_made);
-                        return;
-                    }
-
-                    skill.current = {
-                        sub_id: subid,
-                        sub_name: subname,
-                        attribute: "skill",
-                        container: "skill_base",
-                        cost: 0,
-                        racial: true
-                    };
-
-                    const cSkill = new Skill(skill);
-                    cSkill.add();
+                        //an empty choice exists
+                        if(!subid && !subname) {
+                            showMessage('#choice-actions', 'error', oTranslations[language].not_choice_made);
+                            return
+                        }
+                        skill.current = {}; // Initialize the object
+                        Object.assign(skill.current, {
+                            sub_id: subid,
+                            sub_name: subname
+                        });
+                        Object.assign(skill.current, {
+                            attribute: "skill",
+                            container: "skill_base",
+                            cost: 0,
+                            racial: 1
+                        });
+                        cSkill = new Skill(skill); 
+                        cSkill.add();  
+                    });                                      
                 } else {
                     Object.assign(skill.current, {
                         attribute: "skill",
                         container: "skill_base",
                         cost: 0,
-                        racial: true
+                        racial: 1
                     });
                     const cSkill = new Skill(skill);
                     cSkill.add();

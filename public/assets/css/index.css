@@ -150,13 +150,9 @@ form label {
   color: #e7e7e7;
   margin-bottom: 0.625rem;
 }
-form label.input-error {
-  color: rgb(196, 118, 118);
-  font-weight: bold;
-  margin-top: 0.625rem;
-  margin-bottom: 1.5rem;
-}
 form input, form select {
+  border: solid 1px #fff;
+  border-radius: 0.313rem !important;
   font: normal 1rem/1.35rem Manuale, serif;
   display: block;
   font-size: inherit;
@@ -209,6 +205,9 @@ ul li {
   padding: 0.625rem 1.875rem;
   margin-bottom: 1.25rem;
 }
+.button:last-child {
+  margin-bottom: 0;
+}
 .button.solid {
   border-radius: 0.313rem;
   border: solid 0.063rem #7D1717;
@@ -216,7 +215,7 @@ ul li {
   background-color: #7D1717;
 }
 .button.solid:hover {
-  background-color: #d32727;
+  background: #d32727;
 }
 .button.clear {
   color: #e7e7e7;
@@ -318,11 +317,11 @@ ul li {
   font-weight: bold;
 }
 
-label.input-error {
+.input-error {
   display: block;
   color: rgb(196, 118, 118);
   font-weight: bold;
-  margin: 1.25rem 0;
+  margin: 0 0 1.25rem;
 }
 
 .reveal {
@@ -419,6 +418,9 @@ label.input-error {
 }
 .form-character .info-container ul li {
   text-align: left;
+}
+.form-character .info-container i.fa-solid, .form-character .info-container i.fa-regular, .form-character .info-container i.fa-brands {
+  margin-right: 0 !important;
 }
 
 /* breakpoints */

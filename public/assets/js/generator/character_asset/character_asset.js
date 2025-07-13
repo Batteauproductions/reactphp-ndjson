@@ -1,6 +1,6 @@
 //Generic settings and functions
-import { icons, iconset, language, oTranslations, currentDateTime } from '../../_lib/settings.js'
-import { debugLog, generateIconSet, showMessage, showPopup } from '../../_lib/functions.js'
+import { icons, language, oTranslations, currentDateTime } from '../../_lib/settings.js'
+import { debugLog, generateAssetIcons, showMessage, showPopup } from '../../_lib/functions.js'
 import { findItemIndex } from '../character/character.js';
 import { updateExperience } from '../helper/experience.js';
 
@@ -15,13 +15,14 @@ class CharacterAsset {
             cost,
             max_rank,
             loresheet,
-            max_purchase,            
+            allow_multiple,            
         },
         modifier = [], // Default to an empty array for safety
         current: {
             sub_id = null,
             sub_name = null,
             rank = null,
+            locked_rank = null,
             racial,
             rank_cost,
             attribute,  
@@ -34,15 +35,16 @@ class CharacterAsset {
         this.id = id !== null ? parseInt(id) : null;
         this.name = name;
         this.description = description;
-        this.requirements = requirements !== null ? requirements : null;
-        this.max_rank = isNaN(parseInt(max_rank)) ? 1 : parseInt(max_rank); //checks that rank is always set to at least 1
-        this.max_purchase = max_purchase ? parseInt(max_purchase) : 0; //only certain items can be added multiple times [true/false]
+        this.requirements = requirements !== null ? requirements : null; //assets can have requirements
+        this.max_rank = max_rank ? parseInt(max_rank) : 1 ; //checks that rank is always set to at least 1
+        this.allow_multiple = allow_multiple ? parseInt(allow_multiple) : 0; //only certain items can be added multiple times [true/false]
         this.attribute = attribute; //what attribute of the character the assets should be stored [profession/skill/item]
         this.sub_id = sub_id !== null ? parseInt(sub_id) : null; //some assets have an sub id, for instance [2/5]
         this.sub_name = sub_name !== null ? sub_name : null; //some assets have a sub name, for instance [mage/elemental]
         this.rank = isNaN(parseInt(rank)) ? 1 : parseInt(rank); //what level is the asset
+        this.locked_rank = locked_rank ? parseInt(locked_rank) : parseInt(rank); //what was the level when the character (asset) was locked
         this.modifier = modifier.length > 0 && modifier[0]?.id !== undefined ? parseInt(modifier[0].id) : null; //some assets contain stat modifiers
-        this.racial = racial ? Boolean(racial) : false //some assets are included in the racial choice of the character
+        this.racial = racial ? Boolean(parseInt(racial)) : false; //some assets are included in the racial choice of the character
         this.cost = this.racial ? 0 : cost; // all racial elements are 0 cost    
         this.rank_cost = rank_cost !== undefined ? parseInt(rank_cost) : parseInt(this.cost); // upon initialization the asset cost is the same as the cost          
         this.container = container; //this is the container on the character sheet [profession/skill/equipment]
@@ -58,44 +60,56 @@ class CharacterAsset {
     }
 
     add () {
-
-        // Check for duplicates, but only when not allowed
-        if(this.max_purchase == 1) {
-            const index = this.getSelfIndex();
+        const duplicate_index = findItemIndex(this.attribute, this.id, this.sub_id);
+        // Check for duplicates, no same assets with same main- and sub_id
+        if (duplicate_index !== -1) {
+            showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
+            console.warn(oTranslations[language].duplicate_choose)
+            return;
+        }
+        
+        // Some assets allow for multiple main instances
+        if(this.allow_multiple == 0) {
+            const index = findItemIndex(this.attribute, this.id);
             if (index !== -1) {
-                showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
+                showMessage('#choice-actions', 'error', oTranslations[language].multiple_choose);
+                console.warn(oTranslations[language].multiple_choose)
                 return;
             }            
         }
         //-----------------------------//
 
         // Check if the requirement is met, if so; continue
+        console.log('this.requirements ',this.requirements)
         if (this.requirements) {
-            let result = [];
-            const items = this.requirements.split('|');
-            
-            items.forEach(function(item) {
-                let parts = item.split(',');
-                let id = parts[0];
-                let rank = parts[1];
+            const andConditions = this.requirements.split('|');
 
-                result.push({
-                    id: parseInt(id),
-                    sub_id: null,
-                    rank: parseInt(rank)
-                });
-            });
+            for (let condition of andConditions) {
+                // Handle OR blocks
+                let orParts = condition.split('/');
+                let orSatisfied = false;
 
-            for (let i = 0; i < result.length; i++) {
-                const obj = result[i];
-                const index = findItemIndex('skill', obj.id, obj.sub_id, obj.rank);
-                console.log('index: ', index);
-                if (index === -1) {
+                for (let orPart of orParts) {
+                    let parts = orPart.split(',');
+                    let id = parseInt(parts[0]);
+                    let rank = parts[1] ? parseInt(parts[1]) : null;
+
+                    // You may want to adapt sub_id logic depending on your actual data
+                    const index = findItemIndex('skill', id, null, rank, false);
+
+                    if (index !== -1) {
+                        orSatisfied = true;
+                        break; // One OR condition met
+                    }
+                }
+
+                if (!orSatisfied) {
                     showMessage('#choice-actions', 'error', oTranslations[language].requirements_not_met);
                     return;
                 }
             }
         }
+
 
         //-----------------------------//
 
@@ -185,13 +199,7 @@ class CharacterAsset {
         this.rank = new_rank;
     
         // Icon logic
-        let iconType = "adjust_all";
-        if (new_rank === this.max_rank) { 
-            iconType = "adjust_down_remove" 
-        } else if (new_rank === this.min_rank || new_rank === 1) { 
-            iconType = "adjust_up_remove" 
-        }    
-        const new_icons = generateIconSet(iconset[iconType], this, this.attribute);
+        const new_icons = generateAssetIcons(this);
     
         // Update UI
         const $row = this.getVisualRow();
@@ -216,17 +224,10 @@ class CharacterAsset {
             [`data-${this.container}_sub_id`]: this.sub_id,
         });
         //-- -- array to contain the columns, starting with the basic one   
-        let bNewSkill = true;
-
-        if (
-            new Date(this.created_dt) < new Date(window.character.meta.lastlocked_dt)
-        ) {
-            bNewSkill = false;
-        } 
-
-        this.modified_dt      
+        const lockedDt = window.character?.meta?.lastlocked_dt ?? null;
+        const bNewAsset = lockedDt !== null && this.created_dt > lockedDt;
         let name = '';
-            name += `${bNewSkill ? icons.new.icon() : ''}`;
+            name += `${bNewAsset ? icons.new.icon() : ''}`;
             name += `${this.loresheet===1 ? icons.loresheet.icon() : ''}`;
             name += `${this.name}`;
             name += `${this.rank != this.max_rank ? ` (${icons.rank.text()} ${this.rank})` : ''}`;
@@ -239,7 +240,6 @@ class CharacterAsset {
             })
         ];
         //-- -- create column for subname / cost (if any) and determine the icon set for this asset
-        let local_icons;
         switch (this.attribute) {
             case 'skill':
             case 'profession':
@@ -252,25 +252,7 @@ class CharacterAsset {
                     'data-column': 'cost',
                     class: 'cell small-2 medium-1 text-right',
                     html: this.racial ? `<em>${oTranslations[language].racial}</em>` : `${this.rank_cost}pt.`
-                })); 
-                //set icons
-                if (this.racial) {
-                    // Racial no adjustments
-                    local_icons = iconset.adjust_none;
-                } else if(this.rank == this.max_rank || this.max_rank == null) {
-                    // maxed out → no adjustments
-                    local_icons = iconset.adjust_basic;
-                } else if (this.rank > 1 && this.rank < this.max_rank) {
-                    // Mid-range skill
-                    local_icons = this.locked_dt == null 
-                        ? iconset.adjust_up_down_remove 
-                        : iconset.adjust_up_down;
-                } else if (this.rank < this.max_rank) {
-                    // Low-rank skill
-                    local_icons = this.locked_dt == null 
-                        ? iconset.adjust_up_remove 
-                        : iconset.adjust_up;
-                }
+                }));  
                 break;
             case 'item':
                 arrColumns.push($('<div>', {
@@ -282,17 +264,14 @@ class CharacterAsset {
                     'data-column': 'cost',
                     class: 'cell small-5 medium-4 text-center',
                     html: `${this.costText()}`
-                }));
-                local_icons = iconset["adjust_basic"];
+                }));                
                 break;
-        }        
-        //-- -- fills the column of icons with the correct iconset
-        const arrIcons = generateIconSet(local_icons,this);
+        }  
         arrColumns.push($('<div>', {
             class: 'cell small-12 medium-3 small-text-center medium-text-right',
             'data-column': 'action',
-            html: arrIcons
-        }));
+            html: generateAssetIcons(this)
+        }));     
         //-- -- adds the columns to the master row    
         row.append(arrColumns);        
         // Sorts the rows within the container by ABC > Desc

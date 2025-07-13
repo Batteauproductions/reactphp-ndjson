@@ -22,7 +22,8 @@ class ProfessionModel extends Model
                         name, 
                         description, 
                         available')
-                ->where('available', 1);
+                ->where('available', 1)
+                ->orderBy('name','asc');
 
         if (!$gamemaster) {
             $builder->where('sl_only', '0');
@@ -52,14 +53,16 @@ class ProfessionModel extends Model
                             p.modifier, 
                             p.skill_bonus,
                             p.cost,
-                            p.max_purchase,
+                            p.allow_multiple,
                             p.rule_page,
                             p.available,
                             p.sl_only')
                     ->where('p.id',$id);
+                    
         if (!$gamemaster) {
             $builder->where('sl_only', '0');
         }
+        
         $query = $builder->get();
 
         return $query->getRow();
@@ -71,7 +74,8 @@ class ProfessionModel extends Model
             ->db
             ->table(TBL_PROF_SUB)
             ->select('id, name, description')
-            ->where('parent_id', $id);
+            ->where('parent_id', $id)
+            ->orderBy('name','asc');
 
         if (!$gamemaster) {
             $builder->where('sl_only', '0');

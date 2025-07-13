@@ -31,11 +31,11 @@
                 <button class="button solid fullwidth" type="submit">
                     <i class="fa-solid fa-right-to-bracket"></i>Inloggen
                 </button>
-            </div>
-            <div class="cell text-center">
-                <hr>
-                <span class="small-paragraph">Of als je nog geen account hebt, kan je deze <a href="<?php echo base_url('account/signup') ?>">hier registreren</a>.</span>
-            </div>
+                <div class="text-center">
+                    <hr>
+                    <span class="small-paragraph">Als je nog geen account hebt, kan je deze <a href="<?php echo base_url('account/signup') ?>">hier registreren</a>.</span>
+                </div>
+            </div>            
         </form>
     </div>
 </section>

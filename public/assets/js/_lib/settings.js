@@ -46,6 +46,7 @@ const oTranslations = Object.freeze({
         "increase_base_sanity": "Verhoogt de sanity",
         "increase_base_str": "Verhoogt de kracht",
         "loresheet": "Je krijgt hievoor een loresheet.",
+        "multiple_choose": "Het is niet toegestaan om meerdere van dit type vaardigheid te kiezen",
         "more_info": "meer informatie",
         "new": "Nieuw",
         "no_skills_available": "Op dit moment heb je geen beroep om vaardigheden van dit type te ondersteunen.",
@@ -120,48 +121,11 @@ const icons = Object.freeze({
     "9": new Icon({icon_visual: 'fa-regular fa-comment', icon_text: 'skill_knowledge_x'}),
 });
 
-const iconset = Object.freeze({
-    adjust_none: null,
-    adjust_basic: [
-        { name: 'remove', icon: icons.remove }
-    ],
-    adjust_down: [
-        { name: 'downgrade', icon: icons.downgrade },
-    ],
-    adjust_down_remove: [
-        { name: 'downgrade', icon: icons.downgrade },
-        { name: 'remove', icon: icons.remove }
-    ],
-    adjust_up: [
-        { name: 'upgrade', icon: icons.upgrade },
-    ],
-    adjust_up_down: [
-        { name: 'downgrade', icon: icons.downgrade },
-        { name: 'upgrade', icon: icons.upgrade },
-    ],
-    adjust_up_down: [
-        { name: 'downgrade', icon: icons.downgrade },
-        { name: 'upgrade', icon: icons.upgrade },
-        { name: 'remove', icon: icons.remove }
-    ],
-    adjust_up_remove: [
-        { name: 'upgrade', icon: icons.upgrade },
-        { name: 'remove', icon: icons.remove }
-    ],
-    adjust_all: [
-        { name: 'downgrade', icon: icons.downgrade },
-        { name: 'upgrade', icon: icons.upgrade },
-        { name: 'remove', icon: icons.remove }
-    ],
-    
-});
-
 export {
     debug,
     currentDateTime,
     domain,
     icons,
-    iconset,
     language,
     oTranslations,
 }

@@ -25,5 +25,11 @@
                 text-align: left;
             }
         }
+
+        i {
+            &.fa-solid, &.fa-regular, &.fa-brands {
+                margin-right: 0 !important;
+            }
+        }
     }
 }

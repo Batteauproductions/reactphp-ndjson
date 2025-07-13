@@ -233,7 +233,7 @@ class Character {
                     id: obj.main_id,
                     name: obj.name,
                     description: obj.description,
-                    max_rank: obj.name,
+                    max_rank: obj.max_rank,
                 },
                 current: {
                     attribute: "skill",
@@ -340,12 +340,15 @@ function calculateIncrease(id) {
  * @param {string|null} sub_id - The sub ID of the item (optional).
  * @returns {number} The index of the item if found, otherwise -1.
  */
-function findItemIndex(attribute, id, sub_id = null, rank = null) {
-    // Access the specified attribute array directly from window.character
+function findItemIndex(attribute, id, sub_id = null, rank = null, strictSubId = true) {
     const attributeArray = window.character[attribute];
-    // Ensure the attributeArray is an array and search for the item by id and sub_id
-    return Array.isArray(attributeArray) 
-        ? attributeArray.findIndex(item => item?.id === id && (item?.sub_id === sub_id || sub_id === null) && (item?.rank >= rank || rank === null))
+
+    return Array.isArray(attributeArray)
+        ? attributeArray.findIndex(item =>
+            item?.id === id &&
+            (strictSubId ? (item?.sub_id === sub_id || sub_id === null) : true) &&
+            (item?.rank >= rank || rank === null)
+        )
         : -1;
 }
 
@@ -385,15 +388,17 @@ function transferCharacter(btn_action) {
             const tone = isSuccess ? 'success' : 'error';
             console.log('btn_action', btn_action)
             const confirm = btn_action == 'save' 
-                        ? function () { window.location.href = `${domain}/user/character/edit/${data.id}`; } 
+                        ? function () { 
+                            //only refresh page to edit when it's a new character
+                            if(isNaN(window.character.meta.id)) {
+                                window.location.href = `${domain}/user/character/edit/${data.id}`;
+                                window.character.meta.id = data.id;
+                            }  
+                        } 
                         : function () { window.location.href = `${domain}/user/character/database`; };
 
             $button.html(`${icon.icon()} ${icon.text()}`);
             showPopup(`<h2>${popupTitle}</h2><p>${popupText}</p>`, 'inform', tone, confirm);
-
-            if (data.id) {
-                window.character.meta.id = data.id;
-            }
         },
         error: function() {
             const icon = icons.character_error;

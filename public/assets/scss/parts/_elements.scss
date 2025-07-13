@@ -22,11 +22,11 @@
     font-weight: bold;
 }
 
-label.input-error {
+.input-error{
     display: block;
     color: $color-error;
     font-weight: bold;
-    margin: $margin 0;
+    margin: 0 0 $margin;
 }
 
 .reveal {
