@@ -15,48 +15,71 @@ class SkillModel extends Model
     }
 	
 	/*START: LINKED TO THE SKILLS*/
-	public function getSkills($gamemaster=false) {		
-		$query = $this
-                ->db
-                ->table(TBL_SKILL.' s')
-                ->select('s.id, 
-                        s.name,
-                        s.description,
-                        s.requirements,
-                        s.disclaimer,
-                        s.cost,
-                        s.max_rank,
-                        s.allow_multiple,
-                        s.skill_type,
-                        s.profession_link,
-                        s.profession_sublink,
-                        s.profession_rank,
-                        s.sl_only,
-                        s.multiplier,
-                        s.modifier,
-                        s.loresheet,
-                        s.ingame_call,
-                        s.power,
-                        s.time,
-                        s.atk_range,
-                        p.id as prof_id, p.name as prof_name,
-                        sm.id as stat_id, sm.name as stat_name,
-                        st.id as type_id, st.name as type_name')
-                ->join(TBL_PROF.' p','p.id = s.profession_link','left')
-                ->join(TBL_STATMOD.' sm','sm.id = s.modifier','left')
-                ->join(TBL_SKILL_TYPE.' st','st.id = s.skill_type','left')
-                ->orderBy('s.name','asc')
-                ->orderBy('s.profession_link','asc')
-                ->orderBy('s.profession_sublink','asc')
-                ->orderBy('s.profession_rank','asc')
-                ->where('s.available', 1);
-            
-        if (!$gamemaster) {
-            $query->where('s.sl_only', 0);
-        } 
+	public function getSkills($gamemaster = false, $cid = null)
+    {
+        $query = $this
+            ->db
+            ->table(TBL_SKILL . ' s')
+            ->select('s.id, 
+                    s.name,
+                    s.description,
+                    s.requirements,
+                    s.disclaimer,
+                    s.cost,
+                    s.max_rank,
+                    s.allow_multiple,
+                    s.skill_type,
+                    s.profession_link,
+                    s.profession_sublink,
+                    s.profession_rank,
+                    s.sl_only,
+                    s.multiplier,
+                    s.modifier,
+                    s.loresheet,
+                    s.ingame_call,
+                    s.power,
+                    s.time,
+                    s.atk_range,
+                    p.id as prof_id, p.name as prof_name,
+                    sm.id as stat_id, sm.name as stat_name,
+                    st.id as type_id, st.name as type_name')
+            ->join(TBL_PROF . ' p', 'p.id = s.profession_link', 'left')
+            ->join(TBL_STATMOD . ' sm', 'sm.id = s.modifier', 'left')
+            ->join(TBL_SKILL_TYPE . ' st', 'st.id = s.skill_type', 'left')
+            ->orderBy('s.name', 'asc')
+            ->orderBy('s.profession_link', 'asc')
+            ->orderBy('s.profession_sublink', 'asc')
+            ->orderBy('s.profession_rank', 'asc')
+            ->where('s.available', 1);
 
-		return $query->get()->getResultObject();
-	}
+        if (!$gamemaster && $cid !== null) {
+            $query->where('s.sl_only', 0);
+        }
+
+        if ($cid !== null) {
+            $query->select('cs.main_id, 
+                            cs.sub_id, 
+                            cs.racial, 
+                            cs.rank, 
+                            cs.rank_locked,
+                            cs.bonus, 
+                            cs.created_dt, 
+                            cs.modified_dt,
+                            ss.name as sub_name')
+                ->join(TBL_CHAR_SKILL . ' cs', 'cs.main_id = s.id', 'left')
+                ->join(TBL_SKILL_SUB . ' ss', 'cs.sub_id = ss.id','left')
+                ->where('cs.char_id', $cid);
+        }
+
+        $results = $query->get()->getResultObject();
+
+        // Voeg requirement_name toe aan elk resultaat
+        foreach ($results as $skill) {
+            $skill->requirement_name = $this->getRequirementNames($skill->requirements);
+        }
+
+        return $results;
+    }
 
     public function getSkillsByLink($skill_type = null, $arrProfessions = null, $admin = false)
     {
@@ -67,6 +90,7 @@ class SkillModel extends Model
                 ->select('s.id, 
                         s.name,
                         s.description,
+                        s.avatar,
                         s.requirements,
                         s.disclaimer,
                         s.cost,

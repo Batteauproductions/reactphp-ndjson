@@ -92,9 +92,18 @@ hr {
     margin: calc($margin/2) 0;
 }
 
-li {
-    color: $paragraph-color;
-    font: $paragraph-font;
+ul, ol {
+    &.no-spacing {
+        margin: 0 !important;
+        padding: 0 !important;
+        li {
+           padding-left: 0 !important; 
+        }
+    }
+    li {
+        color: $paragraph-color;
+        font: $paragraph-font;
+    }
 }
 
 a, a:hover, a:active, a:focus {

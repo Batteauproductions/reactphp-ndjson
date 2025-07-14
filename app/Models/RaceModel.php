@@ -74,7 +74,14 @@ class RaceModel extends Model
         $query = $this
                     ->db
                     ->table(TBL_RACE . ' r')
-                    ->select('r.id, r.name, r.description, r.bonus, r.rule_page, r.skills, r.modifier')
+                    ->select('r.id, 
+                            r.name, 
+                            r.description,
+                            r.avatar,
+                            r.bonus, 
+                            r.rule_page, 
+                            r.skills, 
+                            r.modifier')
                     ->where('r.id', $id)
                     ->get();
 

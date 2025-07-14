@@ -48,12 +48,20 @@ function openSelectionModal(sAction,$modal) {
         });
     });
     $modal.find('select[name="subtype"]').off('change').on('change',function() {
-        oTmpData.current = {
-            sub_id: $subtypeSelect.val(),
-            sub_name: $subtypeSelect.text(),
+        const id = $subtypeSelect.val();
+        const match = oTmpData.subtype.find(item => item.id == id);
+        if (match) {            
+            oTmpData.current = {
+                sub_id: parseInt(match.id),
+                sub_name: match.name,
+                sub_description: match.description,
+                avatar: match.avatar,
+            }
+            allowChoose();
+            updateModal(sAction,oTmpData); 
+        } else {
+            console.warn("No match found for id:", id);
         }
-        allowChoose();
-        updateModal(sAction,oTmpData); 
     });
     //-- changing of the rank input field
     $modal.find('input[name="rank"]').off('change').on('change',function() {
@@ -67,12 +75,8 @@ function openSelectionModal(sAction,$modal) {
 function updateModal (sAction,oData) {
     debugLog('updateModal: ', sAction, oData);
     //update parts of the Modal
-    if(sAction === 'profession' || sAction === 'race') {
-        updateModalImage(sAction,oData);
-    } else {
-        updateModalImage();
-    }    
-    updateModelContent(oData.details);
+    updateModalImage(sAction,oData);  
+    updateModelContent(oData);
     updateModelDetails(sAction,oData);
     updateModelButtons(sAction,oData);
     //items allow amount to be chosen

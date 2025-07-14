@@ -14,19 +14,19 @@ class ProfessionModel extends Model
         $this->db = \Config\Database::connect();
     }
     
-    public function getProfessions($gamemaster=false) {
+    public function getProfessions($gamemaster = false, $cid = null) {
         $builder = $this
                 ->db
-                ->table(TBL_PROF)
-                ->select('id, 
-                        name, 
-                        description, 
-                        available')
-                ->where('available', 1)
-                ->orderBy('name','asc');
+                ->table(TBL_PROF.' p')
+                ->select('p.id, 
+                        p.name, 
+                        p.description, 
+                        p.available')
+                ->where('p.available', 1)
+                ->orderBy('p.name','asc');
 
-        if (!$gamemaster) {
-            $builder->where('sl_only', '0');
+        if (!$gamemaster && $cid === null ) {
+            $builder->where('p.sl_only', '0');
         }
 
         $query = $builder->get();
@@ -50,6 +50,7 @@ class ProfessionModel extends Model
                     ->select('p.id, 
                             p.name, 
                             p.description,
+                            p.avatar,
                             p.modifier, 
                             p.skill_bonus,
                             p.cost,
@@ -73,7 +74,10 @@ class ProfessionModel extends Model
         $builder = $this
             ->db
             ->table(TBL_PROF_SUB)
-            ->select('id, name, description')
+            ->select('id, 
+                    name, 
+                    description,
+                    avatar')
             ->where('parent_id', $id)
             ->orderBy('name','asc');
 

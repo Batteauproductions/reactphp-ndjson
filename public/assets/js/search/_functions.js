@@ -1,6 +1,6 @@
 import { showPopup, debugLog } from '../_lib/functions.js';
 import { oTranslations, language, domain } from '../_lib/settings.js';
-import { setCookieURL } from '../_lib/setCookie.js';
+import { setCookieURL, deleteFilterCookies } from '../_lib/setCookie.js';
 
 /**
  * Submits a form via AJAX to filter database items based on serialized form data.
@@ -48,6 +48,8 @@ function resetDatabasesort(sType, $el) {
     const $form = $(`#form-sort_${sType}`);
     $form[0].reset();
     $form.find('select').val('').trigger('chosen:updated');
+
+    deleteFilterCookies(sType);
 
     // Clear query parameters from URL
     window.history.pushState({}, '', window.location.pathname);

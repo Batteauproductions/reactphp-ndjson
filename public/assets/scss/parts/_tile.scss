@@ -47,19 +47,19 @@
                 filter: contrast(200%);
             }
         }
-        &--nieuw {
+        &--new {
             border: solid 2px white;
         }
-        &--actief {
+        &--active {
             border: solid 2px white;
         }
-        &--dood {
+        &--dead {
             border: solid 2px black;
             img {                    
                 filter: grayscale(100%);
             }
         }
-        &--locked {
+        &--approved {
             border: solid 2px white;
         }
         &--denied {
@@ -68,7 +68,7 @@
         &--deleted {
             border: solid 2px darkred;
         }
-        &--inactief {
+        &--inactive {
             border: solid 2px grey;
             img {                    
                 filter: grayscale(70%);
@@ -85,7 +85,7 @@
         }
 
         p {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             line-height: 1.0rem;
         }
 
@@ -97,7 +97,7 @@
             border: none;
             font: $paragraph-font;
             font-size: 0.8rem;
-            line-height: 0.9rem;
+            line-height: 1.0rem;
 
             tr, td {                
                 padding: 0 0 calc($padding/4);
@@ -114,6 +114,14 @@
 
                 span {
                     @include emphasize();
+                }
+
+                ul {
+                    li {
+                        font-size: 0.8rem !important;
+                        line-height: 1.0rem !important;
+                        padding-left: 0 !important;
+                    }
                 }
             }
             

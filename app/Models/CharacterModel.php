@@ -5,7 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 use App\Models\ProfessionModel;
 use App\Models\SkillModel;
-use App\Models\NotesModel;
+
 
 class CharacterModel extends Model
 {
@@ -13,14 +13,12 @@ class CharacterModel extends Model
     protected $db;
     protected $professionModel;
     protected $skillModel;
-    protected $notesModel;
 
     public function __construct()
     {
         $this->db = \Config\Database::connect();
         $this->professionModel = new ProfessionModel();
         $this->skillModel = new SkillModel(); 
-        $this->notesModel = new NotesModel();
     }
 
     public function getCharacterById($cid, $uid, $gamemaster) {
@@ -45,6 +43,7 @@ class CharacterModel extends Model
                     c.lastlocked_dt,
                     ct.name as type_name,
                     cs.name as status_name,
+                    cs.code as status_code,
                     CONCAT(u.firstname, " ", u.lastname) AS user_name')
             ->join(TBL_USER.' u', 'c.user_id = u.id', 'left')
             ->join(TBL_CHAR_TYPES . ' ct', 'ct.id = type_id')
@@ -116,43 +115,8 @@ class CharacterModel extends Model
                         ->getResultObject();
         
         // Query for character skill(s)
-        $oCharacter->skill = $this->db
-                        ->table(TBL_CHAR_SKILL . ' cs')
-                        ->select('
-                                cs.main_id, 
-                                cs.sub_id, 
-                                cs.racial, 
-                                cs.rank, 
-                                cs.rank_locked,
-                                cs.bonus, 
-                                cs.created_dt, 
-                                cs.modified_dt,
-                                s.name,
-                                s.description,
-                                s.requirements,
-                                s.disclaimer,
-                                s.cost,
-                                s.max_rank,
-                                s.allow_multiple,
-                                s.skill_type,
-                                s.profession_link,
-                                s.profession_sublink,
-                                s.profession_rank,
-                                s.sl_only,
-                                s.multiplier,
-                                s.modifier,
-                                s.loresheet,
-                                s.ingame_call,
-                                s.power,
-                                s.time,
-                                s.atk_range, 
-                            ss.name as sub_name', false)
-                        ->join(TBL_SKILL . ' s', 'cs.main_id = s.id')
-                        ->join(TBL_SKILL_SUB . ' ss', 'cs.sub_id = ss.id','left')
-                        ->where('cs.char_id', $cid)
-                        ->get()
-                        ->getResultObject();
-          
+        $oCharacter->skill = $this->skillModel->getSkills(true, $cid);
+         
         // Query for character items
         $oCharacter->item = $this->db
                         ->table(TBL_CHAR_ITEMS.' ci')
@@ -171,7 +135,15 @@ class CharacterModel extends Model
         // Query for character items
         $oCharacter->stories = $this->db
             ->table(TBL_CHAR_STORIES . ' cs')
-            ->select('cs.event_id, cs.question_1, cs.question_2, cs.question_3, cs.question_4, cs.question_5, cs.question_6, cs.created_dt, cs.modified_dt', false)
+            ->select('cs.event_id, 
+                    cs.question_1, 
+                    cs.question_2, 
+                    cs.question_3, 
+                    cs.question_4, 
+                    cs.question_5, 
+                    cs.question_6, 
+                    cs.created_dt, 
+                    cs.modified_dt', false)
             ->where('cs.char_id', $cid)
             ->get()
             ->getResultObject();
@@ -179,7 +151,11 @@ class CharacterModel extends Model
         // Query for character notes
         $oCharacter->notes = $this->db
             ->table(TBL_CHAR_COMMENTS . ' cc')
-            ->select('cc.char_id, cc.mail_note, cc.player_notes, cc.sl_notes, cc.sl_private_notes', false)
+            ->select('cc.char_id, 
+                    cc.mail_note, 
+                    cc.player_notes, 
+                    cc.sl_notes, 
+                    cc.sl_private_notes', false)
             ->where('cc.char_id', $cid)
             ->get()
             ->getResultObject();
@@ -206,21 +182,20 @@ class CharacterModel extends Model
     {
         // Build the query
         $builder = $this->db->table(TBL_CHAR.' c');
-        $builder->select([
-            'c.id',
-            'c.user_id',
-            'c.name',
-            'c.avatar',
-            'c.created_dt',
-            'c.modified_dt',
-            'ct.id AS type_id',
-            'ct.name AS type_name',
-            'ct.description AS type_description',
-            'cs.id AS status_id',
-            'cs.name AS status_name',
-            'cs.description AS status_description',
-            'CONCAT(u.firstname, " ", u.lastname) AS user_name',
-        ])
+        $builder->select('c.id,
+                    c.user_id,
+                    c.name,
+                    c.avatar,
+                    c.created_dt,
+                    c.modified_dt,
+                    ct.id AS type_id,
+                    ct.name AS type_name,
+                    ct.description AS type_description,
+                    cs.id AS status_id,
+                    cs.name AS status_name,
+                    cs.code as status_code,
+                    cs.description AS status_description,
+                    CONCAT(u.firstname, " ", u.lastname) AS user_name', false)
         ->join(TBL_USER.' u', 'c.user_id = u.id', 'left')
         ->join(TBL_CHAR_TYPES.' ct', 'ct.id = c.type_id', 'left')
         ->join(TBL_CHAR_STATUS.' cs', 'c.status_id = cs.id', 'left');
@@ -257,8 +232,6 @@ class CharacterModel extends Model
                     ->where('csk.main_id', $params['skill_id']);
         }
 
-       
-
         // Order By clause
         $builder->orderBy('c.name', 'ASC');
 
@@ -282,17 +255,32 @@ class CharacterModel extends Model
             $charData['firstlocked_dt'] = empty($arrData['firstlocked_dt']) ? date('Y-m-d H:i:s') : $arrData['firstlocked_dt'];
             $charData['lastlocked_dt']  = date('Y-m-d H:i:s');
             // Step A: For all related data profession records, set lock_rank equal to rank
-            $sql = "UPDATE " . TBL_CHAR_PROF . " SET lock_rank = rank WHERE char_id = ?";
-            $this->db->query($sql, [$arrData['uid']]);
+            $sql = "UPDATE " . TBL_CHAR_PROF . " SET rank_locked = rank WHERE char_id = ?";
+            $this->db->query($sql, [$arrData['cid']]);
             // Step B: For all related data skill records, set lock_rank equal to rank
-            $sql = "UPDATE " . TBL_CHAR_SKILL . " SET lock_rank = rank WHERE char_id = ?";
-            $this->db->query($sql, [$arrData['uid']]);
+            $sql = "UPDATE " . TBL_CHAR_SKILL . " SET rank_locked = rank WHERE char_id = ?";
+            $this->db->query($sql, [$arrData['cid']]);
         }
-
         // Step 3: Set the status for the character
         $this->db->table(TBL_CHAR)
-                ->where('id', $arrData['uid'])
+                ->where('id', $arrData['cid'])
                 ->update($charData);
+
+        // Step 4: Set the mailnote for the user
+        $this->db->table(TBL_CHAR_COMMENTS)
+                ->where('id', $arrData['cid'])
+                ->update( ['mail_note' => $arrData['status_id'] ]);
+        
+        $query = $this->db->table(TBL_CHAR.' c')
+                    ->select('c.name as char_name,
+                            u.email,
+                            CONCAT(u.firstname, " ", u.lastname) AS player_name')
+                    ->join(TBL_USER.' u', 'c.user_id = u.id', 'left')
+                    ->where('c.id', $arrData['cid'])
+                    ->get()
+                    ->getResultArray();
+
+        return $query[0];
     }
 
     public function saveCharacter($arrData,$status=null) {

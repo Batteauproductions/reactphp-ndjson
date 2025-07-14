@@ -61,15 +61,15 @@ function clearModal(bClear) {
  * @param {number|string|null} [oData.current.sub_id] - The sub-ID for the image.
  */
 function updateModalImage(sAction, oData) {
-    const id = oData?.details?.id || null;
-    const sub_id = oData?.current?.sub_id || null;
+    const main_avatar = oData?.details?.avatar || null;
+    const sub_avatar = oData?.current?.avatar || null;
 
     // Determine the image source and visibility
     let src = '';
-    if (id && sub_id) {
-        src = `${domain}/assets/images/${sAction}/${sAction}_${id}_${sub_id}.jpg`;
-    } else if (id) {
-        src = `${domain}/assets/images/${sAction}/${sAction}_${id}.jpg`;
+    if (sub_avatar) {
+        src = `${domain}/assets/images/character_asset/${sAction}/${sub_avatar}`;
+    } else if (main_avatar) {
+        src = `${domain}/assets/images/character_asset/${sAction}/${main_avatar}`;
     }
 
     if (src) {
@@ -136,35 +136,30 @@ function updateModalDropdown($element, oData) {
     $typeLabel.show();
 }
 
-function updateModelContent(oDetails) {
+function updateModelContent(oData) {
+    const oDetails = oData.details;
+    const oCurrent = oData.current ?? null;
     // Check if oDetails is valid
-    if (oDetails) {
-        // Destructure the parameter with default values
-        const {
-            name = '',
-            description = '',
-            advanced_description = ''
-        } = oDetails;
-
+    if (oData) {
         // Array for batch DOM adding
         const contentElements = [];
-
         // Create and push content elements only if they have content
-        if (name) {
-            contentElements.push($('<h1>', { text: name }));
+        if (oDetails.name) {
+            contentElements.push($('<h1>', { text: oDetails.name }));
         }
-        if (description) {
-            contentElements.push($('<article>', { html: description }));
+        if (oDetails.description) {
+            contentElements.push($('<article>', { html: oDetails.description }));
         }
-        if (advanced_description) {
-            contentElements.push($('<article>', { html: advanced_description }));
+        //render subtype description
+        if (oCurrent?.sub_description) {
+            contentElements.push(`<hr><h2>${oCurrent.sub_name}</h2><p class="small-paragraph">${oCurrent.sub_description}</p>`);
         }
-
         // Clear existing content and append new content elements
         $choice_description.empty().append(contentElements).show();
     } else {
         // Hide the description if no details are provided
         $choice_description.hide();
+        console.warn('no content was provided for this action')
     }
 }
 
@@ -178,6 +173,7 @@ function updateModelDetails(sAction, oData) {
 
     // Check if action and details are valid or if there's a modifier
     if ((sAction && oData) || arrModifier.length > 0) {
+
         //render the cost
         if(oDetails.cost) {                        
             // Cost-related text to the element
@@ -318,7 +314,7 @@ function updateModelButtons(sAction, oData) {
         if (click_function) {
             const $button = $('<button>', {
                 id: 'choose-characterAsset',
-                class: 'button solid',
+                class: 'button solid no-spacing',
                 html: `${icons.choose.icon()} ${icons.choose.text()}`,
                 disabled: !allowChoose() //logic is reversed because of how disable attribute works                
             }).on('click', function(e) {

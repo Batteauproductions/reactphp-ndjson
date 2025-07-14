@@ -24,6 +24,22 @@ function setCookie(name, value, days) {
     document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
 }
 
+function deleteFilterCookies(sType) {
+  const filterPrefix = sType + "_filters";
+  const cookies = document.cookie.split(";");
+
+  cookies.forEach(cookie => {
+    const [name] = cookie.trim().split("=");
+
+    // Check if cookie name starts with `${sType}_filters`
+    if (name.startsWith(filterPrefix)) {
+      // Delete the cookie by setting expiry to the past
+      document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    }
+  });
+}
+
 export {
-    setCookieURL
+    setCookieURL,
+    deleteFilterCookies
 }

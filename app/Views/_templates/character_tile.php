@@ -3,7 +3,7 @@
 <?php else: ?>
     <div 
         data-character_id="<?= esc($character->id) ?>"
-        class="cell small-12 large-6 tile tile-status--<?= esc($character->status_name) ?>">        
+        class="cell small-12 large-6 tile tile-status--<?= esc($character->status_code) ?>">        
         <div class="grid-x" style="height: 100%;">
             <div class="cell small-12 medium-4">
                 <div class="tile-avatar-wrapper">

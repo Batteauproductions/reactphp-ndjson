@@ -81,6 +81,29 @@ table {
 
 /* Optional screen styles */
 @media screen {
+
+    #page-container {
+        position: relative;
+        z-index: 0;
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('/assets/images/backgrounds/bg_forestpatrol.png');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.3; /* Only background image is transparent */
+            z-index: -1;
+        }
+
+        #page-wrapper {            
+            background: #fff;
+            width:794px;
+            margin: 0 auto;              
+        }
+    }
+    
     .page-break {
         border-top: 2px dashed #ccc;
         margin: 40px 0;
@@ -89,6 +112,9 @@ table {
 
 /* Hide elements during printing */
 @media print {
+    #page-wrapper {
+        width:100%;
+    }
     .no-padding-print {
         padding: 0;
     }

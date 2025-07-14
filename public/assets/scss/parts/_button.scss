@@ -8,6 +8,10 @@
     padding: calc(0.5*$padding) calc($padding*1.5);
     margin-bottom: $margin;
     
+    &.no-spacing {
+        margin-bottom: 0 !important;
+    }
+    
     &:last-child {
         margin-bottom: 0;
     }

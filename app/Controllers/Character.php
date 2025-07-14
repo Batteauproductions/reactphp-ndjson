@@ -192,25 +192,25 @@ class Character extends Controller
                     echo json_encode($returnData);
                     break;
                 case "review":
-                    $queryString = $_SERVER['QUERY_STRING'];
+                    $referrer = $_SERVER['HTTP_REFERER'] ?? '';
                     $arrData = array(
                         'cid' => $this->request->getPost('cid'),
                         'status_id' => $this->request->getPost('status_id'),
                         'mail_note' => $this->request->getPost('mail_note')
                     );
-                    print_r($arrData);
-                    exit;
-        
-                    $returnData = $this->models['character']->saveCharacter($arrData);
-                    if($returnData['done']) {
-                        $send = $this->controllers['mail']->sendCharacterReview([
-                            'player_name'   =>$this->session->get('name'),
-                            'char_name'     =>$returnData['cname'],
-                            'cid'           =>$returnData['id'],
-                        ]);
+                    $mailData = $this->models['character']->reviewCharacter($arrData);
+                    if($mailData) {
+                        $mailData['cid'] = $arrData['cid'];
+                        $mailData['mail_note'] = $arrData['mail_note'];
+                        $mailData['status_id'] = $arrData['status_id'];
+                        if($mailData['status_id'] == 5) {
+                            $send = $this->controllers['mail']->sendCharacterDenied($mailData);
+                        } else {
+                            $send = $this->controllers['mail']->sendCharacterApproved($mailData);
+                        }
                         if($send) {
                             // Redirect back to the same URL with query parameters
-                            return redirect()->to(current_url() . '?' . $queryString);
+                            return redirect()->to(current_url() . '?' . $referrer);
                         }
                     } 
                     break;

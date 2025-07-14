@@ -155,7 +155,7 @@
             </div>            
         </div> 
         <div class="cell">
-            <button type="submit" class="button solid"><i class="fa-solid fa-paper-plane"></i> Verwerken</button>
+            <button type="submit" class="button solid no-spacing"><i class="fa-solid fa-paper-plane"></i> Verwerken</button>
             <a data-close aria-label="Close modal" class="button clear"><i class="fa-solid fa-xmark"></i> Annuleren</a>
         </div>                         
     </form>
