@@ -946,6 +946,26 @@ nav[aria-label=breadcrumb] .breadcrumbs li a {
 .reveal-overlay {
   background-color: rgba(10, 10, 10, 0.75);
 }
+.reveal-overlay .reveal {
+  /* Small only */
+  /* Medium and up */
+  /* Large and up */
+}
+@media screen and (max-width: 39.9375em) {
+  .reveal-overlay .reveal {
+    width: 100% !important;
+  }
+}
+@media screen and (min-width: 40em) {
+  .reveal-overlay .reveal {
+    width: 80% !important;
+  }
+}
+@media screen and (min-width: 64em) {
+  .reveal-overlay .reveal {
+    width: 60% !important;
+  }
+}
 
 /* CSS Document */
 .jconfirm-cell {

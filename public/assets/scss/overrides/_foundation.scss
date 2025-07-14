@@ -30,4 +30,19 @@ nav[aria-label="breadcrumb"] {
 
 .reveal-overlay {
 	background-color: rgba(10, 10, 10, .75);
+
+	.reveal {
+		/* Small only */
+		@media screen and (max-width: #{$breakpoint-small}) {
+			width: 100% !important;
+		}
+		/* Medium and up */
+		@media screen and (min-width: 40em) {
+			width: 80% !important;
+		}
+		/* Large and up */
+		@media screen and (min-width: 64em) {
+			width: 60% !important;
+		}		
+	}
 }
