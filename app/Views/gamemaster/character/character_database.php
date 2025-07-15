@@ -113,7 +113,7 @@
                 </div>                
             </form> 
             <div class="cell small-12 medium-8 large-9">
-                <div id="sort_character-result" class="grid-x grid-margin-x grid-margin-y wrapper-character" data-equalizer>
+                <div id="sort_character-result" class="grid-x grid-margin-x grid-margin-y small-up-1 large-up-2 wrapper-character" data-equalizer>
                     <?php foreach($arrSelectedCharacters as $character): ?>
                         <?= view('_templates/character_tile', ['character' => $character, 'target' => 'gamemaster', 'isGameMaster' => true]) ?>                                               
                     <?php endforeach; ?>

@@ -25,65 +25,66 @@
 <body>
     <div id="page-container">
         <div id="page-wrapper">
-            <!-- first-page -->    
-            <div id="Charsheet" class="grid-x grid-padding-x no-padding-print">
-                <div class="cell text-center"> 
-                    <h1>Karakterblad | <?= $oCharacter->meta->name; ?></h1>
-                </div>  
-                <!-- Notes and base information -->
-                <div class="cell small-3">
-                    <div class="grid-x grid-padding-x grid-padding-y grid-margin-x grid-margin-y">
-                        <div class="cell small-12 text-left">
-                            <?= view('character/parts/Profile', ['print'=>true]) ?>   
-                        </div>
-                        <div class="cell small-12 text-center tile">
-                            <?= view('character/parts/Baseinfo', ['print'=>true]) ?>
-                        </div>
-                        <div class="cell small-12 text-center tile">
-                            <?= view('character/parts/Notes', ['print'=>true]) ?>
-                        </div>
-                    </div>
-                </div>
-                <!-- Stats and assets -->
-                <div class="cell small-9">
-                    <div class="grid-x grid-padding-x grid-padding-y grid-margin-x grid-margin-y">
-                        <div class="cell small-12 medium-12 large-6 text-center tile">
-                            <?= view('character/parts/stats/Stats_Primary', ['print'=>true]) ?>
-                        </div>
-                        <div class="cell small-12 medium-12 large-6 text-center tile">
-                            <?= view('character/parts/stats/Stats_Secundary', ['print'=>true]) ?>
-                        </div>
-                        <div class="cell small-12 medium-12 text-center tile">
-                            <?= view('character/parts/Asset', ['title'=>'Beroep(en)', 'id'=>'profession', 'array'=>$oCharacter->profession, 'print'=>true]); ?>
-                        </div>
-                        <div class="cell small-12 medium-12 large-6 text-center tile">
-                            <?= view('character/parts/Asset', ['title'=>'Basis vaardigheden', 'id'=>'skill_base', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_BASE, 'print'=> true]); ?>
-                        </div>
-                        <div class="cell small-12 medium-12 large-6 text-center tile">
-                            <?= view('character/parts/Asset', ['title'=>'Gevechts vaardigheden','id'=>'skill_combat', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_COMBAT, 'print'=>true]); ?>
-                        </div>
-                        <div class="cell small-12 medium-12 large-6 text-center tile">
-                            <?= view('character/parts/Asset', ['title'=>'Magische vaardigheden','id' => 'skill_magic','array' =>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_MAGIC, 'print' => true]); ?>
-                        </div>
-                        <div class="cell small-12 medium-12 large-6 text-center tile">
-                            <?= view('character/parts/Asset', ['title'=>'Goddelijke vaardigheden','id'=>'skill_divine', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_DIVINE, 'print'=>true]); ?>            
-                        </div>
-                        <div class="cell small-12 medium-12 large-6 text-center tile">
-                            <div class="info-container">
-                                <h3>Startuitrusting</h3>
-                                <hr>
-                                <div data-id="basekit-list">
-                                    <?php print_r($oCharacter->build->base_kit_description) ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cell small-12 medium-12 large-6 text-center tile">
-                            <?= view('character/parts/Asset', ['title'=>'Voorwerpen', 'id'=>'item', 'array'=>$oCharacter->item, 'print'=>true]); ?>
-                        </div>
-                    </div>                
-                </div>
-            </div>
-
+            <!-- first-page -->  
+            <table id="Charsheet" border="0" cellspacing="0" cellpadding="0" style="width:100%;">
+                <tr>
+                    <!-- Notes and base information -->
+                    <td width="30%" valign="top">
+                        <?= view('character/parts/Profile', ['print'=>true]) ?>  
+                        <?= view('character/parts/Baseinfo', ['print'=>true]) ?> 
+                        <?= view('character/parts/Notes', ['print'=>true]) ?>
+                    </td>
+                    <!-- Stats and assets -->
+                    <td width="70%" valign="top">
+                        <table id="Charsheet" border="0" cellspacing="0" cellpadding="0" style="width:100%;">
+                            <tr>
+                                <td width="50%" valign="top">
+                                    <?= view('character/parts/stats/Stats_Primary', ['print'=>true]) ?>
+                                </td>
+                                <td width="50%" valign="top">
+                                    <?= view('character/parts/stats/Stats_Secundary', ['print'=>true]) ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <?= view('character/parts/Asset', ['title'=>'Beroep(en)', 'id'=>'profession', 'array'=>$oCharacter->profession, 'print'=>true]); ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" valign="top">
+                                    <?= view('character/parts/Asset', ['title'=>'Basis vaardigheden', 'id'=>'skill_base', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_BASE, 'print'=> true]); ?>
+                                </td>
+                                <td width="50%" valign="top">
+                                    <?= view('character/parts/Asset', ['title'=>'Gevechts vaardigheden','id'=>'skill_combat', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_COMBAT, 'print'=>true]); ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" valign="top">
+                                    <?= view('character/parts/Asset', ['title'=>'Magische vaardigheden','id' => 'skill_magic','array' =>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_MAGIC, 'print' => true]); ?>
+                                </td>
+                                <td width="50%" valign="top">
+                                    <?= view('character/parts/Asset', ['title'=>'Goddelijke vaardigheden','id'=>'skill_divine', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_DIVINE, 'print'=>true]); ?> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" valign="top">
+                                    <div class="info-container">
+                                        <h3>Startuitrusting</h3>
+                                        <hr>
+                                        <div data-id="basekit-list">
+                                            <?php print_r($oCharacter->build->base_kit_description) ?>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="50%" valign="top">
+                                    <?= view('character/parts/Asset', ['title'=>'Voorwerpen', 'id'=>'item', 'array'=>$oCharacter->item, 'print'=>true]); ?>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            
             <!-- next-page -->
             <div class="page-break"></div>
             <div class="grid-x grid-padding-x no-padding-print">

@@ -475,35 +475,35 @@ ul li {
   }
 }
 .tile-status--pending {
-  border: 2px solid;
+  border: 1px solid;
   border-image: linear-gradient(45deg, #d4af37, #f7e694) 1;
 }
 .tile-status--pending img {
   filter: contrast(200%);
 }
 .tile-status--new {
-  border: solid 2px white;
+  border: solid 1px rgb(127, 127, 127);
 }
 .tile-status--active {
-  border: solid 2px white;
+  border: solid 1px rgb(255, 255, 255);
 }
 .tile-status--dead {
-  border: solid 2px black;
+  border: solid 1px rgb(0, 0, 0);
 }
 .tile-status--dead img {
   filter: grayscale(100%);
 }
 .tile-status--approved {
-  border: solid 2px white;
+  border: solid 1px rgb(255, 255, 255);
 }
 .tile-status--denied {
-  border: solid 2px red;
+  border: solid 1px rgb(255, 0, 0);
 }
 .tile-status--deleted {
-  border: solid 2px darkred;
+  border: solid 1px rgb(139, 0, 0);
 }
 .tile-status--inactive {
-  border: solid 2px grey;
+  border: solid 1px rgb(72, 72, 72);
 }
 .tile-status--inactive img {
   filter: grayscale(70%);

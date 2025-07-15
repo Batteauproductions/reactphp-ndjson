@@ -204,13 +204,13 @@ class Character extends Controller
                         $mailData['mail_note'] = $arrData['mail_note'];
                         $mailData['status_id'] = $arrData['status_id'];
                         if($mailData['status_id'] == 5) {
-                            $send = $this->controllers['mail']->sendCharacterDenied($mailData);
-                        } else {
                             $send = $this->controllers['mail']->sendCharacterApproved($mailData);
+                        } else {
+                            $send = $this->controllers['mail']->sendCharacterDenied($mailData);
                         }
                         if($send) {
                             // Redirect back to the same URL with query parameters
-                            return redirect()->to(current_url() . '?' . $referrer);
+                            return redirect()->to($referrer);
                         }
                     } 
                     break;

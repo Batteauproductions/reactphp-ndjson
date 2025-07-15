@@ -13,18 +13,18 @@ class EmailController extends Controller
         $this->email = \Config\Services::email();
     }
 
-    public function sendSignupConfirmation ($arrData) 
+    public function sendSignupConfirmation ($arrInput) 
     {
-        $subject = 'Spelleiding Dalaria | Activeer je account';
-        $this->email->setTo($arrData['email']);
+        $subject = '[Spelleiding Dalaria] Activeer je account';
+        $this->email->setTo($arrInput['email']);
         $this->email->setSubject($subject);
         // Load PHP view file and capture its output
-        $arrData['sEmailLink']	= base_url('account/activate/'.$arrData['username'].'/'.$arrData['hash']);
-		$arrData['sFirstname']	= $arrData['firstname'];
-		$arrData['sLastname']	= $arrData['lastname'];
+        $arrInput['sEmailLink']	= base_url('account/activate/'.$arrInput['username'].'/'.$arrInput['hash']);
+		$arrInput['sFirstname']	= $arrInput['firstname'];
+		$arrInput['sLastname']	= $arrInput['lastname'];
         //-------
         $mailContent['title'] = $subject;
-        $mailContent['content'] = view('email/new_user',$arrData);
+        $mailContent['content'] = view('email/new_user',$arrInput);
         $htmlContent = view('_templates/email',$mailContent);
 
         // Set the HTML message
@@ -41,17 +41,17 @@ class EmailController extends Controller
 
     public function sendPasswordReset($oData)
     {    
-        $subject = 'Spelleiding Dalaria | Wachtwoord vergeten';
+        $subject = '[Spelleiding Dalaria] Wachtwoord vergeten';
         // Set email parameters
         $this->email->setTo($oData->email);
         $this->email->setSubject($subject);
         // Load PHP view file and capture its output
-        $arrData['sEmailLink']	= base_url('account/password_reset/'.$oData->username.'/'.$oData->hash);
-		$arrData['sFirstname']	= $oData->firstname;
-		$arrData['sLastname']	= $oData->lastname;
+        $arrInput['sEmailLink']	= base_url('account/password_reset/'.$oData->username.'/'.$oData->hash);
+		$arrInput['sFirstname']	= $oData->firstname;
+		$arrInput['sLastname']	= $oData->lastname;
         //-------
         $mailContent['title'] = $subject;
-        $mailContent['content'] = view('email/password_forget',$arrData);        
+        $mailContent['content'] = view('email/password_forget',$arrInput);        
         $htmlContent = view('_templates/email',$mailContent);
         // Set the HTML message
         $this->email->setMessage($htmlContent);
@@ -67,18 +67,18 @@ class EmailController extends Controller
 
     public function sendCharacterApproved ($arrInput) 
     {
-        $subject = 'Spelleiding Dalaria | Personage is goed gekeurd';
+        $subject = '[Spelleiding Dalaria] Personage is goed gekeurd';
         $this->email->setTo($arrInput['email']);
         $this->email->setSubject($subject);
         // Load PHP view file and capture its output
-        $arrData = [
+        $arrInput = [
             'player_name' => $arrInput['player_name'],
             'char_name'	  => $arrInput['char_name'],
             'sEmailLink'  => base_url('gamemaster/character/print/'.$arrInput['cid'])
         ];
         //-------
         $mailContent['title'] = $subject;
-        $mailContent['content'] = view('email/character_approved',$arrData);
+        $mailContent['content'] = view('email/character_approved',$arrInput);
         $htmlContent = view('_templates/email',$mailContent);
 
         // Set the HTML message
@@ -92,20 +92,20 @@ class EmailController extends Controller
         }
     }
 
-    public function sendCharacterDenied ($arrData) 
+    public function sendCharacterDenied ($arrInput) 
     {
-        $subject = 'Spelleiding Dalaria | Personage is afgekeurd door spelleiding';
+        $subject = '[Spelleiding Dalaria] Personage is afgekeurd door spelleiding';
         $this->email->setTo($arrInput['email']);
         $this->email->setSubject($subject);
         // Load PHP view file and capture its output
-        $arrData = [
+        $arrInput = [
             'player_name' => $arrInput['player_name'],
             'char_name'	  => $arrInput['char_name'],
             'sEmailLink'  => base_url('user/character/edit/'.$arrInput['cid'])
         ];
         //-------
         $mailContent['title'] = $subject;
-        $mailContent['content'] = view('email/character_denied',$arrData);
+        $mailContent['content'] = view('email/character_denied',$arrInput);
         $htmlContent = view('_templates/email',$mailContent);
 
         // Set the HTML message
@@ -121,18 +121,18 @@ class EmailController extends Controller
 
     public function sendCharacterSubmit ($arrInput) 
     {
-        $subject = 'Stichting Dalaria | Personage ingediend';
+        $subject = '[Spelleiding Dalaria] Personage ingediend';
         $this->email->setTo(EMAIL_GENERIC);
         $this->email->setSubject($subject);
         // Load PHP view file and capture its output
-        $arrData = [
+        $arrInput = [
             'player_name' => $arrInput['player_name'],
             'char_name'	  => $arrInput['char_name'],
             'sEmailLink'  => base_url('gamemaster/character/print/'.$arrInput['cid'])
         ];
         //-------
         $mailContent['title'] = $subject;
-        $mailContent['content'] = view('email/character_submitted',$arrData);
+        $mailContent['content'] = view('email/character_submitted',$arrInput);
         $htmlContent = view('_templates/email',$mailContent);
 
         // Set the HTML message

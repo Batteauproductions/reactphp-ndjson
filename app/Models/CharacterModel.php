@@ -124,6 +124,7 @@ class CharacterModel extends Model
                                 ci.sub_id, 
                                 ci.bonus, 
                                 ci.amount,
+                                i.cost,
                                 i.name,
                                 it.name as sub_name', false)
                         ->join(TBL_ITEM. ' i', 'ci.main_id = i.id','left')
