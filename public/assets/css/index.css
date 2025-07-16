@@ -440,6 +440,13 @@ ul li {
 /* font settings for the body */
 /* font settings for the links */
 /* misc settings */
+/* breakpoints */
+/* color sets for the application */
+/*font-sizings for different screens*/
+/* font settings for the headers */
+/* font settings for the body */
+/* font settings for the links */
+/* misc settings */
 .tile {
   color: #fff;
   background: #1E1E1E;
@@ -519,6 +526,27 @@ ul li {
   font-size: 0.8rem;
   line-height: 1rem;
 }
+.tile .tile-content i {
+  display: block;
+  width: 20px;
+}
+.tile .tile-content ul {
+  list-style: none;
+  margin-left: 0;
+  margin-bottom: 1.25rem;
+}
+.tile .tile-content ul.decorated {
+  list-style: initial;
+  margin-left: 1.25rem;
+}
+.tile .tile-content ul li {
+  font-size: 0.8rem;
+  padding-left: 0.3125rem;
+  padding-bottom: 0.3125rem;
+}
+.tile .tile-content ul li:last-child {
+  padding-bottom: 0;
+}
 .tile .tile-content table, .tile .tile-content thead, .tile .tile-content tbody {
   background-color: transparent;
   padding: 0;
@@ -533,36 +561,16 @@ ul li {
   margin: 0;
   background: none;
 }
-.tile .tile-content table tr h3, .tile .tile-content table td h3, .tile .tile-content thead tr h3, .tile .tile-content thead td h3, .tile .tile-content tbody tr h3, .tile .tile-content tbody td h3 {
-  text-transform: capitalize;
-}
-.tile .tile-content table tr p, .tile .tile-content table td p, .tile .tile-content thead tr p, .tile .tile-content thead td p, .tile .tile-content tbody tr p, .tile .tile-content tbody td p {
-  text-align: justify;
-}
 .tile .tile-content table tr span, .tile .tile-content table td span, .tile .tile-content thead tr span, .tile .tile-content thead td span, .tile .tile-content tbody tr span, .tile .tile-content tbody td span {
-  font: normal 1rem/1.35rem Manuale, serif;
   color: #F5B041;
+  font-family: "Manuale", serif;
   font-variant: small-caps;
   font-weight: 700;
+  font-size: 1rem;
+  line-height: inherit;
 }
-.tile .tile-content table tr ul li, .tile .tile-content table td ul li, .tile .tile-content thead tr ul li, .tile .tile-content thead td ul li, .tile .tile-content tbody tr ul li, .tile .tile-content tbody td ul li {
-  font-size: 0.8rem !important;
-  line-height: 1rem !important;
-  padding-left: 0 !important;
-}
-.tile .tile-content ul {
-  list-style: none;
-  margin-left: 0;
-  margin-bottom: 1.25rem;
-}
-.tile .tile-content ul.decorated {
-  list-style: initial;
-  margin-left: 1.25rem;
-}
-.tile .tile-content ul li {
-  font-size: 0.9rem;
-  padding-left: 0.3125rem;
-  padding-bottom: 0.3125rem;
+.tile .tile-content .info-row {
+  margin-bottom: 0.625rem;
 }
 
 /* breakpoints */
@@ -733,10 +741,12 @@ ul li {
   font: normal 1rem/1.35rem Manuale, serif;
 }
 #selection-modal #choice-description span {
-  font: normal 1rem/1.35rem Manuale, serif;
   color: #F5B041;
+  font-family: "Manuale", serif;
   font-variant: small-caps;
   font-weight: 700;
+  font-size: 1rem;
+  line-height: inherit;
 }
 #selection-modal #choice-description ul {
   margin-left: 0.313rem;

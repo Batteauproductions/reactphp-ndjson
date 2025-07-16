@@ -1,4 +1,5 @@
 @import '../variables';
+@import '../textstyling';
 
 .tile {
     color: #fff;
@@ -89,6 +90,32 @@
             line-height: 1.0rem;
         }
 
+        i {
+            display:block;
+            width: 20px;
+        }
+
+        ul {
+            list-style: none;  
+            margin-left: 0;          
+            margin-bottom: $margin;
+
+            &.decorated {
+                list-style: initial;
+                margin-left: $margin;
+            }
+
+            li {
+                font-size: 0.8rem;
+                padding-left: calc($padding/4);
+                padding-bottom: calc($padding/4);
+
+                &:last-child {
+                    padding-bottom: 0;
+                }
+            }
+        }
+
         table, thead, tbody {
 
             background-color: transparent;
@@ -104,44 +131,17 @@
                 margin: 0;
                 background: none;
 
-                h3 {
-                    text-transform: capitalize;
-                }
-
-                p {
-                    text-align: justify;
-                }
-
                 span {
                     @include emphasize();
                 }
 
-                ul {
-                    li {
-                        font-size: 0.8rem !important;
-                        line-height: 1.0rem !important;
-                        padding-left: 0 !important;
-                    }
-                }
             }
             
         }
 
-        ul {
-            list-style: none;  
-            margin-left: 0;          
-            margin-bottom: $margin;
-
-            &.decorated {
-                list-style: initial;
-                margin-left: $margin;
-            }
-
-            li {
-                font-size: 0.9rem;
-                padding-left: calc($padding/4);
-                padding-bottom: calc($padding/4);
-            }
+        .info-row {
+            margin-bottom: calc($margin/2);
         }
+
     }
 }

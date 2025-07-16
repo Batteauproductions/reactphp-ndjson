@@ -165,6 +165,12 @@ class Character {
             const content = (key === "currency") ? convertCurrency(value) : value;
             $(`#stat-${key}`).html(content);
         });
+
+        if(window.character.build.favour > 0) {
+            $('#patron-favour').show();
+        } else {
+            $('#patron-favour').hide();
+        }
         debugLog('updateCharacter',window.character);
         //transferCharacter('save'); this should be turned on eventually, but currently auto-save should NOT work.
     }

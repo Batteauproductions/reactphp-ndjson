@@ -1,4 +1,5 @@
 @import 'variables';
+@import './parts/tile';
 @import 'textstyling';
 
 html {
@@ -9,19 +10,19 @@ body {
     color: #000;
 }
 h1 {
-    font: bold 16pt/18pt $paragraph-font-family;
+    font: bold 16pt/18pt $head-font-family;
 }
 
 h2 {
-    font: bold 14pt/16pt $paragraph-font-family;
+    font: bold 14pt/16pt $head-font-family;
 }
 
 h3 {
-    font: bold 12pt/14pt $paragraph-font-family;
+    font: bold 12pt/14pt $head-font-family;
 }
 
 h4 {
-    font: bold 11pt/13pt $paragraph-font-family;
+    font: bold 11pt/13pt $head-font-family;
 }
 
 p {
@@ -35,6 +36,9 @@ hr {
 table {
 
     border: none;
+    font-family: $paragraph-font-family !important;
+    font-size: 0.8rem !important;
+    line-height: 1rem !important;
 
     thead {
         h1, h2, h3, h4 {
@@ -46,28 +50,18 @@ table {
         }
     }
 
-    tbody {
-        tr{
-            td {
-                p {
-                    font: normal 8pt/10pt $paragraph-font-family;
-                    &:last-child {
-                        margin-bottom: 0;
-                    }
-                }
+}
 
-                span {
-                    @include emphasize();
-                    line-height: 10pt;
-                }
-            }  
-        }      
-    }    
+.no-spacing {
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .tile {
+    background-color: #fff;
+    color: $color-primary;
     border: 0.5pt solid $color-primary;
-    font-size: 8pt;
+    text-shadow: none;
 }
 
 .hide-for-print {

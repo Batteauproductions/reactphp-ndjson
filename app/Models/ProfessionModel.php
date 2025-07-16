@@ -8,6 +8,7 @@ class ProfessionModel extends Model
 {
     
     protected $db;
+    protected $profession_columns = 'p.id, p.name, p.description, p.avatar, p.modifier, p.skill_bonus, p.cost, p.max_rank, p.allow_multiple, p.rule_page, p.available, p.sl_only';
 
     public function __construct()
     {
@@ -18,15 +19,25 @@ class ProfessionModel extends Model
         $builder = $this
                 ->db
                 ->table(TBL_PROF.' p')
-                ->select('p.id, 
-                        p.name, 
-                        p.description, 
-                        p.available')
+                ->select($this->profession_columns)
                 ->where('p.available', 1)
                 ->orderBy('p.name','asc');
 
         if (!$gamemaster && $cid === null ) {
             $builder->where('p.sl_only', '0');
+        }
+
+        if ($cid !== null) {
+            $builder->select('cp.main_id, 
+                            cp.sub_id, 
+                            cp.rank, 
+                            cp.rank_locked,
+                            cp.created_dt, 
+                            cp.modified_dt,
+                            ps.name as sub_name')
+                ->join(TBL_CHAR_PROF. ' cp', 'cp.main_id = p.id', 'left')
+                ->join(TBL_PROF_SUB. ' ps', 'cp.sub_id = ps.id','left')
+                ->where('cp.char_id', $cid);
         }
 
         $query = $builder->get();
@@ -47,17 +58,7 @@ class ProfessionModel extends Model
         $builder = $this
                     ->db
                     ->table(TBL_PROF.' p')
-                    ->select('p.id, 
-                            p.name, 
-                            p.description,
-                            p.avatar,
-                            p.modifier, 
-                            p.skill_bonus,
-                            p.cost,
-                            p.allow_multiple,
-                            p.rule_page,
-                            p.available,
-                            p.sl_only')
+                    ->select($this->profession_columns)
                     ->where('p.id',$id);
                     
         if (!$gamemaster) {

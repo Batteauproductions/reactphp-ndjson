@@ -95,24 +95,7 @@ class CharacterModel extends Model
                         ->getRow();
 
         // Query for character profession(s)
-        $oCharacter->profession = $this->db
-                        ->table(TBL_CHAR_PROF . ' cp')
-                        ->select('cp.main_id, 
-                                cp.sub_id, 
-                                cp.rank, 
-                                cp.rank_locked,
-                                cp.created_dt, 
-                                cp.modified_dt,
-                                p.name, 
-                                p.modifier, 
-                                p.cost, 
-                                p.allow_multiple,
-                                ps.name as sub_name', false)
-                        ->join(TBL_PROF . ' p', 'cp.main_id = p.id')
-                        ->join(TBL_PROF_SUB . ' ps', 'cp.sub_id = ps.id','left')
-                        ->where('cp.char_id', $cid)
-                        ->get()
-                        ->getResultObject();
+        $oCharacter->profession = $this->professionModel->getProfessions(true, $cid);
         
         // Query for character skill(s)
         $oCharacter->skill = $this->skillModel->getSkills(true, $cid);

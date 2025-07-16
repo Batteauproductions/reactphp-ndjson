@@ -26,11 +26,15 @@
         <div class="cell small-6">
             <span id="stat-gp"><?= isset($oCharacter) ? $oCharacter->build->sanity : (isset($jsonBaseChar) ? $jsonBaseChar['gp'] : '')?></span>
         </div>
-        <div class="cell small-6 text-left">
-            Patron gunst
-        </div>
-        <div class="cell small-6">
-            <span id="stat-favour"><?= isset($oCharacter) ? $oCharacter->build->favour : (isset($jsonBaseChar) ? $jsonBaseChar['favour'] : '')?></span>
+        <div id="patron-favour" class="cell" <?= isset($oCharacter) && $oCharacter->build->favour > 0 ? 'style="display:none;"' : '' ?>>
+            <div class="grid-x">
+                <div class="cell small-6 text-left">
+                    Patron gunst
+                </div>        
+                <div class="cell small-6">
+                    <span id="stat-favour"><?= isset($oCharacter) ? $oCharacter->build->favour : ''?></span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

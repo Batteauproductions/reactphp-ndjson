@@ -68,20 +68,6 @@ $padding: 1.25rem;
 $margin: 1.25rem;
 $list-style: "\203A";
 
-@mixin input-error {
-    background: $color-error;
-    border-color: darken($color-error,20%);
-    color: darken($color-error,20%);
-    margin-bottom: 0;
-}
-
-@mixin emphasize {
-    font: $paragraph-font;
-    color: $color-highlight;
-    font-variant: small-caps;
-    font-weight: 700;        
-}
-
 @mixin tile ($size) {
     border-radius: $border-radius;
     overflow: hidden;   

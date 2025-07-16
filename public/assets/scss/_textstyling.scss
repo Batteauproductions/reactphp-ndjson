@@ -42,3 +42,19 @@
     font: #{$paragraph-font-weight} calc(#{$paragraph-font-size}*0.85)/calc(#{$paragraph-line-height}*0.85) #{$paragraph-font-family};
     text-transform: $paragraph-font-transform;
 }
+
+@mixin emphasize {
+    color: $color-highlight;
+    font-family: $head-font-family;
+    font-variant: small-caps;
+    font-weight: 700; 
+    font-size: $paragraph-font-size;
+    line-height: inherit;       
+}
+
+@mixin input-error {
+    background: $color-error;
+    border-color: darken($color-error,20%);
+    color: darken($color-error,20%);
+    margin-bottom: 0;
+}

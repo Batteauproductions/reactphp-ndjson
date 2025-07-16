@@ -12,6 +12,146 @@
 /* font settings for the body */
 /* font settings for the links */
 /* misc settings */
+/* breakpoints */
+/* color sets for the application */
+/*font-sizings for different screens*/
+/* font settings for the headers */
+/* font settings for the body */
+/* font settings for the links */
+/* misc settings */
+.tile {
+  color: #fff;
+  background: #1E1E1E;
+  border-radius: 0.313rem;
+  overflow: hidden;
+  text-shadow: 1px 0 0 #000, 0 1px 0 #000, -1px 0 0 #000, 0 -1px 0 #000; /*bottom */
+}
+.tile-avatar-wrapper {
+  width: 100%;
+  background-color: #ccc; /* Optional */
+  display: flex;
+  overflow: hidden;
+  height: 12.5rem;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.313rem;
+  /* Medium and up */
+}
+@media screen and (min-width: 40em) {
+  .tile-avatar-wrapper {
+    height: 100%;
+  }
+}
+.tile-avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Small only */
+}
+@media screen and (max-width: 39.9375em) {
+  .tile-avatar-wrapper img {
+    object-position: top;
+  }
+}
+.tile-status--pending {
+  border: 1px solid;
+  border-image: linear-gradient(45deg, #d4af37, #f7e694) 1;
+}
+.tile-status--pending img {
+  filter: contrast(200%);
+}
+.tile-status--new {
+  border: solid 1px rgb(127, 127, 127);
+}
+.tile-status--active {
+  border: solid 1px rgb(255, 255, 255);
+}
+.tile-status--dead {
+  border: solid 1px rgb(0, 0, 0);
+}
+.tile-status--dead img {
+  filter: grayscale(100%);
+}
+.tile-status--approved {
+  border: solid 1px rgb(255, 255, 255);
+}
+.tile-status--denied {
+  border: solid 1px rgb(255, 0, 0);
+}
+.tile-status--deleted {
+  border: solid 1px rgb(139, 0, 0);
+}
+.tile-status--inactive {
+  border: solid 1px rgb(72, 72, 72);
+}
+.tile-status--inactive img {
+  filter: grayscale(70%);
+}
+.tile .tile-content {
+  padding: 1.25rem;
+}
+.tile .tile-content h1 {
+  font-size: 1.1rem;
+  line-height: 1.2rem;
+}
+.tile .tile-content p {
+  font-size: 0.8rem;
+  line-height: 1rem;
+}
+.tile .tile-content i {
+  display: block;
+  width: 20px;
+}
+.tile .tile-content ul {
+  list-style: none;
+  margin-left: 0;
+  margin-bottom: 1.25rem;
+}
+.tile .tile-content ul.decorated {
+  list-style: initial;
+  margin-left: 1.25rem;
+}
+.tile .tile-content ul li {
+  font-size: 0.8rem;
+  padding-left: 0.3125rem;
+  padding-bottom: 0.3125rem;
+}
+.tile .tile-content ul li:last-child {
+  padding-bottom: 0;
+}
+.tile .tile-content table, .tile .tile-content thead, .tile .tile-content tbody {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 0 1.25rem;
+  border: none;
+  font: normal 1rem/1.35rem Manuale, serif;
+  font-size: 0.8rem;
+  line-height: 1rem;
+}
+.tile .tile-content table tr, .tile .tile-content table td, .tile .tile-content thead tr, .tile .tile-content thead td, .tile .tile-content tbody tr, .tile .tile-content tbody td {
+  padding: 0 0 0.3125rem;
+  margin: 0;
+  background: none;
+}
+.tile .tile-content table tr span, .tile .tile-content table td span, .tile .tile-content thead tr span, .tile .tile-content thead td span, .tile .tile-content tbody tr span, .tile .tile-content tbody td span {
+  color: #F5B041;
+  font-family: "Manuale", serif;
+  font-variant: small-caps;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: inherit;
+}
+.tile .tile-content .info-row {
+  margin-bottom: 0.625rem;
+}
+
+/* breakpoints */
+/* color sets for the application */
+/*font-sizings for different screens*/
+/* font settings for the headers */
+/* font settings for the body */
+/* font settings for the links */
+/* misc settings */
 html {
   padding: 0;
   margin: 0;
@@ -47,6 +187,9 @@ hr {
 
 table {
   border: none;
+  font-family: "Manuale", serif !important;
+  font-size: 0.8rem !important;
+  line-height: 1rem !important;
 }
 table thead h1, table thead h2, table thead h3, table thead h4 {
   margin: 0;
@@ -55,23 +198,17 @@ table thead h1, table thead h2, table thead h3, table thead h4 {
   font-size: 11pt;
   line-height: 12pt;
 }
-table tbody tr td p {
-  font: normal 8pt/10pt "Manuale", serif;
-}
-table tbody tr td p:last-child {
-  margin-bottom: 0;
-}
-table tbody tr td span {
-  font: normal 1rem/1.35rem Manuale, serif;
-  color: #F5B041;
-  font-variant: small-caps;
-  font-weight: 700;
-  line-height: 10pt;
+
+.no-spacing {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .tile {
+  background-color: #fff;
+  color: #1E1E1E;
   border: 0.5pt solid #1E1E1E;
-  font-size: 8pt;
+  text-shadow: none;
 }
 
 .hide-for-print {

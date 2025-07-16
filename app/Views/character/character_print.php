@@ -26,48 +26,62 @@
     <div id="page-container">
         <div id="page-wrapper">
             <!-- first-page -->  
-            <table id="Charsheet" border="0" cellspacing="0" cellpadding="0" style="width:100%;">
+            <table role="presentation" id="Charsheet" border="0" cellspacing="0" cellpadding="0" style="width:100%;">
                 <tr>
                     <!-- Notes and base information -->
                     <td width="30%" valign="top">
-                        <?= view('character/parts/Profile', ['print'=>true]) ?>  
-                        <?= view('character/parts/Baseinfo', ['print'=>true]) ?> 
-                        <?= view('character/parts/Notes', ['print'=>true]) ?>
+                        <table role="presentation" id="Charsheet" border="0" cellspacing="0" cellpadding="0" style="width:100%;">
+                            <tr>
+                                <td valign="top" class="text-center">
+                                    <?= view('character/parts/Profile', ['print'=>true]) ?>  
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" class="text-center">
+                                    <?= view('character/parts/Baseinfo', ['print'=>true]) ?> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" class="text-center">
+                                    <?= view('character/parts/Notes', ['print'=>true]) ?>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                     <!-- Stats and assets -->
                     <td width="70%" valign="top">
-                        <table id="Charsheet" border="0" cellspacing="0" cellpadding="0" style="width:100%;">
+                        <table role="presentation" id="Charsheet" border="0" cellspacing="0" cellpadding="0" style="width:100%;">
                             <tr>
-                                <td width="50%" valign="top">
+                                <td width="50%" valign="top" class="text-center">
                                     <?= view('character/parts/stats/Stats_Primary', ['print'=>true]) ?>
                                 </td>
-                                <td width="50%" valign="top">
+                                <td width="50%" valign="top" class="text-center">
                                     <?= view('character/parts/stats/Stats_Secundary', ['print'=>true]) ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2">
+                                <td colspan="2" class="text-center">
                                     <?= view('character/parts/Asset', ['title'=>'Beroep(en)', 'id'=>'profession', 'array'=>$oCharacter->profession, 'print'=>true]); ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td width="50%" valign="top">
+                                <td width="50%" valign="top" class="text-center">
                                     <?= view('character/parts/Asset', ['title'=>'Basis vaardigheden', 'id'=>'skill_base', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_BASE, 'print'=> true]); ?>
                                 </td>
-                                <td width="50%" valign="top">
+                                <td width="50%" valign="top" class="text-center">
                                     <?= view('character/parts/Asset', ['title'=>'Gevechts vaardigheden','id'=>'skill_combat', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_COMBAT, 'print'=>true]); ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td width="50%" valign="top">
+                                <td width="50%" valign="top" class="text-center">
                                     <?= view('character/parts/Asset', ['title'=>'Magische vaardigheden','id' => 'skill_magic','array' =>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_MAGIC, 'print' => true]); ?>
                                 </td>
-                                <td width="50%" valign="top">
+                                <td width="50%" valign="top" class="text-center">
                                     <?= view('character/parts/Asset', ['title'=>'Goddelijke vaardigheden','id'=>'skill_divine', 'array'=>$oCharacter->skill, 'skill_set'=>TYPE_SKILL_DIVINE, 'print'=>true]); ?> 
                                 </td>
                             </tr>
                             <tr>
-                                <td width="50%" valign="top">
+                                <td width="50%" valign="top" class="text-center">
                                     <div class="info-container">
                                         <h3>Startuitrusting</h3>
                                         <hr>
@@ -76,7 +90,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td width="50%" valign="top">
+                                <td width="50%" valign="top" class="text-center">
                                     <?= view('character/parts/Asset', ['title'=>'Voorwerpen', 'id'=>'item', 'array'=>$oCharacter->item, 'print'=>true]); ?>
                                 </td>
                             </tr>

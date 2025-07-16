@@ -87,7 +87,6 @@ function chooseProfession(sAction, obj) {
     //--Add the current asset to the object
     obj.details = {
         ...obj.details,
-        max_rank: 3,
     }
 
     //convert cost to array
