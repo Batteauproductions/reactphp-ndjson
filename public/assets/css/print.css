@@ -1,3 +1,10 @@
+/* font-families */
+@font-face {
+  font-family: "FTY Skorzen NCV";
+  src: url("/assets/fonts/fty_skorzhen_ncv/FTY-SKORZHEN-NCV.otf") format("opentype"), url("/assets/fonts/fty_skorzhen_ncv/FTY-SKORZHEN-NCV.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 /* breakpoints */
 /* color sets for the application */
 /*font-sizings for different screens*/
@@ -5,6 +12,13 @@
 /* font settings for the body */
 /* font settings for the links */
 /* misc settings */
+/* font-families */
+@font-face {
+  font-family: "FTY Skorzen NCV";
+  src: url("/assets/fonts/fty_skorzhen_ncv/FTY-SKORZHEN-NCV.otf") format("opentype"), url("/assets/fonts/fty_skorzhen_ncv/FTY-SKORZHEN-NCV.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 /* breakpoints */
 /* color sets for the application */
 /*font-sizings for different screens*/
@@ -12,6 +26,13 @@
 /* font settings for the body */
 /* font settings for the links */
 /* misc settings */
+/* font-families */
+@font-face {
+  font-family: "FTY Skorzen NCV";
+  src: url("/assets/fonts/fty_skorzhen_ncv/FTY-SKORZHEN-NCV.otf") format("opentype"), url("/assets/fonts/fty_skorzhen_ncv/FTY-SKORZHEN-NCV.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 /* breakpoints */
 /* color sets for the application */
 /*font-sizings for different screens*/
@@ -24,7 +45,6 @@
   background: #1E1E1E;
   border-radius: 0.313rem;
   overflow: hidden;
-  text-shadow: 1px 0 0 #000, 0 1px 0 #000, -1px 0 0 #000, 0 -1px 0 #000; /*bottom */
 }
 .tile-avatar-wrapper {
   width: 100%;
@@ -99,7 +119,8 @@
   line-height: 1rem;
 }
 .tile .tile-content i {
-  display: block;
+  margin-top: 0.25rem;
+  display: inline-block;
   width: 20px;
 }
 .tile .tile-content ul {
@@ -137,14 +158,22 @@
   color: #F5B041;
   font-family: "Manuale", serif;
   font-variant: small-caps;
-  font-weight: 700;
+  font-weight: 900;
   font-size: 1rem;
+  letter-spacing: 1px;
   line-height: inherit;
 }
 .tile .tile-content .info-row {
-  margin-bottom: 0.625rem;
+  margin-bottom: 0.3125rem;
 }
 
+/* font-families */
+@font-face {
+  font-family: "FTY Skorzen NCV";
+  src: url("/assets/fonts/fty_skorzhen_ncv/FTY-SKORZHEN-NCV.otf") format("opentype"), url("/assets/fonts/fty_skorzhen_ncv/FTY-SKORZHEN-NCV.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 /* breakpoints */
 /* color sets for the application */
 /*font-sizings for different screens*/
@@ -162,27 +191,47 @@ body {
 }
 
 h1 {
-  font: bold 16pt/18pt "Manuale", serif;
+  color: #000;
+  font: bold 1.25rem/1.45rem FTY Skorzen NCV, Roboto, serif;
+  text-transform: none;
+  letter-spacing: 1px;
 }
 
 h2 {
-  font: bold 14pt/16pt "Manuale", serif;
+  color: #000;
+  font: bold 1.25rem/1.45rem FTY Skorzen NCV, Roboto, serif;
+  font-size: 1.0625rem;
+  line-height: 1.2325rem;
+  text-transform: none;
+  letter-spacing: 1px;
 }
 
 h3 {
-  font: bold 12pt/14pt "Manuale", serif;
+  color: #000;
+  font: bold 1.25rem/1.45rem FTY Skorzen NCV, Roboto, serif;
+  font-size: 0.9375rem;
+  line-height: 1.0875rem;
+  text-transform: none;
+  letter-spacing: 1px;
 }
 
 h4 {
-  font: bold 11pt/13pt "Manuale", serif;
+  color: #000;
+  font: bold 1.25rem/1.45rem FTY Skorzen NCV, Roboto, serif;
+  font-size: 0.8125rem;
+  line-height: 0.9425rem;
+  text-transform: none;
+  letter-spacing: 1px;
 }
 
 p {
-  font: normal 10pt/12pt "Manuale", serif;
+  color: #000;
+  font: normal 1rem/1.35rem Manuale, serif;
+  text-transform: none;
 }
 
 hr {
-  margin: 0.625rem 0;
+  margin: 0.4166666667rem 0;
 }
 
 table {
@@ -198,10 +247,22 @@ table thead h1, table thead h2, table thead h3, table thead h4 {
   font-size: 11pt;
   line-height: 12pt;
 }
+table tbody {
+  border: none;
+}
+table tbody tr {
+  background-color: transparent !important;
+}
+table tbody tr td p:last-of-type {
+  margin-bottom: 0;
+}
 
 .no-spacing {
   margin: 0 !important;
   padding: 0 !important;
+}
+.no-spacing li {
+  padding-left: 0;
 }
 
 .tile {
@@ -209,6 +270,9 @@ table thead h1, table thead h2, table thead h3, table thead h4 {
   color: #1E1E1E;
   border: 0.5pt solid #1E1E1E;
   text-shadow: none;
+}
+.tile .tile-content {
+  padding: 0.9375rem;
 }
 
 .hide-for-print {

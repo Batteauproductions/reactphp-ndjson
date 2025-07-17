@@ -9,28 +9,29 @@ html {
 body {
     color: #000;
 }
+
 h1 {
-    font: bold 16pt/18pt $head-font-family;
+    @include heading_1(#000);
 }
 
 h2 {
-    font: bold 14pt/16pt $head-font-family;
+    @include heading_2(#000);
 }
 
 h3 {
-    font: bold 12pt/14pt $head-font-family;
+    @include heading_3(#000);
 }
 
 h4 {
-    font: bold 11pt/13pt $head-font-family;
+    @include heading_4(#000);
 }
 
 p {
-     font: normal 10pt/12pt $paragraph-font-family;
+    @include paragraph(#000);
 }
 
 hr {
-    margin: calc($margin/2) 0;
+    margin: calc($margin/3) 0;
 }
 
 table {
@@ -50,11 +51,28 @@ table {
         }
     }
 
+    tbody {
+        border: none;
+        tr{
+            background-color: transparent !important;
+            td {
+                p:last-of-type {
+                    margin-bottom: 0;
+                }
+            }
+        }
+        
+    }
+
 }
 
 .no-spacing {
     margin: 0 !important;
     padding: 0 !important;
+
+    li {
+        padding-left: 0;
+    }
 }
 
 .tile {
@@ -62,6 +80,9 @@ table {
     color: $color-primary;
     border: 0.5pt solid $color-primary;
     text-shadow: none;
+    .tile-content {
+        padding: calc($padding*0.75)
+    }
 }
 
 .hide-for-print {

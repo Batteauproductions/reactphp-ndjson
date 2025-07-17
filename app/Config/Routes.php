@@ -53,4 +53,4 @@ $routes->post('event/update-form', 'Event::updateForm');
 
 //------
 $routes->get('/home', 'Page::viewGeneric');
-$routes->get('/', 'Page::viewGeneric/login');
+$routes->get('/', 'Page::viewGeneric');

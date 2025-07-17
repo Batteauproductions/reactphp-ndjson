@@ -1,3 +1,12 @@
+/* font-families */
+@font-face {
+    font-family: 'FTY Skorzen NCV';
+    src: url('/assets/fonts/fty_skorzhen_ncv/FTY-SKORZHEN-NCV.otf') format('opentype'),
+        url('/assets/fonts/fty_skorzhen_ncv/FTY-SKORZHEN-NCV.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* breakpoints */
 $breakpoint-small: 39.9375em;
 $breakpoint-medium: 40em;
@@ -40,7 +49,7 @@ $head-font-transform: none;
 $head-font-weight: bold;
 $head-font-size: 1.25rem;
 $head-line-height: 1.45rem;
-$head-font-family: "Manuale", serif;
+$head-font-family: 'FTY Skorzen NCV', Roboto, serif;
 $head-font: #{$head-font-weight} #{$head-font-size}/#{$head-line-height} #{$head-font-family};
 $head-color: $color-font-body;
 

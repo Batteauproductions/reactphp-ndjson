@@ -98,11 +98,7 @@ class EmailController extends Controller
         $this->email->setTo($arrInput['email']);
         $this->email->setSubject($subject);
         // Load PHP view file and capture its output
-        $arrInput = [
-            'player_name' => $arrInput['player_name'],
-            'char_name'	  => $arrInput['char_name'],
-            'sEmailLink'  => base_url('user/character/edit/'.$arrInput['cid'])
-        ];
+        $arrInput['sEmailLink'] = base_url('user/character/edit/'.$arrInput['cid']);
         //-------
         $mailContent['title'] = $subject;
         $mailContent['content'] = view('email/character_denied',$arrInput);
@@ -125,11 +121,7 @@ class EmailController extends Controller
         $this->email->setTo(EMAIL_GENERIC);
         $this->email->setSubject($subject);
         // Load PHP view file and capture its output
-        $arrInput = [
-            'player_name' => $arrInput['player_name'],
-            'char_name'	  => $arrInput['char_name'],
-            'sEmailLink'  => base_url('gamemaster/character/print/'.$arrInput['cid'])
-        ];
+        $arrInput['sEmailLink'] = base_url('gamemaster/character/print/'.$arrInput['cid']);
         //-------
         $mailContent['title'] = $subject;
         $mailContent['content'] = view('email/character_submitted',$arrInput);

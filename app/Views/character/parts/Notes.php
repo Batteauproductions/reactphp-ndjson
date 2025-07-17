@@ -7,9 +7,7 @@
             <div class="grid-x align-middle">
                 <div id="container-player_notes" class="cell text-left" style="display:none;">
                     <?php if(isset($oCharacter) && is_array($oCharacter->notes)): ?>
-                        <?php foreach($oCharacter->notes as $note): ?>
-                            <?php print_r($note) ?>
-                        <?php endforeach; ?>
+                        <?= $oCharacter->notes[0]->player_notes ?>
                     <?php endif; ?>
                 </div>
                 <?php if(!$print): ?>
@@ -26,9 +24,7 @@
             <div class="grid-x align-middle">
                 <div id="container-sl_notes" class="cell text-left" style="display:none;">
                     <?php if(isset($oCharacter) && is_array($oCharacter->notes)): ?>
-                        <?php foreach($oCharacter->notes as $note): ?>
-                            <?php print_r($note) ?>
-                        <?php endforeach; ?>
+                        <?= $oCharacter->notes[0]->sl_notes ?>
                     <?php endif; ?>
                 </div>
                 <?php if($viewAsGamemaster && !$print): ?>
@@ -46,9 +42,7 @@
                 <div class="grid-x align-middle">
                     <div id="container-sl_private_notes" class="cell text-left" style="display:none;">
                         <?php if(isset($oCharacter) && is_array($oCharacter->notes)): ?>
-                            <?php foreach($oCharacter->notes as $note): ?>
-                               <?php print_r($note) ?>
-                            <?php endforeach; ?>
+                            <?= $oCharacter->notes[0]->sl_private_notes ?>
                         <?php endif; ?>
                     </div>
                     <?php if(!$print): ?>

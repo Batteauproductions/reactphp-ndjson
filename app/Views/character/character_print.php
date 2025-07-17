@@ -32,7 +32,7 @@
                     <td width="30%" valign="top">
                         <table role="presentation" id="Charsheet" border="0" cellspacing="0" cellpadding="0" style="width:100%;">
                             <tr>
-                                <td valign="top" class="text-center">
+                                <td valign="top" class="text-center no-spacing">
                                     <?= view('character/parts/Profile', ['print'=>true]) ?>  
                                 </td>
                             </tr>

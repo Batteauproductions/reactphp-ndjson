@@ -5,6 +5,7 @@
     color: $clr;
     font: $head-font;
     text-transform: $head-font-transform;
+    letter-spacing: 1px;
 }
 
 @mixin heading_2($clr) {
@@ -13,6 +14,7 @@
     font-size: calc($head-font-size * 0.85);
     line-height: calc($head-line-height * 0.85);
     text-transform: $head-font-transform;
+    letter-spacing: 1px;
 }
 
 @mixin heading_3($clr) {
@@ -21,14 +23,16 @@
     font-size: calc($head-font-size * 0.75);
     line-height: calc($head-line-height * 0.75);
     text-transform: $head-font-transform;
+    letter-spacing: 1px;
 }
 
 @mixin heading_4($clr) {
     color: $clr;
     font: $head-font;
-    font-size: calc($head-font-size * 0.75);
-    line-height: calc($head-line-height * 0.75);
+    font-size: calc($head-font-size * 0.65);
+    line-height: calc($head-line-height * 0.65);
     text-transform: $head-font-transform;
+    letter-spacing: 1px;
 }
 
 @mixin paragraph($clr) {
@@ -45,10 +49,11 @@
 
 @mixin emphasize {
     color: $color-highlight;
-    font-family: $head-font-family;
+    font-family: $paragraph-font-family;
     font-variant: small-caps;
-    font-weight: 700; 
+    font-weight: 900; 
     font-size: $paragraph-font-size;
+    letter-spacing: 1px;
     line-height: inherit;       
 }
 

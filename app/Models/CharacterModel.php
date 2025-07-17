@@ -252,8 +252,8 @@ class CharacterModel extends Model
 
         // Step 4: Set the mailnote for the user
         $this->db->table(TBL_CHAR_COMMENTS)
-                ->where('id', $arrData['cid'])
-                ->update( ['mail_note' => $arrData['status_id'] ]);
+                ->where('char_id', $arrData['cid'])
+                ->update( ['mail_note' => $arrData['mail_note'] ]);
         
         $query = $this->db->table(TBL_CHAR.' c')
                     ->select('c.name as char_name,

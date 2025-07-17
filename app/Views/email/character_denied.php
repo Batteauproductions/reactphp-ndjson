@@ -32,7 +32,7 @@
             <table align="left" bgcolor="#7D1717" style="background-color:#7D1717">						
                 <tr>
                     <td style="font: normal 16px/18px 'Manuale', serif; text-align:center; padding:12px 28px;">
-                        <a href="<?= $sEmailLink ?>" target="_blank" style="color:#ffffff; text-decoration: none;">Print karakter &rsaquo; </a>
+                        <a href="<?= $sEmailLink ?>" target="_blank" style="color:#ffffff; text-decoration: none;">Karakter aanpassen &rsaquo; </a>
                     </td>
                 </tr>							
             </table>

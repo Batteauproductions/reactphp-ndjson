@@ -8,17 +8,17 @@
     <form id="modal-form" class="grid-x grid-padding-x grid-padding-y" style="display:none;">
         <div id="selection-modal-dropdowns" class="cell small-12">
             <div class="grid-x grid-margin-x align-center">
-                <label id="lbl-type" for="type" class="cell small-12 medium-4 large-2 text-center" style="display:none;">Type
+                <label id="lbl-type" for="type" class="cell small-12 medium-4 text-center" style="display:none;">Type
                     <select id="type" name="type" class="chosen-select">
                         <!-- dynamic filled -->
                     </select>
                 </label>
-                <label id="lbl-subtype" for="subtype" class="cell small-12 medium-4 large-2 shrink text-center" style="display:none;">Sub-type
+                <label id="lbl-subtype" for="subtype" class="cell small-12 medium-4 shrink text-center" style="display:none;">Sub-type
                     <select id="subtype" name="subtype" class="chosen-select">
                         <!-- dynamic filled -->
                     </select>
                 </label>
-                <label id="lbl-amount" for="amount" class="cell small-12 medium-4 large-2 shrink text-center" style="display:none;">
+                <label id="lbl-amount" for="amount" class="cell small-12 medium-4 shrink text-center" style="display:none;">
                     Hoeveelheid
                     <input id="amount" type="number" name="amount" value="1" />
                 </label>

@@ -37,7 +37,7 @@
                             </select>
                         </label>
                         <div class="cell">
-                            <button class="button solid" type="submit">
+                            <button class="button solid fullwidth" type="submit">
                                 <i class="fa-solid fa-filter"></i>Filter toepassen
                             </button>
                         </div>
@@ -45,7 +45,7 @@
                 </div>                
             </form> 
             <div class="cell small-12 medium-8 large-9">
-                <div class="grid-x grid-margin-x grid-margin-y small-up-1 medium-up-2">
+                <div class="grid-x grid-margin-x grid-margin-y small-up-1 large-up-2">
                     <?php foreach($arrSkills as $skill): ?>
                         <?= view('_templates/skill_tile', ['skill' => $skill]) ?>                                               
                     <?php endforeach; ?>

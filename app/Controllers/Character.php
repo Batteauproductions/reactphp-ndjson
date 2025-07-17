@@ -203,6 +203,7 @@ class Character extends Controller
                         $mailData['cid'] = $arrData['cid'];
                         $mailData['mail_note'] = $arrData['mail_note'];
                         $mailData['status_id'] = $arrData['status_id'];
+           
                         if($mailData['status_id'] == 5) {
                             $send = $this->controllers['mail']->sendCharacterApproved($mailData);
                         } else {

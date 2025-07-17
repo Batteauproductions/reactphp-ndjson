@@ -8,6 +8,7 @@
                     <tr>
                         <td class="text-center">
                             <h3><?= isset($skill->sub_name) ? $skill->name.' ('.$skill->sub_name.') ' : $skill->name; ?></h3>
+                            <hr>
                         </td>
                     </tr>
                 </thead>
@@ -15,6 +16,7 @@
                     <tr>
                         <td>
                             <p><?= $skill->description ?></p>
+                            <hr>
                         </td>
                     </tr>
                     <tr>
@@ -35,12 +37,14 @@
                                         <i class="fa-solid fa-star-of-life"></i>
                                     </div>
                                     <div class="cell auto">
-                                        <?php
-                                            $arrReq = explode('|',$skill->requirement_name);
-                                            foreach($arrReq as $requirement) {
-                                                echo '<li>'.$requirement.'</li>';
-                                            }
-                                        ?>
+                                        <ul class="no-spacing">
+                                            <?php
+                                                $arrReq = explode('|',$skill->requirement_name);
+                                                foreach($arrReq as $requirement) {
+                                                    echo '<li>'.$requirement.'</li>';
+                                                }
+                                            ?>
+                                        </ul>
                                     </div>
                                 </div>
                             <?php endif; ?>

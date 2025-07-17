@@ -20,8 +20,13 @@ function getCost($asset) {
         return $total.'vp';
     }
     if($isSkill) {
-        $cost = ($asset->cost * $asset->rank);
-        return $cost.'vp';
+        if($asset->racial == 1) {
+            return 'ras';
+        } else {
+            $cost = ($asset->cost * $asset->rank);
+            return $cost.'vp';
+        }
+        
     }
     if($isItem) {
         $cost = isset($asset->cost) ? (int)$asset->cost : 0;

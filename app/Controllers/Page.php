@@ -100,9 +100,9 @@ class Page extends BaseController
             default:
                 //if this user is not logged in -> no acces, otherwise just revent to homepage
                 if (!$this->arrRights['isUser']) {
-                    return $this->noPageAccess();
-                }
-                return $this->constructView();
+                    $content = view('account/login');
+                    $arrJS = ['validation/login_validation.js'];
+                } 
                 break; 
         }
         return $this->constructView($content,$arrJS);
@@ -124,8 +124,13 @@ class Page extends BaseController
             case 'view':
             case 'edit':
                 $this->characterData['oCharacter'] =  $this->models['character']->getCharacterByID($id,$this->session->get('uid'),$this->arrRights['isGameMaster']);
-                $content = view('character/character_sheet',$this->characterData);
-                $arrJS = ['generator/generator.js','validation/character_validation.js'];
+                $status = $this->characterData['oCharacter']->meta->status;
+                if(in_array($status, CHARACTER_WRITABLE) || in_array($status, CHARACTER_EDITABLE)) {
+                    $content = view('character/character_sheet',$this->characterData);
+                    $arrJS = ['generator/generator.js','validation/character_validation.js'];
+                } else {
+                    return redirect()->to('/user/character/database');
+                }
                 break;
             case 'create':  
                 $this->characterData['oCharacter'] = null;
@@ -140,9 +145,7 @@ class Page extends BaseController
         }
 
         return $this->constructView($content,$arrJS);
-    }
-
-    
+    } 
 
     public function viewGameMaster ($page,$child_page=null,$id=null) 
     {
@@ -372,6 +375,7 @@ class Page extends BaseController
         $arrContent['header'] = '';
         $arrContent['content'] = view('_templates/no_access');
         $arrContent['footer'] = '';
+
         return view('_templates/framework', $arrContent);
     }
 
