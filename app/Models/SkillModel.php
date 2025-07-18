@@ -3,15 +3,18 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Models\ModifierModel;
 
 class SkillModel extends Model
 {
 
     protected $db;
+    protected $modifierModel; 
 
     public function __construct()
     {
         $this->db = \Config\Database::connect();
+        $this->modifierModel = new ModifierModel();
     }
 	
 	/*START: LINKED TO THE SKILLS*/
@@ -164,7 +167,7 @@ class SkillModel extends Model
     {
         $arrData['details'] = $this->getSkillById($id);
 		$arrData['subtype'] = $this->getSkillSubtypeByParent($id);
-        $arrData['modifier'] = $this->getSkillModifer(explode('|',$arrData['details']->modifier));
+        $arrData['modifier'] = $this->modifierModel->getModifiers(explode('|',$arrData['details']->modifier));
         return $arrData;
     }
 	
@@ -276,15 +279,4 @@ class SkillModel extends Model
         return $query->getRow();
 	}
 
-	public function getSkillModifer($ids) 
-    {
-		$query = $this
-			->db
-            ->table(TBL_STATMOD)
-			->select('id, name, description')
-			->whereIn('id', $ids)
-            ->get();
-					
-        return $query->getResultObject();
-	}
 }

@@ -3,16 +3,19 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Models\ModifierModel;
 
 class ProfessionModel extends Model
 {
     
     protected $db;
+    protected $modifierModel; 
     protected $profession_columns = 'p.id, p.name, p.description, p.avatar, p.modifier, p.skill_bonus, p.cost, p.max_rank, p.allow_multiple, p.rule_page, p.available, p.sl_only';
 
     public function __construct()
     {
         $this->db = \Config\Database::connect();
+        $this->modifierModel = new ModifierModel(); 
     }
     
     public function getProfessions($gamemaster = false, $cid = null) {
@@ -49,7 +52,7 @@ class ProfessionModel extends Model
     {
         $arrData['details'] = $this->getProfessionById($id,$gamemaster);
         $arrData['subtype'] = $this->getProfessionSubtype($id,$gamemaster);
-        $arrData['modifier'] = $this->getProfessionModifer(explode('|',$arrData['details']->modifier));        
+        $arrData['modifier'] = $this->modifierModel->getModifiers(explode('|',$arrData['details']->modifier));        
         return $arrData;
     }
 
@@ -89,17 +92,5 @@ class ProfessionModel extends Model
         $query = $builder->get();
         return $query->getResultObject();
     }
-
-	public function getProfessionModifer($ids) 
-    {
-		$query = $this
-			->db
-            ->table(TBL_STATMOD)
-			->select('id, name, description')
-			->whereIn('id', $ids)
-            ->get();
-					
-        return $query->getResultObject();
-	}
 
 }

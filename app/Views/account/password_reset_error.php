@@ -8,7 +8,7 @@
             </p>
         </div> 
         <div>
-            <a class="button solid" href="<?php echo base_url('account/login') ?>">
+            <a class="button solid no-spacing" href="<?php echo base_url('account/login') ?>">
                 <i class="fa-solid fa-right-to-bracket"></i>Naar inloggen
             </a>
         </div>

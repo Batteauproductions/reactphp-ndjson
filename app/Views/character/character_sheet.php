@@ -74,11 +74,11 @@
                 <?php 
                     if (!isset($oCharacter) || $viewAsGamemaster || (isset($oCharacter) && in_array($oCharacter->meta->status, CHARACTER_WRITABLE) || in_array($oCharacter->meta->status, CHARACTER_EDITABLE))) : 
                 ?>  
-                    <a class="button solid no-spacing" data-action="character-save"><i class="fa-regular fa-floppy-disk"></i> Opslaan</a>
-                    <a class="button clear no-spacing" data-action="character-submit"><i class="fa-regular fa-share-from-square"></i> Indienen</a>
+                    <a class="button solid" data-action="character-save"><i class="fa-regular fa-floppy-disk"></i> Opslaan</a>
+                    <a class="button clear" data-action="character-submit"><i class="fa-regular fa-share-from-square"></i> Indienen</a>
                 <?php endif; ?>
                 <?php if(isset($oCharacter)): ?>
-                    <a class="button clear no-spacing" href="<?= base_url('user/character/print/'.$oCharacter->meta->id); ?>" target="_blank"><i class="fa-solid fa-print"></i> Printen</a>
+                    <a class="button clear" href="<?= base_url('user/character/print/'.$oCharacter->meta->id); ?>" target="_blank"><i class="fa-solid fa-print"></i> Printen</a>
                 <?php endif; ?>
             </div>
         </form>

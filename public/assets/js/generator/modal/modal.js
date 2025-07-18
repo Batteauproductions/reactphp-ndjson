@@ -218,8 +218,8 @@ function updateModelDetails(sAction, oData) {
         // Handle modifiers        
         if (arrModifier && arrModifier.length > 0) {
             arrModifier.forEach((mod, i) => {
-                const name = mod.name.toLowerCase();                
-                const iconHtml = icons[name].render(null, true).outerHTML;
+                const code = mod.code.toLowerCase();
+                const iconHtml = icons[code].render(null, true, mod.description).outerHTML;
                 if (arrModifier.length > 1) {
                     const row = $('<div>', { class: 'choice-row' });
                     const input = $('<input>', {

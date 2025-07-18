@@ -9,13 +9,9 @@
     margin-bottom: $margin;
     
     &.no-spacing {
-        margin-bottom: 0 !important;
-    }
-    
-    &:last-child {
         margin-bottom: 0;
     }
-
+    
     &.solid {
         
         border-radius: $border-radius;

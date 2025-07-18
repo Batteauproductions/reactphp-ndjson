@@ -45,7 +45,7 @@ class CharacterAsset {
         this.locked_rank = locked_rank ? parseInt(locked_rank) : parseInt(rank); //what was the level when the character (asset) was locked
         this.modifier = modifier.length > 0 && modifier[0]?.id !== undefined ? parseInt(modifier[0].id) : null; //some assets contain stat modifiers
         this.racial = racial ? Boolean(parseInt(racial)) : false; //some assets are included in the racial choice of the character
-        this.cost = this.racial ? 0 : cost; // all racial elements are 0 cost    
+        this.cost = this.racial ? "0" : cost; // all racial elements are 0 cost    
         this.rank_cost = rank_cost !== undefined ? parseInt(rank_cost) : parseInt(this.cost); // upon initialization the asset cost is the same as the cost          
         this.container = container; //this is the container on the character sheet [profession/skill/equipment]
         this.loresheet = loresheet ? Boolean(parseInt(loresheet)) : false;
@@ -114,7 +114,7 @@ class CharacterAsset {
         //-----------------------------//
 
         // Check if the cost can be deducted, if so; deduct and continue
-        const spend = this.costSpend();
+        const spend = this.costSpend(this.rank_cost);
         if(spend !== true) {
             showMessage('#choice-actions', 'error', spend);
             return;
@@ -179,24 +179,42 @@ class CharacterAsset {
         //-----------------------------//
 
         // Update the currency / experience accordingly
-        let cost;        
-        if(direction===1) {
-            cost = this.getNewRankCost(new_rank);
-            const spend = this.costSpend(cost);
-            if(spend !== true) {
-                showPopup(`<p>${spend}</p>`,'inform','error');
+        const cost_array = this.cost.split('|').map(str => parseInt(str));
+        let new_cost = 0;
+
+        if (direction === 1) {
+            // UPGRADE
+            if (cost_array.length === 1) {
+                new_cost = cost_array[0]; // flat cost for all ranks
+            } else if (this.rank < cost_array.length) {
+                new_cost = cost_array[this.rank]; // cost for upgrading to the next rank
+            } 
+
+            if (!this.costSpend(new_cost)) {
+                showPopup(`<p>${spend}</p>`, 'inform', 'error');
                 return;
             }
-            this.rank_cost += cost;           
+
+            this.rank += 1;
+            this.rank_cost += new_cost;
+
         } else {
-            cost = this.getNewRankCost(this.rank);
-            this.costRefund(cost);
-            this.rank_cost -= cost;
+            // DOWNGRADE
+            if (cost_array.length === 1) {
+                new_cost = cost_array[0];
+            } else if (this.rank > 0) {
+                new_cost = cost_array[this.rank - 1]; // refund last rank's cost
+            } 
+
+            if (!this.costRefund(new_cost)) {
+                showPopup(`<p>${spend}</p>`, 'inform', 'error');
+                return;
+            }
+
+            this.rank -= 1;
+            this.rank_cost -= new_cost;
         }
         //-----------------------------//
-    
-        // Adjust rank
-        this.rank = new_rank;
     
         // Icon logic
         const new_icons = generateAssetIcons(this);
@@ -292,18 +310,29 @@ class CharacterAsset {
         //-----------------------------// 
     }    
 
-    costSpend(cost = this.rank_cost) {
+    costSpend(cost) {
         if(!updateExperience(cost,"spend")) {
             return oTranslations[language].not_enough_vp;  
         }
         return true;
     }
 
-    costRefund(cost = this.rank_cost) {
+    costRefund(cost) {
         if(!updateExperience(cost,"refund")) {
             return false;
         }
         return true;      
+    }
+
+    getCurrentRankCost() {
+        const cost_array = this.cost.split('|').map(str => parseInt(str));
+        if (cost_array.length === 1) {
+            // Flat cost per rank
+            return cost_array[0];
+        }
+        // Progressive cost: sum of all previous steps up to current rank
+        // E.g., for rank 2 and cost "3|2|1", return 3+2 = 5
+        return cost_array.slice(0, this.rank).reduce((sum, val) => sum + val, 0);
     }
 
     getVisualRow() {
@@ -312,13 +341,6 @@ class CharacterAsset {
         return $row;
     }
 
-    getNewRankCost() {
-        return this.rank_cost;
-    }
-
-    getCurrentRankCost() {
-        return parseInt(this.rank_cost * this.rank);
-    }
 }
 
 export {  

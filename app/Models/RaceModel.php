@@ -3,17 +3,20 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-use App\Models\SkillModel; // Import the SkillModel
+use App\Models\SkillModel;
+use App\Models\ModifierModel;
 
 class RaceModel extends Model
 {
     protected $db;
-    protected $skillModel; // Declare a variable to hold the SkillModel instance
+    protected $skillModel; 
+    protected $modifierModel; 
 
     public function __construct()
     {
         $this->db = \Config\Database::connect();
         $this->skillModel = new SkillModel(); 
+        $this->modifierModel = new ModifierModel(); 
     }
 
     public function getRaces() 
@@ -32,7 +35,7 @@ class RaceModel extends Model
     public function getRaceDetails($id) 
     {
         $arrData['details'] = $this->getRaceById($id);
-        $arrData['modifier'] = $this->getRaceModifer(explode('|', $arrData['details']->modifier));
+        $arrData['modifier'] = $this->modifierModel->getModifiers(explode('|', $arrData['details']->modifier));
         $arrData['skills'] = [];
         // Check if the skills attribute is set and not empty
         if (!empty($arrData['details']->skills)) {
@@ -111,7 +114,7 @@ class RaceModel extends Model
         $query = $this
             ->db
             ->table(TBL_STATMOD)
-            ->select('id, name, description')
+            ->select('id, name, description, code')
             ->whereIn('id', $ids)
             ->get();
                     

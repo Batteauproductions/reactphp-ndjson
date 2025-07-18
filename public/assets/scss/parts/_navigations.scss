@@ -4,7 +4,7 @@
 
     &-site {
         border-bottom: solid 0.125rem #fff;
-        box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.35);
+        box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.4);
     }
     &-footer {
         border-top: solid 0.125rem #fff;
@@ -17,9 +17,13 @@
         nav {
 
             a {
+                color: #ddd;
                 display: inline-block;
                 padding: $padding;
                 font: $paragraph-font;
+                i {
+                    color: $link-color;                            
+                }
             }
       
             ul {
@@ -56,10 +60,17 @@
                     position: absolute;
                     background-color: lighten($color-primary,20%);
                     min-width: 260px;
-                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4);
                     z-index: 1;      
                     a {
+                        color: #ddd;
                         display: block;
+                        &:hover{
+                            background: lighten($color-primary,30%);
+                        }
+                        i {
+                            color: $link-color;                            
+                        }
                     } 
                     @media screen and (max-width: #{$breakpoint-small}) {
                         width: 100vw;
