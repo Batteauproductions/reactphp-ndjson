@@ -1,5 +1,5 @@
 //Generic settings and functions
-import { icons, language, oTranslations, currentDateTime } from '../../_lib/settings.js'
+import { domain, icons, language, oTranslations, currentDateTime } from '../../_lib/settings.js'
 import { debugLog, generateAssetIcons, showMessage, showPopup } from '../../_lib/functions.js'
 import { findItemIndex } from '../character/character.js';
 import { updateExperience } from '../helper/experience.js';
@@ -133,46 +133,43 @@ class CharacterAsset {
             console.error(`Trying to remove ${this.attribute}, instance not found`);
             return false;
         }   
-        // Optional Return 2: Removes from the character in the database if id present 
-        if(isNaN(window.character.meta.id)) {
-            $.ajax({
+        const self = this;
+        let ajaxPromise = Promise.resolve(); // Default: resolved (in case no AJAX is sent)
+        if (!isNaN(window.character.meta.id)) {
+            ajaxPromise = $.ajax({
                 url: `${domain}/action/character-transfer`,
                 data: {
-                    uid: $typeSelect.val(),
-                    sm_id: this.id,
-                    su_id: this.sub_id,
-                    table: this.attribute,
-                    action: `remove-skill`
+                    cid: window.character.meta.id,
+                    sm_id: self.id,
+                    su_id: self.sub_id,
+                    table: self.attribute,
+                    action: 'remove-asset'
                 },
                 type: 'POST',
-                dataType: 'json',
-                success: function(oData) {
-                    debugLog('select[name="type"][data]',oData);
-                    oTmpData = oData;
-                    allowChoose();
-                    if (oTmpData.subtype && oTmpData.subtype.length > 0) {
-                        updateModalDropdown($subtypeSelect, oTmpData.subtype);
-                        $subtypeLabel.show();
-                        $subtypeSelect.trigger("chosen:updated");
-                    } else {
-                        $subtypeLabel.hide();
-                    }
-                    updateModal(sAction,oTmpData);
-                },
-                error: function(error) {
-                    console.error(error);
-                }
+                dataType: 'json'
+            }).done(function () {
+                console.log(`asset successfully removed from ${self.attribute} with ${self.id},${self.sub_id}`);
+            }).fail(function () {
+                const message = `asset could not be removed from ${self.attribute} with ${self.id},${self.sub_id}`;
+                showPopup(`<h2>${oTranslations[language].popup_error}</h2><p>${message}</p>`, 'inform', 'error');
+                console.error(`${message}`);
+                throw new Error("AJAX failed"); // Prevent `.then()` from running
             });
         }
-        // Refund the cost of the element
-        this.costRefund(this.rank_cost);
-        // Remove the asset of the character both functionally and visionally 
-        window.character[this.attribute].splice(index, 1)[0]; //-- functionally
-        const $row = this.getVisualRow(); //-- visionally
-        $row.remove();        
-        // Update the character object in the interface
-        window.character.update();
-        //-----------------------------//
+
+        // Always run this part *after* optional AJAX succeeds or is skipped
+        ajaxPromise.then(() => {
+            // Refund the cost of the element
+            self.costRefund(self.rank_cost);
+
+            // Remove the asset of the character both functionally and visually 
+            window.character[self.attribute].splice(index, 1)[0]; //-- functionally
+            const $row = self.getVisualRow(); //-- visually
+            $row.remove();
+
+            // Update the character object in the interface
+            window.character.update();
+        });
         return true;
     }
 
