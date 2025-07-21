@@ -16,7 +16,7 @@ function updateExperience(cost, action) {
 
     if (action === 'spend') {
         if (currentXP + cost > maxXP) {
-            console.error('Attempt to spend XP over the maximum allowed.');
+            console.error('Attempt to spend XP over the maximum');
             updateSpendXpDisplay();
             return false;
         } else {
@@ -24,7 +24,7 @@ function updateExperience(cost, action) {
         }
     } else if (action === 'refund') {
         if (currentXP - cost < 0) {
-            console.error('Attempt to refund XP below zero.');
+            console.error('Attempt to refund XP below zero');
             updateSpendXpDisplay();
             return false;
         } else {

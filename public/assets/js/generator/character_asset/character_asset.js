@@ -60,64 +60,60 @@ class CharacterAsset {
     }
 
     add () {
+        // Return 1 (Unique): Check for duplicates, no same assets with same main- and sub_id
         const duplicate_index = findItemIndex(this.attribute, this.id, this.sub_id);
-        // Check for duplicates, no same assets with same main- and sub_id
         if (duplicate_index !== -1) {
-            showMessage('#choice-actions', 'error', oTranslations[language].duplicate_choose);
-            console.warn(oTranslations[language].duplicate_choose)
-            return;
+            const message = oTranslations[language].duplicate_choose;
+            showMessage('#choice-actions', 'error', message);
+            debugLog(message);
+            return false;
         }
+        //-----------------------------//
         
-        // Some assets allow for multiple main instances
+        // Return 2 (Duplicates): Some assets allow for multiple main instances, others do not
         if(this.allow_multiple == 0) {
             const index = findItemIndex(this.attribute, this.id);
             if (index !== -1) {
-                showMessage('#choice-actions', 'error', oTranslations[language].multiple_choose);
-                console.warn(oTranslations[language].multiple_choose)
-                return;
+                const message = oTranslations[language].multiple_choose
+                showMessage('#choice-actions', 'error', message);
+                debugLog(message);
+                return false;
             }            
         }
         //-----------------------------//
 
-        // Check if the requirement is met, if so; continue
-        console.log('this.requirements ',this.requirements)
+        // Return 3 (Requirements): Check if the requirement is met, if so; continue
         if (this.requirements) {
             const andConditions = this.requirements.split('|');
-
             for (let condition of andConditions) {
                 // Handle OR blocks
                 let orParts = condition.split('/');
                 let orSatisfied = false;
-
                 for (let orPart of orParts) {
                     let parts = orPart.split(',');
                     let id = parseInt(parts[0]);
                     let rank = parts[1] ? parseInt(parts[1]) : null;
-
                     // You may want to adapt sub_id logic depending on your actual data
                     const index = findItemIndex('skill', id, null, rank, false);
-
                     if (index !== -1) {
                         orSatisfied = true;
                         break; // One OR condition met
                     }
                 }
-
                 if (!orSatisfied) {
-                    showMessage('#choice-actions', 'error', oTranslations[language].requirements_not_met);
-                    return;
+                    const message = oTranslations[language].requirements_not_met;
+                    showMessage('#choice-actions', 'error', message);
+                    debugLog(message);
+                    return false;
                 }
             }
         }
-
-
         //-----------------------------//
 
-        // Check if the cost can be deducted, if so; deduct and continue
-        const spend = this.costSpend(this.rank_cost);
-        if(spend !== true) {
-            showMessage('#choice-actions', 'error', spend);
-            return;
+        // Return 4 (Cost): Check if the cost can be deducted, if so; deduct and continue
+        if(!this.costSpend(this.rank_cost)) {
+            showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
+            return false;
         }
         //-----------------------------//   
 
@@ -131,12 +127,43 @@ class CharacterAsset {
     }
     
     remove () {
-        // Attempt to find the asset within the character object
+        // Return 1: Attempt to find the asset within the character object
         const index = findItemIndex(this.attribute, this.id, this.sub_id);
         if (index === -1) {
             console.error(`Trying to remove ${this.attribute}, instance not found`);
-            return;
-        }    
+            return false;
+        }   
+        // Optional Return 2: Removes from the character in the database if id present 
+        if(isNaN(window.character.meta.id)) {
+            $.ajax({
+                url: `${domain}/action/character-transfer`,
+                data: {
+                    uid: $typeSelect.val(),
+                    sm_id: this.id,
+                    su_id: this.sub_id,
+                    table: this.attribute,
+                    action: `remove-skill`
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function(oData) {
+                    debugLog('select[name="type"][data]',oData);
+                    oTmpData = oData;
+                    allowChoose();
+                    if (oTmpData.subtype && oTmpData.subtype.length > 0) {
+                        updateModalDropdown($subtypeSelect, oTmpData.subtype);
+                        $subtypeLabel.show();
+                        $subtypeSelect.trigger("chosen:updated");
+                    } else {
+                        $subtypeLabel.hide();
+                    }
+                    updateModal(sAction,oTmpData);
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        }
         // Refund the cost of the element
         this.costRefund(this.rank_cost);
         // Remove the asset of the character both functionally and visionally 
@@ -159,22 +186,22 @@ class CharacterAsset {
 
     adjustRank(direction) {
 
-        //check if item is available
+        // Return 1: Checks if item exists on the character, should not be possible hence a console error
         const index = findItemIndex(this.attribute, this.id, this.sub_id);
         if (index === -1) {
             console.error(`Trying to adjust ${this.attribute}, instance not found`);
-            return;
+            return false;
         }
                 
-        // Checks if an attempt is made to manipulate outside of rank limit
+        // Return 2: Checks if an attempt is made to manipulate outside of rank limit, should not be possible hence a console error
         const new_rank = this.rank + direction;
         if (new_rank > this.max_rank) {
             console.error(`${oTranslations[language].rank_max}`);
-            return;
+            return false;
         }
         if (new_rank < 1) {
             console.error(`${oTranslations[language].rank_min}`);
-            return;
+            return false;
         }
         //-----------------------------//
 
@@ -189,15 +216,13 @@ class CharacterAsset {
             } else if (this.rank < cost_array.length) {
                 new_cost = cost_array[this.rank]; // cost for upgrading to the next rank
             } 
-
+            // Return 3: Check if cost can be paid
             if (!this.costSpend(new_cost)) {
-                showPopup(`<p>${spend}</p>`, 'inform', 'error');
-                return;
+                showPopup(`<h2>${oTranslations[language].popup_error}</h2><p>${oTranslations[language].not_enough_vp}</p>`, 'inform', 'error');
+                return false;
             }
-
             this.rank += 1;
             this.rank_cost += new_cost;
-
         } else {
             // DOWNGRADE
             if (cost_array.length === 1) {
@@ -205,9 +230,9 @@ class CharacterAsset {
             } else if (this.rank > 0) {
                 new_cost = cost_array[this.rank - 1]; // refund last rank's cost
             } 
-
+            
             if (!this.costRefund(new_cost)) {
-                showPopup(`<p>${spend}</p>`, 'inform', 'error');
+                showPopup(`<h2>${oTranslations[language].popup_error}</h2><p>${oTranslations[language].not_enough_vp}</p>`, 'inform', 'error');
                 return;
             }
 
@@ -311,17 +336,11 @@ class CharacterAsset {
     }    
 
     costSpend(cost) {
-        if(!updateExperience(cost,"spend")) {
-            return oTranslations[language].not_enough_vp;  
-        }
-        return true;
+        return updateExperience(cost,"spend");
     }
 
     costRefund(cost) {
-        if(!updateExperience(cost,"refund")) {
-            return false;
-        }
-        return true;      
+        return updateExperience(cost,"refund")
     }
 
     getCurrentRankCost() {

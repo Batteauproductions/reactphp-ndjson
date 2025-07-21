@@ -32,13 +32,17 @@
                 Raskeuze
             </div>
             <div class="cell small-6">
-                <?php if(isset($oCharacter) && $print): ?>
-                    <?= $oCharacter->race->name ?>
+                <?php if($print): ?>
+                    <?php if (isset($oCharacter) && isset($oCharacter->race)): ?>
+                        <?= $oCharacter->race->name ?>
+                    <?php else: ?>
+                        <span class="input-error">Geen ras</span>
+                    <?php endif; ?>
                 <?php else: ?>
                     <a data-action="pick-race">
                         <span id="race"><i class="fa-solid fa-plus"></i>toevoegen</span>
                     </a>
-                <?php endif ?>
+                <?php endif; ?>
             </div>
             <div class="cell small-6 text-left">
                 Vaardigheid

@@ -14,7 +14,6 @@ function debugLog(message, ...optionalParams) {
     }
 }
 
-
 /**
  * Displays a confirmation modal before deleting a database item, then removes it via AJAX.
  *
@@ -105,8 +104,6 @@ function initiateEditor() {
         console.error(error);
     });
 }
-
-
 
 function showPopup(message, type='inform', tone='', confirm = () => {}) {
     debugLog('showPopup', message, type);
