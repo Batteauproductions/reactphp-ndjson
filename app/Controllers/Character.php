@@ -126,137 +126,211 @@ class Character extends Controller
         }
     }
 
-    public function getDetails () 
+    public function getDetails()
     {
-        //collect user
-        $arrData = array(
-            'id' => $this->request->getPost('id'),
-            'sub_id' => $this->request->getPost('sub_id'),
-            'action' => $this->request->getPost('action'),
-        );
+        // Retrieve the 'action' from the POST data
+        $action = $this->request->getPost('action');
 
-        if (isset($arrData['action'])) {
-            switch($arrData['action']) {
-                case 'get-details-race':
-                    echo json_encode($this->models['race']->getRaceDetails($arrData['id']));
-                    break;
-                case 'get-details-profession':
-                    echo json_encode($this->models['profession']->getProfessionDetails($arrData['id'],$arrData['sub_id'],$this->arrRights['isGameMaster']));
-                    break;
-                case 'get-details-skill_base':
-                case 'get-details-skill_combat':
-                case 'get-details-skill_magic':
-                case 'get-details-skill_divine':                    
-                    echo json_encode($this->models['skill']->getSkillDetails($arrData['id'],$this->arrRights['isGameMaster']));
-                    break;
-                case 'get-details-basekit':
-                    echo json_encode($this->models['item']->getBasicKitDetails($arrData['id']));
-                    break;
-                case 'get-details-item':
-                    echo json_encode($this->models['item']->getItemDetails($arrData['id']));
-                    break;
-                default:
-                    echo 'unknown action called';
-                    break;
-            }            
-        } else {
+        if (!$action) {
             echo 'no action parsed';
+            return;
         }
-        
+
+        // Switch based on the action type
+        switch ($action) {
+
+            // Fetch detailed info about a race
+            case 'get-details-race':
+                $id = $this->request->getPost('id');
+                echo json_encode($this->models['race']->getRaceDetails($id));
+                break;
+
+            // Fetch detailed info about a profession
+            case 'get-details-profession':
+                $id     = $this->request->getPost('id');
+                $sub_id = $this->request->getPost('sub_id');
+                echo json_encode($this->models['profession']->getProfessionDetails(
+                    $id,
+                    $sub_id,
+                    $this->arrRights['isGameMaster'] // Only include private info if GM
+                ));
+                break;
+
+            // Fetch details about various skill types (same handler)
+            case 'get-details-skill_base':
+            case 'get-details-skill_combat':
+            case 'get-details-skill_magic':
+            case 'get-details-skill_divine':
+                $id = $this->request->getPost('id');
+                echo json_encode($this->models['skill']->getSkillDetails($id));
+                break;
+
+            // Fetch starter kit details
+            case 'get-details-basekit':
+                $id = $this->request->getPost('id');
+                echo json_encode($this->models['item']->getBasicKitDetails($id));
+                break;
+
+            // Fetch general item details
+            case 'get-details-item':
+                $id = $this->request->getPost('id');
+                echo json_encode($this->models['item']->getItemDetails($id));
+                break;
+
+            // Fallback if action is unrecognized
+            default:
+                echo 'unknown action called';
+                break;
+        }
     }
 
-    public function Process () 
-    {
-        //collect user
-        $arrData = array(
-            'uid' => $this->session->get('uid'),
-            'action' => $this->request->getPost('action'),
-            'character' => $this->request->getPost('character'),
-        );
 
-        if (isset($arrData['action'])) {
-            switch($arrData['action']) {                
-                case "delete":
-                    echo json_encode($this->models['character']->deleteCharacter(
-                                                                    $this->request->getPost('character'),                                            
-                                                                    $this->session->get('uid'),                                                                    
-                                                                    $this->arrRights['isGameMaster'],
-                                                                ));
-                    break;
-                case "lock":
-                    $returnData = $this->models['character']->saveCharacter($arrData,5);                    
-                    echo json_encode($returnData);
-                    break;
-                case "save":
-                    $returnData = $this->models['character']->saveCharacter($arrData);                    
-                    echo json_encode($returnData);
-                    break;
-                case "review":
-                    $referrer = $_SERVER['HTTP_REFERER'] ?? '';
-                    $arrData = array(
-                        'cid' => $this->request->getPost('cid'),
-                        'status_id' => $this->request->getPost('status_id'),
-                        'mail_note' => $this->request->getPost('mail_note')
-                    );
-                    $mailData = $this->models['character']->reviewCharacter($arrData);
-                    if($mailData) {
-                        $mailData['cid'] = $arrData['cid'];
-                        $mailData['mail_note'] = $arrData['mail_note'];
-                        $mailData['status_id'] = $arrData['status_id'];
-           
-                        if($mailData['status_id'] == 5) {
-                            $send = $this->controllers['mail']->sendCharacterApproved($mailData);
-                        } else {
-                            $send = $this->controllers['mail']->sendCharacterDenied($mailData);
-                        }
-                        if($send) {
-                            // Redirect back to the same URL with query parameters
-                            return redirect()->to($referrer);
-                        }
-                    } 
-                    break;
-                case "search":
-                    //collect user
-                    $arrData = array(
-                        'cid' => $this->request->getPost('character_name'),
-                        'uid' => $this->request->getPost('character_player'),
-                        'type_id' => $this->request->getPost('character_type'),
-                        'status_id' => $this->request->getPost('character_status'),
-                        'race_id' => $this->request->getPost('character_race'),
-                        'prof_id' => $this->request->getPost('character_profession'),
-                        'skill_id' => $this->request->getPost('character_skill'),
-                    );
-                    $results = $this->models['character']->getCharacters($arrData);
-                    $view = '';
-                    foreach ($results as $result) {
-                        $view .= view('_templates/character_tile', [
-                            'character'    => $result,
-                            'target'       => 'gamemaster',
-                            'isGameMaster' => true
-                        ]);
+    public function Process()
+    {
+        // Get the action from the POST request to determine what to do
+        $action = $this->request->getPost('action');
+
+        if (!$action) {
+            echo 'no action parsed';
+            return;
+        }
+
+        switch ($action) {
+
+            // Handle character deletion
+            case "delete":
+                echo json_encode(
+                    $this->models['character']->deleteCharacter(
+                        $this->request->getPost('character'),               // Character ID
+                        $this->session->get('uid'),                         // User ID from session
+                        $this->arrRights['isGameMaster']                   // Permission check
+                    )
+                );
+                break;
+
+            // Lock a character (status = 5)
+            case "lock":
+                $arrData = [
+                    'uid'       => $this->session->get('uid'),
+                    'action'    => 'lock',
+                    'character' => $this->request->getPost('character'),
+                ];
+                echo json_encode($this->models['character']->saveCharacter($arrData, 5));
+                break;
+
+            // Save character changes (normal save)
+            case "save":
+                $arrData = [
+                    'uid'       => $this->session->get('uid'),
+                    'action'    => 'save',
+                    'character' => $this->request->getPost('character'),
+                ];
+                echo json_encode($this->models['character']->saveCharacter($arrData));
+                break;
+
+            // Remove a profession, skill, or item from a character
+            case "remove-asset":
+                $arrData = [
+                    'cid'    => $this->request->getPost('cid'),    // Character ID
+                    'sm_id'  => $this->request->getPost('sm_id'),  // Skill/Profession/Item mapping ID
+                    'su_id'  => $this->request->getPost('su_id') ?? null,  // Sub-ID (if relevant)
+                    'table'  => $this->request->getPost('table'),  // Type: profession, skill, or item
+                ];
+                switch ($arrData['table']) {
+                    case "profession":
+                        $this->models['profession']->removeProfession($arrData);
+                        break;
+                    case "skill":
+                        $this->models['skill']->removeSkill($arrData);
+                        break;
+                    case "item":
+                        $this->models['item']->removeItem($arrData);
+                        break;
+                }
+                echo true;
+                break;
+
+            // Review a character and send mail based on status
+            case "review":
+                $arrData = [
+                    'cid'       => $this->request->getPost('cid'),        // Character ID
+                    'status_id' => $this->request->getPost('status_id'),  // New status
+                    'mail_note' => $this->request->getPost('mail_note')   // Optional message
+                ];
+                $mailData = $this->models['character']->reviewCharacter($arrData);
+                if ($mailData) {
+                    // Merge extra mail-related data
+                    $mailData = array_merge($mailData, $arrData);
+
+                    // Determine which mail to send based on status
+                    $send = ($mailData['status_id'] == 5)
+                        ? $this->controllers['mail']->sendCharacterApproved($mailData)
+                        : $this->controllers['mail']->sendCharacterDenied($mailData);
+
+                    // If mail is successfully sent, redirect back
+                    if ($send) {
+                        return redirect()->to($_SERVER['HTTP_REFERER'] ?? '/');
                     }
-                    echo $view;
-                    break;                
-                case "submit":
-                    $returnData = $this->models['character']->saveCharacter($arrData,2);
-                    if($returnData['done']) {
-                        $send = $this->controllers['mail']->sendCharacterSubmit([
-                            'player_name'   =>$this->session->get('name'),
-                            'char_name'     =>$returnData['cname'],
-                            'cid'           =>$returnData['id'],
-                        ]);
-                        if($send) {
-                            echo json_encode($returnData);
-                        }
-                    }                    
-                    break;
-                
-                default: 
-                    echo 'unknown action has been parsed';
-                    break;
-            }
-        } else {
-            echo 'no action parsed';
+                }
+                break;
+
+            // Search for characters based on filters
+            case "search":
+                $arrData = [
+                    'cid'       => $this->request->getPost('character_name'),
+                    'uid'       => $this->request->getPost('character_player'),
+                    'type_id'   => $this->request->getPost('character_type'),
+                    'status_id' => $this->request->getPost('character_status'),
+                    'race_id'   => $this->request->getPost('character_race'),
+                    'prof_id'   => $this->request->getPost('character_profession'),
+                    'skill_id'  => $this->request->getPost('character_skill'),
+                ];
+
+                // Perform character search
+                $results = $this->models['character']->getCharacters($arrData);
+                $view = '';
+
+                // Render a tile view for each result
+                foreach ($results as $result) {
+                    $view .= view('_templates/character_tile', [
+                        'character'    => $result,
+                        'target'       => 'gamemaster',
+                        'isGameMaster' => true
+                    ]);
+                }
+
+                echo $view;
+                break;
+
+            // Submit character for review (status = 2) and send email
+            case "submit":
+                $arrData = [
+                    'uid'       => $this->session->get('uid'),
+                    'character' => $this->request->getPost('character'),
+                    'action'    => 'submit',
+                ];
+
+                $returnData = $this->models['character']->saveCharacter($arrData, 2);
+
+                if (!empty($returnData['done'])) {
+                    $send = $this->controllers['mail']->sendCharacterSubmit([
+                        'player_name' => $this->session->get('name'),
+                        'char_name'   => $returnData['cname'],
+                        'cid'         => $returnData['id'],
+                    ]);
+
+                    if ($send) {
+                        echo json_encode($returnData);
+                    }
+                }
+                break;
+
+            // Catch-all: unknown action
+            default:
+                echo 'unknown action has been parsed';
+                break;
         }
     }
+
+
 }

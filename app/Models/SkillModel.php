@@ -285,4 +285,24 @@ class SkillModel extends Model
         return $query->getRow();
 	}
 
+    public function removeSkill($arrData)
+    {
+        $builder = $this->db->table(TBL_CHAR_SKILL);
+
+        // Add mandatory WHERE conditions
+        $builder->where('char_id', $arrData['cid']);
+        $builder->where('main_id', $arrData['sm_id']);
+
+        // Handle sub_id explicitly: if null, use IS NULL, otherwise use normal equality
+        if (is_null($arrData['su_id'])) {
+            // Raw where for IS NULL condition, third param false to avoid escaping
+            $builder->where('sub_id IS NULL', null, false);
+        } else {
+            $builder->where('sub_id', $arrData['su_id']);
+        }
+
+        // Execute the delete query
+        $builder->delete();
+    }
+
 }
