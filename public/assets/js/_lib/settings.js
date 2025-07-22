@@ -1,9 +1,9 @@
 import { Icon } from "../generator/helper/icon.js";
+import { setDateTime } from "./functions.js";
 
 //oSettings
 const debug = true;
-const date = new Date();
-const currentDateTime = date.toISOString();
+const currentDateTime = setDateTime();
 const domain = window.location.origin;
 let language = 'nl-NL';
 const oTranslations = Object.freeze({

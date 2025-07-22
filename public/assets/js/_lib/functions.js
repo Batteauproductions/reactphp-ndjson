@@ -248,6 +248,23 @@ function allowChoose() {
     return false;
 }
 
+function setDateTime() {
+    const date = new Date();
+
+    const pad = (n) => n.toString().padStart(2, '0');
+
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1);
+    const day = pad(date.getDate());
+
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
+
+    const mariadbDatetime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    return mariadbDatetime;
+}
 
 
 // Export functions
@@ -259,4 +276,5 @@ export {
     debugLog,
     initiateEditor,
     showMessage,
+    setDateTime,
 }

@@ -29,10 +29,10 @@
                         </div>
                         <label for="skill_name" class="cell">
                             Naam
-                            <select id="skill_name" name="skill_name">
+                            <select id="skill_name" class="chosen-select" name="skill_name">
                                 <option value="">Geen voorkeur</option>
                                 <?php foreach($arrSkills as $skill): ?>
-                                    <option value="<?php echo $skill->name ?>" <?php echo $skill->name == $selectedName ? 'selected' : ''; ?>><?php echo $skill->name ?></option>
+                                    <option value="<?php echo $skill->id ?>" <?php echo $skill->id == $selectedName ? 'selected' : ''; ?>><?php echo $skill->name ?></option>
                                 <?php endforeach; ?> 
                             </select>
                         </label>
