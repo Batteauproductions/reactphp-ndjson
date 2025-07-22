@@ -148,10 +148,8 @@ class Character extends Controller
             // Fetch detailed info about a profession
             case 'get-details-profession':
                 $id     = $this->request->getPost('id');
-                $sub_id = $this->request->getPost('sub_id');
                 echo json_encode($this->models['profession']->getProfessionDetails(
                     $id,
-                    $sub_id,
                     $this->arrRights['isGameMaster'] // Only include private info if GM
                 ));
                 break;
@@ -162,7 +160,10 @@ class Character extends Controller
             case 'get-details-skill_magic':
             case 'get-details-skill_divine':
                 $id = $this->request->getPost('id');
-                echo json_encode($this->models['skill']->getSkillDetails($id));
+                echo json_encode($this->models['skill']->getSkillDetails(
+                    $id,
+                    $this->arrRights['isGameMaster'] // Only include private info if GM
+                ));
                 break;
 
             // Fetch starter kit details

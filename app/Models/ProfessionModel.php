@@ -48,7 +48,7 @@ class ProfessionModel extends Model
         return $query->getResultObject();
     }
 
-    public function getProfessionDetails($id,$sub_id,$gamemaster=false) 
+    public function getProfessionDetails($id,$gamemaster=false) 
     {
         $arrData['details'] = $this->getProfessionById($id,$gamemaster);
         $arrData['subtype'] = $this->getProfessionSubtype($id,$gamemaster);
