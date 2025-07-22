@@ -163,15 +163,15 @@ class SkillModel extends Model
         return $result;
     }
 
-	public function getSkillDetails($id) 
+	public function getSkillDetails($id,$gamemaster=false) 
     {
         $arrData['details'] = $this->getSkillById($id);
-		$arrData['subtype'] = $this->getSkillSubtypeByParent($id);
+		$arrData['subtype'] = $this->getSkillSubtypeByParent($id,$gamemaster);
         $arrData['modifier'] = $this->modifierModel->getModifiers(explode('|',$arrData['details']->modifier));
         return $arrData;
     }
 	
-	public function getSkillById($id) 
+	public function getSkillById($id,$gamemaster=false) 
     {
         $query = $this
                     ->db
@@ -255,27 +255,33 @@ class SkillModel extends Model
         return implode(' | ', $requirementNames);
     }
 
-	public function getSkillSubtypeByParent($id) 
+	public function getSkillSubtypeByParent($id,$gamemaster=false) 
     {
-		$query = $this
+		$builder = $this
 			->db
             ->table(TBL_SKILL_SUB)
 			->select('id, name, description')
-			->where('parent_id', $id)
-            ->get();
-					
+			->where('parent_id', $id);
+        //some subtypes are only for SL
+        if (!$gamemaster) {
+            $builder->where('sl_only', '0');
+        }
+        $query = $builder->get();
         return $query->getResultObject();
 	}
 
-    public function getSkillSubtypeByID($id) 
+    public function getSkillSubtypeByID($id,$gamemaster=false) 
     {
-		$query = $this
+		$builder  = $this
 			->db
             ->table(TBL_SKILL_SUB)
 			->select('id, name, description')
-			->where('id', $id)
-            ->get();
-					
+			->where('id', $id);
+        //some subtypes are only for SL
+        if (!$gamemaster) {
+            $builder->where('sl_only', '0');
+        }
+        $query = $builder->get();
         return $query->getRow();
 	}
 

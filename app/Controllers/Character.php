@@ -147,7 +147,7 @@ class Character extends Controller
                 case 'get-details-skill_combat':
                 case 'get-details-skill_magic':
                 case 'get-details-skill_divine':                    
-                    echo json_encode($this->models['skill']->getSkillDetails($arrData['id']));
+                    echo json_encode($this->models['skill']->getSkillDetails($arrData['id'],$this->arrRights['isGameMaster']));
                     break;
                 case 'get-details-basekit':
                     echo json_encode($this->models['item']->getBasicKitDetails($arrData['id']));
