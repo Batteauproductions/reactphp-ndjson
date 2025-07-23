@@ -275,34 +275,6 @@ class Character extends Controller
                 }
                 break;
 
-            // Search for characters based on filters
-            case "search":
-                $arrData = [
-                    'cid'       => $this->request->getPost('character_name'),
-                    'uid'       => $this->request->getPost('character_player'),
-                    'type_id'   => $this->request->getPost('character_type'),
-                    'status_id' => $this->request->getPost('character_status'),
-                    'race_id'   => $this->request->getPost('character_race'),
-                    'prof_id'   => $this->request->getPost('character_profession'),
-                    'skill_id'  => $this->request->getPost('character_skill'),
-                ];
-
-                // Perform character search
-                $results = $this->models['character']->getCharacters($arrData);
-                $view = '';
-
-                // Render a tile view for each result
-                foreach ($results as $result) {
-                    $view .= view('_templates/character_tile', [
-                        'character'    => $result,
-                        'target'       => 'gamemaster',
-                        'isGameMaster' => true
-                    ]);
-                }
-
-                echo $view;
-                break;
-
             // Submit character for review (status = 2) and send email
             case "submit":
                 $arrData = [

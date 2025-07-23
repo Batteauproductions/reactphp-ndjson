@@ -18,7 +18,7 @@ class SkillModel extends Model
     }
 	
 	/*START: LINKED TO THE SKILLS*/
-	public function getSkills($gamemaster = false, $cid = null)
+	public function getSkills($gamemaster = false, $cid = null, $params = [])
     {
         $query = $this
             ->db
@@ -72,6 +72,11 @@ class SkillModel extends Model
                 ->join(TBL_CHAR_SKILL . ' cs', 'cs.main_id = s.id', 'left')
                 ->join(TBL_SKILL_SUB . ' ss', 'cs.sub_id = ss.id','left')
                 ->where('cs.char_id', $cid);
+        }
+
+        // If $uid is provided, add a where clause to filter by user_id
+        if (!empty($params['sid'])) {
+            $query->where('s.id', $params['sid']);
         }
 
         $results = $query->get()->getResultObject();

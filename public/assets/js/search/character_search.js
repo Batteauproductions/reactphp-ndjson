@@ -1,4 +1,4 @@
-import { sortDatabase, resetDatabasesort } from "./_functions.js";
+import { sortDatabase, resetDatabasesort } from "./search_functions.js";
 
 $(document).ready(function() {
 

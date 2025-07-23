@@ -1,26 +1,26 @@
-<?php echo 'work in progress' ?>
-
 <?php 
     // Initialize variables for each filter
     $selectedName = '';
 
     // Check if 'filters' exists in the cookie
-    if (isset($_COOKIE['filters'])) {
-        // Get the filters string
-        $filters = $_COOKIE['filters'];
-        
-        // Parse the filters into an associative array
-        parse_str($filters, $filtersArray);
+    if (isset($_COOKIE['skill_filters'])) {
+        // Decode the JSON string from the cookie
+        $filtersArray = json_decode($_COOKIE['skill_filters'], true);
         
         // Extract each filter value
         $selectedName = isset($filtersArray['skill_name']) ? $filtersArray['skill_name'] : '';
+
+        // If it's a valid array, extract values
+        if (is_array($filtersArray)) {
+            $selectedName = $filtersArray['skill_name'] ?? '';
+        }
     } 
 ?>
 
 <div class="grid-container">
     <section class="page-wrapper transparent">
         <div class="grid-x grid-padding-x grid-padding-y">                    
-            <form class="sortable cell small-12 medium-4 large-3" action="<?php current_url() ?>" method="post">
+            <form id="form-sort_skill" class="sortable cell small-12 medium-4 large-3" action="<?php current_url() ?>" method="post">
                 <div class="sortable-wrapper">
                     <div class="grid-x">
                         <div class="cell text-center">
@@ -38,14 +38,17 @@
                         </label>
                         <div class="cell">
                             <button class="button solid fullwidth" type="submit">
-                                <i class="fa-solid fa-filter"></i>Filter toepassen
+                                <i class="fa-solid fa-filter"></i>Filter(s) toepassen
+                            </button>
+                            <button id="clear-form" class="button clear fullwidth">
+                                <i class="fa-solid fa-filter-circle-xmark"></i>Filter(s) verwijderen
                             </button>
                         </div>
                     </div>                    
                 </div>                
             </form> 
             <div class="cell small-12 medium-8 large-9">
-                <div class="grid-x grid-margin-x grid-margin-y small-up-1 large-up-2">
+                <div id="sort_skill-result" class="grid-x grid-margin-x grid-margin-y small-up-1 large-up-2">
                     <?php foreach($arrSkills as $skill): ?>
                         <?= view('_templates/skill_tile', ['skill' => $skill]) ?>                                               
                     <?php endforeach; ?>

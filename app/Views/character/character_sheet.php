@@ -12,6 +12,7 @@
     window.arrXP = Object.freeze(<?= json_encode(explode(',', $arrXP)); ?>);
     window.jsonBaseChar = Object.freeze(<?= json_encode($jsonBaseChar); ?>);
     window.jsonStat = Object.freeze(<?= json_encode($jsonStat); ?>);
+    window.gamemaster = <?= $viewAsGamemaster ? $viewAsGamemaster : 'false' ?>;
 </script>
 
 <div class="grid-container">

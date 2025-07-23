@@ -32,8 +32,10 @@ $routes->get('account/password_reset/(:any)/(:any)', 'Account::passwordReset/$1/
 $routes->get('account/logout', 'Account::signOutProcess');
 $routes->get('account/(:any)', 'Page::viewGeneric/$1');
 
+$routes->post('search/character', 'Search::searchCharacter');
+$routes->post('search/skill', 'Search::searchSkill');
+$routes->post('search/user', 'Search::searchProfile');
 //----
-$routes->post('action/user-transfer', 'Account::searchProfile');
 $routes->post('action/character-transfer', 'Character::Process');
 $routes->post('action/get-adventure', 'Character::getAdventure');
 $routes->post('action/get-background', 'Character::getBackground');

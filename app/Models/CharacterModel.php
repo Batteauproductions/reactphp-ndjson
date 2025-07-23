@@ -273,7 +273,7 @@ class CharacterModel extends Model
             return false;
         }
         // Step 2 setup "global" variables to be used in the statements below
-        $now = date('Y-m-d H:i:s');        
+        $now = date('Y-m-d H:i:s'); 
         $user_id = $arrData['uid'];
         // -- turn into object
         $arrCharJSON = json_decode($arrData['character']);

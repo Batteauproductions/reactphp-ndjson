@@ -112,7 +112,11 @@ class CharacterAsset {
 
         // Return 4 (Cost): Check if the cost can be deducted, if so; deduct and continue
         if(!this.costSpend(this.rank_cost)) {
-            showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
+            if(this.attribute==='item') {
+                showMessage('#choice-actions', 'error', oTranslations[language].not_enough_coin);
+            } else {
+                showMessage('#choice-actions', 'error', oTranslations[language].not_enough_vp);
+            }
             return false;
         }
         //-----------------------------//   
@@ -189,6 +193,7 @@ class CharacterAsset {
             console.error(`Trying to adjust ${this.attribute}, instance not found`);
             return false;
         }
+        //-----------------------------//
                 
         // Return 2: Checks if an attempt is made to manipulate outside of rank limit, should not be possible hence a console error
         const new_rank = this.rank + direction;

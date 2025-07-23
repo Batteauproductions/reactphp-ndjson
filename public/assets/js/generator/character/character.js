@@ -418,7 +418,7 @@ function transferCharacter(btn_action) {
         },
         complete: function() {
             // Always restore button state after 3 seconds
-            if(window.character.meta.status === 1 || window.character.meta.status === 3 || window.character.meta.status !== 7) {
+            if(window.character.meta.status === 1 || window.character.meta.status === 3 || window.character.meta.status === 7) {
                 setTimeout(() => {
                     $button.html(`${icons.character_save.icon()} ${icons.character_save.text()}`);
                     $buttons.removeClass('disabled').css('pointer-events', '');

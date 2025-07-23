@@ -9,7 +9,7 @@ let language = 'nl-NL';
 const oTranslations = Object.freeze({
     "nl-NL": {
         "change": "veranderen",
-        "character_save": "Karakter opslaan",
+        "character_save": "Opslaan",
         "character_saving": "Opslaan bezig",
         "character_status": "Karakter status",
         "character_type": "Karakter type",

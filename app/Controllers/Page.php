@@ -205,7 +205,7 @@ class Page extends BaseController
                                 $filters[$dbField] = $value;
                             }
                         }
-                        $arrJS = ['search/character.js'];
+                        $arrJS = ['search/character_search.js'];
                         $arrData = array (
                             'arrUsers' => $this->models['account']->getUsers(),
                             'arrStatus' => $this->arrSettings['options_character_status'],
@@ -273,7 +273,7 @@ class Page extends BaseController
                             }
                         }
 
-                        $arrJS = ['search/user.js'];
+                        $arrJS = ['search/user_search.js'];
                         $arrData = array (
                             'arrRoles' => $this->arrSettings['options_user_roles'],
                             'arrStatus' => $this->arrSettings['options_user_status'],
@@ -322,6 +322,7 @@ class Page extends BaseController
                 $content = view('manual/rulebooks');
                 break;
             case 'skills':
+                $arrJS = ['search/skill_search.js'];
                 $arrData['arrSkills'] = $this->models['skill']->getSkills($this->arrRights['isGameMaster']);
                 $content = view('manual/skills',$arrData);
                 break;

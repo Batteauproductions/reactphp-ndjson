@@ -172,8 +172,17 @@ function generateAssetIcons(asset) {
         validActions.push('downgrade');
     }
 
-    // Upgrade allowed if below max
-    if (asset.rank < (asset.max_rank ?? 3)) {
+    // Upgrade allowed if:
+    // A regular user should be able to upgrade up to max level -1 (if it's a profession)
+    // A gamemaster can always upgrade to max level
+    if (
+        asset.rank < asset.max_rank &&
+        !(
+            asset.rank === asset.max_rank - 1 &&
+            !window.gamemaster &&
+            asset.attribute === 'profession'
+        )
+    ) {
         validActions.push('upgrade');
     }
 

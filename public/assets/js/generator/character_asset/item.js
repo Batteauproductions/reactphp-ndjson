@@ -17,18 +17,12 @@ class Item extends CharacterAsset {
         return convertCurrency(this.cost);
     }
 
-    costSpend (cost = this.cost) {
-        if(!updateCurrency(cost,"spend")) {
-            return oTranslations[language].not_enough_coin;  
-        }
-        return true;
+    costSpend (cost) {
+        return updateCurrency(cost,"spend");
     }
 
-    costRefund(cost = this.cost) {
-        if(!updateCurrency(cost,"refund")) {
-            return false;
-        }
-        return true;      
+    costRefund(cost) {
+        return updateCurrency(cost,"refund")
     }
 
 }

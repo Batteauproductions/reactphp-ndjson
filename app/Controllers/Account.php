@@ -324,24 +324,6 @@ class Account extends Controller
         }        
     }
 
-    public function searchProfile() {        
-        //collect user
-        $arrData = array(
-            'uid' => $this->request->getPost('user_name'),
-            'role_id' => $this->request->getPost('user_role'),
-            'status_id' => $this->request->getPost('user_status'),
-        );
-        $results = $this->accountModel->getUsers($arrData);
-        $view = '';
-        foreach ($results as $result) {
-            $view .= view('_templates/user_tile', [
-                'user'    => $result,
-                'target'       => 'admin',
-            ]);
-        }
-        echo $view;
-    }
-
     public function accountDelete() 
     {
         $uid = $this->request->getPost('uid');
