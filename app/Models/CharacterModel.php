@@ -298,6 +298,10 @@ class CharacterModel extends Model
             'background'  => $meta->background ?? null,
             $isNew ? 'created_dt' : 'modified_dt' => $now
         ];
+        // Only add 'avatar' if supplied
+        if (!empty($arrData['avatar'])) {
+            $charData['avatar'] = $arrData['avatar'];
+        }
         if ($isNew) {
             $this->db->table(TBL_CHAR)->insert($charData);
             $char_id = $this->db->insertID();
@@ -391,6 +395,8 @@ class CharacterModel extends Model
                 'main_id'    => $item->id,
                 // Ensure sub_id is always present (can be null)
                 'sub_id'     => property_exists($item, 'sub_id') && $item->sub_id !== '' ? $item->sub_id : null,
+                'created_dt' => $item->created_dt ?? date('Y-m-d H:i:s'),
+                'modified_dt' => $item->modified_dt ?? date('Y-m-d H:i:s'),
             ];
 
             // Add optional data fields

@@ -21,14 +21,13 @@ function openStoryModal(sAction, $modal, storyId=null) {
     $modal.foundation('open');
 
     // Variables for dynamic modal content
-    let ajaxUrl = null;
     let $form = null;
-    const $textareas = $('textarea[id^="question_"]');
 
     // Configure based on action type
     switch (sAction) {
         case 'adventure':
             $form = $('#adventure-form');
+            $('[name="event_id"]').val(storyId);
             const story = window.character.stories.find(s => parseInt(s.event_id) === storyId);
             if (story) {
                 Object.keys(story).forEach(key => {

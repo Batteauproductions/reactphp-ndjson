@@ -14,6 +14,20 @@ $(document).ready(function() {
         sessionStorage.setItem('navigationAnimated', 'true');
     }
 
+    $('#avatar').on('change', function (e) {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#avatarPreview').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // Optional fallback or reset
+            $('#avatarPreview').attr('src', `${domain}/elements/anonymous_avatar.png`);
+        }
+    });
+
     // Binds click events to the more available buttons
     $('a[data-logout]').on('click' , function() {
         sessionStorage.removeItem('navigationAnimated');

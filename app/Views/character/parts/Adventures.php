@@ -6,7 +6,7 @@
 ?>
 
 <section>
-    <h1>Avonturen</h1>
+    <h2>Avonturen</h2>
     <img class="spacer-image" src="<?= image_path('elements/header-img.png') ?>" alt="-"/>
     <div class="grid-x grid-margin-x grid-margin-y">
         <a class="cell small-4 medium-3 large-2" data-action="<?= $action ?>">

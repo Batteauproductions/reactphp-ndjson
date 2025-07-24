@@ -8,6 +8,6 @@
                 <li>Aspect ratio van 1:1 wordt aangeraden</li>
             </ul>
         </label>
-        <img src="<?php echo image_path('elements/anonymous_avatar.png') ?>"/>
+        <img id="avatarPreview" src="<?= !isset($oCharacter) || empty($oCharacter->meta->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/hero/'.$oCharacter->meta->avatar) ?>"/>
     </div>                        
 </section>

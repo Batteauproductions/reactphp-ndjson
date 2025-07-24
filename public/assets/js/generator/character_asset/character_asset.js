@@ -49,7 +49,7 @@ class CharacterAsset {
         this.rank_cost = rank_cost !== undefined ? parseInt(rank_cost) : parseInt(this.cost); // upon initialization the asset cost is the same as the cost          
         this.container = container; //this is the container on the character sheet [profession/skill/equipment]
         this.loresheet = loresheet ? Boolean(parseInt(loresheet)) : false;
-        this.created_dt = created_dt ? created_dt : currentDateTime;
+        this.created_dt = created_dt ? created_dt : null;
         this.modified_dt = modified_dt ? modified_dt : null;
         this.locked_dt = locked_dt ? locked_dt : null;
     }
@@ -136,44 +136,29 @@ class CharacterAsset {
         if (index === -1) {
             console.error(`Trying to remove ${this.attribute}, instance not found`);
             return false;
-        }   
-        const self = this;
-        let ajaxPromise = Promise.resolve(); // Default: resolved (in case no AJAX is sent)
-        if (!isNaN(window.character.meta.id)) {
-            ajaxPromise = $.ajax({
-                url: `${domain}/action/character-transfer`,
-                data: {
-                    cid: window.character.meta.id,
-                    sm_id: self.id,
-                    su_id: self.sub_id,
-                    table: self.attribute,
-                    action: 'remove-asset'
-                },
-                type: 'POST',
-                dataType: 'json'
-            }).done(function () {
-                console.log(`asset successfully removed from ${self.attribute} with ${self.id},${self.sub_id}`);
-            }).fail(function () {
-                const message = `asset could not be removed from ${self.attribute} with ${self.id},${self.sub_id}`;
-                showPopup(`<h2>${oTranslations[language].popup_error}</h2><p>${message}</p>`, 'inform', 'error');
-                console.error(`${message}`);
-                throw new Error("AJAX failed"); // Prevent `.then()` from running
-            });
         }
 
-        // Always run this part *after* optional AJAX succeeds or is skipped
-        ajaxPromise.then(() => {
-            // Refund the cost of the element
-            self.costRefund(self.rank_cost);
+        //only push to remove skills from database if the asset was created
+        if (this.created_dt !== null) {   
+            const asset = {
+                cid:    window.character.meta.id,
+                sm_id:  this.id,
+                su_id:  this.sub_id,
+                table:  this.attribute,
+            }
+            window.remove_asset.push(asset);
+        }
 
-            // Remove the asset of the character both functionally and visually 
-            window.character[self.attribute].splice(index, 1)[0]; //-- functionally
-            const $row = self.getVisualRow(); //-- visually
-            $row.remove();
+        // Refund the cost of the element
+        this.costRefund(this.rank_cost);
 
-            // Update the character object in the interface
-            window.character.update();
-        });
+        // Remove the asset of the character both functionally and visually 
+        window.character[this.attribute].splice(index, 1)[0]; //-- functionally
+        const $row = this.getVisualRow(); //-- visually
+        $row.remove();
+
+        // Update the character object in the interface
+        window.character.update();
         return true;
     }
 

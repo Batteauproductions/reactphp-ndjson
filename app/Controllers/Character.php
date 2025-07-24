@@ -219,38 +219,6 @@ class Character extends Controller
                 echo json_encode($this->models['character']->saveCharacter($arrData, 5));
                 break;
 
-            // Save character changes (normal save)
-            case "save":
-                $arrData = [
-                    'uid'       => $this->session->get('uid'),
-                    'action'    => 'save',
-                    'character' => $this->request->getPost('character'),
-                ];
-                echo json_encode($this->models['character']->saveCharacter($arrData));
-                break;
-
-            // Remove a profession, skill, or item from a character
-            case "remove-asset":
-                $arrData = [
-                    'cid'    => $this->request->getPost('cid'),    // Character ID
-                    'sm_id'  => $this->request->getPost('sm_id'),  // Skill/Profession/Item mapping ID
-                    'su_id'  => $this->request->getPost('su_id') ?? null,  // Sub-ID (if relevant)
-                    'table'  => $this->request->getPost('table'),  // Type: profession, skill, or item
-                ];
-                switch ($arrData['table']) {
-                    case "profession":
-                        $this->models['profession']->removeProfession($arrData);
-                        break;
-                    case "skill":
-                        $this->models['skill']->removeSkill($arrData);
-                        break;
-                    case "item":
-                        $this->models['item']->removeItem($arrData);
-                        break;
-                }
-                echo true;
-                break;
-
             // Review a character and send mail based on status
             case "review":
                 $arrData = [
@@ -275,27 +243,67 @@ class Character extends Controller
                 }
                 break;
 
-            // Submit character for review (status = 2) and send email
+            // Save character changes (normal save) / Submit character for review (status = 2) and send email
+            case "save":
             case "submit":
                 $arrData = [
                     'uid'       => $this->session->get('uid'),
                     'character' => $this->request->getPost('character'),
-                    'action'    => 'submit',
+                    'action'    => $action,
                 ];
 
-                $returnData = $this->models['character']->saveCharacter($arrData, 2);
-
-                if (!empty($returnData['done'])) {
-                    $send = $this->controllers['mail']->sendCharacterSubmit([
-                        'player_name' => $this->session->get('name'),
-                        'char_name'   => $returnData['cname'],
-                        'cid'         => $returnData['id'],
-                    ]);
-
-                    if ($send) {
-                        echo json_encode($returnData);
-                    }
+                // Make sure old assets are removed
+                $removeArray = json_decode($this->request->getPost('remove_assets')) ?? null;
+                if($removeArray !== null) {
+                    $this->removeFromCharacter($removeArray);
                 }
+                
+                // Add an avatar if supplied
+                $file = $this->request->getFile('avatar');
+                if ($file && $file->isValid() && !$file->hasMoved()) {
+                    $file_name = md5($this->request->getPost('char_name')).'.'.$file->getExtension();
+                    $arrData['avatar'] = $file_name;
+                    // Setup rules for upload
+                    $uploadConfig = array(
+                        'upload_path'   => './assets/images/avatars/hero/',
+                        'allowed_types' => 'jpg|jpeg|png',
+                        'max_size'      => 1024 * 5, // 5 MB
+                        'file_name'     => $file_name,
+                        'overwrite'     => true,
+                    );            
+                    // Check if the file was uploaded successfully
+                    if ($file->isValid() && !$file->hasMoved()) {
+                        // Perform the upload using the specified upload settings
+                        if ($file->move($uploadConfig['upload_path'], $uploadConfig['file_name'])) {
+                            $arrUserDetails = array(
+                                'avatar' 		=> $file->getName(),
+                                'modified_dt' 	=> date('Y-m-d H:i:s')
+                            );                
+                        } else {
+                            return redirect()->back()->withInput()->with('errors', ['Een fout zorgde dat je je plaatje niet kon uploaden, probeer het later nog eens.']);
+                        }
+                    } else {
+                        return redirect()->back()->withInput()->with('errors', ['Een fout zorgde dat je je plaatje niet kon uploaden, probeer het later nog eens.']);
+                    }
+                } 
+
+                //do something slightly different per action
+                if($action === 'submit') {
+                    $returnData = $this->models['character']->saveCharacter($arrData, 2);
+                    if (!empty($returnData['done'])) {
+                        $send = $this->controllers['mail']->sendCharacterSubmit([
+                            'player_name' => $this->session->get('name'),
+                            'char_name'   => $returnData['cname'],
+                            'cid'         => $returnData['id'],
+                        ]);
+
+                        if ($send) {
+                            echo json_encode($returnData);
+                        }
+                    }
+                } else {
+                    echo json_encode($this->models['character']->saveCharacter($arrData));
+                }                
                 break;
 
             // Catch-all: unknown action
@@ -305,5 +313,21 @@ class Character extends Controller
         }
     }
 
+    //Remove a profession, skill, or item from a character
+    private function removeFromCharacter($arrData) { 
+        foreach($arrData as $item) {
+            switch ($item->table) {
+                case "profession":
+                    $this->models['profession']->removeProfession($item);
+                    break;
+                case "skill":
+                    $this->models['skill']->removeSkill($item);
+                    break;
+                case "item":
+                    $this->models['item']->removeItem($item);
+                    break;
+            }
+        }        
+    }
 
 }

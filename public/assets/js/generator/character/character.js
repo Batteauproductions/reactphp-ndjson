@@ -215,6 +215,8 @@ class Character {
                     rank_cost: obj.rank_cost,
                     sub_id: obj.sub_id,
                     sub_name: obj.sub_name,
+                    created_dt: obj.created_dt,
+                    modified_dt: obj.modified_dt,
                 },
                 modifier: [
                     {
@@ -378,21 +380,37 @@ function transferCharacter(btn_action) {
     $button.html(`${icons.character_saving.icon()} ${icons.character_saving.text()}`);
     $buttons.addClass('disabled').css('pointer-events', 'none');
 
+    let formData = new FormData();
+
+    // Add JSON data
+    formData.append('action', btn_action);
+    formData.append('char_name', $('[name="char_name"]').val())
+    formData.append('character', JSON.stringify(window.character));
+
+    if (window.remove_asset.length > 0) {
+        formData.append('remove_assets', JSON.stringify(window.remove_asset));
+    }
+
+    // Add file (avatar)
+    const avatarFile = document.getElementById('avatar').files[0];
+    if (avatarFile) {
+        formData.append('avatar', avatarFile);
+    }
+
+    // Run the ajax
     $.ajax({
         url: `${domain}/action/character-transfer`,
         type: 'POST',
         dataType: 'json',
-        data: {
-            action: btn_action,
-            character: JSON.stringify(window.character)
-        },
+        data: formData,
+        processData: false,       // Important for file upload
+        contentType: false,       // Important for file upload
         success: function(data) {
             const isSuccess = data.done;
             const icon = isSuccess ? icons.character_save_done : icons.character_error;
             const popupTitle = isSuccess ? lang["popup_success"] : lang["popup_error"];
             const popupText = isSuccess ? lang["character_save_done"] : lang["character_error_save"];
             const tone = isSuccess ? 'success' : 'error';
-            console.log('btn_action', btn_action)
             const confirm = btn_action == 'save' 
                         ? function () { 
                             //only refresh page to edit when it's a new character

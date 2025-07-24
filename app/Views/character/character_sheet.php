@@ -13,23 +13,23 @@
     window.jsonBaseChar = Object.freeze(<?= json_encode($jsonBaseChar); ?>);
     window.jsonStat = Object.freeze(<?= json_encode($jsonStat); ?>);
     window.gamemaster = <?= $viewAsGamemaster ? $viewAsGamemaster : 'false' ?>;
+    window.remove_asset = [];
 </script>
 
 <div class="grid-container">
     <div class="page-wrapper transparent">
-        <form id="form-character" class="grid-x grid-padding-x grid-padding-y form-character" method="POST">
-
+        <form id="form-character" class="grid-x grid-padding-x grid-padding-y form-character" method="POST" enctype="multipart/form-data">
             <!-- Notes and base information -->
             <div class="cell small-12 medium-12 large-3">
                 <div class="grid-x grid-padding-x grid-padding-y">
                     <div class="cell small-12 medium-4 large-12 text-left">
                         <?= view('character/parts/Profile', ['print'=>false]) ?>   
                     </div>
-                    <div class="cell small-12 medium-8 large-12 text-center">
-                        <?= view('character/parts/Baseinfo', ['print'=>false]) ?>
+                    <div class="cell small-12 medium-4 large-12 text-center">
+                        <?= view('character/parts/stats/Stats_Primary', ['print'=>false]) ?>
                     </div>
-                    <div class="cell small-12 medium-12 large-12 text-center">
-                        <?= view('character/parts/Notes', ['print'=>false]) ?>
+                    <div class="cell small-12 medium-4 large-12 text-center">
+                        <?= view('character/parts/stats/Stats_Secundary', ['print'=>false]) ?>
                     </div>
                 </div>
             </div>
@@ -37,12 +37,9 @@
             <div class="cell small-12 medium-12 large-9">
                 <div class="grid-x grid-padding-x grid-padding-y">
                     <div class="cell small-12 medium-6 large-6 text-center">
-                        <?= view('character/parts/stats/Stats_Primary', ['print'=>false]) ?>
+                        <?= view('character/parts/Baseinfo', ['print'=>false]) ?>
                     </div>
                     <div class="cell small-12 medium-6 large-6 text-center">
-                        <?= view('character/parts/stats/Stats_Secundary', ['print'=>false]) ?>
-                    </div>
-                    <div class="cell small-12 medium-12 text-center">
                         <?= view('character/parts/Asset', ['title'=>'Beroep(en)', 'id'=>'profession', 'print'=>false]); ?>
                     </div>
                     <div class="cell small-12 medium-12 large-6 text-center">
@@ -65,11 +62,15 @@
                     </div>
                 </div>                
             </div>    
-                        
+            <!-- Adventures -->
             <div class="cell small-12 text-center">
                 <?= view('character/parts/Adventures') ?>
             </div> 
-                  
+            <!-- Notes -->   
+            <div class="cell small-12 text-center">
+                <?= view('character/parts/Notes', ['print'=>false]) ?>
+            </div>
+            <!-- Buttons -->
             <div class="cell small-12 text-right">
                 <hr>
                 <?php 

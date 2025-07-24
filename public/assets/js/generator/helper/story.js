@@ -4,8 +4,8 @@ function editAdventure(storyId) {
     openStoryModal('adventure',$('#adventure-modal'),storyId);
 }
 
-function viewAdventure () {
-    openStoryModal('background',$('#adventure-modal'),storyId);
+function viewAdventure (storyId) {
+    openStoryModal('adventure',$('#adventure-modal'),storyId);
 }
 
 function editBackground () {

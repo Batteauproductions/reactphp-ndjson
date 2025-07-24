@@ -314,7 +314,7 @@ function updateModelButtons(sAction, oData) {
         if (click_function) {
             const $button = $('<button>', {
                 id: 'choose-characterAsset',
-                class: 'button solid no-spacing',
+                class: 'button solid',
                 html: `${icons.choose.icon()} ${icons.choose.text()}`,
                 disabled: !allowChoose() //logic is reversed because of how disable attribute works                
             }).on('click', function(e) {

@@ -13,9 +13,8 @@
                                     <li>Aspect ratio van 1:1 wordt aangeraden</li>
                                 </ul>
                             </label>
-                            <img src="<?php echo empty($oUser->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/user/'.$oUser->avatar) ?>"/>
-                        </div>                        
-                        
+                            <img id="avatarPreview" src="<?= empty($oUser->avatar) ? image_path('elements/anonymous_avatar.png') : image_path('avatars/user/'.$oUser->avatar) ?>"/>
+                        </div>
                     </div>
                 </div>                
                 <div class="cell small-8 tile">
