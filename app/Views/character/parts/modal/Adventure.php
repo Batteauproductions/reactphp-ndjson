@@ -5,7 +5,7 @@
         <i class="fa-solid fa-spinner fa-spin"></i> Gegevens laden
     </div>
 
-    <form id="adventure-form" class="grid-x grid-padding-x grid-padding-y" style="display:none;">
+    <form id="form-adventure" class="grid-x grid-padding-x grid-padding-y" style="display:none;">
         <input type="hidden" name="event_id" value=""/>
         <div class="cell small-12">
             <label for="question_1">Wat heb je dit evenement ondernomen?</label>

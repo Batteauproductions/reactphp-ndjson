@@ -8,13 +8,17 @@ class Adventure {
         this.question_4 = data.question_4 ?? null;
         this.question_5 = data.question_5 ?? null;
         this.question_6 = data.question_6 ?? null;
+        this.created_dt = data.created_dt ?? null;
+        this.modified_dt = data.modified_dt ?? null;
+        this.locked_dt = data.locked_dt ?? null;
     }
 
     // Example method to check if all questions except 6 are answered
     allAnswered() {
-        return [this.question_1, this.question_2, this.question_3, this.question_4, this.question_5]
+        return [this.event_id, this.question_1, this.question_2, this.question_3, this.question_4, this.question_5]
             .every(q => q !== null && q !== '');
     }
+
 }
 
 export {

@@ -285,6 +285,7 @@ class CharacterModel extends Model
         $skill = $arrCharJSON->skill;  
         $item = $arrCharJSON->item; 
         $notes = $arrCharJSON->notes; 
+        $stories = $arrCharJSON->stories; 
         // -- check if new based on fact if ID is parsed
         $isNew = $meta->id === null;       
         // Step 3a: Fill the Char table
@@ -375,6 +376,22 @@ class CharacterModel extends Model
                 ->where('char_id', $char_id)
                 ->update($charNote);
         }
+        if($stories) { 
+            foreach ($stories as $story) {
+                $itemData = [
+                    'char_id'    => $char_id,
+                    'event_id'   => $story->event_id ,
+                    'question_1' => $story->question_1,
+                    'question_2' => $story->question_2,
+                    'question_3' => $story->question_3,
+                    'question_4' => $story->question_4,
+                    'question_5' => $story->question_5,
+                    'question_6' => $story->question_6,
+                    $story->created_dt ? 'modified_dt' : 'created_dt' => $now,
+                ];
+            }
+            $this->db->table(TBL_CHAR_STORIES)->upsertBatch($itemData); 
+        }
 
         $returnData = [
             'id' => $char_id,
@@ -392,9 +409,8 @@ class CharacterModel extends Model
         foreach ($items as $item) {
             $itemData = [
                 'char_id'    => $char_id,
-                'main_id'    => $item->id,
-                // Ensure sub_id is always present (can be null)
-                'sub_id'     => property_exists($item, 'sub_id') && $item->sub_id !== '' ? $item->sub_id : null,
+                'main_id'    => $item->id,                
+                'sub_id'     => property_exists($item, 'sub_id') && $item->sub_id !== '' ? $item->sub_id : null, // Ensure sub_id is always present (can be null)
                 'created_dt' => $item->created_dt ?? date('Y-m-d H:i:s'),
                 'modified_dt' => $item->modified_dt ?? date('Y-m-d H:i:s'),
             ];

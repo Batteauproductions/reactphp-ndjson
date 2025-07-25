@@ -45,6 +45,7 @@ const oTranslations = Object.freeze({
         "increase_base_points": "Verhoogt de vaardigheidspunten",
         "increase_base_sanity": "Verhoogt de sanity",
         "increase_base_str": "Verhoogt de kracht",
+        "linked_profession": "Je personage heeft vaardigheden die gekoppeld zijn aan dit beroep.",
         "loresheet": "Je krijgt hievoor een loresheet.",
         "multiple_choose": "Het is niet toegestaan om meerdere van dit type vaardigheid te kiezen",
         "more_info": "meer informatie",

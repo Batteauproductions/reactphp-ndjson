@@ -1,6 +1,6 @@
 //Generic settings and functions
 import { Character } from './character/character.js'
-import { currentDateTime, domain } from '../_lib/settings.js'
+import { currentDateTime } from '../_lib/settings.js'
 import { debugLog, initiateEditor } from '../_lib/functions.js'
 import { pickName } from './character/name.js'
 import { pickType } from './character/type.js'
@@ -50,18 +50,6 @@ $(document).ready(function() {
         });
         initiateEditor();
     }
-
-    $('#adventure-form').on('submit', function(e){
-        e.preventDefault();
-        const data = { event_id: $('[name="event_id"]').val() };
-        for (let i = 1; i <= 6; i++) {
-            const field = this.querySelector(`[name="question_${i}"]`);
-            data[`question_${i}`] = field?.value?.trim() || null;
-        }
-        window.character.stories.push(new Adventure(data));
-        $('#adventure-modal').foundation('close');
-        window.character.update();
-    })
 
     $('#stat-currency').html(convertCurrency(window.character.build.currency));
     

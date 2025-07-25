@@ -1,7 +1,7 @@
 //Generic settings and functions
-import { domain } from '../../_lib/settings.js';
 import { debugLog } from '../../_lib/functions.js'
 import { clearModal, $modalLoading, } from "./modal.js";
+import { Adventure } from '../character/adventure.js';
 
 /**
  * Opens the modal for the submission of stories.
@@ -26,10 +26,15 @@ function openStoryModal(sAction, $modal, storyId=null) {
     // Configure based on action type
     switch (sAction) {
         case 'adventure':
-            $form = $('#adventure-form');
+            $form = $('#form-adventure');
             $('[name="event_id"]').val(storyId);
-            const story = window.character.stories.find(s => parseInt(s.event_id) === storyId);
-            if (story) {
+
+            // Try to find an existing story with this ID
+            const story = window.character.stories.find(s => parseInt(s.event_id) === parseInt(storyId));
+            console.log('story', story);
+
+            // Populate form if story exists, otherwise clear fields
+            if (typeof story !== 'undefined') {
                 Object.keys(story).forEach(key => {
                     if (key.startsWith('question_')) {
                         const textarea = document.querySelector(`textarea[name="${key}"]`);
@@ -38,7 +43,36 @@ function openStoryModal(sAction, $modal, storyId=null) {
                         }
                     }
                 });
+            } else {
+                $('textarea[name^="question_"]').val('');
             }
+
+            // Handle form submission
+            $form.off('submit').on('submit', function (e) {
+                e.preventDefault();
+
+                if($form.valid()) {
+                    const data = {
+                        event_id: $('[name="event_id"]').val()
+                    };
+
+                    for (let i = 1; i <= 6; i++) {
+                        const field = this.querySelector(`[name="question_${i}"]`);
+                        data[`question_${i}`] = field?.value?.trim() || null;
+                    }
+
+                    // Overwrite or add the Adventure in the character's stories
+                    const existingIndex = window.character.stories.findIndex(s => parseInt(s.event_id) === parseInt(data.event_id));
+                    if (existingIndex !== -1) {
+                        window.character.stories[existingIndex] = new Adventure(data);
+                    } else {
+                        window.character.stories.push(new Adventure(data));
+                    }
+
+                    $('#adventure-modal').foundation('close');
+                    window.character.update();
+                }                
+            });
             break;
         case 'background':
             $form = $('#background-form');

@@ -1,7 +1,7 @@
 //Generic settings and functions
-import { domain, icons, language, oTranslations, currentDateTime } from '../../_lib/settings.js'
+import { icons, language, oTranslations } from '../../_lib/settings.js'
 import { debugLog, generateAssetIcons, showMessage, showPopup } from '../../_lib/functions.js'
-import { findItemIndex } from '../character/character.js';
+import { findItemIndex, findLinkedSkillIndex } from '../character/character.js';
 import { updateExperience } from '../helper/experience.js';
 
 // Define the class
@@ -35,7 +35,7 @@ class CharacterAsset {
         this.id = id !== null ? parseInt(id) : null;
         this.name = name;
         this.description = description;
-        this.requirements = requirements !== null ? requirements : null; //assets can have requirements
+        this.requirements = requirements ?? null; //assets can have requirements
         this.max_rank = max_rank ? parseInt(max_rank) : 1 ; //checks that rank is always set to at least 1
         this.allow_multiple = allow_multiple ? parseInt(allow_multiple) : 0; //only certain items can be added multiple times [true/false]
         this.attribute = attribute; //what attribute of the character the assets should be stored [profession/skill/item]
@@ -136,6 +136,18 @@ class CharacterAsset {
         if (index === -1) {
             console.error(`Trying to remove ${this.attribute}, instance not found`);
             return false;
+        }
+
+        // (potentional) Return 2: Attempt to remove profession with skills of profession
+        if(this.attribute === 'profession') {
+            const index = findLinkedSkillIndex(this.id, this.sub_id);
+            const title = oTranslations[language].popup_error;
+            const message = oTranslations[language].linked_profession;
+            if (index !== -1) {
+                showPopup(`<h2>${title}</h2><p>${message}`,'inform','error');
+                debugLog(message);
+                return false;
+            }
         }
 
         //only push to remove skills from database if the asset was created

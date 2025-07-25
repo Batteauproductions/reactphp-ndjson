@@ -286,6 +286,7 @@ class Character {
                 current: {
                     attribute: "item",
                     container: "item",
+                    amount: obj.amount,
                     sub_id: obj.sub_id,
                     sub_name: obj.sub_name,
                     created_dt: obj.created_dt,
@@ -358,6 +359,25 @@ function findItemIndex(attribute, id, sub_id = null, rank = null, strictSubId = 
             (item?.rank >= rank || rank === null)
         )
         : -1;
+}
+
+/**
+ * Finds the index of a skill in the character's skill array that is linked to a specific profession.
+ * @param {string} professionId - The main profession ID.
+ * @param {string|null} subId - The optional sub profession ID.
+ * @param {boolean} strictSubId - If true, subId must match exactly (or be null); otherwise, subId is ignored.
+ * @returns {number} The index of the matching skill if found, otherwise -1.
+ */
+function findLinkedSkillIndex(professionId, subId = null, strictSubId = true) {
+    const skills = window.character.skill;
+
+    if (!Array.isArray(skills)) return -1;
+
+    return skills.findIndex(skill =>
+        skill &&
+        skill.profession_link === professionId &&
+        (strictSubId ? (skill.profession_sublink === subId || subId === null) : true)
+    );
 }
 
 /**
@@ -450,5 +470,6 @@ function transferCharacter(btn_action) {
 // Export functions
 export {
     Character,
-    findItemIndex
+    findItemIndex,
+    findLinkedSkillIndex,
 }

@@ -139,6 +139,7 @@ define('TBL_PROF','profession');
 define('TBL_PROF_SUB','profession_subtype');
 define('TBL_PROF_RANK','profession_ranks');
 define('TBL_SKILL','skill');
+define('TBL_SKILL_LINK','skill_links');
 define('TBL_SKILL_TYPE','skill_types');
 define('TBL_SKILL_SUB','skill_subtype');
 define('TBL_ITEM','item');

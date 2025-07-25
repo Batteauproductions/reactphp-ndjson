@@ -31,9 +31,7 @@ class SkillModel extends Model
                     s.cost,
                     s.max_rank,
                     s.allow_multiple,
-                    s.skill_type,
-                    s.profession_link,
-                    s.profession_sublink,
+                    s.skill_type,                    
                     s.profession_rank,
                     s.sl_only,
                     s.multiplier,
@@ -43,15 +41,11 @@ class SkillModel extends Model
                     s.power,
                     s.time,
                     s.atk_range,
-                    p.id as prof_id, p.name as prof_name,
                     sm.id as stat_id, sm.name as stat_name,
                     st.id as type_id, st.name as type_name')
-            ->join(TBL_PROF . ' p', 'p.id = s.profession_link', 'left')
             ->join(TBL_STATMOD . ' sm', 'sm.id = s.modifier', 'left')
             ->join(TBL_SKILL_TYPE . ' st', 'st.id = s.skill_type', 'left')
             ->orderBy('s.name', 'asc')
-            ->orderBy('s.profession_link', 'asc')
-            ->orderBy('s.profession_sublink', 'asc')
             ->orderBy('s.profession_rank', 'asc')
             ->where('s.available', 1);
 
@@ -105,8 +99,6 @@ class SkillModel extends Model
                         s.max_rank,
                         s.allow_multiple,
                         s.skill_type,
-                        s.profession_link,
-                        s.profession_sublink,
                         s.profession_rank,
                         s.sl_only,
                         s.multiplier,
@@ -122,6 +114,7 @@ class SkillModel extends Model
                 ->where('s.available', 1)
                 ->whereIn('s.skill_type', $skill_type)
                 ->join(TBL_PROF . ' p', 'p.id = s.profession_link', 'left')
+                ->join(TBL_SKILL_LINK . ' sl', 'sl.skill_id = s.id', 'left')
                 ->join(TBL_STATMOD . ' sm', 'sm.id = s.modifier', 'left')
                 ->join(TBL_SKILL_TYPE . ' st', 'st.id = s.skill_type', 'left')
                 ->orderBy('s.profession_link', 'asc')
@@ -137,19 +130,19 @@ class SkillModel extends Model
         if ($arrProfessions !== null) {
             foreach ($arrProfessions as $key => $value) {
                 $query->orGroupStart()                              
-                    ->where('s.profession_link', intval($arrProfessions[$key]['id']))
-                    ->where('s.profession_sublink', intval($arrProfessions[$key]['sub_id']))
+                    ->where('sl.profession_id', intval($arrProfessions[$key]['id']))
+                    ->where('sl.sub_profession_id', intval($arrProfessions[$key]['sub_id']))
                     ->where('s.profession_rank <=', intval($arrProfessions[$key]['rank']))          
                     ->groupEnd();
                 //for skills with a rank in the profession, but no sublink
                 $query->orGroupStart()                    
-                    ->where('s.profession_link', intval($arrProfessions[$key]['id']))
-                    ->where('s.profession_sublink', null)
+                    ->where('sl.profession_id', intval($arrProfessions[$key]['id']))
+                    ->where('sl.sub_profession_id', null)
                     ->where('s.profession_rank <=', intval($arrProfessions[$key]['rank']))
                     ->groupEnd();
                 //for skills with no rank in the profession
                 $query->orGroupStart()                    
-                    ->where('s.profession_link', intval($arrProfessions[$key]['id']))
+                    ->where('sl.profession_id', intval($arrProfessions[$key]['id']))
                     ->where('s.profession_rank', null)
                     ->groupEnd();
             }
@@ -264,30 +257,17 @@ class SkillModel extends Model
     {
 		$builder = $this
 			->db
-            ->table(TBL_SKILL_SUB)
-			->select('id, name, description')
-			->where('parent_id', $id);
+            ->table(TBL_SKILL_SUB.' ss')
+			->select('ss.id, 
+                    ss.name, 
+                    ss.description')
+			->where('ss.parent_id', $id);
         //some subtypes are only for SL
         if (!$gamemaster) {
-            $builder->where('sl_only', '0');
+            $builder->where('ss.sl_only', '0');
         }
         $query = $builder->get();
         return $query->getResultObject();
-	}
-
-    public function getSkillSubtypeByID($id,$gamemaster=false) 
-    {
-		$builder  = $this
-			->db
-            ->table(TBL_SKILL_SUB)
-			->select('id, name, description')
-			->where('id', $id);
-        //some subtypes are only for SL
-        if (!$gamemaster) {
-            $builder->where('sl_only', '0');
-        }
-        $query = $builder->get();
-        return $query->getRow();
 	}
 
     public function removeSkill($arrData)

@@ -46,7 +46,7 @@ function updateMaxXP() {
     } else {
         const stories = window.character.stories ? window.character.stories.length : 0;
         for (let i = 1; i <= stories; i++) {
-            const xp_bonus = window.arrXP[i] ?? 0;
+            const xp_bonus = window.arrXP[i-1] ?? 0;
             total += parseInt(xp_bonus);
         }
     }

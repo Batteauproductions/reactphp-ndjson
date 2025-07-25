@@ -8,6 +8,8 @@ import { openSelectionModal, updateModalDropdown, $subtypeSelect, $rankSelect } 
 class Skill extends CharacterAsset {
     constructor(params) {
         super(params);
+        this.profession_link = parseInt(params.details.profession_link);
+        this.profession_sublink = parseInt(params.details.profession_sublink);
     }
 }
 
