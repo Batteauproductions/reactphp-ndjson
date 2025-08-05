@@ -158,45 +158,52 @@ function generateAssetIcons(asset) {
     const result = [];
     const lockedDt = window.character?.meta?.lastlocked_dt ?? null;
 
+    const isItem = asset.attribute === 'item';
+
+    const current = isItem ? asset.amount : asset.rank;
+    const locked = isItem ? asset.amount_locked : asset.rank_locked;
+    const max = asset.max_rank ?? 3;
+    const createdAfterLock = lockedDt === null || asset.created_dt > lockedDt;
+
     const validActions = [];
 
-    // Downgrade is allowed if rank > 0 and above locked, or was added after lock
+    // --- Downgrade Logic ---
     const canDowngrade =
-        asset.rank > 1 && (
-            lockedDt === null ||
-            asset.created_dt > lockedDt ||
-            asset.rank_locked === null ||
-            asset.rank > asset.rank_locked
+        current > 1 && (
+            createdAfterLock ||
+            locked === null ||
+            current > locked
         );
     if (canDowngrade) {
         validActions.push('downgrade');
     }
 
-    // Upgrade allowed if:
-    // A regular user should be able to upgrade up to max level -1 (if it's a profession)
-    // A gamemaster can always upgrade to max level
-    if (
-        asset.rank < asset.max_rank &&
+    // --- Upgrade Logic ---
+    const canUpgrade = isItem || (
+        current < max &&
         !(
-            asset.rank === asset.max_rank - 1 &&
-            !window.gamemaster &&
-            asset.attribute === 'profession'
+            asset.attribute === 'profession' &&
+            current === max - 1 &&
+            !window.gamemaster
         )
-    ) {
+    );
+    if (canUpgrade) {
         validActions.push('upgrade');
     }
 
-    // Remove allowed if asset added after lock or no lock at all
-    if (asset.racial == 0 && (lockedDt === null || asset.created_dt > lockedDt)) {
+    // --- Remove Logic ---
+    if (asset.racial == 0 && createdAfterLock) {
         validActions.push('remove');
     }
 
+    // --- Bind Event Handlers ---
     const eventHandlers = {
         remove: asset.remove?.bind(asset),
         upgrade: asset.upgrade?.bind(asset),
         downgrade: asset.downgrade?.bind(asset)
     };
 
+    // --- Render Icons ---
     for (const action of validActions) {
         const icon = icons[action];
         const handler = eventHandlers[action] ?? null;
@@ -209,8 +216,6 @@ function generateAssetIcons(asset) {
 
     return result;
 }
-
-
 
 /**
  * Inserts a message into the DOM, replacing any existing messages.

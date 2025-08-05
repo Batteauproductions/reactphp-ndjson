@@ -290,4 +290,19 @@ class SkillModel extends Model
         return $builder->delete();
     }
 
+    public function getSkillSubtypeByID($id,$gamemaster=false) 
+    {
+		$builder  = $this
+			->db
+            ->table(TBL_SKILL_SUB)
+			->select('id, name, description')
+			->where('id', $id);
+        //some subtypes are only for SL
+        if (!$gamemaster) {
+            $builder->where('sl_only', '0');
+        }
+        $query = $builder->get();
+        return $query->getRow();
+	}
+
 }

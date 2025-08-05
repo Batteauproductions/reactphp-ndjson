@@ -204,30 +204,45 @@ class Account extends Controller
             $arrUserDetails = [];
             // Get the uploaded file
             $file = $this->request->getFile('avatar');
-            if(!empty($file->getName())) {
-                //setup rules for upload
-                $uploadConfig = array(
-                    'upload_path'   => './assets/images/avatars/user/',
-                    'allowed_types' => 'jpg|jpeg|png',
-                    'max_size'      => 1024 * 5, // 5 MB
-                    'file_name'     => md5($this->session->get('username')).'.'.$file->getExtension(),
-                    'overwrite'     => true,
-                );            
-                // Check if the file was uploaded successfully
+            if (!empty($file->getName())) {
+                $allowedTypes = ['jpg', 'jpeg', 'png'];
+                $maxSizeBytes = 1024 * 1024 * 5; // 5 MB
+
+                $extension = strtolower($file->getExtension());
+                $fileSize  = $file->getSize(); // in bytes
+
+                if (!in_array($extension, $allowedTypes)) {
+                    return redirect()->back()->withInput()->with('errors', ['Alleen .jpg, .jpeg of .png bestanden zijn toegestaan.']);
+                }
+
+                if ($fileSize > $maxSizeBytes) {
+                    return redirect()->back()->withInput()->with('errors', ['Het bestand is te groot. Maximum is 5MB.']);
+                }
+
+                $file_name = md5($this->session->get('username')) . '.' . $extension;
+                $uploadPath = FCPATH . 'assets/images/avatars/user/';
+                $fullPath = $uploadPath . $file_name;
+
+                // Bestaand bestand handmatig verwijderen indien nodig
+                if (file_exists($fullPath)) {
+                    unlink($fullPath);
+                }
+
                 if ($file->isValid() && !$file->hasMoved()) {
-                    // Perform the upload using the specified upload settings
-                    if ($file->move($uploadConfig['upload_path'], $uploadConfig['file_name'])) {
+                    if ($file->move($uploadPath, $file_name)) {
                         $arrUserDetails = array(
-                            'avatar' 		=> $file->getName(),
-                            'modified_dt' 	=> date('Y-m-d H:i:s')
-                        );                
+                            'avatar'       => $file_name,
+                            'modified_dt'  => date('Y-m-d H:i:s')
+                        );
+                        // Hier eventueel opslaan naar DB
                     } else {
-                        return redirect()->back()->withInput()->with('errors', ['Een fout zorgde dat je je plaatje niet kon uploaden, probeer het later nog eens.']);
+                        return redirect()->back()->withInput()->with('errors', ['Uploaden is mislukt. Probeer het later opnieuw.']);
                     }
                 } else {
-                    return redirect()->back()->withInput()->with('errors', ['Een fout zorgde dat je je plaatje niet kon uploaden, probeer het later nog eens.']);
+                    return redirect()->back()->withInput()->with('errors', ['Uploaden is mislukt. Probeer het later opnieuw.']);
                 }
-            }  
+            }
+ 
             //setup data for the model           
             $arrUser = array(
                 'id' 			=> $this->session->get('uid'),

@@ -261,30 +261,42 @@ class Character extends Controller
                 // Add an avatar if supplied
                 $file = $this->request->getFile('avatar');
                 if ($file && $file->isValid() && !$file->hasMoved()) {
-                    $file_name = md5($this->request->getPost('char_name')).'.'.$file->getExtension();
-                    $arrData['avatar'] = $file_name;
-                    // Setup rules for upload
-                    $uploadConfig = array(
-                        'upload_path'   => './assets/images/avatars/hero/',
-                        'allowed_types' => 'jpg|jpeg|png',
-                        'max_size'      => 1024 * 5, // 5 MB
-                        'file_name'     => $file_name,
-                        'overwrite'     => true,
-                    );            
-                    // Check if the file was uploaded successfully
-                    if ($file->isValid() && !$file->hasMoved()) {
-                        // Perform the upload using the specified upload settings
-                        if ($file->move($uploadConfig['upload_path'], $uploadConfig['file_name'])) {
-                            $arrUserDetails = array(
-                                'avatar' 		=> $file->getName(),
-                                'modified_dt' 	=> date('Y-m-d H:i:s')
-                            );                
-                        } else {
-                            return redirect()->back()->withInput()->with('errors', ['Een fout zorgde dat je je plaatje niet kon uploaden, probeer het later nog eens.']);
-                        }
-                    } else {
-                        return redirect()->back()->withInput()->with('errors', ['Een fout zorgde dat je je plaatje niet kon uploaden, probeer het later nog eens.']);
+                    $allowedTypes = ['jpg', 'jpeg', 'png'];
+                    $maxSizeBytes = 1024 * 1024 * 5; // 5 MB
+
+                    $extension = strtolower($file->getExtension());
+                    $fileSize  = $file->getSize(); // in bytes
+
+                    if (!in_array($extension, $allowedTypes)) {
+                        return redirect()->back()->withInput()->with('errors', ['Alleen .jpg, .jpeg of .png bestanden zijn toegestaan.']);
                     }
+
+                    if ($fileSize > $maxSizeBytes) {
+                        return redirect()->back()->withInput()->with('errors', ['Het bestand is te groot. Maximum is 5MB.']);
+                    }
+
+                    $file_name = md5($this->request->getPost('char_name')) . '.' . $extension;
+                    $arrData['avatar'] = $file_name;
+
+                    $uploadPath = FCPATH . 'assets/images/avatars/hero/';
+                    $fullPath = $uploadPath . $file_name;
+
+                    // Overwrite manually
+                    if (file_exists($fullPath)) {
+                        unlink($fullPath);
+                    }
+
+                    if ($file->move($uploadPath, $file_name)) {
+                        $arrUserDetails = array(
+                            'avatar'       => $file_name,
+                            'modified_dt'  => date('Y-m-d H:i:s')
+                        );
+                        // You might want to save $arrUserDetails to DB here
+                    } else {
+                        return redirect()->back()->withInput()->with('errors', ['Uploaden is mislukt. Probeer het later opnieuw.']);
+                    }
+                } else {
+                    return redirect()->back()->withInput()->with('errors', ['Uploaden is mislukt. Probeer het later opnieuw.']);
                 } 
 
                 //do something slightly different per action

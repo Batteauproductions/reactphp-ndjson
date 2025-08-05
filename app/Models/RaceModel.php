@@ -49,7 +49,7 @@ class RaceModel extends Model
                 $skillData = $this->skillModel->getSkillDetails($parsedSkill['id']);
                 //check if a subid is already present
                 if (isset($parsedSkill['subid'])) {
-                    $subSkill = $this->skillModel->getSkillSubtypeByID($parsedSkill['subid']);
+                    $subSkill = $this->skillModel->getSkillSubtypeByID($parsedSkill['subid'],true);//Race selection should always be considered a SL option
                     $skillData['current'] = new \stdClass();
                     $skillData['current']->sub_id = $subSkill->id;
                     $skillData['current']->sub_name = $subSkill->name;
