@@ -10,15 +10,15 @@ class Profession extends CharacterAsset {
         super(params);
     }
     
-    getNewRankCost(new_rank = null) {
+    getNewRankCost(asset_value_new = null) {
         const arr_cost = this.cost.split('|');
-        return parseInt(arr_cost[new_rank-1]);
+        return parseInt(arr_cost[asset_value_new-1]);
     }
 
-    getCurrentRankCost() {
+    getCurrentAssetValueCost() {
         let total = 0;
         const arr_cost = this.cost.split('|'); 
-        for (let i = 0; i <= (this.rank-1); i++) {
+        for (let i = 0; i <= (this.asset_value-1); i++) {
             const cost = parseInt(arr_cost[i]) ?? 0;
             total += cost;
         }

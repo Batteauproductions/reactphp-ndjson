@@ -1,6 +1,6 @@
 //Generic settings and functions
 import { CharacterAsset } from './character_asset.js';
-import { domain, oTranslations, language } from '../../_lib/settings.js';
+import { domain } from '../../_lib/settings.js';
 import { debugLog } from '../../_lib/functions.js';
 import { convertCurrency, updateCurrency} from '../helper/currency.js';
 import { openSelectionModal, updateModalDropdown } from '../modal/selection_modal.js';
@@ -9,8 +9,6 @@ import { openSelectionModal, updateModalDropdown } from '../modal/selection_moda
 class Item extends CharacterAsset {
     constructor(params) {
         super(params);
-        // Ensure `amount` is a number inside `current`
-        this.amount = parseInt(params.current.amount);
     }
 
     costText() {
@@ -80,21 +78,15 @@ function chooseItem (sAction, obj) {
         return;
     }
 
-    
-    const amount = parseInt($('input[name="amount"]').val()) || 0;
-    const itemcost = parseInt(obj.details?.cost) || 0;
-
     // Update details and current in one go
     obj.details = {
         ...obj.details,
-        cost: amount * itemcost,
-        allow_multiple: 1,
     };
 
     obj.current = {
-        amount,
+        asset_value: 1,
         container: sAction,
-        attribute: sAction,
+        attribute: 'item',
     };
 
     const itemClass = new Item(obj);

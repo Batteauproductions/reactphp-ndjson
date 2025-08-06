@@ -38,12 +38,7 @@
                             </tr>
                             <tr>
                                 <td valign="top" class="text-center">
-                                    <?= view('character/parts/stats/Stats_Primary', ['print'=>true]) ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td valign="top" class="text-center">
-                                    <?= view('character/parts/stats/Stats_Secundary', ['print'=>true]) ?>
+                                    <?= view('character/parts/Baseinfo', ['print'=>true]) ?>
                                 </td>
                             </tr>
                         </table>
@@ -53,9 +48,14 @@
                         <table role="presentation" id="Charsheet" border="0" cellspacing="0" cellpadding="0" style="width:100%;">
                             <tr>
                                 <td width="50%" valign="top" class="text-center">
-                                    <?= view('character/parts/Baseinfo', ['print'=>true]) ?>
+                                    <?= view('character/parts/stats/Stats_Primary', ['print'=>true]) ?>
                                 </td>
                                 <td width="50%" valign="top" class="text-center">
+                                    <?= view('character/parts/stats/Stats_Secundary', ['print'=>true]) ?>                                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
                                     <?= view('character/parts/Asset', ['title'=>'Beroep(en)', 'id'=>'profession', 'array'=>$oCharacter->profession, 'print'=>true]); ?>
                                 </td>
                             </tr>

@@ -145,9 +145,9 @@ function showPopup(message, type='inform', tone='', confirm = () => {}) {
  * and returns jQuery anchor elements with appropriate click handlers.
  *
  * @param {Object} asset - The asset object.
- * @param {number} asset.rank - The current rank of the asset (0 to 3).
- * @param {number} asset.rank_locked - The minimum locked rank.
- * @param {number} asset.max_rank - The maximum possible rank (default 3).
+ * @param {number} asset.asset_value_ - The current asset_value of the asset (0 to 3).
+ * @param {number} asset.asset_value_locked - The minimum locked asset_value.
+ * @param {number} asset.asset_value_max - The maximum possible asset_value (default 3).
  * @param {Date|string} asset.created_dt - When the asset was added.
  * @param {Function} asset.remove - Method to remove the asset.
  * @param {Function} asset.upgrade - Method to upgrade the asset.
@@ -160,9 +160,9 @@ function generateAssetIcons(asset) {
 
     const isItem = asset.attribute === 'item';
 
-    const current = isItem ? asset.amount : asset.rank;
-    const locked = isItem ? asset.amount_locked : asset.rank_locked;
-    const max = asset.max_rank ?? 3;
+    const current = isItem ? asset.amount : asset.asset_value;
+    const locked = isItem ? asset.amount_locked : asset.asset_value_locked;
+    const max = asset.asset_value_max ?? 3;
     const createdAfterLock = lockedDt === null || asset.created_dt > lockedDt;
 
     const validActions = [];

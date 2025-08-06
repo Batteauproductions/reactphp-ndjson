@@ -13,7 +13,7 @@ class CharacterAsset {
             description,
             requirements,
             cost,
-            max_rank,
+            asset_value_max,
             loresheet,
             allow_multiple,            
         },
@@ -21,10 +21,10 @@ class CharacterAsset {
         current: {
             sub_id = null,
             sub_name = null,
-            rank = null,
-            locked_rank = null,
+            asset_value = null,
+            asset_value_locked = null,
             racial,
-            rank_cost,
+            asset_value_cost,
             attribute,  
             container, //div container within the interface                        
             created_dt,
@@ -36,17 +36,17 @@ class CharacterAsset {
         this.name = name;
         this.description = description;
         this.requirements = requirements ?? null; //assets can have requirements
-        this.max_rank = max_rank ? parseInt(max_rank) : 1 ; //checks that rank is always set to at least 1
+        this.asset_value_max = asset_value_max ? parseInt(asset_value_max) : 1 ; //checks that asset_value is always set to at least 1
         this.allow_multiple = allow_multiple ? parseInt(allow_multiple) : 0; //only certain items can be added multiple times [true/false]
         this.attribute = attribute; //what attribute of the character the assets should be stored [profession/skill/item]
         this.sub_id = sub_id !== null ? parseInt(sub_id) : null; //some assets have an sub id, for instance [2/5]
         this.sub_name = sub_name !== null ? sub_name : null; //some assets have a sub name, for instance [mage/elemental]
-        this.rank = isNaN(parseInt(rank)) ? 1 : parseInt(rank); //what level is the asset
-        this.locked_rank = locked_rank ? parseInt(locked_rank) : parseInt(rank); //what was the level when the character (asset) was locked
+        this.asset_value = isNaN(parseInt(asset_value)) ? 1 : parseInt(asset_value); //what level is the asset
+        this.asset_value_locked = asset_value_locked ? parseInt(asset_value_locked) : parseInt(asset_value); //what was the level when the character (asset) was locked
         this.modifier = modifier.length > 0 && modifier[0]?.id !== undefined ? parseInt(modifier[0].id) : null; //some assets contain stat modifiers
         this.racial = racial ? Boolean(parseInt(racial)) : false; //some assets are included in the racial choice of the character
         this.cost = this.racial ? "0" : cost; // all racial elements are 0 cost    
-        this.rank_cost = rank_cost !== undefined ? parseInt(rank_cost) : parseInt(this.cost); // upon initialization the asset cost is the same as the cost          
+        this.asset_value_cost = asset_value_cost !== undefined ? parseInt(asset_value_cost) : parseInt(this.cost); // upon initialization the asset cost is the same as the cost          
         this.container = container; //this is the container on the character sheet [profession/skill/equipment]
         this.loresheet = loresheet ? Boolean(parseInt(loresheet)) : false;
         this.created_dt = created_dt ? created_dt : null;
@@ -60,7 +60,8 @@ class CharacterAsset {
     }
 
     add () {
-        // Return 1 (Unique): Check for duplicates, no same assets with same main- and sub_id
+
+        // Return 1 (Unique combination): Check for duplicates, no same assets with same main- and sub_id
         const duplicate_index = findItemIndex(this.attribute, this.id, this.sub_id);
         if (duplicate_index !== -1) {
             const message = oTranslations[language].duplicate_choose;
@@ -70,7 +71,7 @@ class CharacterAsset {
         }
         //-----------------------------//
         
-        // Return 2 (Duplicates): Some assets allow for multiple main instances, others do not
+        // Return 2 (Duplicate master): Some assets allow for multiple main instances, others do not
         if(this.allow_multiple == 0) {
             const index = findItemIndex(this.attribute, this.id);
             if (index !== -1) {
@@ -83,6 +84,11 @@ class CharacterAsset {
         //-----------------------------//
 
         // Return 3 (Requirements): Check if the requirement is met, if so; continue
+        // The data structure is as follows
+        // | : indicates and AND
+        // / : indicates an OR
+        // , : indicates asset_value
+        // example: 14|12,2/13,2 translates to "skill id 14 AND (skill id 12 asset_value 2 OR skill id 13 asset_value 2)
         if (this.requirements) {
             const andConditions = this.requirements.split('|');
             for (let condition of andConditions) {
@@ -92,9 +98,8 @@ class CharacterAsset {
                 for (let orPart of orParts) {
                     let parts = orPart.split(',');
                     let id = parseInt(parts[0]);
-                    let rank = parts[1] ? parseInt(parts[1]) : null;
-                    // You may want to adapt sub_id logic depending on your actual data
-                    const index = findItemIndex('skill', id, null, rank, false);
+                    let asset_value = parts[1] ? parseInt(parts[1]) : null;
+                    const index = findItemIndex('skill', id, null, asset_value, false);
                     if (index !== -1) {
                         orSatisfied = true;
                         break; // One OR condition met
@@ -111,7 +116,7 @@ class CharacterAsset {
         //-----------------------------//
 
         // Return 4 (Cost): Check if the cost can be deducted, if so; deduct and continue
-        if(!this.costSpend(this.rank_cost)) {
+        if(!this.costSpend(this.asset_value_cost)) {
             if(this.attribute==='item') {
                 showMessage('#choice-actions', 'error', oTranslations[language].not_enough_coin);
             } else {
@@ -131,26 +136,30 @@ class CharacterAsset {
     }
     
     remove () {
+
         // Return 1: Attempt to find the asset within the character object
         const index = findItemIndex(this.attribute, this.id, this.sub_id);
         if (index === -1) {
             console.error(`Trying to remove ${this.attribute}, instance not found`);
             return false;
         }
+        //-----------------------------//
 
         // (potentional) Return 2: Attempt to remove profession with skills of profession
+        // A profession can not be removed if the character still has skills related to the profession
         if(this.attribute === 'profession') {
             const index = findLinkedSkillIndex(this.id, this.sub_id);
             const title = oTranslations[language].popup_error;
             const message = oTranslations[language].linked_profession;
             if (index !== -1) {
                 showPopup(`<h2>${title}</h2><p>${message}`,'inform','error');
-                debugLog(message);
                 return false;
             }
         }
+        //-----------------------------//
 
-        //only push to remove skills from database if the asset was created
+        // This pushes the instance to an array if it has a creation date (stored in the database)
+        // It will then process deletion in a later stage so that no every delete is called via ajax and processed in bulk
         if (this.created_dt !== null) {   
             const asset = {
                 cid:    window.character.meta.id,
@@ -160,9 +169,10 @@ class CharacterAsset {
             }
             window.remove_asset.push(asset);
         }
+        //-----------------------------//
 
         // Refund the cost of the element
-        this.costRefund(this.rank_cost);
+        this.costRefund(this.asset_value_cost);
 
         // Remove the asset of the character both functionally and visually 
         window.character[this.attribute].splice(index, 1)[0]; //-- functionally
@@ -175,14 +185,14 @@ class CharacterAsset {
     }
 
     downgrade () {
-        this.adjustRank(-1);
+        this.adjustAssetValue(-1);
     }
 
     upgrade () {
-        this.adjustRank(+1);
+        this.adjustAssetValue(+1);
     }
 
-    adjustRank(direction) {
+    adjustAssetValue(direction) {
 
         // Return 1: Checks if item exists on the character, should not be possible hence a console error
         const index = findItemIndex(this.attribute, this.id, this.sub_id);
@@ -192,15 +202,17 @@ class CharacterAsset {
         }
         //-----------------------------//
                 
-        // Return 2: Checks if an attempt is made to manipulate outside of rank limit, should not be possible hence a console error
-        const new_rank = this.rank + direction;
-        if (new_rank > this.max_rank) {
-            console.error(`${oTranslations[language].rank_max}`);
-            return false;
-        }
-        if (new_rank < 1) {
-            console.error(`${oTranslations[language].rank_min}`);
-            return false;
+        // (potential) Return 2: Checks if an attempt is made to manipulate outside of asset_value limit, should not be possible hence a console error
+        const new_asset_value = this.asset_value + direction;
+        if(this.attribute !== 'item') {
+            if (this.asset_value_max !== null && new_asset_value > this.asset_value_max) {
+                console.error(`${oTranslations[language].asset_value_max}`);
+                return false;
+            }
+            if (new_asset_value < 1) {
+                console.error(`${oTranslations[language].asset_value_min}`);
+                return false;
+            }
         }
         //-----------------------------//
 
@@ -211,23 +223,23 @@ class CharacterAsset {
         if (direction === 1) {
             // UPGRADE
             if (cost_array.length === 1) {
-                new_cost = cost_array[0]; // flat cost for all ranks
-            } else if (this.rank < cost_array.length) {
-                new_cost = cost_array[this.rank]; // cost for upgrading to the next rank
+                new_cost = cost_array[0]; // flat cost for all asset_values
+            } else if (this.asset_value < cost_array.length) {
+                new_cost = cost_array[this.asset_value]; // cost for upgrading to the next asset_value
             } 
             // Return 3: Check if cost can be paid
             if (!this.costSpend(new_cost)) {
                 showPopup(`<h2>${oTranslations[language].popup_error}</h2><p>${oTranslations[language].not_enough_vp}</p>`, 'inform', 'error');
                 return false;
             }
-            this.rank += 1;
-            this.rank_cost += new_cost;
+            this.asset_value += 1;
+            this.asset_value_cost += new_cost;
         } else {
             // DOWNGRADE
             if (cost_array.length === 1) {
                 new_cost = cost_array[0];
-            } else if (this.rank > 0) {
-                new_cost = cost_array[this.rank - 1]; // refund last rank's cost
+            } else if (this.asset_value > 0) {
+                new_cost = cost_array[this.asset_value - 1]; // refund last asset_value's cost
             } 
             
             if (!this.costRefund(new_cost)) {
@@ -235,8 +247,8 @@ class CharacterAsset {
                 return;
             }
 
-            this.rank -= 1;
-            this.rank_cost -= new_cost;
+            this.asset_value -= 1;
+            this.asset_value_cost -= new_cost;
         }
         //-----------------------------//
     
@@ -245,8 +257,8 @@ class CharacterAsset {
     
         // Update UI
         const $row = this.getVisualRow();
-        $row.find('[data-column="name"]').text(`${this.name} (${icons.rank.text()} ${this.rank})`);
-        $row.find('[data-column="cost"]').text(`${this.rank_cost}pt.`);
+        $row.find('[data-column="name"]').text(`${this.name} (${icons.asset_value.text()} ${this.asset_value})`);
+        $row.find('[data-column="cost"]').text(`${this.asset_value_cost}pt.`);
         $row.find('[data-column="action"]').html(new_icons);
 
         window.character.update();
@@ -272,7 +284,7 @@ class CharacterAsset {
             name += `${bNewAsset ? icons.new.icon() : ''}`;
             name += `${this.loresheet===1 ? icons.loresheet.icon() : ''}`;
             name += `${this.name}`;
-            name += `${this.rank != this.max_rank ? ` (${icons.rank.text()} ${this.rank})` : ''}`;
+            name += `${this.asset_value != this.asset_value_max ? ` (${icons.asset_value.text()} ${this.asset_value})` : ''}`;
         
         const arrColumns = [
             $('<div>', {
@@ -293,14 +305,14 @@ class CharacterAsset {
                 arrColumns.push($('<div>', {
                     'data-column': 'cost',
                     class: 'cell small-2 medium-1 text-right',
-                    html: this.racial ? `<em>${oTranslations[language].racial}</em>` : `${this.rank_cost}pt.`
+                    html: this.racial ? `<em>${oTranslations[language].racial}</em>` : `${this.asset_value_cost}pt.`
                 }));  
                 break;
             case 'item':
                 arrColumns.push($('<div>', {
                     'data-column': 'amount',
                     class: 'cell small-2 medium-1 text-right',
-                    text: `${this.amount}x`
+                    text: `${this.asset_value}x`
                 }));    
                 arrColumns.push($('<div>', {
                     'data-column': 'cost',
@@ -342,15 +354,15 @@ class CharacterAsset {
         return updateExperience(cost,"refund")
     }
 
-    getCurrentRankCost() {
+    getCurrentAssetValueCost() {
         const cost_array = this.cost.split('|').map(str => parseInt(str));
         if (cost_array.length === 1) {
-            // Flat cost per rank
+            // Flat cost per asset_value
             return cost_array[0];
         }
-        // Progressive cost: sum of all previous steps up to current rank
-        // E.g., for rank 2 and cost "3|2|1", return 3+2 = 5
-        return cost_array.slice(0, this.rank).reduce((sum, val) => sum + val, 0);
+        // Progressive cost: sum of all previous steps up to current asset_value
+        // E.g., for asset_value 2 and cost "3|2|1", return 3+2 = 5
+        return cost_array.slice(0, this.asset_value).reduce((sum, val) => sum + val, 0);
     }
 
     getVisualRow() {

@@ -10,7 +10,7 @@ class ProfessionModel extends Model
     
     protected $db;
     protected $modifierModel; 
-    protected $profession_columns = 'p.id, p.name, p.description, p.avatar, p.modifier, p.skill_bonus, p.cost, p.max_rank, p.allow_multiple, p.rule_page, p.available, p.sl_only';
+    protected $profession_columns = 'p.id, p.name, p.description, p.avatar, p.modifier, p.skill_bonus, p.cost, p.asset_value_max, p.allow_multiple, p.rule_page, p.available, p.sl_only';
 
     public function __construct()
     {
@@ -33,8 +33,8 @@ class ProfessionModel extends Model
         if ($cid !== null) {
             $builder->select('cp.main_id, 
                             cp.sub_id, 
-                            cp.rank, 
-                            cp.rank_locked,
+                            cp.asset_value, 
+                            cp.asset_value_locked,
                             cp.created_dt, 
                             cp.modified_dt,
                             ps.name as sub_name')

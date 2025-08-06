@@ -77,7 +77,7 @@ function pickSkill(sAction) {
                 updateModalDropdown($select, data);
                 $form.show();
             } else {
-                showPopup(`<p>${oTranslations[language].no_skills_available}</p>`,'inform','question');
+                showPopup(`<h2>${oTranslations[language].popup_error}</h2><p>${oTranslations[language].no_skills_available}</p>`,'inform','question');
             }
         },
         error: function(error) {
@@ -105,7 +105,7 @@ function chooseSkill(sAction, obj) {
     obj.current = {
         sub_id: $subtypeSelect.find('option:selected').val() || null,
         sub_name: $subtypeSelect.find('option:selected').text() || null,
-        rank: $rankSelect.val() || 1,        
+        asset_value: $rankSelect.val() || 1,        
         container: sAction,
         attribute: 'skill',
     }

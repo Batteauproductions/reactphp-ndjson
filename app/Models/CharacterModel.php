@@ -234,15 +234,15 @@ class CharacterModel extends Model
             'status_id'      => $arrData['status_id'],
         ];
 
-        // Step 2: Only lock the ranks if status is 5 (locked)
+        // Step 2: Only lock the asset_values if status is 5 (locked)
         if($arrData['status_id'] == 5) {
             $charData['firstlocked_dt'] = empty($arrData['firstlocked_dt']) ? date('Y-m-d H:i:s') : $arrData['firstlocked_dt'];
             $charData['lastlocked_dt']  = date('Y-m-d H:i:s');
-            // Step A: For all related data profession records, set lock_rank equal to rank
-            $sql = "UPDATE " . TBL_CHAR_PROF . " SET rank_locked = rank WHERE char_id = ?";
+            // Step A: For all related data profession records, set lock_asset_value equal to asset_value
+            $sql = "UPDATE " . TBL_CHAR_PROF . " SET asset_value_locked = asset_value WHERE char_id = ?";
             $this->db->query($sql, [$arrData['cid']]);
-            // Step B: For all related data skill records, set lock_rank equal to rank
-            $sql = "UPDATE " . TBL_CHAR_SKILL . " SET rank_locked = rank WHERE char_id = ?";
+            // Step B: For all related data skill records, set lock_asset_value equal to asset_value
+            $sql = "UPDATE " . TBL_CHAR_SKILL . " SET asset_value_locked = asset_value WHERE char_id = ?";
             $this->db->query($sql, [$arrData['cid']]);
         }
         // Step 3: Set the status for the character
@@ -354,9 +354,9 @@ class CharacterModel extends Model
             }
         }
         // Step 3d: Insert data into the TBL_CHAR_PROF table
-        if($profession) { $this->insertItems($profession, TBL_CHAR_PROF, $char_id, ['rank','rank_locked']); }
+        if($profession) { $this->insertItems($profession, TBL_CHAR_PROF, $char_id, ['asset_value','asset_value_locked']); }
         // Step 3e: Insert data into the TBL_CHAR_SKILL table
-        if($skill) { $this->insertItems($skill, TBL_CHAR_SKILL, $char_id, ['racial','rank','rank_locked','bonus']); }
+        if($skill) { $this->insertItems($skill, TBL_CHAR_SKILL, $char_id, ['racial','asset_value','asset_value_locked','bonus']); }
         // Step 3f: Insert data into the TBL_CHAR_ITEMS table
         if($item) { $this->insertItems($item, TBL_CHAR_ITEMS, $char_id, ['bonus','amount']); }
         // Step 3g: Insert (or Update) the notes in TBL_CHAR_COMMENTS

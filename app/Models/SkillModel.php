@@ -29,7 +29,7 @@ class SkillModel extends Model
                     s.requirements,
                     s.disclaimer,
                     s.cost,
-                    s.max_rank,
+                    s.asset_value_max,
                     s.allow_multiple,
                     s.skill_type,                    
                     s.profession_rank,
@@ -57,8 +57,8 @@ class SkillModel extends Model
             $query->select('cs.main_id, 
                             cs.sub_id, 
                             cs.racial, 
-                            cs.rank, 
-                            cs.rank_locked,
+                            cs.asset_value, 
+                            cs.asset_value_locked,
                             cs.bonus, 
                             cs.created_dt, 
                             cs.modified_dt,
@@ -96,7 +96,7 @@ class SkillModel extends Model
                         s.requirements,
                         s.disclaimer,
                         s.cost,
-                        s.max_rank,
+                        s.asset_value_max,
                         s.allow_multiple,
                         s.skill_type,
                         s.profession_rank,
@@ -132,13 +132,13 @@ class SkillModel extends Model
                 $query->orGroupStart()                              
                     ->where('sl.profession_id', intval($arrProfessions[$key]['id']))
                     ->where('sl.sub_profession_id', intval($arrProfessions[$key]['sub_id']))
-                    ->where('s.profession_rank <=', intval($arrProfessions[$key]['rank']))          
+                    ->where('s.profession_rank <=', intval($arrProfessions[$key]['asset_value']))          
                     ->groupEnd();
                 //for skills with a rank in the profession, but no sublink
                 $query->orGroupStart()                    
                     ->where('sl.profession_id', intval($arrProfessions[$key]['id']))
                     ->where('sl.sub_profession_id', null)
-                    ->where('s.profession_rank <=', intval($arrProfessions[$key]['rank']))
+                    ->where('s.profession_rank <=', intval($arrProfessions[$key]['asset_value']))
                     ->groupEnd();
                 //for skills with no rank in the profession
                 $query->orGroupStart()                    
@@ -180,7 +180,7 @@ class SkillModel extends Model
                             s.requirements,
                             s.disclaimer,
                             s.cost,
-                            s.max_rank,
+                            s.asset_value_max,
                             s.allow_multiple,
                             s.skill_type,
                             s.profession_link,
