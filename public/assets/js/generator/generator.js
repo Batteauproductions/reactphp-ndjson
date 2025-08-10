@@ -13,7 +13,6 @@ import { convertCurrency } from './helper/currency.js'
 import { pickItem } from './character_asset/item.js'
 import { pickBasekit } from './character/equipment.js'
 import { editBackground, viewBackground, editAdventure, viewAdventure } from './helper/story.js'
-import { Adventure } from './character/adventure.js'
 
 $(document).ready(function() {
 

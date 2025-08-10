@@ -145,7 +145,7 @@ function showPopup(message, type='inform', tone='', confirm = () => {}) {
  * and returns jQuery anchor elements with appropriate click handlers.
  *
  * @param {Object} asset - The asset object.
- * @param {number} asset.asset_value_ - The current asset_value of the asset (0 to 3).
+ * @param {number} asset.asset_value - The current asset_value of the asset (0 to 3).
  * @param {number} asset.asset_value_locked - The minimum locked asset_value.
  * @param {number} asset.asset_value_max - The maximum possible asset_value (default 3).
  * @param {Date|string} asset.created_dt - When the asset was added.
@@ -160,8 +160,8 @@ function generateAssetIcons(asset) {
 
     const isItem = asset.attribute === 'item';
 
-    const current = isItem ? asset.amount : asset.asset_value;
-    const locked = isItem ? asset.amount_locked : asset.asset_value_locked;
+    const current = asset.asset_value;
+    const locked = asset.asset_value_locked;
     const max = asset.asset_value_max ?? 3;
     const createdAfterLock = lockedDt === null || asset.created_dt > lockedDt;
 

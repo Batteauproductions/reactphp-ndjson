@@ -12,7 +12,7 @@ class Item extends CharacterAsset {
     }
 
     costText() {
-        return convertCurrency(this.cost);
+        return convertCurrency(this.asset_value_cost);
     }
 
     costSpend (cost) {

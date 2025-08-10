@@ -53,7 +53,13 @@
                 Geld
             </div>
             <div class="cell small-6">
-                <span id="stat-currency"><?= isset($oCharacter) ? $oCharacter->build->currency : ''?></span>
+                <?php if($viewAsAdmin && !$print): ?>
+                    <a data-action="pick-currency">
+                        <span id="stat-currency"><?= isset($oCharacter) ? $oCharacter->build->currency : ''?></span>
+                    </a>
+                <?php else: ?>
+                    <span id="stat-currency"><?= isset($oCharacter) ? $oCharacter->build->currency : ''?></span>
+                <?php endif; ?>
             </div>   
             <div class="cell small-6 text-left">
                 Type

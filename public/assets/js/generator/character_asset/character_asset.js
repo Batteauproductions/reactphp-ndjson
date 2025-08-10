@@ -3,6 +3,7 @@ import { icons, language, oTranslations } from '../../_lib/settings.js'
 import { debugLog, generateAssetIcons, showMessage, showPopup } from '../../_lib/functions.js'
 import { findItemIndex, findLinkedSkillIndex } from '../character/character.js';
 import { updateExperience } from '../helper/experience.js';
+import { convertCurrency } from '../helper/currency.js';
 
 // Define the class
 class CharacterAsset {
@@ -42,7 +43,7 @@ class CharacterAsset {
         this.sub_id = sub_id !== null ? parseInt(sub_id) : null; //some assets have an sub id, for instance [2/5]
         this.sub_name = sub_name !== null ? sub_name : null; //some assets have a sub name, for instance [mage/elemental]
         this.asset_value = isNaN(parseInt(asset_value)) ? 1 : parseInt(asset_value); //what level is the asset
-        this.asset_value_locked = asset_value_locked ? parseInt(asset_value_locked) : parseInt(asset_value); //what was the level when the character (asset) was locked
+        this.asset_value_locked = asset_value_locked ?? null; //what was the level when the character (asset) was locked
         this.modifier = modifier.length > 0 && modifier[0]?.id !== undefined ? parseInt(modifier[0].id) : null; //some assets contain stat modifiers
         this.racial = racial ? Boolean(parseInt(racial)) : false; //some assets are included in the racial choice of the character
         this.cost = this.racial ? "0" : cost; // all racial elements are 0 cost    
@@ -204,7 +205,9 @@ class CharacterAsset {
                 
         // (potential) Return 2: Checks if an attempt is made to manipulate outside of asset_value limit, should not be possible hence a console error
         const new_asset_value = this.asset_value + direction;
-        if(this.attribute !== 'item') {
+        const isItem = this.attribute === 'item';
+
+        if(!isItem) {
             if (this.asset_value_max !== null && new_asset_value > this.asset_value_max) {
                 console.error(`${oTranslations[language].asset_value_max}`);
                 return false;
@@ -229,7 +232,14 @@ class CharacterAsset {
             } 
             // Return 3: Check if cost can be paid
             if (!this.costSpend(new_cost)) {
-                showPopup(`<h2>${oTranslations[language].popup_error}</h2><p>${oTranslations[language].not_enough_vp}</p>`, 'inform', 'error');
+                let title = oTranslations[language].popup_error;
+                let paragraph;
+                if(!isItem) {
+                    paragraph = oTranslations[language].not_enough_vp;
+                } else {
+                    paragraph = oTranslations[language].not_enough_coin;
+                }
+                showPopup(`<h2>${title}</h2><p>${paragraph}</p>`, 'inform', 'error');
                 return false;
             }
             this.asset_value += 1;
@@ -243,7 +253,14 @@ class CharacterAsset {
             } 
             
             if (!this.costRefund(new_cost)) {
-                showPopup(`<h2>${oTranslations[language].popup_error}</h2><p>${oTranslations[language].not_enough_vp}</p>`, 'inform', 'error');
+                let title = oTranslations[language].popup_error;
+                let paragraph;
+                if(!isItem) {
+                    paragraph = oTranslations[language].not_enough_vp;
+                } else {
+                    paragraph = oTranslations[language].not_enough_coin;
+                }
+                showPopup(`<h2>${title}</h2><p>${paragraph}</p>`, 'inform', 'error');
                 return;
             }
 
@@ -251,15 +268,10 @@ class CharacterAsset {
             this.asset_value_cost -= new_cost;
         }
         //-----------------------------//
-    
-        // Icon logic
-        const new_icons = generateAssetIcons(this);
-    
+        
         // Update UI
         const $row = this.getVisualRow();
-        $row.find('[data-column="name"]').text(`${this.name} (${icons.asset_value.text()} ${this.asset_value})`);
-        $row.find('[data-column="cost"]').text(`${this.asset_value_cost}pt.`);
-        $row.find('[data-column="action"]').html(new_icons);
+        buildOrUpdateRow(this, $row);
 
         window.character.update();
     
@@ -271,79 +283,11 @@ class CharacterAsset {
     }
 
     addVisualRow(animated) {
-        //-- -- setup the master-row to contain the asset
-        const row = $('<div>', {
-            class: `grid-x choice-row ${animated ? 'animate__animated animate__fadeInLeft' : ''}`,
-            [`data-${this.container}_id`]: this.id, 
-            [`data-${this.container}_sub_id`]: this.sub_id,
-        });
-        //-- -- array to contain the columns, starting with the basic one   
-        const lockedDt = window.character?.meta?.lastlocked_dt ?? null;
-        const bNewAsset = lockedDt !== null && this.created_dt > lockedDt;
-        let name = '';
-            name += `${bNewAsset ? icons.new.icon() : ''}`;
-            name += `${this.loresheet===1 ? icons.loresheet.icon() : ''}`;
-            name += `${this.name}`;
-            name += `${this.asset_value != this.asset_value_max ? ` (${icons.asset_value.text()} ${this.asset_value})` : ''}`;
-        
-        const arrColumns = [
-            $('<div>', {
-                'data-column': 'name',
-                class: 'cell small-5 medium-4 text-left',
-                html: `<span data-tooltip class="top" tabindex="2" title="${this.description}">${name}</span>` 
-            })
-        ];
-        //-- -- create column for subname / cost (if any) and determine the icon set for this asset
-        switch (this.attribute) {
-            case 'skill':
-            case 'profession':
-                arrColumns.push($('<div>', {
-                    'data-column': 'sub_name',
-                    class: 'cell small-5 medium-4 text-center',
-                    text: this.sub_name !== null ? this.sub_name : '-'
-                }));    
-                arrColumns.push($('<div>', {
-                    'data-column': 'cost',
-                    class: 'cell small-2 medium-1 text-right',
-                    html: this.racial ? `<em>${oTranslations[language].racial}</em>` : `${this.asset_value_cost}pt.`
-                }));  
-                break;
-            case 'item':
-                arrColumns.push($('<div>', {
-                    'data-column': 'amount',
-                    class: 'cell small-2 medium-1 text-right',
-                    text: `${this.asset_value}x`
-                }));    
-                arrColumns.push($('<div>', {
-                    'data-column': 'cost',
-                    class: 'cell small-5 medium-4 text-center',
-                    html: `${this.costText()}`
-                }));                
-                break;
-        }  
-        arrColumns.push($('<div>', {
-            class: 'cell small-12 medium-3 small-text-center medium-text-right',
-            'data-column': 'action',
-            html: generateAssetIcons(this)
-        }));     
-        //-- -- adds the columns to the master row    
-        row.append(arrColumns);        
-        // Sorts the rows within the container by ABC > Desc
+        const $row = buildOrUpdateRow(this, null, animated); // 'this' = asset object
         const $container = $(`[data-id="${this.container}-list"]`);
-        let inserted = false;
-        $container.children('.choice-row').each(function() {
-            const currentRow = $(this);
-            const currentName = currentRow.find('.cell.small-5.text-left').text().trim();
-            if (currentName.localeCompare(this.name, undefined, { sensitivity: 'base' }) > 0) {
-                currentRow.before(row);
-                inserted = true;
-                return false;
-            }
-        });
-        if (!inserted) {
-            $container.append(row);
-        }
-        //-----------------------------// 
+        insertRowAlphabetically($container, $row);
+        
+        return true;
     }    
 
     costSpend(cost) {
@@ -357,8 +301,9 @@ class CharacterAsset {
     getCurrentAssetValueCost() {
         const cost_array = this.cost.split('|').map(str => parseInt(str));
         if (cost_array.length === 1) {
+            const value_cost = cost_array[0];
             // Flat cost per asset_value
-            return cost_array[0];
+            return parseInt(value_cost*this.asset_value);
         }
         // Progressive cost: sum of all previous steps up to current asset_value
         // E.g., for asset_value 2 and cost "3|2|1", return 3+2 = 5
@@ -372,6 +317,126 @@ class CharacterAsset {
     }
 
 }
+
+// Build or update a row for an asset
+function buildOrUpdateRow(data, $row = null, animated = false) {
+    const isItem = data.attribute === 'item';
+
+    // create row if not provided
+    if (!$row || !$row.length) {
+        $row = $('<div>', {
+            class: `grid-x choice-row ${animated ? 'animate__animated animate__fadeInLeft' : ''}`,
+            // computed attr names
+            [`data-${data.container}_id`]: data.id,
+            [`data-${data.container}_sub_id`]: data.sub_id
+        });
+    }
+
+    // name + icons
+    const lockedDt = window.character?.meta?.lastlocked_dt ?? null;
+    const bNewAsset = lockedDt !== null && data.created_dt > lockedDt;
+    let nameHtml = '';
+    nameHtml += bNewAsset ? icons.new.icon() : '';
+    nameHtml += data.loresheet === 1 ? icons.loresheet.icon() : '';
+    nameHtml += data.name;
+    if (!isItem && data.asset_value != data.asset_value_max) {
+        nameHtml += ` (${icons.asset_value.text()} ${data.asset_value})`;
+    }
+
+    // ensure name column
+    let $nameCell = $row.find('[data-column="name"]');
+    if (!$nameCell.length) {
+        $nameCell = $('<div>', {
+            'data-column': 'name',
+            class: 'cell small-5 medium-4 text-left'
+        }).appendTo($row);
+    }
+    $nameCell.html(`<span data-tooltip class="top" tabindex="2" title="${data.description}">${nameHtml}</span>`);
+
+    // attribute-specific columns
+    if (data.attribute === 'skill' || data.attribute === 'profession') {
+        let $sub = $row.find('[data-column="sub_name"]');
+        if (!$sub.length) {
+            $sub = $('<div>', {
+                'data-column': 'sub_name',
+                class: 'cell small-5 medium-4 text-center'
+            }).insertAfter($nameCell);
+        }
+        $sub.text(data.sub_name ?? '-');
+
+        let $cost = $row.find('[data-column="cost"]');
+        if (!$cost.length) {
+            $cost = $('<div>', {
+                'data-column': 'cost',
+                class: 'cell small-2 medium-1 text-right'
+            }).insertAfter($sub);
+        }
+        $cost.html(data.racial ? `<em>${oTranslations[language].racial}</em>` : `${data.asset_value_cost}pt.`);
+    } else if (data.attribute === 'item') {
+        let $amount = $row.find('[data-column="amount"]');
+        if (!$amount.length) {
+            $amount = $('<div>', {
+                'data-column': 'amount',
+                class: 'cell small-2 medium-1 text-right'
+            }).insertAfter($nameCell);
+        }
+        $amount.text(`${data.asset_value}x`);
+
+        let $cost = $row.find('[data-column="cost"]');
+        if (!$cost.length) {
+            $cost = $('<div>', {
+                'data-column': 'cost',
+                class: 'cell small-5 medium-4 text-center'
+            }).insertAfter($amount);
+        }
+        $cost.html(data.costText());
+    } else {
+        // fallback cost column if needed
+        let $cost = $row.find('[data-column="cost"]');
+        if (!$cost.length) {
+            $cost = $('<div>', {
+                'data-column': 'cost',
+                class: 'cell small-2 medium-1 text-right'
+            }).insertAfter($nameCell);
+        }
+        $cost.html(`${data.asset_value_cost ?? ''}`);
+    }
+
+    // action column
+    let $action = $row.find('[data-column="action"]');
+    if (!$action.length) {
+        $action = $('<div>', {
+            class: 'cell small-12 medium-3 small-text-center medium-text-right',
+            'data-column': 'action'
+        }).appendTo($row);
+    }
+    $action.html(generateAssetIcons(data));
+
+    return $row;
+}
+
+// Insert a row into $container sorted by the rendered name column
+function insertRowAlphabetically($container, $row) {
+    const newName = $row.find('[data-column="name"]').text().trim();
+
+    let inserted = false;
+    $container.children('.choice-row').each(function() {
+        const $cur = $(this);
+        const curName = $cur.find('[data-column="name"]').text().trim();
+
+        // insert before the first item that sorts after newName (case/accent insensitive)
+        if (curName.localeCompare(newName, undefined, { sensitivity: 'base' }) > 0) {
+            $cur.before($row);
+            inserted = true;
+            return false; // break .each()
+        }
+    });
+
+    if (!inserted) {
+        $container.append($row);
+    }
+}
+
 
 export {  
     CharacterAsset   

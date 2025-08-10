@@ -40,7 +40,7 @@ class Character {
     }) {
         // Assign properties to the instance's meta object
         this.meta = {
-            id: parseInt(id),
+            id: id,
             type: parseInt(type),
             type_name: type_name,
             status: parseInt(status),
@@ -192,115 +192,11 @@ class Character {
         //-- Set the race by name
         if(this.race) { this.setRace(this.race.name) }
 
-        // Set advannced visual and functional information
-        //-- Convert the profession object(s) to object classes
-        const tmp_prof = this.profession;
-        this.profession = [];
-        tmp_prof.forEach(obj => {     
-            //--Add the current asset to the object
-            const tmp_obj =
-            {
-                details: {
-                    allow_multiple: obj.allow_multiple,
-                    cost: obj.cost,
-                    id: obj.main_id,
-                    name: obj.name,
-                    description: obj.description,
-                    max_rank: 3,
-                },
-                current: {
-                    attribute: "profession",
-                    container: "profession",
-                    rank: obj.rank,
-                    rank_cost: obj.rank_cost,
-                    sub_id: obj.sub_id,
-                    sub_name: obj.sub_name,
-                    created_dt: obj.created_dt,
-                    modified_dt: obj.modified_dt,
-                },
-                modifier: [
-                    {
-                        id: obj.modifier,
-                    }
-                ]
-            }
-            const profClass = new Profession(tmp_obj);
-            profClass.rank_cost = profClass.getCurrentRankCost();
-            profClass.__construct();
-        });
-        //create new skill objects
-        const tmp_skill = this.skill;
-        this.skill = [];
-        tmp_skill.forEach(obj => {     
-            //--Add the current asset to the object
-            const tmp_obj =
-            {
-                details: {
-                    allow_multiple: obj.allow_multiple,
-                    cost: obj.cost,
-                    id: obj.main_id,
-                    name: obj.name,
-                    description: obj.description,
-                    max_rank: obj.max_rank,
-                },
-                current: {
-                    attribute: "skill",
-                    container: 
-                        [1, 2, 12].includes(parseInt(obj.skill_type)) ? 'skill_base' :
-                        [6, 8, 13].includes(parseInt(obj.skill_type)) ? 'skill_combat' :
-                        [4, 5, 11].includes(parseInt(obj.skill_type)) ? 'skill_magic' :
-                        [3, 10].includes(parseInt(obj.skill_type)) ? 'skill_divine' :
-                        'skill_base',
-                    rank: obj.rank,
-                    sub_id: obj.sub_id,
-                    sub_name: obj.sub_name,
-                    racial: obj.racial,
-                    bonus: obj.bonus,
-                    created_dt: obj.created_dt,
-                    modified_dt: obj.modified_dt,
-                },
-                modifier: [
-                    {
-                        id: obj.modifier,
-                    }
-                ]
-            }
-            const skillClass = new Skill(tmp_obj);
-            skillClass.rank_cost = skillClass.getCurrentRankCost();
-            skillClass.__construct();
-        });
+        // Usage:
+        this.profession = createAssets(this.profession, Profession, 'profession', null, 3);
+        this.skill = createAssets(this.skill, Skill, 'skill', resolveSkillContainer);
+        this.item = createAssets(this.item, Item, 'item');
 
-        //create new item objects
-        const tmp_item = this.item;
-        this.item = [];
-        tmp_item.forEach(obj => {     
-            //--Add the current asset to the object
-            const tmp_obj =
-            {
-                details: {
-                    cost: obj.cost,
-                    id: obj.main_id,
-                    name: obj.name,
-                    description: obj.description,
-                },
-                current: {
-                    attribute: "item",
-                    container: "item",
-                    amount: obj.amount,
-                    sub_id: obj.sub_id,
-                    sub_name: obj.sub_name,
-                    created_dt: obj.created_dt,
-                    modified_dt: obj.modified_dt,
-                },
-                modifier: [
-                    {
-                        id: obj.modifier,
-                    }
-                ]
-            }
-            const itemClass = new Item(tmp_obj);
-            itemClass.__construct();
-        });
         //-- Create new note class objects on the character 
         const tmp_note = this.notes[0];
         this.notes = [];
@@ -317,6 +213,72 @@ class Character {
 
 }
 
+/**
+ * Create asset class instances from raw objects.
+ * @param {Array} rawAssets Array of raw asset objects.
+ * @param {Function} AssetClass The class constructor (Profession, Skill, Item).
+ * @param {string} attribute Attribute type ('profession', 'skill', 'item').
+ * @param {Function} [containerResolver] Optional function to determine container for skill.
+ * @param {number|null} [defaultMax=null] Optional default max asset value (used for profession).
+ */
+function createAssets(rawAssets, AssetClass, attribute, containerResolver, defaultMax = null) {
+    const assets = [];
+    rawAssets.forEach(obj => {
+        /** @type {object} */
+        const tmp_obj = {
+            details: {
+                cost: obj.cost,
+                id: obj.main_id,
+                name: obj.name,
+                description: obj.description,
+                allow_multiple: obj.allow_multiple,
+                asset_value_max: obj.asset_value_max,
+            },
+            current: {
+                attribute,
+                container: containerResolver ? containerResolver(obj) : attribute,
+                asset_value: obj.asset_value,                
+                sub_id: obj.sub_id,
+                sub_name: obj.sub_name,
+                created_dt: obj.created_dt,
+                modified_dt: obj.modified_dt,
+            },
+            modifier: [{ id: obj.modifier }]
+        };
+
+        // Add additional known fields based on type
+        if(attribute === 'skill') {
+            tmp_obj.current.racial = obj.racial;
+            tmp_obj.current.bonus = obj.bonus;
+        }
+
+        const instance = new AssetClass(tmp_obj);
+        instance.asset_value_cost = instance.getCurrentAssetValueCost();
+        
+        // Call explicit constructor if exists
+        if(typeof instance.__construct === 'function') {
+            instance.__construct();
+        }
+
+        assets.push(instance);
+    });
+    return assets;
+}
+
+/**
+ * Determines skill container based on skill_type.
+ * @param {object} obj Skill raw object.
+ * @returns {string} Skill container string.
+ */
+function resolveSkillContainer(obj) {
+    const type = parseInt(obj.skill_type);
+    if ([1, 2, 12].includes(type)) return 'skill_base';
+    if ([6, 8, 13].includes(type)) return 'skill_combat';
+    if ([4, 5, 11].includes(type)) return 'skill_magic';
+    if ([3, 10].includes(type)) return 'skill_divine';
+    return 'skill_base';
+}
+
 function calculateIncrease(id) {
     let increase = 0;
     // Helper function to calculate the increase for each category
@@ -324,7 +286,7 @@ function calculateIncrease(id) {
         if ($.isArray(category)) {
             $.each(category, function(key, value) {
                 if (value.modifier == id) {
-                    increase += value.rank > 1 ? value.rank : 1;
+                    increase += value.asset_value > 1 ? value.asset_value : 1;
                 }
             });
         } else {
@@ -349,14 +311,14 @@ function calculateIncrease(id) {
  * @param {string|null} sub_id - The sub ID of the item (optional).
  * @returns {number} The index of the item if found, otherwise -1.
  */
-function findItemIndex(attribute, id, sub_id = null, rank = null, strictSubId = true) {
+function findItemIndex(attribute, id, sub_id = null, asset_value = null, strictSubId = true) {
     const attributeArray = window.character[attribute];
 
     return Array.isArray(attributeArray)
         ? attributeArray.findIndex(item =>
             item?.id === id &&
             (strictSubId ? (item?.sub_id === sub_id || sub_id === null) : true) &&
-            (item?.rank >= rank || rank === null)
+            (item?.asset_value >= asset_value || asset_value === null)
         )
         : -1;
 }
@@ -444,7 +406,11 @@ function transferCharacter(btn_action) {
             $button.html(`${icon.icon()} ${icon.text()}`);
             showPopup(`<h2>${popupTitle}</h2><p>${popupText}</p>`, 'inform', tone, confirm);
         },
-        error: function() {
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log("Status:", textStatus);
+    console.log("Error Thrown:", errorThrown);
+    console.log("Raw Response:", jqXHR.responseText); // This is probably what you need
+    
             const icon = icons.character_error;
             const popupTitle = lang["popup_error"];
             const popupText = lang["character_error_save"];

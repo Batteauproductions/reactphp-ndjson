@@ -15,7 +15,8 @@
         "ext-mbstring": "*",
         "laminas/laminas-escaper": "^2.13",
         "league/oauth2-client": "*",
-        "psr/log": "^3.0"
+        "psr/log": "^3.0",
+        "ramsey/uuid": "^4.9"
     },
     "require-dev": {
         "codeigniter/coding-standard": "^1.7",

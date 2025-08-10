@@ -5,7 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 use App\Models\ProfessionModel;
 use App\Models\SkillModel;
-
+use Ramsey\Uuid\Uuid;
 
 class CharacterModel extends Model
 {
@@ -30,7 +30,7 @@ class CharacterModel extends Model
         // This code ensures that if a non-gamemaster tries to access the page,
         // they can't call up a character that isn't theirs.
         $query = $this->db->table(TBL_CHAR.' c')
-            ->select('c.id, 
+            ->select('c.char_id as id, 
                     c.type_id as type, 
                     c.status_id as status, 
                     c.chronicle_id as chronicle, 
@@ -48,7 +48,7 @@ class CharacterModel extends Model
             ->join(TBL_USER.' u', 'c.user_id = u.id', 'left')
             ->join(TBL_CHAR_TYPES . ' ct', 'ct.id = type_id')
             ->join(TBL_CHAR_STATUS . ' cs', 'cs.id = status_id')
-            ->where('c.id', $cid);
+            ->where('c.char_id', $cid);
     
         // Check if the user is not a gamemaster, add a where clause to filter by user_id
         if (!$gamemaster) {
@@ -66,7 +66,6 @@ class CharacterModel extends Model
         $oCharacter->build = $this->db
             ->table(TBL_CHAR_BUILD . ' cb')
             ->select('
-                    cb.char_id,        
                     cb.hp, 
                     cb.mana, 
                     cb.sanity, 
@@ -106,7 +105,7 @@ class CharacterModel extends Model
                         ->select('ci.main_id, 
                                 ci.sub_id, 
                                 ci.bonus, 
-                                ci.amount,
+                                ci.asset_value,
                                 i.cost,
                                 i.name,
                                 it.name as sub_name', false)
@@ -152,7 +151,7 @@ class CharacterModel extends Model
         // This code ensures that if a non-gamemaster tries to access the page,
         // they can't delete up a character that isn't theirs.
         $query = $this->db->table(TBL_CHAR)
-                 ->where('id', $cid);
+                 ->where('char_id', $cid);
                  
         // Check if the user is not a gamemaster, add a where clause to filter by user_id
         if (!$gamemaster) {
@@ -166,7 +165,7 @@ class CharacterModel extends Model
     {
         // Build the query
         $builder = $this->db->table(TBL_CHAR.' c');
-        $builder->select('c.id,
+        $builder->select('c.char_id as id,
                     c.user_id,
                     c.name,
                     c.avatar,
@@ -186,7 +185,7 @@ class CharacterModel extends Model
 
         // If $uid is provided, add a where clause to filter by user_id
         if (!empty($params['cid'])) {
-            $builder->where('c.id', $params['cid']);
+            $builder->where('c.char_id', $params['cid']);
         }
 
         if (!empty($params['uid'])) {
@@ -247,7 +246,7 @@ class CharacterModel extends Model
         }
         // Step 3: Set the status for the character
         $this->db->table(TBL_CHAR)
-                ->where('id', $arrData['cid'])
+                ->where('char_id', $arrData['cid'])
                 ->update($charData);
 
         // Step 4: Set the mailnote for the user
@@ -276,7 +275,7 @@ class CharacterModel extends Model
         $now = date('Y-m-d H:i:s'); 
         $user_id = $arrData['uid'];
         // -- turn into object
-        $arrCharJSON = json_decode($arrData['character']);
+        $arrCharJSON = json_decode($arrData['character']);        
         // -- cache elements for easier access        
         $meta = $arrCharJSON->meta;
         $build = $arrCharJSON->build; 
@@ -300,22 +299,23 @@ class CharacterModel extends Model
             $isNew ? 'created_dt' : 'modified_dt' => $now
         ];
         // Only add 'avatar' if supplied
-        if (!empty($arrData['avatar'])) {
+        if (!empty($arrData['avatar'])) {            
             $charData['avatar'] = $arrData['avatar'];
         }
         if ($isNew) {
+            // Generate UUID (v4)
+            $char_id = Uuid::uuid4()->toString();
+            $charData['char_id'] = $char_id;
             $this->db->table(TBL_CHAR)->insert($charData);
-            $char_id = $this->db->insertID();
         } else {
             $char_id = $meta->id;
             $this->db->table(TBL_CHAR)
-                ->where('id', $char_id)
+                ->where('char_id', $char_id)
                 ->where('user_id', $user_id)
                 ->update($charData);
         }
         // Step 3b: Fill the Char-build table   
         $buildData = [
-            'char_id'   => $char_id,
             'hp'        => $build->hp,
             'mana'      => $build->mana,
             'sanity'    => $build->sanity,
@@ -354,11 +354,11 @@ class CharacterModel extends Model
             }
         }
         // Step 3d: Insert data into the TBL_CHAR_PROF table
-        if($profession) { $this->insertItems($profession, TBL_CHAR_PROF, $char_id, ['asset_value','asset_value_locked']); }
+        if($profession) { $this->insertItems($profession, TBL_CHAR_PROF, $char_id,[]); }
         // Step 3e: Insert data into the TBL_CHAR_SKILL table
-        if($skill) { $this->insertItems($skill, TBL_CHAR_SKILL, $char_id, ['racial','asset_value','asset_value_locked','bonus']); }
+        if($skill) { $this->insertItems($skill, TBL_CHAR_SKILL, $char_id, ['racial','bonus']); }
         // Step 3f: Insert data into the TBL_CHAR_ITEMS table
-        if($item) { $this->insertItems($item, TBL_CHAR_ITEMS, $char_id, ['bonus','amount']); }
+        if($item) { $this->insertItems($item, TBL_CHAR_ITEMS, $char_id, ['bonus']); }
         // Step 3g: Insert (or Update) the notes in TBL_CHAR_COMMENTS
         $charNote = [
             'char_id' => $char_id,
@@ -411,6 +411,8 @@ class CharacterModel extends Model
                 'char_id'    => $char_id,
                 'main_id'    => $item->id,                
                 'sub_id'     => property_exists($item, 'sub_id') && $item->sub_id !== '' ? $item->sub_id : null, // Ensure sub_id is always present (can be null)
+                'asset_value'=> $item->asset_value, 
+                'asset_value_locked'=> $item->asset_value_locked, 
                 'created_dt' => $item->created_dt ?? date('Y-m-d H:i:s'),
                 'modified_dt' => $item->modified_dt ?? date('Y-m-d H:i:s'),
             ];

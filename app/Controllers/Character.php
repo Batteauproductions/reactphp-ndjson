@@ -202,9 +202,9 @@ class Character extends Controller
             case "delete":
                 echo json_encode(
                     $this->models['character']->deleteCharacter(
-                        $this->request->getPost('character'),               // Character ID
-                        $this->session->get('uid'),                         // User ID from session
-                        $this->arrRights['isGameMaster']                   // Permission check
+                        $this->request->getPost('character'), // Character ID
+                        $this->session->get('uid'),           // User ID from session
+                        $this->arrRights['isGameMaster']      // Permission check
                     )
                 );
                 break;
@@ -295,8 +295,6 @@ class Character extends Controller
                     } else {
                         return redirect()->back()->withInput()->with('errors', ['Uploaden is mislukt. Probeer het later opnieuw.']);
                     }
-                } else {
-                    return redirect()->back()->withInput()->with('errors', ['Uploaden is mislukt. Probeer het later opnieuw.']);
                 } 
 
                 //do something slightly different per action
