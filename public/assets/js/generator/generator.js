@@ -9,7 +9,7 @@ import { pickRace  } from './character_asset/race.js'
 import { pickProfession } from './character_asset/professions.js'
 import { pickSkillProfession, pickSkillCombat, pickSkillMagic, pickSkillDivine } from './character_asset/skills.js'
 import { createNote } from './character/note.js'
-import { convertCurrency } from './helper/currency.js'
+import { convertCurrency, pickCurrency } from './helper/currency.js'
 import { pickItem } from './character_asset/item.js'
 import { pickBasekit } from './character/equipment.js'
 import { editBackground, viewBackground, editAdventure, viewAdventure } from './helper/story.js'
@@ -57,49 +57,53 @@ $(document).ready(function() {
         e.preventDefault();
         createNote($(this).data('type')); 
     });
-    $('a[data-action="pick-name"]').on('click', (e) => {
+    $('a[data-action="pick-name"]').on('click', function (e) {
         e.preventDefault();
         pickName();
     });
-    $('a[data-action="pick-type"]').on('click', (e) => {
+    $('a[data-action="pick-type"]').on('click', function (e) {
         e.preventDefault();
         pickType();
     });
-    $('a[data-action="pick-status"]').on('click', (e) => {
+    $('a[data-action="pick-status"]').on('click', function (e) {
         e.preventDefault();
         pickStatus();
     });
-    $('a[data-action="pick-race"]').on('click', (e) => {
+    $('a[data-action="pick-race"]').on('click', function (e) {
         e.preventDefault();
         pickRace();
     });
-    $('a[data-action="pick-profession"]').on('click', (e) => {
+    $('a[data-action="pick-profession"]').on('click', function (e) {
         e.preventDefault();
         pickProfession();
     });
-    $('a[data-action="pick-skill_base"]').on('click', (e) => {
+    $('a[data-action="pick-skill_base"]').on('click', function (e) {
         e.preventDefault();
         pickSkillProfession();
     });
-    $('a[data-action="pick-skill_combat"]').on('click', (e) => {
+    $('a[data-action="pick-skill_combat"]').on('click', function (e) {
         e.preventDefault();
         pickSkillCombat();
     });
-    $('a[data-action="pick-skill_magic"]').on('click', (e) => {
+    $('a[data-action="pick-skill_magic"]').on('click', function (e) {
         e.preventDefault();
         pickSkillMagic();
     });
-    $('a[data-action="pick-skill_divine"]').on('click', (e) => {
+    $('a[data-action="pick-skill_divine"]').on('click', function (e) {
         e.preventDefault();
         pickSkillDivine();
     });
-    $('a[data-action="pick-basekit"]').on('click', (e) => {
+    $('a[data-action="pick-basekit"]').on('click', function (e) {
         e.preventDefault();
         pickBasekit();
     });
-    $('a[data-action="pick-item"]').on('click', (e) => {
+    $('a[data-action="pick-item"]').on('click', function (e) {
         e.preventDefault();
         pickItem();
+    });
+    $('a[data-action="pick-currency"]').on('click', function (e) {
+        e.preventDefault();
+        pickCurrency();
     });
     $('a[data-action="edit-background"]').on('click', (e) => {
         e.preventDefault();

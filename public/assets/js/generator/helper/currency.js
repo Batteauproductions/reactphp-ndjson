@@ -68,8 +68,13 @@ function convertCurrency(iAmount) {
     return `${sGold} ${sSilver} ${sCopper}`.trim();
 }
 
+function pickCurrency() {
+
+}
+
 // Export functions
 export {
     updateCurrency,
     convertCurrency,
+    pickCurrency,
 }

@@ -8,7 +8,7 @@
             </p>
         </div> 
         <div class="text-center">
-            <a class="button solid" href="<?php echo base_url('/user/login') ?>">
+            <a class="button solid no-spacing" href="<?php echo base_url('/user/login') ?>">
                 <i class="fa-solid fa-house"></i>Homepagina
             </a>
         </div>
